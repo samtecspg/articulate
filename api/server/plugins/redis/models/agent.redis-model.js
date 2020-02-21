@@ -99,19 +99,23 @@ const schema = {
         type: 'json',
         defaultValue: {}
     },
-    backupAgentUsed: {
+    isOriginalAgentVersion: {
         type: 'boolean',
         defaultValue: true
     },
-    backupAgentId: {
+    originalAgentVersionId: {
         type: 'number',
         defaultValue: -1
     },
-    backupAgentOriginalName: {
+    originalAgentVersionName: {
         type: 'string',
         defaultValue: ''
     },
-    backupAgentNotes: {
+    agentVersionNotes: {
+        type: 'string',
+        defaultValue: ''
+    },
+    loadedAgentVersionName: {
         type: 'string',
         defaultValue: ''
     }

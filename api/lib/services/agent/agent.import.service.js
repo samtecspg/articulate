@@ -20,7 +20,7 @@ module.exports = async function ({ payload }) {
     try {
 
         var AgentModel;
-        var originalAgentName = agent.backupAgentOriginalName;
+        var originalAgentName = agent.originalAgentVersionName;
         if (!isVersionImport) {
             AgentModel = await agentService.create({
                 data: {
@@ -37,12 +37,12 @@ module.exports = async function ({ payload }) {
                 userCredentials
             });
         } else {
-            //AgentModel = await globalService.findById({ id: backupAgentId, model: MODEL_AGENT, returnModel: true });
-            agent.backupAgentOriginalName = agent.agentName;
+            //AgentModel = await globalService.findById({ id: originalAgentVersionId, model: MODEL_AGENT, returnModel: true });
+            agent.loadedAgentVersionName = agent.agentName;
             agent.agentName = originalAgentName;
-            AgentModel = await agentService.updateById({ id: agent.backupAgentId, data: agent, returnModel: true });
-            await agentService.removePostFormat({ id: agent.backupAgentId, returnModel: true });
-            await agentService.removeWebhook({ id: agent.backupAgentId, returnModel: true });
+            AgentModel = await agentService.updateById({ id: agent.originalAgentVersionId, data: agent, returnModel: true });
+            await agentService.removePostFormat({ id: agent.originalAgentVersionId, returnModel: true });
+            await agentService.removeWebhook({ id: agent.originalAgentVersionId, returnModel: true });
 
             var linkedSayings = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_SAYING, returnModel: true });
             var linkedCategories = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel: false });

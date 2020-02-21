@@ -151,7 +151,7 @@ const makeSelectAgentVersionsSorted = (versions) => {
   var tempArray = Immutable.asMutable(versions);
   var temp = tempArray && tempArray.length ? tempArray
     .sort((a, b) => (Number(b.creationDate) > Number(a.creationDate)) ? 1 : -1)
-    .filter(version => { return !version.backupAgentUsed })
+    .filter(version => { return !version.isOriginalAgentVersion })
     : []
   return temp
 };

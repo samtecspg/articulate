@@ -158,7 +158,7 @@ export class TrainButton extends React.Component {
   }
 
   render() {
-    const { intl, classes, serverStatus, agentStatus, lastTraining, onTrain, isReadOnly, backupAgentOriginalName } = this.props;
+    const { intl, classes, serverStatus, agentStatus, lastTraining, onTrain, isReadOnly, loadedAgentVersionName } = this.props;
     return (
 
       <Grid item className={classes.trainContainer}>
@@ -191,7 +191,7 @@ export class TrainButton extends React.Component {
             <Fragment>
               <Button disabled={serverStatus === 'Training' || isReadOnly} className={classes.versionButton} onClick={this.handleVersionsModalOpen} key="btnVersion" variant="contained">
                 <MuiThemeProvider theme={tooltipTheme}>
-                  <Tooltip title={backupAgentOriginalName ? backupAgentOriginalName : ''} placement="top">
+                  <Tooltip title={loadedAgentVersionName ? loadedAgentVersionName : ''} placement="top">
                     <img src={selectVersion} className={classes.selectVersionImage} />
                   </Tooltip>
                 </MuiThemeProvider>

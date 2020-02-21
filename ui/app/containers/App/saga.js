@@ -168,7 +168,7 @@ export function* getAgent(payload) {
       postFormat = response;
     }
     yield put(loadAgentSuccess({ agent, webhook, postFormat }));
-    yield put(loadAgentBackups(agent.backupAgentId == -1 ? agent.id : agent.backupAgentId));
+    yield put(loadAgentBackups(agent.originalAgentVersionId == -1 ? agent.id : agent.originalAgentVersionId));
   } catch (err) {
     yield put(loadAgentError(err));
   }
@@ -178,13 +178,14 @@ export function* postAgentBackup(payload) {
   const { api, id } = payload;
   try {
     var agent = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
-    agent.backupAgentOriginalName = agent.agentName;
+    agent.originalAgentVersionName = agent.agentName;
     var date = new Date();
     date = date.toString();
     agent.agentName = date + '_' + agent.agentName;
-    agent.backupAgentUsed = false;
-    agent.backupAgentId = Number(id);
-    agent.backupAgentNotes = '';
+    agent.loadedAgentVersionName = agent.agentName;
+    agent.isOriginalAgentVersion = false;
+    agent.originalAgentVersionId = Number(id);
+    agent.agentVersionNotes = '';
     var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), agent);
     yield put(addAgentBackupSuccess(importResponse));
     yield put(loadAgentBackups(id));
@@ -194,10 +195,10 @@ export function* postAgentBackup(payload) {
 }
 
 export function* getAgentBackups(payload) {
-  const { api, backupAgentId } = payload;
+  const { api, originalAgentVersionId } = payload;
   try {
     var filter = JSON.stringify({
-      backupAgentId: Number(backupAgentId)
+      originalAgentVersionId: Number(originalAgentVersionId)
     });
     const params = {
       filter
@@ -214,7 +215,8 @@ export function* getAgentVersion(payload) {
   try {
     var versionAgent = yield call(api.get, toAPIPath([ROUTE_AGENT, Number(versionId), ROUTE_EXPORT]));
     versionAgent.isVersionImport = true;
-    versionAgent.backupAgentUsed = true;
+    versionAgent.isOriginalAgentVersion = true;
+    debugger;
     var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), versionAgent);
     window.location.reload();
     yield put(loadAgentVersionSuccess());
@@ -227,7 +229,7 @@ export function* putAgentVersion(payload) {
   const { api, version } = payload;
   try {
     var id = version.id;
-    var currentAgentId = version.backupAgentId
+    var currentAgentId = version.originalAgentVersionId
     delete version.id;
     delete version.settings;
     delete version.status;

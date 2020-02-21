@@ -129,7 +129,7 @@ class VersionsModal extends React.Component {
       && prevState.versionPicked
       && this.state.versionPicked.agentName !== prevState.versionPicked.agentName) {
       this.setState({
-        currentEditDescription: this.state.versionPicked.backupAgentNotes,
+        currentEditDescription: this.state.versionPicked.agentVersionNotes,
         currentEditName: this.state.versionPicked.agentName
       })
     }
@@ -153,9 +153,9 @@ class VersionsModal extends React.Component {
 
   loadVersion() {
     if (this.props.selectedTab !== 'agent') {
-      this.props.onGoToUrl('/agent/' + this.state.versionPicked.id, this.state.versionPicked.id, this.state.versionPicked.backupAgentId)
+      this.props.onGoToUrl('/agent/' + this.state.versionPicked.id, this.state.versionPicked.id, this.state.versionPicked.originalAgentVersionId)
     } else {
-      this.props.onGoToUrl('/agent/' + this.state.versionPicked.id + '/' + this.props.selectedTab, this.state.versionPicked.id, this.state.versionPicked.backupAgentId)
+      this.props.onGoToUrl('/agent/' + this.state.versionPicked.id + '/' + this.props.selectedTab, this.state.versionPicked.id, this.state.versionPicked.originalAgentVersionId)
     }
   }
 
@@ -164,7 +164,7 @@ class VersionsModal extends React.Component {
       deep: true,
     });
     mutableVersion.agentName = this.state.currentEditName;
-    mutableVersion.backupAgentNotes = this.state.currentEditDescription;
+    mutableVersion.agentVersionNotes = this.state.currentEditDescription;
     this.props.onUpdateAgentVersion(mutableVersion);
     this.setState({
       isEditing: false,
@@ -391,7 +391,7 @@ class VersionsModal extends React.Component {
                 //onClick && !disabled ? onClick() : _.noop;
                 this.setState({ isEditing: !this.state.isEditing });
                 this.setState({ currentEditName: this.state.versionPicked.agentName })
-                this.setState({ currentEditDescription: this.state.versionPicked.backupAgentNotes })
+                this.setState({ currentEditDescription: this.state.versionPicked.agentVersionNotes })
               }}
               className={classes.icon}
               src={pencilIcon}
@@ -400,7 +400,7 @@ class VersionsModal extends React.Component {
               alt=""
               onClick={() => {
                 //onClick && !disabled ? onClick() : _.noop;
-                this.props.onDeleteAgentVersion(this.state.versionPicked.id, this.state.versionPicked.backupAgentId);
+                this.props.onDeleteAgentVersion(this.state.versionPicked.id, this.state.versionPicked.originalAgentVersionId);
               }}
               className={classes.icon}
               src={trashIcon}
@@ -441,7 +441,7 @@ class VersionsModal extends React.Component {
           <span
             className={classes.headerDescriptionLabel}>
             {
-              this.state.versionPicked ? this.state.versionPicked.backupAgentNotes : ''
+              this.state.versionPicked ? this.state.versionPicked.agentVersionNotes : ''
             }
           </span>)}
         {this.state.isEditing && (

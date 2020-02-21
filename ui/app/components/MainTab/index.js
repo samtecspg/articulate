@@ -266,7 +266,7 @@ export class MainTab extends React.Component {
                   onDeleteAgentVersion={this.props.onDeleteAgentVersion}
                   onAddNewAgentBackup={this.props.onAddNewAgentBackup}
                   currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
-                  backupAgentOriginalName={currentAgent ? currentAgent.backupAgentOriginalName : ''}
+                  loadedAgentVersionName={currentAgent ? currentAgent.loadedAgentVersionName : ''}
                 />
               )}
               {disableSave ||

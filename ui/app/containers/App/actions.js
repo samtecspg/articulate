@@ -636,10 +636,10 @@ export function loadAgentSuccess(payload) {
   };
 }
 
-export function loadAgentBackups(backupAgentId) {
+export function loadAgentBackups(originalAgentVersionId) {
   return {
     type: LOAD_AGENT_BACKUPS,
-    backupAgentId,
+    originalAgentVersionId,
     apiCall: true,
   };
 }

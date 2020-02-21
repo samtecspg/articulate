@@ -288,10 +288,11 @@ class AgentValidate {
                     parameters: Joi.object(),
                     enableDiscoverySheet: AgentSchema.enableDiscoverySheet,
                     accessPolicies: AgentSchema.accessPolicies,
-                    backupAgentUsed: AgentSchema.backupAgentUsed,
-                    backupAgentId: AgentSchema.backupAgentId,
-                    backupAgentOriginalName: AgentSchema.backupAgentOriginalName,
-                    backupAgentNotes: AgentSchema.backupAgentNotes.allow(''),
+                    isOriginalAgentVersion: AgentSchema.isOriginalAgentVersion,
+                    originalAgentVersionId: AgentSchema.originalAgentVersionId,
+                    originalAgentVersionName: AgentSchema.originalAgentVersionName,
+                    agentVersionNotes: AgentSchema.agentVersionNotes.allow(''),
+                    loadedAgentVersionName: AgentSchema.loadedAgentVersionName
                 };
             })()
         };
@@ -1013,10 +1014,11 @@ class AgentValidate {
                         creationDate: KeywordSchema.creationDate,
                         modificationDate: KeywordSchema.modificationDate
                     }),
-                    backupAgentUsed: AgentSchema.backupAgentUsed,
-                    backupAgentId: AgentSchema.backupAgentId,
-                    backupAgentOriginalName: AgentSchema.backupAgentOriginalName,
-                    backupAgentNotes: AgentSchema.backupAgentNotes.allow(''),
+                    isOriginalAgentVersion: AgentSchema.isOriginalAgentVersion,
+                    originalAgentVersionId: AgentSchema.originalAgentVersionId,
+                    originalAgentVersionName: AgentSchema.originalAgentVersionName,
+                    agentVersionNotes: AgentSchema.agentVersionNotes.allow(''),
+                    loadedAgentVersionName: AgentSchema.loadedAgentVersionName,
                     creationDate: KeywordSchema.creationDate,
                     modificationDate: KeywordSchema.modificationDate,
                     accessPolicies: AgentSchema.accessPolicies,

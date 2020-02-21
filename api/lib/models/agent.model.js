@@ -37,10 +37,11 @@ class AgentModel {
       generateSlotsQuickResponsesMax: Joi.number(),
       generateActionsQuickResponses: Joi.boolean(),
       generateActionsQuickResponsesMax: Joi.number(),
-      backupAgentUsed: Joi.boolean(),
-      backupAgentId: Joi.number(),
-      backupAgentOriginalName: Joi.string(),
-      backupAgentNotes: Joi.string()
+      isOriginalAgentVersion: Joi.boolean(),
+      originalAgentVersionId: Joi.number(),
+      originalAgentVersionName: Joi.string(),
+      agentVersionNotes: Joi.string(),
+      loadedAgentVersionName: Joi.string(),
     };
   }
 }
