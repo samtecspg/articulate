@@ -120,10 +120,11 @@ class VersionsModal extends React.Component {
       isEditing: false
     };
     this.state = this.initialState;
-
   }
 
   componentDidUpdate(prevProps, prevState) {
+    debugger;
+    // If its editing but changed version name
     if (this.state.isEditing
       && this.state.versionPicked
       && prevState.versionPicked
@@ -133,9 +134,15 @@ class VersionsModal extends React.Component {
         currentEditName: this.state.versionPicked.agentName
       })
     }
-    if (!this.state.isEditing &&
+    // If there is no editing but update keep the value already selected
+    else if (!this.state.isEditing &&
       (this.props.agentVersions !== prevProps.agentVersions)) {
       this.handleDropDownValuePicked(this.state.dropDownValuePicked);
+    }
+    // If there is no value picked try to load the current version loaded in the agent
+    else if (this.state.dropDownValuePicked === '') {
+      this.setState({ dropDownValuePicked: this.props.loadedAgentVersionName });
+      this.handleDropDownValuePicked(this.props.loadedAgentVersionName);
     }
   }
 
@@ -185,6 +192,12 @@ class VersionsModal extends React.Component {
   getDate(dateString) {
     var d = new Date(Number(dateString));
     return d.toString();
+  }
+
+  setStateAsync(state) {
+    return new Promise((resolve) => {
+      this.setState(state, resolve)
+    });
   }
 
   renderMainHeader(classes, intl) {
@@ -394,9 +407,9 @@ class VersionsModal extends React.Component {
             />
             <img
               alt=""
-              onClick={() => {
-                //onClick && !disabled ? onClick() : _.noop;
+              onClick={async () => {
                 this.props.onDeleteAgentVersion(this.state.versionPicked.id, this.state.versionPicked.originalAgentVersionId);
+                await this.setStateAsync(this.initialState);
               }}
               className={classes.icon}
               src={trashIcon}
@@ -471,7 +484,11 @@ class VersionsModal extends React.Component {
             aria-labelledby="simple-modal-title"
             aria-describedby="simple-modal-description"
             open={this.props.open}
-            onClose={this.props.onClose}
+            onClose={async () => {
+              await this.setStateAsync(this.initialState);
+              this.props.onClose();
+            }
+            }
             style={{ overflow: 'scroll' }}
           >
             <div className={classes.modalContent}>

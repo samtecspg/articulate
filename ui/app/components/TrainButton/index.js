@@ -154,6 +154,7 @@ export class TrainButton extends React.Component {
       onAddAgentVersion={this.props.onAddAgentVersion}
       onUpdateAgentVersion={this.props.onUpdateAgentVersion}
       onDeleteAgentVersion={this.props.onDeleteAgentVersion}
+      loadedAgentVersionName={this.props.loadedAgentVersionName}
     />
   }
 
