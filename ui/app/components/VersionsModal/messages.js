@@ -1,29 +1,41 @@
 /*
- * ExitModal Messages
+ * Versions Modal Messages
  *
- * This contains all the text for the ExitModal component.
+ * This contains all the text for the Versions Modal component.
  */
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  exitMessageDialog1: {
-    id: 'app.components.ExitModal.exitMessageDialog1',
-    defaultMessage: 'You currently have unsaved changes in this',
+  headerTitle: {
+    id: 'app.components.VersionsModal.headerTitle',
+    defaultMessage: 'Version Timestamp',
   },
-  exitMessageDialog2: {
-    id: 'app.components.ExitModal.exitMessageDialog2',
-    defaultMessage: 'and you are about to exit without saving…',
+  headerDescription: {
+    id: 'app.components.VersionsModal.headerDescription',
+    defaultMessage: 'Select a version for this agent',
   },
-  exitQuestion: {
-    id: 'app.components.ExitModal.exitQuestion',
-    defaultMessage: 'Do you want to save and exit?',
+  dropdownLabel: {
+    id: 'app.components.VersionsModal.dropdownLabel',
+    defaultMessage: 'Switch version: ',
   },
-  saveAndExit: {
-    id: 'app.components.ExitModal.saveAndExit',
-    defaultMessage: 'Save and Exit',
+  dropdownSelectMessage: {
+    id: 'app.components.VersionsModal.dropdownSelectMessage',
+    defaultMessage: 'Select a version: ',
   },
-  exit: {
-    id: 'app.components.ExitModal.exit',
-    defaultMessage: 'Exit',
+  versionName: {
+    id: 'app.components.VersionsModal.versionName',
+    defaultMessage: 'Version Name: ',
   },
+  timeTrained: {
+    id: 'app.components.VersionsModal.timeTrained',
+    defaultMessage: 'Time Trained: ',
+  },
+  versionNotes: {
+    id: 'app.components.VersionsModal.versionNotes',
+    defaultMessage: 'Version Notes: ',
+  },
+
+
+
+
 });

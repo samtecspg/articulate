@@ -209,9 +209,7 @@ class VersionsModal extends React.Component {
       >
         <Grid item xs={6}>
           <span className={classes.titleLabel}>
-            {//intl.formatMessage(messages.applyFilter)
-              'Version Timestamp'
-            }
+            {intl.formatMessage(messages.headerTitle)}
           </span>
         </Grid>
         <Grid item xs={6}
@@ -251,9 +249,7 @@ class VersionsModal extends React.Component {
       <Grid item xs>
         <span
           className={classes.headerDescriptionLabel}>
-          {//this.props.filtersDescription
-            'Select a version for this agent'
-          }
+          {intl.formatMessage(messages.headerDescription)}
         </span>
       </Grid>
     </Grid>
@@ -264,9 +260,7 @@ class VersionsModal extends React.Component {
       <span
         className={classes.filterNamesLabels}
       >
-        {//this.props.dropDownFilterLabel
-          'Switch Version Timestamp:'
-        }
+        {intl.formatMessage(messages.dropdownLabel)}
       </span>
       <Grid
         container
@@ -300,9 +294,7 @@ class VersionsModal extends React.Component {
             <MenuItem key={this.props.dropDownMainOptionLabel} value={this.props.dropDownMainOptionLabel}
               className={classes.dropDownMainOption}
             >
-              {//this.props.dropDownMainOptionLabel
-                'Pick a version'
-              }
+              {intl.formatMessage(messages.dropdownSelectMessage)}
             </MenuItem>
             {
               this.props.agentVersions && this.props.agentVersions
@@ -334,9 +326,7 @@ class VersionsModal extends React.Component {
           <Fragment>
             <span
               className={classes.filterNamesLabels}>
-              {//this.props.filtersDescription
-                'Training currently:'
-              }
+              {intl.formatMessage(messages.versionName)}
             </span>
             <br />
             <span
@@ -379,14 +369,12 @@ class VersionsModal extends React.Component {
       <Grid item xs={3}>
         <span
           className={classes.filterNamesLabels}>
-          {//this.props.filtersDescription
-            'Time trained'
-          }
+          {intl.formatMessage(messages.timeTrained)}
         </span>
         <br />
         <span
           className={classes.headerDescriptionLabel}>
-          {//this.props.filtersDescription
+          {
             this.state.versionPicked ? this.getDate(this.state.versionPicked.creationDate) : ''
           }
         </span>
@@ -397,7 +385,6 @@ class VersionsModal extends React.Component {
             <img
               alt=""
               onClick={() => {
-                //onClick && !disabled ? onClick() : _.noop;
                 this.setState({ isEditing: !this.state.isEditing });
                 this.setState({ currentEditName: this.state.versionPicked.agentName })
                 this.setState({ currentEditDescription: this.state.versionPicked.agentVersionNotes })
@@ -430,9 +417,7 @@ class VersionsModal extends React.Component {
       <Grid item xs>
         <span
           className={classes.filterNamesLabels}>
-          {//this.props.filtersDescription
-            'Training Info'
-          }
+          {intl.formatMessage(messages.versionNotes)}
         </span>
       </Grid>
     </Grid>
