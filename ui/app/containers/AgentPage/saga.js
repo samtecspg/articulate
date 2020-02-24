@@ -171,6 +171,8 @@ export function* putAgent(payload) {
   const mutableAgent = Immutable.asMutable(agent, { deep: true });
   mutableAgent.categoryClassifierThreshold =
     agent.categoryClassifierThreshold / 100;
+  mutableAgent.originalAgentVersionName = mutableAgent.agentName;
+  mutableAgent.loadedAgentVersionName = mutableAgent.agentName;
   const { api } = payload;
   delete mutableAgent.id;
   delete mutableAgent.settings;

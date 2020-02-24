@@ -123,6 +123,7 @@ class VersionsModal extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    debugger;
     // If its editing but changed version name
     if (this.state.isEditing
       && this.state.versionPicked
@@ -139,7 +140,7 @@ class VersionsModal extends React.Component {
       this.handleDropDownValuePicked(this.state.dropDownValuePicked);
     }
     // If there is no value picked try to load the current version loaded in the agent
-    else if (this.state.dropDownValuePicked === '') {
+    else if (this.state.dropDownValuePicked === '' && this.props.loadedAgentVersionName !== '') {
       this.setState({ dropDownValuePicked: this.props.loadedAgentVersionName });
       this.handleDropDownValuePicked(this.props.loadedAgentVersionName);
     }
