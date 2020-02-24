@@ -24,12 +24,11 @@ module.exports = async function ({ id }) {
 
         //Remove agent versions
         const AgentVersions = await globalService.findAll({ model: MODEL_AGENT, filter: { originalAgentVersionId: id } });
-        if (AgentVersions.data) {
-            AgentVersions.data.forEach(async (Version) => {
-                await Agent.findById({ id: Version.id });
-                return Agent.removeInstance({ id: Version.id });
-            });
-        }
+
+        await Promise.all(AgentVersions.data.map(async (Version) => {
+            await Agent.findById({ id: Version.id });
+            await Agent.removeInstance({ id: Version.id });
+        }));
 
         await Agent.findById({ id });
         return Agent.removeInstance({ id });

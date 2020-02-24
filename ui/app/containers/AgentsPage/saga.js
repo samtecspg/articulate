@@ -20,7 +20,7 @@ export function* getAgents(payload) {
   const { api } = payload;
   try {
     var filter = JSON.stringify({
-      isOriginalAgentVersion: true
+      //isOriginalAgentVersion: true
     });
     const params = {
       filter
