@@ -79,6 +79,7 @@ class AgentValidate {
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     parameters: Joi.object(),
                     enableDiscoverySheet: AgentSchema.enableDiscoverySheet.default(false),
+                    enableAgentVersions: AgentSchema.enableAgentVersions.default(false),
                     generateSlotsQuickResponses: AgentSchema.generateSlotsQuickResponses,
                     accessPolicies: AgentSchema.accessPolicies,
                     generateSlotsQuickResponsesMax: AgentSchema.generateSlotsQuickResponsesMax,
@@ -287,6 +288,7 @@ class AgentValidate {
                     modificationDate: AgentSchema.modificationDate,
                     parameters: Joi.object(),
                     enableDiscoverySheet: AgentSchema.enableDiscoverySheet,
+                    enableAgentVersions: AgentSchema.enableAgentVersions,
                     accessPolicies: AgentSchema.accessPolicies,
                     isOriginalAgentVersion: AgentSchema.isOriginalAgentVersion,
                     originalAgentVersionId: AgentSchema.originalAgentVersionId,
@@ -895,6 +897,7 @@ class AgentValidate {
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     model: AgentSchema.model,
                     enableDiscoverySheet: AgentSchema.enableDiscoverySheet,
+                    enableAgentVersions: AgentSchema.enableAgentVersions,
                     parameters: Joi.object(),
                     webhook: {
                         webhookKey: WebhookSchema.webhookKey.required().error(new Error('The webhook key is required. If this is an old export, please add a webhook key to this webhook')),

@@ -132,7 +132,8 @@ export class TrainButton extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.agentStatus === 'Training' && this.props.agentStatus === 'Ready') {
+    if (prevProps.agentStatus === 'Training' && this.props.agentStatus === 'Ready'
+      && this.props.agentSettings && this.props.agentSettings.enableAgentVersions) {
       this.props.onAddAgentVersion(this.props.currentAgentId);
     }
   }
@@ -159,7 +160,7 @@ export class TrainButton extends React.Component {
   }
 
   render() {
-    const { intl, classes, serverStatus, agentStatus, lastTraining, onTrain, isReadOnly, loadedAgentVersionName } = this.props;
+    const { intl, classes, serverStatus, agentStatus, lastTraining, onTrain, isReadOnly, loadedAgentVersionName, agentSettings } = this.props;
     return (
 
       <Grid item className={classes.trainContainer}>
@@ -190,7 +191,7 @@ export class TrainButton extends React.Component {
               {agentStatus !== 'Training' ? <FormattedMessage {...messages.trainButton} /> : <img src={training} className={classes.trainingAnimation} />}
             </Button>
             <Fragment>
-              <Button disabled={serverStatus === 'Training' || isReadOnly} className={classes.versionButton} onClick={this.handleVersionsModalOpen} key="btnVersion" variant="contained">
+              <Button disabled={(serverStatus === 'Training' || isReadOnly) || (agentSettings && !agentSettings.enableAgentVersions)} className={classes.versionButton} onClick={this.handleVersionsModalOpen} key="btnVersion" variant="contained">
                 <MuiThemeProvider theme={tooltipTheme}>
                   <Tooltip title={loadedAgentVersionName ? loadedAgentVersionName : ''} placement="top">
                     <img src={selectVersion} className={classes.selectVersionImage} />

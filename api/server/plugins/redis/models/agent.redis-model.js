@@ -95,6 +95,10 @@ const schema = {
         type: 'boolean',
         defaultValue: false
     },
+    enableAgentVersions: {
+        type: 'boolean',
+        defaultValue: false
+    },
     accessPolicies: {
         type: 'json',
         defaultValue: {}

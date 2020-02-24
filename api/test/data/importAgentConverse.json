@@ -124,6 +124,7 @@
   "creationDate": "1578418789000",
   "modificationDate": "1578419075000",
   "enableDiscoverySheet": false,
+  "enableAgentVersions": false,
   "actions": [
     {
       "actionName": "Default Fallback Action",

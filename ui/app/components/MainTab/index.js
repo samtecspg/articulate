@@ -268,6 +268,7 @@ export class MainTab extends React.Component {
                   onAddAgentVersion={onAddAgentVersion}
                   currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
                   loadedAgentVersionName={currentAgent ? currentAgent.loadedAgentVersionName : ''}
+                  agentSettings={currentAgent ? currentAgent.settings : {}}
                 />
               )}
               {disableSave ||
@@ -413,6 +414,7 @@ export class MainTab extends React.Component {
                   onAddAgentVersion={onAddAgentVersion}
                   currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
                   loadedAgentVersionName={currentAgent ? currentAgent.loadedAgentVersionName : ''}
+                  agentSettings={currentAgent ? currentAgent.settings : {}}
                 />
               )}
               {disableSave ||

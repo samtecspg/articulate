@@ -32,6 +32,7 @@ class AgentModel {
       modificationDate: Joi.string(),
       parameters: Joi.object(),
       enableDiscoverySheet: Joi.boolean(),
+      enableAgentVersions: Joi.boolean(),
       generateSlotsQuickResponses: Joi.boolean(),
       accessPolicies: Joi.object(),
       generateSlotsQuickResponsesMax: Joi.number(),
@@ -42,6 +43,7 @@ class AgentModel {
       originalAgentVersionName: Joi.string(),
       agentVersionNotes: Joi.string(),
       loadedAgentVersionName: Joi.string(),
+      enableAgentVersions: Joi.boolean(),
     };
   }
 }

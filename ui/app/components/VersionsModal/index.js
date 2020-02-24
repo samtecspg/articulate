@@ -123,7 +123,6 @@ class VersionsModal extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    debugger;
     // If its editing but changed version name
     if (this.state.isEditing
       && this.state.versionPicked

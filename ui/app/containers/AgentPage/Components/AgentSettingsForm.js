@@ -22,6 +22,7 @@ import DucklingSettings from '../../../components/DucklingSettings';
 import RasaSettings from '../../../components/RasaSettings';
 import ResponseSettings from '../../../components/ResponseSettings';
 import AutomaticQuickRepliesSettings from './AutomaticQuickRepliesSettings'
+import AgentVersionsSettings from './AgentVersionsSettings'
 import WebhookSettings from '../../../components/WebhookSettings';
 import expandedEnabled from '../../../images/expand-enabled-icon.svg';
 import expandedEnabledOpened from '../../../images/expand-enabled-opened-icon.svg';
@@ -298,6 +299,30 @@ class AgentSettingsForm extends React.Component {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <AutomaticQuickRepliesSettings
+                  settings={agentSettings}
+                  onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
+                  errorState={this.props.errorState}
+                />
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
+            <ExpansionPanel
+              expanded={expanded === 'panelAgentVersions'}
+              onChange={() => {
+                this.handleChange('expanded', 'panelAgentVersions');
+              }}
+            >
+              <ExpansionPanelSummary
+                expandIcon={this.getExpandIcon(
+                  false,
+                  expanded === 'panelAgentVersions',
+                )}
+              >
+                <Typography className={classes.panelHeading}>
+                  <FormattedMessage {...messages.agentVersionsSetting} />
+                </Typography>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                <AgentVersionsSettings
                   settings={agentSettings}
                   onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
                   errorState={this.props.errorState}
