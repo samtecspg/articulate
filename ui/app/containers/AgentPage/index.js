@@ -66,6 +66,7 @@ import {
   makeSelectAgentWebhook,
   makeSelectCurrentUser,
   makeSelectLoading,
+  makeSelectLoadingAgentVersion,
   makeSelectLocale,
   makeSelectServerStatus,
   makeSelectSettings,
@@ -377,6 +378,7 @@ export class AgentPage extends React.PureComponent {
           locale={this.props.locale}
           touched={this.props.touched}
           loading={this.props.loading}
+          loadingAgentVersion={this.props.loadingAgentVersion}
           success={this.props.success}
           onSaveAndExit={() => {
             this.submit(true);
@@ -505,6 +507,7 @@ const mapStateToProps = createStructuredSelector({
   settings: makeSelectSettings(),
   agentActions: makeSelectActions(),
   loading: makeSelectLoading(),
+  loadingAgentVersion: makeSelectLoadingAgentVersion(),
   success: makeSelectSuccessAgent(),
   touched: makeSelectAgentTouched(),
   locale: makeSelectLocale(),

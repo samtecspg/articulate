@@ -42,6 +42,12 @@ const makeSelectLoading = () =>
     globalState => globalState.loading,
   );
 
+const makeSelectLoadingAgentVersion = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.loadingAgentVersion,
+  );
+
 const makeSelectLoadingImportCategory = () =>
   createSelector(
     selectGlobal,
@@ -546,6 +552,7 @@ export {
   makeSelectSessionLoaded,
   makeSelectMissingAPI,
   makeSelectLoading,
+  makeSelectLoadingAgentVersion,
   makeSelectLoadingImportCategory,
   makeSelectError,
   makeSelectSuccess,

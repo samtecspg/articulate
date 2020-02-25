@@ -37,6 +37,7 @@ import {
   makeSelectServerStatus,
   makeSelectDocumentsStats,
   makeSelectAgentVersions,
+  makeSelectLoadingAgentVersion,
 } from '../App/selectors';
 
 import Form from './Components/Form';
@@ -137,6 +138,7 @@ export class AnalyticsPage extends React.PureComponent {
           onUpdateAgentVersion={this.props.onUpdateAgentVersion}
           onDeleteAgentVersion={this.props.onDeleteAgentVersion}
           agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
+          loadingAgentVersion={this.props.loadingAgentVersion}
         />
       </Grid>
     ) : (
@@ -359,6 +361,7 @@ const mapStateToProps = createStructuredSelector({
   serverStatus: makeSelectServerStatus(),
   stats: makeSelectDocumentsStats(),
   agentVersions: makeSelectAgentVersions(),
+  loadingAgentVersion: makeSelectLoadingAgentVersion(),
 });
 
 function mapDispatchToProps(dispatch) {

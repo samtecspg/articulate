@@ -153,6 +153,9 @@ import {
   LOAD_AGENT_VERSIONS,
   LOAD_AGENT_VERSIONS_ERROR,
   LOAD_AGENT_VERSIONS_SUCCESS,
+  LOAD_AGENT_VERSION,
+  LOAD_AGENT_VERSION_SUCCESS,
+  LOAD_AGENT_VERSION_ERROR,
   LOAD_AGENTS_SUCCESS,
   LOAD_CATEGORIES,
   LOAD_CATEGORIES_ERROR,
@@ -681,6 +684,7 @@ const initialState = Immutable({
   loading: false,
   loadingImportCategory: false,
   loadingKeywordExamplesUpdate: false,
+  loadingAgentVersion: false,
   error: false,
   success: false,
   successKeyword: false,
@@ -1373,6 +1377,19 @@ function appReducer(state = initialState, action) {
         .set('totalDocuments', initialState.totalDocuments)
         .set('loading', false)
         .set('error', action.error);
+    case LOAD_AGENT_VERSION:
+      return state
+        .set('loadingAgentVersion', true)
+        .set('error', false);
+    case LOAD_AGENT_VERSION_ERROR:
+      return state
+        .set('loadingAgentVersion', false)
+        .set('error', action.error);
+    case LOAD_AGENT_VERSIONS_SUCCESS:
+      return state
+        .set('loadingAgentVersion', false)
+        .set('error', false);
+
     /* Sayings */
     case RESET_SAYINGS:
       return state

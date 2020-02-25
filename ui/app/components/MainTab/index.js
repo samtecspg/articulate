@@ -105,6 +105,7 @@ export class MainTab extends React.Component {
       currentAgent,
       agentVersions,
       selectedTab,
+      loadingAgentVersion
     } = this.props;
     return (
       <Grid container className={classes.mainTabContainer}>
@@ -269,6 +270,7 @@ export class MainTab extends React.Component {
                   currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
                   loadedAgentVersionName={currentAgent ? currentAgent.loadedAgentVersionName : ''}
                   agentSettings={currentAgent ? currentAgent.settings : {}}
+                  loadingAgentVersion={loadingAgentVersion}
                 />
               )}
               {disableSave ||

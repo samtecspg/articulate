@@ -216,6 +216,14 @@ export function* getAgentVersion(payload) {
     var versionAgent = yield call(api.get, toAPIPath([ROUTE_AGENT, Number(versionId), ROUTE_EXPORT]));
     versionAgent.isVersionImport = true;
     versionAgent.isOriginalAgentVersion = true;
+    versionAgent.lastTraining = "2020-01-01T00:00:00Z";
+    debugger;
+    versionAgent.categories.forEach(function (category, index, categories) {
+      if (categories[index].lastTraining === 'Invalid date') {
+        categories[index].lastTraining = "2020-01-01T00:00:00Z";
+      }
+    });
+    debugger;
     var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), versionAgent);
     window.location.reload();
     yield put(loadAgentVersionSuccess());

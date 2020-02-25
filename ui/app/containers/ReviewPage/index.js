@@ -44,6 +44,7 @@ import {
   makeSelectLoadingCurrentUser,
   makeSelectLoading,
   makeSelectAgentVersions,
+  makeSelectLoadingAgentVersion
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -604,6 +605,7 @@ export class ReviewPage extends React.Component {
           onUpdateAgentVersion={this.props.onUpdateAgentVersion}
           onDeleteAgentVersion={this.props.onDeleteAgentVersion}
           agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
+          loadingAgentVersion={this.props.loadingAgentVersion}
         />
       </Grid>
     ) : (
@@ -672,6 +674,7 @@ const mapStateToProps = createStructuredSelector({
   locale: makeSelectLocale(),
   loading: makeSelectLoading(),
   agentVersions: makeSelectAgentVersions(),
+  loadingAgentVersion: makeSelectLoadingAgentVersion(),
 });
 
 function mapDispatchToProps(dispatch) {

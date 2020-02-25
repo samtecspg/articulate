@@ -68,6 +68,7 @@ import {
   makeSelectTotalActionsPage,
   makeSelectTotalKeywords,
   makeSelectTotalSayings,
+  makeSelectLoadingAgentVersion,
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -408,6 +409,7 @@ export class DialoguePage extends React.PureComponent {
             locale={this.props.locale}
             touched={this.props.touched}
             loading={this.props.loading}
+            loadingAgentVersion={this.props.loadingAgentVersion}
             success={this.props.success}
             onSaveAndExit={() => {
               this.submit(true);
@@ -563,6 +565,7 @@ const mapStateToProps = createStructuredSelector({
   totalKeywords: makeSelectTotalKeywords(),
   totalActions: makeSelectTotalActionsPage(),
   currentUser: makeSelectCurrentUser(),
+  loadingAgentVersion: makeSelectLoadingAgentVersion()
 });
 
 function mapDispatchToProps(dispatch) {
