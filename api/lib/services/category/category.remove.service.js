@@ -6,11 +6,14 @@ import {
 import RedisErrorHandler from '../../errors/redis.error-handler';
 import GlobalDefaultError from '../../errors/global.default-error';
 
-module.exports = async function ({ id, CategoryModel, AgentModel }) {
+module.exports = async function ({ id, CategoryModel, AgentModel, isBulk = false }) {
 
     const { redis } = this.server.app;
     try {
         CategoryModel = CategoryModel || await redis.factory(MODEL_CATEGORY, id);
+        if (isBulk) {
+            return CategoryModel.removeInstance();
+        }
         const categorySayingIds = await CategoryModel.getAll(MODEL_SAYING, MODEL_SAYING);
         if (categorySayingIds.length > 0) {
             const categoryName = await CategoryModel.allProperties().categoryName;

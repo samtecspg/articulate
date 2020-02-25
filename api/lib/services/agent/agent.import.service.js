@@ -53,14 +53,16 @@ module.exports = async function ({ payload }) {
                 const deletedSaying = await sayingService.remove({
                     SayingModel: saying,
                     AgentModel,
-                    CategoryModel: CategoryModel[0]
+                    CategoryModel: CategoryModel[0],
+                    isBulk: true
                 });
             }))
 
             await Promise.all(linkedCategories.map(async (category) => {
                 const deletedCategory = await categoryService.remove({
                     id: Number(category.id),
-                    AgentModel
+                    AgentModel,
+                    isBulk: true
                 });
             }))
 
@@ -74,7 +76,8 @@ module.exports = async function ({ payload }) {
             await Promise.all(linkedKeywords.map(async (keyword) => {
                 const deletedKeyword = await keywordService.remove({
                     id: Number(keyword.id),
-                    AgentModel
+                    AgentModel,
+                    isBulk: true
                 });
             }))
         }

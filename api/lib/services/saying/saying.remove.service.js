@@ -9,7 +9,7 @@ import {
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id = null, SayingModel = null, AgentModel, CategoryModel }) {
+module.exports = async function ({ id = null, SayingModel = null, AgentModel, CategoryModel, isBulk = false }) {
 
     const { redis } = this.server.app;
     const { categoryService, globalService, agentService } = this.server.services();
@@ -21,6 +21,9 @@ module.exports = async function ({ id = null, SayingModel = null, AgentModel, Ca
     try {
 
         SayingModel = SayingModel || await redis.factory(MODEL_SAYING, id);
+        if (isBulk) {
+            return await SayingModel.removeInstance();
+        }
         var possibleRemovedKeywordIds = _.map(SayingModel.property('keywords'), 'keywordId');
 
         var remainingSayingsOnAgentFromCategoryWithKeywords = await agentService.findAllSayings({ id: AgentModel.id, loadCategoryId: true, skip: 0, limit: -1 });
