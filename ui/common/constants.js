@@ -40,6 +40,7 @@ export const MODEL_USER_ACCOUNT = 'UserAccount';
 export const MODEL_ACCESS_POLICY_GROUP = 'AccessPolicyGroup';
 export const ROUTE_SEARCH = 'search';
 export const ROUTE_DELETE_BY_QUERY = '_delete_by_query?refresh';
+export const ROUTE_TEST_TRAIN = 'testTrain'
 
 export const GROUP_ACCESS_CONTROL = {
   AGENT_READ: `${MODEL_AGENT}:${ACL_ACTION_READ}`,

@@ -1,7 +1,7 @@
-import { Grid, Hidden, Icon, Tab, Tabs, Tooltip } from '@material-ui/core';
+import { Grid, Hidden, Icon, Tab, Tabs, Tooltip, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import TrainButton from '../TrainButton';
 import agentIcon from '../../images/agents-icon.svg';
@@ -140,8 +140,8 @@ export class MainTab extends React.Component {
                               )}...`}</span>
                             </Tooltip>
                           ) : (
-                            this.props.agentName
-                          )}
+                                this.props.agentName
+                              )}
                         </span>
                       </span>
                     }
@@ -149,37 +149,37 @@ export class MainTab extends React.Component {
                     to={this.props.agentURL}
                   />
                 ) : (
-                  <Tab
-                    value="agents"
-                    className={classes.agentTab}
-                    icon={gravatars[this.props.agentGravatar - 1]({
-                      color: this.props.agentUIColor,
-                      className: classes.agentIcon,
-                    })}
-                    label={
-                      <span>
-                        <span>{intl.formatMessage(messages.agent)}</span>
-                        <span className={classes.subtitle}>
-                          {newAgent && this.props.agentName === '' ? (
-                            <FormattedMessage {...messages.createSubtitle} />
-                          ) : this.props.agentName.length > 15 ? (
-                            <Tooltip
-                              title={this.props.agentName}
-                              placement="top"
-                            >
-                              <span>{`${this.props.agentName.substring(
-                                0,
-                                15,
-                              )}...`}</span>
-                            </Tooltip>
-                          ) : (
-                            this.props.agentName
-                          )}
+                    <Tab
+                      value="agents"
+                      className={classes.agentTab}
+                      icon={gravatars[this.props.agentGravatar - 1]({
+                        color: this.props.agentUIColor,
+                        className: classes.agentIcon,
+                      })}
+                      label={
+                        <span>
+                          <span>{intl.formatMessage(messages.agent)}</span>
+                          <span className={classes.subtitle}>
+                            {newAgent && this.props.agentName === '' ? (
+                              <FormattedMessage {...messages.createSubtitle} />
+                            ) : this.props.agentName.length > 15 ? (
+                              <Tooltip
+                                title={this.props.agentName}
+                                placement="top"
+                              >
+                                <span>{`${this.props.agentName.substring(
+                                  0,
+                                  15,
+                                )}...`}</span>
+                              </Tooltip>
+                            ) : (
+                                  this.props.agentName
+                                )}
+                          </span>
                         </span>
-                      </span>
-                    }
-                  />
-                )}
+                      }
+                    />
+                  )}
                 <Tab
                   className={classes.vDividerIconTab}
                   icon={<img className={classes.vDividerIcon} src={vDivider} />}
@@ -196,14 +196,14 @@ export class MainTab extends React.Component {
                     disabled={!enableTabs}
                   />
                 ) : (
-                  <Tab
-                    value="dialogue"
-                    className={classes.tab}
-                    icon={<img className={classes.icon} src={dialogueIcon} />}
-                    label={intl.formatMessage(messages.dialogue)}
-                    disabled={!enableTabs}
-                  />
-                )}
+                    <Tab
+                      value="dialogue"
+                      className={classes.tab}
+                      icon={<img className={classes.icon} src={dialogueIcon} />}
+                      label={intl.formatMessage(messages.dialogue)}
+                      disabled={!enableTabs}
+                    />
+                  )}
                 {this.props.reviewURL ? (
                   <Tab
                     value="review"
@@ -215,14 +215,14 @@ export class MainTab extends React.Component {
                     disabled={!enableTabs}
                   />
                 ) : (
-                  <Tab
-                    value="review"
-                    className={classes.tab}
-                    icon={<img className={classes.icon} src={reviewIcon} />}
-                    label={intl.formatMessage(messages.review)}
-                    disabled={!enableTabs}
-                  />
-                )}
+                    <Tab
+                      value="review"
+                      className={classes.tab}
+                      icon={<img className={classes.icon} src={reviewIcon} />}
+                      label={intl.formatMessage(messages.review)}
+                      disabled={!enableTabs}
+                    />
+                  )}
                 {this.props.analyticsURL ? (
                   <Tab
                     value="analytics"
@@ -234,42 +234,52 @@ export class MainTab extends React.Component {
                     disabled={!enableTabs}
                   />
                 ) : (
-                  <Tab
-                    value="analytics"
-                    className={classes.tab}
-                    icon={<img className={classes.icon} src={analyticsIcon} />}
-                    label={intl.formatMessage(messages.analytics)}
-                    disabled={!enableTabs}
-                  />
-                )}
+                    <Tab
+                      value="analytics"
+                      className={classes.tab}
+                      icon={<img className={classes.icon} src={analyticsIcon} />}
+                      label={intl.formatMessage(messages.analytics)}
+                      disabled={!enableTabs}
+                    />
+                  )}
               </Tabs>
             </Grid>
             <Grid className={classes.actionsContainer}>
               {newAgent ? null : (
-                <TrainButton
-                  locale={locale}
-                  agentStatus={agentStatus}
-                  serverStatus={serverStatus}
-                  lastTraining={lastTraining}
-                  onTrain={onTrain}
-                  isReadOnly={isReadOnly}
-                />
+                <Fragment>
+                  <TrainButton
+                    locale={locale}
+                    agentStatus={agentStatus}
+                    serverStatus={serverStatus}
+                    lastTraining={lastTraining}
+                    onTrain={onTrain}
+                    isReadOnly={isReadOnly}
+                  />
+                  <Button
+                    onClick={() => {
+                      this.props.onTestAgentTrain(this.props.agent.id)
+                    }
+                    }
+                  >
+                    Click me
+                </Button>
+                </Fragment>
               )}
               {disableSave ||
-              (!this.props.success && !this.props.touched) ? null : (
-                <Grid item className={classes.actionContainer}>
-                  <Grid className={classes.buttonContainer}>
-                    <SaveButton
-                      touched={this.props.touched}
-                      formError={this.props.formError}
-                      success={this.props.success}
-                      loading={this.props.loading}
-                      label={messages.finishButton}
-                      onClick={this.props.onFinishAction}
-                    />
+                (!this.props.success && !this.props.touched) ? null : (
+                  <Grid item className={classes.actionContainer}>
+                    <Grid className={classes.buttonContainer}>
+                      <SaveButton
+                        touched={this.props.touched}
+                        formError={this.props.formError}
+                        success={this.props.success}
+                        loading={this.props.loading}
+                        label={messages.finishButton}
+                        onClick={this.props.onFinishAction}
+                      />
+                    </Grid>
                   </Grid>
-                </Grid>
-              )}
+                )}
             </Grid>
           </Grid>
           {!this.props.agentURL
@@ -315,12 +325,12 @@ export class MainTab extends React.Component {
                     to={this.props.agentURL}
                   />
                 ) : (
-                  <Tab
-                    value="agents"
-                    className={classes.tab}
-                    icon={<img className={classes.icon} src={agentIcon} />}
-                  />
-                )}
+                    <Tab
+                      value="agents"
+                      className={classes.tab}
+                      icon={<img className={classes.icon} src={agentIcon} />}
+                    />
+                  )}
                 <Tab
                   className={classes.vDividerIconTab}
                   icon={<img className={classes.vDividerIcon} src={vDivider} />}
@@ -336,13 +346,13 @@ export class MainTab extends React.Component {
                     disabled={!enableTabs}
                   />
                 ) : (
-                  <Tab
-                    value="dialogue"
-                    className={classes.tab}
-                    icon={<img className={classes.icon} src={dialogueIcon} />}
-                    disabled={!enableTabs}
-                  />
-                )}
+                    <Tab
+                      value="dialogue"
+                      className={classes.tab}
+                      icon={<img className={classes.icon} src={dialogueIcon} />}
+                      disabled={!enableTabs}
+                    />
+                  )}
                 {this.props.reviewURL ? (
                   <Tab
                     value="review"
@@ -354,14 +364,14 @@ export class MainTab extends React.Component {
                     disabled={!enableTabs}
                   />
                 ) : (
-                  <Tab
-                    value="review"
-                    className={classes.tab}
-                    icon={<img className={classes.icon} src={reviewIcon} />}
-                    label={intl.formatMessage(messages.review)}
-                    disabled={!enableTabs}
-                  />
-                )}
+                    <Tab
+                      value="review"
+                      className={classes.tab}
+                      icon={<img className={classes.icon} src={reviewIcon} />}
+                      label={intl.formatMessage(messages.review)}
+                      disabled={!enableTabs}
+                    />
+                  )}
                 {this.props.analyticsURL ? (
                   <Tab
                     value="analytics"
@@ -373,14 +383,14 @@ export class MainTab extends React.Component {
                     disabled={!enableTabs}
                   />
                 ) : (
-                  <Tab
-                    value="analytics"
-                    className={classes.tab}
-                    icon={<img className={classes.icon} src={analyticsIcon} />}
-                    label={intl.formatMessage(messages.analytics)}
-                    disabled={!enableTabs}
-                  />
-                )}
+                    <Tab
+                      value="analytics"
+                      className={classes.tab}
+                      icon={<img className={classes.icon} src={analyticsIcon} />}
+                      label={intl.formatMessage(messages.analytics)}
+                      disabled={!enableTabs}
+                    />
+                  )}
               </Tabs>
             </Grid>
             <Grid className={classes.actionsContainer}>
@@ -394,30 +404,30 @@ export class MainTab extends React.Component {
                 />
               )}
               {disableSave ||
-              (!this.props.success && !this.props.touched) ? null : (
-                <Grid item className={classes.actionContainer}>
-                  <Hidden only={['xl', 'lg']}>
-                    <a
-                      onClick={this.props.onFinishAction}
-                      className={`${classes.icon} ${classes.link}`}
-                    >
-                      <Icon>save</Icon>
-                    </a>
-                  </Hidden>
-                  <Hidden only={['sm', 'xs', 'md']}>
-                    <Grid className={classes.buttonContainer}>
-                      <SaveButton
-                        touched={this.props.touched}
-                        formError={this.props.formError}
-                        success={this.props.success}
-                        loading={this.props.loading}
-                        label={messages.finishButton}
+                (!this.props.success && !this.props.touched) ? null : (
+                  <Grid item className={classes.actionContainer}>
+                    <Hidden only={['xl', 'lg']}>
+                      <a
                         onClick={this.props.onFinishAction}
-                      />
-                    </Grid>
-                  </Hidden>
-                </Grid>
-              )}
+                        className={`${classes.icon} ${classes.link}`}
+                      >
+                        <Icon>save</Icon>
+                      </a>
+                    </Hidden>
+                    <Hidden only={['sm', 'xs', 'md']}>
+                      <Grid className={classes.buttonContainer}>
+                        <SaveButton
+                          touched={this.props.touched}
+                          formError={this.props.formError}
+                          success={this.props.success}
+                          loading={this.props.loading}
+                          label={messages.finishButton}
+                          onClick={this.props.onFinishAction}
+                        />
+                      </Grid>
+                    </Hidden>
+                  </Grid>
+                )}
             </Grid>
           </Grid>
           {!this.props.agentURL

@@ -52,6 +52,7 @@ import {
   toggleConversationBar,
   trainAgent,
   updateAgent,
+  testAgentTrain,
 } from '../App/actions';
 import {
   makeSelectActions,
@@ -433,11 +434,13 @@ export class AgentPage extends React.PureComponent {
           reviewURL={`/agent/${this.props.agent.id}/review`}
           analyticsForm={Link}
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
+          onTestAgentTrain={this.props.onTestAgentTrain}
+          agent={this.props.agent}
         />
       </Grid>
     ) : (
-      <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
-    );
+        <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
+      );
   }
 }
 
@@ -601,6 +604,9 @@ function mapDispatchToProps(dispatch) {
     onLoadUsers: () => {
       dispatch(loadUsers());
     },
+    onTestAgentTrain: (id) => {
+      dispatch(testAgentTrain(id));
+    }
   };
 }
 

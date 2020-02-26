@@ -1084,6 +1084,15 @@ class AgentValidate {
                 };
             })()
         };
+
+        this.testTrain = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })()
+        };
     }
 }
 

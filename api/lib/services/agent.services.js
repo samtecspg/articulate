@@ -57,6 +57,7 @@ import UpdateWebhook from './agent/agent.update-webhook.service';
 import UpsertPostFormatInAction from './agent/agent.upsert-post-format-in-action.service';
 import UpsertSayingInCategory from './agent/agent.upsert-saying-in-category.service';
 import UpsertWebhookInAction from './agent/agent.upsert-webhook-in-action.service';
+import testTrain from './agent/agent.test.train.service';
 
 module.exports = class AgentService extends Schmervice.Service {
 
@@ -344,6 +345,11 @@ module.exports = class AgentService extends Schmervice.Service {
     async findAllSessions() {
 
         return await FindAllSessions.apply(this, arguments);
+    }
+
+    async testTrain() {
+
+        return await testTrain.apply(this, arguments);
     }
 };
 

@@ -77,6 +77,7 @@ export const ROUTE_EXTERNAL = 'external';
 export const ROUTE_USER_ACCOUNT = 'user';
 export const ROUTE_USER_IDENTITY = 'identity';
 export const ROUTE_ACCESS_CONTROL = 'ac';
+export const ROUTE_TEST_TRAIN = 'testTrain'
 
 // STATUS
 export const STATUS_READY = 'Ready';

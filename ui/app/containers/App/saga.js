@@ -16,6 +16,7 @@ import {
   ROUTE_TRAIN,
   ROUTE_USER,
   ROUTE_WEBHOOK,
+  ROUTE_TEST_TRAIN
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
@@ -39,6 +40,8 @@ import {
   trainAgentError,
   updateSettingsError,
   updateSettingSuccess,
+  testAgentTrainError,
+  testAgentTrainSuccess
 } from './actions';
 import {
   LOAD_AGENT,
@@ -51,6 +54,7 @@ import {
   TOGGLE_CONVERSATION_BAR,
   TRAIN_AGENT,
   UPDATE_SETTING,
+  TEST_AGENT_TRAIN
 } from './constants';
 import {
   makeSelectAgent,
@@ -204,6 +208,16 @@ export function* getCurrentUser(payload) {
   }
 }
 
+export function* testAgentTrain(payload) {
+  const { api, id } = payload;
+  try {
+    const result = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_TEST_TRAIN]));
+    yield put(testAgentTrainSuccess({ result }));
+  } catch (err) {
+    yield put(testAgentTrainError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
   yield takeLatest(LOAD_SETTINGS, getSettings);
@@ -217,4 +231,5 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_CURRENT_USER, getCurrentUser);
   yield takeLatest(LOGOUT_USER, logoutUser);
   yield takeLatest(LOAD_CURRENT_USER, getCurrentUser);
+  yield takeLatest(TEST_AGENT_TRAIN, testAgentTrain);
 }
