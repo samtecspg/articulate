@@ -1,3 +1,4 @@
+import Hoek from 'hoek';
 import Joi from 'joi';
 import _ from 'lodash';
 import Package from '../../../package.json';
@@ -9,17 +10,25 @@ import {
 } from '../../../util/constants';
 
 const name = P_GBAC;
-//const logger = require('../../../util/logger')({ name: `plugin:${name}` });
+const logger = require('../../../util/logger')({ name: `plugin:${name}` });
 const internals = {};
 const defaults = {};
 const schemas = {};
 
-defaults.options = {};
+defaults.options = {
+    enabled: true
+};
 
-schemas.registerOptions = Joi.object({});
+schemas.registerOptions = Joi.object({
+    enabled: Joi.boolean().optional()
+});
 
 internals.validate = async ({ groups = [], policies = [] }) => {
 
+    if (!internals.options.enabled) {
+        logger.info('validate disabled');
+        return [];
+    }
     const groupPolicies = await internals.getSimplifiedPolicy({ groups });
 
     if (!groupPolicies) {
@@ -42,6 +51,10 @@ internals.validate = async ({ groups = [], policies = [] }) => {
 
 internals.getGroupPolicy = async ({ group }) => {
 
+    if (!internals.options.enabled) {
+        logger.info('validate disabled');
+        return [];
+    }
     const { redis } = internals.server.app;
     const Model = await redis.factory(MODEL_ACCESS_POLICY_GROUP);
     const accessPolicyGroup = await Model.searchByField({ field: PARAM_NAME, value: group });
@@ -66,7 +79,6 @@ internals.getSimplifiedPolicy = async ({ groups = [] }) => {
             .map((policy) => policy.rules), // Get the rules list for each one
         (o, s) => o || s); // Merge
 
-
     return { ...Model.defaults.rules, ...simplified };
 };
 
@@ -76,6 +88,7 @@ module.exports = {
     register: (server, options) => {
 
         Joi.assert(options, schemas.registerOptions, `[${name}] option`);
+        options = Hoek.applyToDefaults(defaults.options, options);
         internals.server = server;
         internals.options = options;
         server.app[name] = {
