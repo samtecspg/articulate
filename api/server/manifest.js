@@ -141,15 +141,15 @@ module.exports = new Confidence.Store({
             },
             {
                 plugin: './plugins/gbac',
-                options: {}
+                options: { enabled: AUTH_ENABLED }
             },
             {
                 plugin: './plugins/hapi-gbac',
-                options: {}
+                options: { enabled: AUTH_ENABLED }
             },
             {
                 plugin: './plugins/hapi-abac',
-                options: {}
+                options: { enabled: AUTH_ENABLED }
             },
             {
                 plugin: './plugins/swagger',

@@ -6,6 +6,7 @@ import FindById from './user/user.find-by-id.service';
 import RemoveById from './user/user.remove-by-id.service';
 import UpdateById from './user/user.update-by-id.service';
 import Validate from './user/user.validate.service';
+import NoAuthUser from './user/user.no-auth-user.service';
 
 module.exports = class UserService extends Schmervice.Service {
 
@@ -40,5 +41,10 @@ module.exports = class UserService extends Schmervice.Service {
     async updateById() {
 
         return await UpdateById.apply(this, arguments);
+    }
+
+    async noAuthUser() {
+
+        return await NoAuthUser.apply(this, arguments);
     }
 };
