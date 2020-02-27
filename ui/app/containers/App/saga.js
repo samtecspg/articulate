@@ -213,8 +213,8 @@ export function* testAgentTrain(payload) {
   try {
     const result = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_TEST_TRAIN]));
     yield put(testAgentTrainSuccess({ result }));
-  } catch (err) {
-    yield put(testAgentTrainError(err));
+  } catch (error) {
+    yield put(testAgentTrainError(error));
   }
 }
 

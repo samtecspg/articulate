@@ -779,7 +779,7 @@ export function testAgentTrain(id) {
   };
 }
 
-export function testAgentTrainError() {
+export function testAgentTrainError(error) {
   return {
     type: TEST_AGENT_TRAIN_ERROR,
     error,
