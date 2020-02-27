@@ -26,7 +26,6 @@ module.exports = async function ({ id, debug = false }) {
         let errorCounter = 0;
         for (sayingCounter = 0; sayingCounter < agentSayings.data.length; sayingCounter++) {
 
-            result.data[errorCounter] = {};
             let errorPresent = false;
 
             let ParsedDocument = await agentService.parse({ AgentModel, text: agentSayings.data[sayingCounter].userSays, timezone: AgentModel.property('timezone'), saveDocument: false });
@@ -34,6 +33,7 @@ module.exports = async function ({ id, debug = false }) {
             let recognizedAction = ParsedDocument.recognized_action;
             let sayingAction = agentSayings.data[sayingCounter].actions.join('+__+');
             if (recognizedAction !== sayingAction) {
+                result.data[errorCounter] = {};
                 result.data[errorCounter].saying = agentSayings.data[sayingCounter];
                 result.data[errorCounter].recognizedAction = recognizedAction;
                 result.data[errorCounter].sayingAction = sayingAction
@@ -46,10 +46,14 @@ module.exports = async function ({ id, debug = false }) {
             let { recognizedKeywordsMissing, sayingKeywordsMissing } = getKeywordArraysDifference(recognizedKeywords, sayingKeywords);
 
             if (recognizedKeywordsMissing.length > 0 || sayingKeywordsMissing.length > 0) {
+                if (!result.data[errorCounter]) {
+                    result.data[errorCounter] = {};
+                }
+
                 result.data[errorCounter].recognizedKeywordsMissing = recognizedKeywordsMissing;
                 result.data[errorCounter].sayingKeywordsMissing = sayingKeywordsMissing;
-                result.data[errorCounter].recognizedKeywordsMissingError = result.data[sayingCounter].recognizedKeywordsMissing.length > 0;
-                result.data[errorCounter].sayingKeywordsMissingError = result.data[sayingCounter].sayingKeywordsMissing.length > 0;
+                result.data[errorCounter].recognizedKeywordsMissingError = recognizedKeywordsMissing.length > 0;
+                result.data[errorCounter].sayingKeywordsMissingError = sayingKeywordsMissing.length > 0;
                 errorPresent = true;
             }
 
