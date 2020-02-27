@@ -34,7 +34,7 @@ module.exports = async function ({ data, isImport = false, returnModel = false, 
     const defaults = AgentModel.defaults;
     const ownerAccessPolicy = _.mapValues(defaults.accessPolicies, () => true);
     data.accessPolicies = {
-        //[userCredentials.id]: ownerAccessPolicy
+        [userCredentials.id]: ownerAccessPolicy
     };
     if (agentLimit !== -1 && agentCount >= agentLimit) {
         return Promise.reject(OverLimitErrorHandler({ level: agentCount, limit: agentLimit, type: 'Agents' }));
