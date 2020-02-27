@@ -284,6 +284,9 @@ import {
   TOGGLE_CONVERSATION_BAR,
   TRAIN_AGENT,
   TRAIN_AGENT_ERROR,
+  TEST_AGENT_TRAIN,
+  TEST_AGENT_TRAIN_ERROR,
+  TEST_AGENT_TRAIN_SUCCESS,
   UNCHAIN_ACTION_FROM_RESPONSE,
   UNTAG_KEYWORD,
   UNTAG_MODIFIER_KEYWORD,
@@ -891,6 +894,28 @@ export function trainAgentError(error) {
   return {
     type: TRAIN_AGENT_ERROR,
     error,
+  };
+}
+
+export function testAgentTrain(id) {
+  return {
+    type: TEST_AGENT_TRAIN,
+    id,
+    apiCall: true,
+  };
+}
+
+export function testAgentTrainError() {
+  return {
+    type: TEST_AGENT_TRAIN_ERROR,
+    error,
+  };
+}
+
+export function testAgentTrainSuccess(result) {
+  return {
+    type: TEST_AGENT_TRAIN_SUCCESS,
+    result,
   };
 }
 
