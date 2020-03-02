@@ -94,10 +94,18 @@ export class MainTab extends React.Component {
       serverStatus,
       lastTraining,
       onTrain,
+      onLoadAgentVersion,
+      onDeleteAgentVersion,
+      onUpdateAgentVersion,
+      onAddAgentVersion,
       newAgent,
       disableSave,
       locale,
-      isReadOnly
+      isReadOnly,
+      currentAgent,
+      agentVersions,
+      selectedTab,
+      loadingAgentVersion
     } = this.props;
     return (
       <Grid container className={classes.mainTabContainer}>
@@ -254,6 +262,16 @@ export class MainTab extends React.Component {
                     lastTraining={lastTraining}
                     onTrain={onTrain}
                     isReadOnly={isReadOnly}
+                    agentVersions={agentVersions}
+                    selectedTab={selectedTab}
+                    onLoadAgentVersion={onLoadAgentVersion}
+                    onUpdateAgentVersion={onUpdateAgentVersion}
+                    onDeleteAgentVersion={onDeleteAgentVersion}
+                    onAddAgentVersion={onAddAgentVersion}
+                    currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
+                    loadedAgentVersionName={currentAgent ? currentAgent.loadedAgentVersionName : ''}
+                    agentSettings={currentAgent ? currentAgent.settings : {}}
+                    loadingAgentVersion={loadingAgentVersion}
                   />
                   <Button
                     onClick={() => {
@@ -401,6 +419,14 @@ export class MainTab extends React.Component {
                   serverStatus={serverStatus}
                   lastTraining={lastTraining}
                   onTrain={onTrain}
+                  selectedTab={this.state.selectedTab}
+                  onLoadAgentVersion={onLoadAgentVersion}
+                  onUpdateAgentVersion={onUpdateAgentVersion}
+                  onDeleteAgentVersion={onDeleteAgentVersion}
+                  onAddAgentVersion={onAddAgentVersion}
+                  currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
+                  loadedAgentVersionName={currentAgent ? currentAgent.loadedAgentVersionName : ''}
+                  agentSettings={currentAgent ? currentAgent.settings : {}}
                 />
               )}
               {disableSave ||
@@ -469,8 +495,13 @@ MainTab.propTypes = {
   reviewForm: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   reviewURL: PropTypes.string,
   agentName: PropTypes.string,
+  currentAgent: PropTypes.object,
   onFinishAction: PropTypes.func,
   onTrain: PropTypes.func,
+  onLoadAgentVersion: PropTypes.func,
+  onAddAgentVersion: PropTypes.func,
+  onUpdateAgentVersion: PropTypes.func,
+  onDeleteAgentVersion: PropTypes.func,
   agentStatus: PropTypes.string,
   lastTraining: PropTypes.string,
   formError: PropTypes.bool,
@@ -480,6 +511,7 @@ MainTab.propTypes = {
   locale: PropTypes.string,
   serverStatus: PropTypes.string,
   isReadOnly: PropTypes.bool,
+  agentVersions: PropTypes.array
 };
 
 MainTab.defaultProps = {

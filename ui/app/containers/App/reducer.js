@@ -150,6 +150,12 @@ import {
   LOAD_AGENT_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
+  LOAD_AGENT_VERSIONS,
+  LOAD_AGENT_VERSIONS_ERROR,
+  LOAD_AGENT_VERSIONS_SUCCESS,
+  LOAD_AGENT_VERSION,
+  LOAD_AGENT_VERSION_SUCCESS,
+  LOAD_AGENT_VERSION_ERROR,
   LOAD_AGENTS_SUCCESS,
   LOAD_CATEGORIES,
   LOAD_CATEGORIES_ERROR,
@@ -496,6 +502,7 @@ const initialState = Immutable({
   channels: false,
   connections: false,
   agents: false,
+  agentVersions: [],
   currentAgent: {
     gravatar: '',
     uiColor: '',
@@ -678,6 +685,7 @@ const initialState = Immutable({
   loading: false,
   loadingImportCategory: false,
   loadingKeywordExamplesUpdate: false,
+  loadingAgentVersion: false,
   error: false,
   success: false,
   successKeyword: false,
@@ -842,6 +850,21 @@ function appReducer(state = initialState, action) {
     case LOAD_AGENTS_SUCCESS:
       return state
         .set('agents', action.agents)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_AGENT_VERSIONS:
+      return state
+        .set('agentVersions', false)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_AGENT_VERSIONS_ERROR:
+      return state
+        .set('agentVersions', false)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_AGENT_VERSIONS_SUCCESS:
+      return state
+        .set('agentVersions', action.agentVersions)
         .set('loading', false)
         .set('error', false);
     case EXPORT_AGENT:
@@ -1363,6 +1386,18 @@ function appReducer(state = initialState, action) {
           subtype: 'testTrainError'
         }),
       );
+    case LOAD_AGENT_VERSION:
+      return state
+        .set('loadingAgentVersion', true)
+        .set('error', false);
+    case LOAD_AGENT_VERSION_ERROR:
+      return state
+        .set('loadingAgentVersion', false)
+        .set('error', action.error);
+    case LOAD_AGENT_VERSIONS_SUCCESS:
+      return state
+        .set('loadingAgentVersion', false)
+        .set('error', false);
     /* Sayings */
     case RESET_SAYINGS:
       return state

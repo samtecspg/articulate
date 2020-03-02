@@ -5,12 +5,15 @@ import {
 import GlobalDefaultError from '../../errors/global.default-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id, KeywordModel }) {
+module.exports = async function ({ id, KeywordModel, isBulk = false }) {
 
     const { redis } = this.server.app;
     const { globalService } = await this.server.services();
     try {
         KeywordModel = KeywordModel || await redis.factory(MODEL_KEYWORD, id);
+        if (isBulk) {
+            return KeywordModel.removeInstance();
+        }
         //const keywordCategoryIds = await KeywordModel.getAll(MODEL_CATEGORY, MODEL_CATEGORY);
         const categories = await globalService.loadAllLinked({ parentModel: KeywordModel, model: MODEL_CATEGORY });
         if (categories.length > 0) {

@@ -43,6 +43,8 @@ import {
   makeSelectServerStatus,
   makeSelectLoadingCurrentUser,
   makeSelectLoading,
+  makeSelectAgentVersions,
+  makeSelectLoadingAgentVersion
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -597,6 +599,13 @@ export class ReviewPage extends React.Component {
           dialogueURL={`/agent/${agent.id}/dialogue`}
           analyticsForm={Link}
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
+          currentAgent={this.props.agent}
+          onAddAgentVersion={this.props.onAddAgentVersion}
+          onLoadAgentVersion={this.props.onLoadAgentVersion}
+          onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+          onDeleteAgentVersion={this.props.onDeleteAgentVersion}
+          agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
+          loadingAgentVersion={this.props.loadingAgentVersion}
         />
       </Grid>
     ) : (
@@ -664,6 +673,8 @@ const mapStateToProps = createStructuredSelector({
   sessions: makeSelectSessions(),
   locale: makeSelectLocale(),
   loading: makeSelectLoading(),
+  agentVersions: makeSelectAgentVersions(),
+  loadingAgentVersion: makeSelectLoadingAgentVersion(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -696,7 +707,19 @@ function mapDispatchToProps(dispatch) {
     ),
     onGoToUrl: url => {
       dispatch(push(url));
-    }
+    },
+    onLoadAgentVersion: (versionId, currentAgentId) => {
+      dispatch(Actions.loadAgentVersion(versionId, currentAgentId));
+    },
+    onUpdateAgentVersion: (version) => {
+      dispatch(Actions.updateAgentVersion(version));
+    },
+    onDeleteAgentVersion: (versionId, currentAgentId) => {
+      dispatch(Actions.deleteAgentVersion(versionId, currentAgentId));
+    },
+    onAddAgentVersion: id => {
+      dispatch(Actions.addAgentVersion(id));
+    },
   };
 }
 

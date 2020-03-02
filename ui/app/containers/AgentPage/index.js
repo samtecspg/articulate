@@ -53,6 +53,10 @@ import {
   trainAgent,
   updateAgent,
   testAgentTrain,
+  addAgentVersion,
+  loadAgentVersion,
+  updateAgentVersion,
+  deleteAgentVersion,
 } from '../App/actions';
 import {
   makeSelectActions,
@@ -63,11 +67,13 @@ import {
   makeSelectAgentWebhook,
   makeSelectCurrentUser,
   makeSelectLoading,
+  makeSelectLoadingAgentVersion,
   makeSelectLocale,
   makeSelectServerStatus,
   makeSelectSettings,
   makeSelectSuccessAgent,
   makeSelectUsers,
+  makeSelectAgentVersions,
 } from '../App/selectors';
 
 import Form from './Components/Form';
@@ -373,11 +379,13 @@ export class AgentPage extends React.PureComponent {
           locale={this.props.locale}
           touched={this.props.touched}
           loading={this.props.loading}
+          loadingAgentVersion={this.props.loadingAgentVersion}
           success={this.props.success}
           onSaveAndExit={() => {
             this.submit(true);
           }}
           agentName={this.props.agent.agentName}
+          currentAgent={this.props.agent}
           agentGravatar={this.props.agent.gravatar ? this.props.agent.gravatar : 1}
           agentUIColor={this.props.agent.uiColor}
           newAgent={this.state.isNewAgent}
@@ -436,6 +444,11 @@ export class AgentPage extends React.PureComponent {
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
           onTestAgentTrain={this.props.onTestAgentTrain}
           agent={this.props.agent}
+          onAddAgentVersion={this.props.onAddAgentVersion}
+          onLoadAgentVersion={this.props.onLoadAgentVersion}
+          onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+          onDeleteAgentVersion={this.props.onDeleteAgentVersion}
+          agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
         />
       </Grid>
     ) : (
@@ -471,9 +484,9 @@ AgentPage.propTypes = {
   onEditAgent: PropTypes.func,
   onSuccess: PropTypes.func,
   onTrain: PropTypes.func,
+  onGoToUrl: PropTypes.func,
   onDelete: PropTypes.func,
   agentActions: PropTypes.array,
-  onGoToUrl: PropTypes.func,
   onAddNewParameter: PropTypes.func,
   onDeleteParameter: PropTypes.func,
   onChangeParameterName: PropTypes.func,
@@ -497,11 +510,13 @@ const mapStateToProps = createStructuredSelector({
   settings: makeSelectSettings(),
   agentActions: makeSelectActions(),
   loading: makeSelectLoading(),
+  loadingAgentVersion: makeSelectLoadingAgentVersion(),
   success: makeSelectSuccessAgent(),
   touched: makeSelectAgentTouched(),
   locale: makeSelectLocale(),
   users: makeSelectUsers(),
   currentUser: makeSelectCurrentUser(),
+  agentVersions: makeSelectAgentVersions()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -606,7 +621,19 @@ function mapDispatchToProps(dispatch) {
     },
     onTestAgentTrain: (id) => {
       dispatch(testAgentTrain(id));
-    }
+    },
+    onLoadAgentVersion: (versionId, currentAgentId) => {
+      dispatch(loadAgentVersion(versionId, currentAgentId));
+    },
+    onUpdateAgentVersion: (version) => {
+      dispatch(updateAgentVersion(version));
+    },
+    onDeleteAgentVersion: (versionId, currentAgentId) => {
+      dispatch(deleteAgentVersion(versionId, currentAgentId));
+    },
+    onAddAgentVersion: id => {
+      dispatch(addAgentVersion(id));
+    },
   };
 }
 

@@ -16,7 +16,10 @@ import {
   ROUTE_TRAIN,
   ROUTE_USER,
   ROUTE_WEBHOOK,
-  ROUTE_TEST_TRAIN
+  ROUTE_TEST_TRAIN,
+  ROUTE_EXPORT,
+  ROUTE_IMPORT
+
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
@@ -24,8 +27,21 @@ import {
   putSetting,
 } from '../SettingsPage/saga';
 import {
+  loadAgent,
   loadAgentError,
   loadAgentSuccess,
+  loadAgentVersions,
+  loadAgentVersionsError,
+  loadAgentVersionsSuccess,
+  addAgentVersionError,
+  addAgentVersionSuccess,
+  loadAgentVersion,
+  loadAgentVersionError,
+  loadAgentVersionSuccess,
+  updateAgentVersionError,
+  updateAgentVersionSuccess,
+  deleteAgentVersionError,
+  deleteAgentVersionSuccess,
   loadCurrentUserError,
   loadCurrentUserSuccess,
   loadServerInfoError,
@@ -45,6 +61,9 @@ import {
 } from './actions';
 import {
   LOAD_AGENT,
+  LOAD_AGENT_VERSIONS,
+  ADD_AGENT_VERSION,
+  LOAD_AGENT_VERSION,
   LOAD_CURRENT_USER,
   LOAD_SERVER_INFO,
   LOAD_SETTINGS,
@@ -54,7 +73,9 @@ import {
   TOGGLE_CONVERSATION_BAR,
   TRAIN_AGENT,
   UPDATE_SETTING,
-  TEST_AGENT_TRAIN
+  TEST_AGENT_TRAIN,
+  UPDATE_AGENT_VERSION,
+  DELETE_AGENT_VERSION
 } from './constants';
 import {
   makeSelectAgent,
@@ -152,8 +173,98 @@ export function* getAgent(payload) {
       postFormat = response;
     }
     yield put(loadAgentSuccess({ agent, webhook, postFormat }));
+    yield put(loadAgentVersions(agent.originalAgentVersionId == -1 ? agent.id : agent.originalAgentVersionId));
   } catch (err) {
     yield put(loadAgentError(err));
+  }
+}
+
+export function* postagentVersion(payload) {
+  const { api, id } = payload;
+  try {
+    var agent = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
+    agent.originalAgentVersionName = agent.agentName;
+    var date = new Date();
+    date = date.toString();
+    agent.agentName = date + '_' + agent.agentName;
+    agent.loadedAgentVersionName = agent.agentName;
+    agent.isOriginalAgentVersion = false;
+    agent.originalAgentVersionId = Number(id);
+    agent.agentVersionNotes = '';
+    var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), agent);
+    yield put(addAgentVersionSuccess(importResponse));
+    yield put(loadAgentVersions(id));
+  } catch (err) {
+    yield put(addAgentVersionError(err));
+  }
+}
+
+export function* getagentVersions(payload) {
+  const { api, originalAgentVersionId } = payload;
+  try {
+    var filter = JSON.stringify({
+      originalAgentVersionId: Number(originalAgentVersionId)
+    });
+    const params = {
+      filter
+    };
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT]), { params });
+    yield put(loadAgentVersionsSuccess(response.data));
+  } catch (err) {
+    yield put(loadAgentVersionsError(_.get(err, 'response.data', true)));
+  }
+}
+
+export function* getAgentVersion(payload) {
+  const { api, versionId, currentAgentId } = payload;
+  try {
+    var versionAgent = yield call(api.get, toAPIPath([ROUTE_AGENT, Number(versionId), ROUTE_EXPORT]));
+    versionAgent.isVersionImport = true;
+    versionAgent.isOriginalAgentVersion = true;
+    versionAgent.lastTraining = "2020-01-01T00:00:00Z";
+    versionAgent.categories.forEach(function (category, index, categories) {
+      if (categories[index].lastTraining === 'Invalid date') {
+        categories[index].lastTraining = "2020-01-01T00:00:00Z";
+      }
+    });
+    var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), versionAgent);
+    window.location.reload();
+    yield put(loadAgentVersionSuccess());
+  } catch (err) {
+    yield put(loadAgentVersionError(err));
+  }
+}
+
+export function* putAgentVersion(payload) {
+  const { api, version } = payload;
+  try {
+    var id = version.id;
+    var currentAgentId = version.originalAgentVersionId
+    delete version.id;
+    delete version.settings;
+    delete version.status;
+    delete version.lastTraining;
+
+    const response = yield call(
+      api.put,
+      toAPIPath([ROUTE_AGENT, id]),
+      version,
+    );
+    yield put(updateAgentVersionSuccess(response));
+    yield put(loadAgentVersions(currentAgentId));
+  } catch (err) {
+    yield put(updateAgentVersionError(err));
+  }
+}
+
+export function* deleteAgentVersion(payload) {
+  const { api, versionId, currentAgentId } = payload;
+  try {
+    yield call(api.delete, toAPIPath([ROUTE_AGENT, versionId]));
+    yield put(deleteAgentVersionSuccess());
+    yield put(loadAgentVersions(currentAgentId));
+  } catch (err) {
+    yield put(deleteAgentVersionError(err));
   }
 }
 
@@ -220,6 +331,11 @@ export function* testAgentTrain(payload) {
 
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
+  yield takeLatest(LOAD_AGENT_VERSIONS, getagentVersions);
+  yield takeLatest(LOAD_AGENT_VERSION, getAgentVersion);
+  yield takeLatest(UPDATE_AGENT_VERSION, putAgentVersion);
+  yield takeLatest(DELETE_AGENT_VERSION, deleteAgentVersion);
+  yield takeLatest(ADD_AGENT_VERSION, postagentVersion);
   yield takeLatest(LOAD_SETTINGS, getSettings);
   yield takeLatest(LOAD_SERVER_INFO, getServerInfo);
   yield takeLatest(SEND_MESSAGE, postConverse);

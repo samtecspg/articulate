@@ -18,7 +18,11 @@ import { getWS } from '../../utils/locationResolver';
 
 import {
   trainAgent, loadKeywords, loadActions, loadAgentDocuments, loadAgentDocumentsSuccess,
-  toggleChatButton, loadAgentStats
+  toggleChatButton, loadAgentStats,
+  addAgentVersion,
+  loadAgentVersion,
+  updateAgentVersion,
+  deleteAgentVersion,
 } from '../App/actions';
 
 import { AUTH_ENABLED } from "../../../common/env";
@@ -31,7 +35,9 @@ import {
 import {
   makeSelectAgent,
   makeSelectServerStatus,
-  makeSelectDocumentsStats
+  makeSelectDocumentsStats,
+  makeSelectAgentVersions,
+  makeSelectLoadingAgentVersion,
 } from '../App/selectors';
 
 import Form from './Components/Form';
@@ -100,6 +106,7 @@ export class AnalyticsPage extends React.PureComponent {
           agentGravatar={agent.gravatar ? agent.gravatar : 1}
           agentUIColor={agent.uiColor}
           onTrain={onTrain}
+          onLoadAgentVersion={this.props.onLoadAgentVersion}
           agentStatus={agent.status}
           serverStatus={this.props.serverStatus}
           lastTraining={agent.lastTraining}
@@ -125,6 +132,13 @@ export class AnalyticsPage extends React.PureComponent {
           dialogueURL={`/agent/${this.props.agent.id}/dialogue`}
           reviewForm={Link}
           reviewURL={`/agent/${this.props.agent.id}/review`}
+          currentAgent={this.props.agent}
+          onAddAgentVersion={this.props.onAddAgentVersion}
+          onLoadAgentVersion={this.props.onLoadAgentVersion}
+          onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+          onDeleteAgentVersion={this.props.onDeleteAgentVersion}
+          agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
+          loadingAgentVersion={this.props.loadingAgentVersion}
         />
       </Grid>
     ) : (
@@ -346,6 +360,8 @@ const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   serverStatus: makeSelectServerStatus(),
   stats: makeSelectDocumentsStats(),
+  agentVersions: makeSelectAgentVersions(),
+  loadingAgentVersion: makeSelectLoadingAgentVersion(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -364,7 +380,19 @@ function mapDispatchToProps(dispatch) {
     },
     onShowChatButton: value => {
       dispatch(toggleChatButton(value));
-    }
+    },
+    onLoadAgentVersion: (versionId, currentAgentId) => {
+      dispatch(loadAgentVersion(versionId, currentAgentId));
+    },
+    onUpdateAgentVersion: (version) => {
+      dispatch(updateAgentVersion(version));
+    },
+    onDeleteAgentVersion: (versionId, currentAgentId) => {
+      dispatch(deleteAgentVersion(versionId, currentAgentId));
+    },
+    onAddAgentVersion: id => {
+      dispatch(addAgentVersion(id));
+    },
   };
 }
 

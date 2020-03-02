@@ -140,7 +140,7 @@ class AgentsCards extends React.Component {
     showLeftArrow: false,
     showRightArrow: document.getElementById('dvCardsContainer')
       ? document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth >
-        document.getElementById('dvCardsContainer').scrollLeft
+      document.getElementById('dvCardsContainer').scrollLeft
       : false,
   };
 
@@ -265,8 +265,8 @@ class AgentsCards extends React.Component {
                         const reader = new FileReader();
 
                         // Closure to capture the file information.
-                        reader.onload = (function(theFile) {
-                          return function(e) {
+                        reader.onload = (function (theFile) {
+                          return function (e) {
                             try {
                               const agent = JSON.parse(e.target.result);
                               onImportAgent(agent);
@@ -341,20 +341,20 @@ class AgentsCards extends React.Component {
                       </Grid>
                     </a>
                   ) : (
-                    <Grid
-                      style={{ padding: '15px' }}
-                      onClick={() => {
-                        this.props.onExportAgent(agent.id);
-                      }}
-                      container
-                      justify="center"
-                    >
-                      <img src={exportIcon} />
-                      <Typography className={classes.exportLabel} variant="body1">
-                        <FormattedMessage {...messages.export} />
-                      </Typography>
-                    </Grid>
-                  )}
+                      <Grid
+                        style={{ padding: '15px' }}
+                        onClick={() => {
+                          this.props.onExportAgent(agent.id);
+                        }}
+                        container
+                        justify="center"
+                      >
+                        <img src={exportIcon} />
+                        <Typography className={classes.exportLabel} variant="body1">
+                          <FormattedMessage {...messages.export} />
+                        </Typography>
+                      </Grid>
+                    )}
                 </Grid>
               </Card>
             </Grid>

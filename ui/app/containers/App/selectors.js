@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import Immutable from 'seamless-immutable';
 
 const selectGlobal = state => state.global;
 const selectRoute = state => state.router;
@@ -39,6 +40,12 @@ const makeSelectLoading = () =>
   createSelector(
     selectGlobal,
     globalState => globalState.loading,
+  );
+
+const makeSelectLoadingAgentVersion = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.loadingAgentVersion,
   );
 
 const makeSelectLoadingImportCategory = () =>
@@ -139,6 +146,21 @@ const makeSelectAgent = () =>
     selectGlobal,
     globalState => globalState.agent,
   );
+
+const makeSelectAgentVersions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => makeSelectAgentVersionsSorted(globalState.agentVersions)
+  );
+
+const makeSelectAgentVersionsSorted = (versions) => {
+  var tempArray = Immutable.asMutable(versions);
+  var temp = tempArray && tempArray.length ? tempArray
+    .sort((a, b) => (Number(b.creationDate) > Number(a.creationDate)) ? 1 : -1)
+    .filter(version => { return !version.isOriginalAgentVersion })
+    : []
+  return temp
+};
 
 const makeSelectCurrentAgent = () =>
   createSelector(
@@ -530,6 +552,7 @@ export {
   makeSelectSessionLoaded,
   makeSelectMissingAPI,
   makeSelectLoading,
+  makeSelectLoadingAgentVersion,
   makeSelectLoadingImportCategory,
   makeSelectError,
   makeSelectSuccess,
@@ -544,6 +567,7 @@ export {
   makeSelectAgents,
   makeSelectAgentExport,
   makeSelectAgent,
+  makeSelectAgentVersions,
   makeSelectCurrentAgent,
   makeSelectAgentWebhook,
   makeSelectAgentPostFormat,

@@ -279,4 +279,25 @@ export default defineMessages({
     defaultMessage:
       'Enabling this options will generate quick replies for missing slots and actions according to keywords possible values and the context of the conversation',
   },
+  agentVersionsSetting: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.agentVersionsSetting',
+    defaultMessage: 'Agent Versions',
+  },
+  agentVersions: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.agentVersions',
+    defaultMessage: 'Save agent versions',
+  },
+  agentVersionsDescription: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.agentVersionsDescription',
+    defaultMessage:
+      'Enabling this options will save a new version of the agent each time it is succesfully trained',
+  },
+  agentVersionsHelp: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.agentVersionsHelp',
+    defaultMessage:
+      'If you enable this option, everytime your agent is succesfully trained, there will be a new version saved. You can load them using the icon next to the train button. You can also change the version name and add notes on it',
+  },
 });

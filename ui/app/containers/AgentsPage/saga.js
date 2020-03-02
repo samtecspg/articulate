@@ -18,9 +18,14 @@ import { EXPORT_AGENT, IMPORT_AGENT, LOAD_AGENTS, LOAD_CHANNELS, LOAD_CONNECTION
 
 export function* getAgents(payload) {
   const { api } = payload;
-
   try {
-    const response = yield call(api.get, toAPIPath([ROUTE_AGENT]));
+    var filter = JSON.stringify({
+      isOriginalAgentVersion: true
+    });
+    const params = {
+      filter
+    };
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT]), { params });
     yield put(loadAgentsSuccess(response.data));
   } catch (err) {
     yield put(loadAgentsError(_.get(err, 'response.data', true)));

@@ -95,9 +95,33 @@ const schema = {
         type: 'boolean',
         defaultValue: false
     },
+    enableAgentVersions: {
+        type: 'boolean',
+        defaultValue: false
+    },
     accessPolicies: {
         type: 'json',
         defaultValue: {}
+    },
+    isOriginalAgentVersion: {
+        type: 'boolean',
+        defaultValue: true
+    },
+    originalAgentVersionId: {
+        type: 'number',
+        defaultValue: -1
+    },
+    originalAgentVersionName: {
+        type: 'string',
+        defaultValue: ''
+    },
+    agentVersionNotes: {
+        type: 'string',
+        defaultValue: ''
+    },
+    loadedAgentVersionName: {
+        type: 'string',
+        defaultValue: ''
     }
 };
 

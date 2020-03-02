@@ -16,6 +16,9 @@ import {
   ADD_AGENT_FALLBACK,
   ADD_AGENT_PARAMETER,
   ADD_AGENT_SUCCESS,
+  ADD_AGENT_VERSION,
+  ADD_AGENT_VERSION_SUCCESS,
+  ADD_AGENT_VERSION_ERROR,
   ADD_CATEGORY_PARAMETER,
   ADD_FALLBACK,
   ADD_HEADER_ACTION_WEBHOOK,
@@ -164,6 +167,18 @@ import {
   LOAD_AGENT_STATS_ERROR,
   LOAD_AGENT_STATS_SUCCESS,
   LOAD_AGENT_SUCCESS,
+  LOAD_AGENT_VERSIONS,
+  LOAD_AGENT_VERSIONS_ERROR,
+  LOAD_AGENT_VERSIONS_SUCCESS,
+  LOAD_AGENT_VERSION,
+  LOAD_AGENT_VERSION_ERROR,
+  LOAD_AGENT_VERSION_SUCCESS,
+  UPDATE_AGENT_VERSION,
+  UPDATE_AGENT_VERSION_ERROR,
+  UPDATE_AGENT_VERSION_SUCCESS,
+  DELETE_AGENT_VERSION,
+  DELETE_AGENT_VERSION_ERROR,
+  DELETE_AGENT_VERSION_SUCCESS,
   LOAD_AGENTS,
   LOAD_AGENTS_ERROR,
   LOAD_AGENTS_SUCCESS,
@@ -624,6 +639,95 @@ export function loadAgentSuccess(payload) {
   };
 }
 
+export function loadAgentVersions(originalAgentVersionId) {
+  return {
+    type: LOAD_AGENT_VERSIONS,
+    originalAgentVersionId,
+    apiCall: true,
+  };
+}
+
+export function loadAgentVersionsError(error) {
+  return {
+    type: LOAD_AGENT_VERSIONS_ERROR,
+    error,
+  };
+}
+
+export function loadAgentVersionsSuccess(agentVersions) {
+  return {
+    type: LOAD_AGENT_VERSIONS_SUCCESS,
+    agentVersions,
+  };
+}
+
+export function loadAgentVersion(versionId, currentAgentId) {
+  return {
+    type: LOAD_AGENT_VERSION,
+    versionId,
+    currentAgentId,
+    apiCall: true,
+  };
+}
+
+export function loadAgentVersionError(error) {
+  return {
+    type: LOAD_AGENT_VERSION_ERROR,
+    error,
+  };
+}
+
+export function loadAgentVersionSuccess(version) {
+  return {
+    type: LOAD_AGENT_VERSION_SUCCESS,
+    version,
+  };
+}
+
+export function updateAgentVersion(version) {
+  return {
+    type: UPDATE_AGENT_VERSION,
+    version,
+    apiCall: true,
+  };
+}
+
+export function updateAgentVersionError(error) {
+  return {
+    type: UPDATE_AGENT_VERSION_ERROR,
+    error,
+  };
+}
+
+export function updateAgentVersionSuccess(version) {
+  return {
+    type: UPDATE_AGENT_VERSION_SUCCESS,
+    version,
+  };
+}
+
+export function deleteAgentVersion(versionId, currentAgentId) {
+  return {
+    type: DELETE_AGENT_VERSION,
+    versionId,
+    currentAgentId,
+    apiCall: true,
+  };
+}
+
+export function deleteAgentVersionError(error) {
+  return {
+    type: DELETE_AGENT_VERSION_ERROR,
+    error,
+  };
+}
+
+export function deleteAgentVersionSuccess() {
+  return {
+    type: DELETE_AGENT_VERSION_SUCCESS
+  };
+}
+
 export function setAgentDefaults() {
   return {
     type: SET_AGENT_DEFAULTS,
@@ -713,6 +817,28 @@ export function addAgentError(error) {
 export function addAgentSuccess(agent) {
   return {
     type: ADD_AGENT_SUCCESS,
+    agent,
+  };
+}
+
+export function addAgentVersion(id) {
+  return {
+    type: ADD_AGENT_VERSION,
+    apiCall: true,
+    id
+  };
+}
+
+export function addAgentVersionError(error) {
+  return {
+    type: ADD_AGENT_VERSION_ERROR,
+    error,
+  };
+}
+
+export function addAgentVersionSuccess(agent) {
+  return {
+    type: ADD_AGENT_VERSION_SUCCESS,
     agent,
   };
 }

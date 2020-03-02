@@ -32,11 +32,18 @@ class AgentModel {
       modificationDate: Joi.string(),
       parameters: Joi.object(),
       enableDiscoverySheet: Joi.boolean(),
+      enableAgentVersions: Joi.boolean(),
       generateSlotsQuickResponses: Joi.boolean(),
       accessPolicies: Joi.object(),
       generateSlotsQuickResponsesMax: Joi.number(),
       generateActionsQuickResponses: Joi.boolean(),
-      generateActionsQuickResponsesMax: Joi.number()
+      generateActionsQuickResponsesMax: Joi.number(),
+      isOriginalAgentVersion: Joi.boolean(),
+      originalAgentVersionId: Joi.number(),
+      originalAgentVersionName: Joi.string(),
+      agentVersionNotes: Joi.string(),
+      loadedAgentVersionName: Joi.string(),
+      enableAgentVersions: Joi.boolean(),
     };
   }
 }

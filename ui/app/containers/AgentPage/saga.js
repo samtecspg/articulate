@@ -7,6 +7,8 @@ import {
   ROUTE_SETTINGS,
   ROUTE_USER,
   ROUTE_WEBHOOK,
+  ROUTE_EXPORT,
+  ROUTE_IMPORT
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import { getActions } from '../ActionPage/saga';
@@ -169,6 +171,8 @@ export function* putAgent(payload) {
   const mutableAgent = Immutable.asMutable(agent, { deep: true });
   mutableAgent.categoryClassifierThreshold =
     agent.categoryClassifierThreshold / 100;
+  mutableAgent.originalAgentVersionName = mutableAgent.agentName;
+  mutableAgent.loadedAgentVersionName = mutableAgent.agentName;
   const { api } = payload;
   delete mutableAgent.id;
   delete mutableAgent.settings;
