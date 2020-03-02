@@ -99,4 +99,8 @@ export default defineMessages({
     id: 'app.componenets.ConversationBar.errorSelectSessionToClear',
     defaultMessage: 'Select a session to clear. {emoji}',
   },
+  agentTestTrainTemplate: {
+    id: 'app.components.ConversationBar.agentTestTrainTemplate',
+    defaultMessage: 'We found 2 training conflicting issues during your training. We highly recommend you resolve these issues before procedding',
+  },
 });

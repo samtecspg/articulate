@@ -279,6 +279,7 @@ import {
   UPDATE_USER,
   UPDATE_USER_ERROR,
   UPDATE_USER_SUCCESS,
+  TEST_AGENT_TRAIN_SUCCESS,
 } from './constants';
 
 const happyEmojies = [
@@ -1354,6 +1355,14 @@ function appReducer(state = initialState, action) {
         .set('totalDocuments', initialState.totalDocuments)
         .set('loading', false)
         .set('error', action.error);
+    case TEST_AGENT_TRAIN_SUCCESS:
+      return state.update('notifications', notifications =>
+        notifications.concat({
+          template: 'agentTestTrainTemplate',
+          type: 'error',
+          subtype: 'testTrainError'
+        }),
+      );
     /* Sayings */
     case RESET_SAYINGS:
       return state
@@ -2376,7 +2385,7 @@ function appReducer(state = initialState, action) {
             }))
           });
     case CHANGE_EXAMPLE_SYNONYMS:
-      var synonym = state.keywordExamplesUpdate.find(function(update) {
+      var synonym = state.keywordExamplesUpdate.find(function (update) {
         return update.index === action.exampleIndex && update.synonym === action.synonymChanged;
       });
       let countUpdate = action.action === 'add' ? 1 : -1;
@@ -2779,7 +2788,7 @@ function appReducer(state = initialState, action) {
         notifications.concat({
           message: `Error: ${action.error}. ${
             errorEmojies[Math.floor(Math.random() * errorEmojies.length)]
-          }`,
+            }`,
           type: 'error',
         }),
       );

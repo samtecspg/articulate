@@ -1,13 +1,7 @@
 import _ from 'lodash';
 import {
-    MODEL_ACTION,
     MODEL_AGENT,
-    MODEL_CATEGORY,
     MODEL_KEYWORD,
-    PARAM_DOCUMENT_RASA_RESULTS,
-    RASA_INTENT_SPLIT_SYMBOL,
-    CSO_CATEGORIES,
-    CSO_TIMEZONE_DEFAULT
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
@@ -15,10 +9,13 @@ module.exports = async function ({ id, debug = false }) {
 
     try {
         const { redis } = this.server.app;
-        const { agentService } = await this.server.services();
+        const { agentService, globalService, keywordService } = await this.server.services();
 
         const AgentModel = await redis.factory(MODEL_AGENT, id);
         const agentSayings = await agentService.findAllSayings({ id });
+
+        const agentKeywords = await await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_KEYWORD, returnModel: false });
+        //let ParsedDocument = await agentService.parse({ AgentModel, text: agentKeywords[0].modifiers[0].sayings[0].userSays, timezone: AgentModel.property('timezone'), saveDocument: false });
 
         var sayingCounter;
         let result = {};
@@ -48,6 +45,7 @@ module.exports = async function ({ id, debug = false }) {
             if (recognizedKeywordsMissing.length > 0 || sayingKeywordsMissing.length > 0) {
                 if (!result.data[errorCounter]) {
                     result.data[errorCounter] = {};
+                    result.data[errorCounter].saying = agentSayings.data[sayingCounter];
                 }
 
                 result.data[errorCounter].recognizedKeywordsMissing = recognizedKeywordsMissing;
@@ -77,8 +75,7 @@ const getKeywordArraysDifference = function (recognizedKeywords, sayingKeywords)
         return !sayingKeywords.some(function (obj2) {
             return obj.end == obj2.end &&
                 obj.start == obj2.start &&
-                obj.keyword == obj2.keyword &&
-                obj.value == obj2.value;
+                obj.keyword == obj2.keyword
         });
     });
 
@@ -86,8 +83,7 @@ const getKeywordArraysDifference = function (recognizedKeywords, sayingKeywords)
         return !recognizedKeywords.some(function (obj2) {
             return obj.end == obj2.end &&
                 obj.start == obj2.start &&
-                obj.keyword == obj2.keyword &&
-                obj.value == obj2.value;
+                obj.keyword == obj2.keyword
         });
     });
 

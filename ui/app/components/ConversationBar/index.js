@@ -18,6 +18,7 @@ import {
   Button,
   Select,
   Tooltip,
+  Modal
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { createStructuredSelector } from 'reselect';
@@ -250,7 +251,8 @@ export class ConversationBar extends React.PureComponent {
     newWidth: this.props.settings.conversationPanelWidth ? this.props.settings.conversationPanelWidth : 300,
     client: null,
     socketClientConnected: false,
-    newSessionCreatedForStart: false
+    newSessionCreatedForStart: false,
+    openTestTrainModal: false
   };
 
   componentWillMount() {
@@ -428,6 +430,10 @@ export class ConversationBar extends React.PureComponent {
         socketClientConnected: false,
       });
     }
+  }
+
+  handleOpenTestTrainModal = () => {
+    this.setState({ openTestTrainModal: true });
   }
 
   render() {
@@ -668,6 +674,7 @@ export class ConversationBar extends React.PureComponent {
             <Notifications
               notifications={this.props.notifications}
               onCloseNotification={this.props.onCloseNotification}
+              onOpenTestTrainModal={this.handleOpenTestTrainModal}
             />
             <Grid className={classes.messagesContainer}>
               {this.props.messages.map((message, index) => {
@@ -869,8 +876,16 @@ export class ConversationBar extends React.PureComponent {
             CSO={this.state.CSO}
             open={this.state.openCodeModal}
           />
+          <Modal
+            open={this.state.openTestTrainModal}
+            onClose={() => { this.setState({ openTestTrainModal: false }) }}
+          >
+            <div>
+              Hi
+            </div>
+          </Modal>
         </Grid>
-      </Grid>
+      </Grid >
     );
   }
 }
