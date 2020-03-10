@@ -25,6 +25,7 @@ export const MODEL_CATEGORY = 'Category';
 export const MODEL_DOCUMENT = `${process.env.ES_INDEX_PREFIX ? `${process.env.ES_INDEX_PREFIX}-` : ''}Document`;
 //export const MODEL_LOG = 'filebeat-7.1.1-2019.11.08-000001';
 export const MODEL_LOG = '*filebeat*';
+export const MODEL_TRAINING_TEST = 'trainingTest';
 export const MODEL_KEYWORD = 'Keyword';
 export const MODEL_POST_FORMAT = 'PostFormat';
 export const MODEL_SAYING = 'Saying';
