@@ -15,7 +15,8 @@ class SayingModel {
                 .string(),
             modificationDate: Joi
                 .string(),
-            starred: Joi.boolean()
+            starred: Joi.boolean(),
+            lastFailedTestingTimestamp: Joi.string()
         };
     };
 }

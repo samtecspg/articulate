@@ -20,6 +20,9 @@ const schema = {
     starred: {
         type: 'boolean'
     },
+    lastFailedTestingTimestamp: {
+        type: 'timestamp'
+    }
 };
 
 class SayingRedisModel extends BaseModel {

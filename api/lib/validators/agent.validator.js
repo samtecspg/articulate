@@ -675,7 +675,8 @@ class AgentValidate {
                     actions: SayingSchema.actions.allow([]),
                     creationDate: SayingSchema.creationDate,
                     modificationDate: SayingSchema.modificationDate,
-                    starred: SayingSchema.starred.default(false)
+                    starred: SayingSchema.starred.default(false),
+                    lastFailedTestingTimestamp: SayingSchema.lastFailedTestingTimestamp.default(null)
                 };
             })()
         };
@@ -968,7 +969,8 @@ class AgentValidate {
                             }).required().allow([]),
                             creationDate: KeywordSchema.creationDate,
                             modificationDate: KeywordSchema.modificationDate,
-                            starred: SayingSchema.starred
+                            starred: SayingSchema.starred,
+                            lastFailedTestingTimestamp: SayingSchema.lastFailedTestingTimestamp
                         }),
                         creationDate: KeywordSchema.creationDate,
                         modificationDate: KeywordSchema.modificationDate

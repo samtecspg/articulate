@@ -2,6 +2,8 @@ import _ from 'lodash';
 import {
     MODEL_AGENT,
     MODEL_KEYWORD,
+    MODEL_SAYING,
+    MODEL_CATEGORY,
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
@@ -73,6 +75,7 @@ module.exports = async function ({ id, debug = false }) {
         result.timeStamp = Date.now();
 
         await trainingTestService.create({ data: result });
+        await updateFailedSayings(result, globalService, agentService, AgentModel);
         return result;
     }
     catch (error) {
@@ -157,4 +160,36 @@ const upsertResultKeywords = function (result, sayingKeywords, recognizedKeyword
         }
     });
     return errorPresent;
+}
+
+const updateFailedSayings = async function (result, globalService, agentService, AgentModel) {
+
+    if (result.badSayings > 0) {
+        let actionSayingsIds = result.actions.map(action => {
+            return action.badSayings;
+        }).flat();
+
+        let keywordSayingsIds = result.keywords.map(keyword => {
+            return keyword.badSayings;
+        }).flat();
+
+        let allBadSayingsIds = actionSayingsIds
+            .concat(keywordSayingsIds)
+            .filter((item, i, ar) => ar.indexOf(item) === i);
+
+        let badSayingsModel = await globalService.loadAllByIds({ ids: allBadSayingsIds, model: MODEL_SAYING, returnModel: true });
+
+        await Promise.all(badSayingsModel.map(async (sayingModel) => {
+            let category = await globalService.loadAllLinked({ parentModel: sayingModel, model: MODEL_CATEGORY, returnModel: true });
+            let sayingData = sayingModel.allProperties();
+            sayingData.lastFailedTestingTimestamp = result.timeStamp;
+            delete sayingData.id;
+            await agentService.upsertSayingInCategory({
+                id: Number(AgentModel.id),
+                categoryId: Number(category[0].id),
+                sayingId: Number(sayingModel.id),
+                sayingData
+            });
+        }));
+    }
 }
