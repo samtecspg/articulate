@@ -122,6 +122,10 @@ const schema = {
     loadedAgentVersionName: {
         type: 'string',
         defaultValue: ''
+    },
+    currentAgentVersionCounter: {
+        type: 'number',
+        defaultValue: 0
     }
 };
 

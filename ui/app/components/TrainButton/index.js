@@ -46,7 +46,8 @@ const tooltipTheme = createMuiTheme({
 const styles = {
   button: {
     display: 'inline',
-    borderRadius: '4px 0px 0px 4px'
+    borderRadius: '4px 0px 0px 4px',
+    width: '80px'
   },
   versionButton: {
     width: '30px',

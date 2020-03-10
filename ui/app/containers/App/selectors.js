@@ -248,6 +248,12 @@ const makeSelectTotalSessions = () =>
     globalState => globalState.totalSessions,
   );
 
+const makeSelectTestTrain = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.testTrainResult ? globalState.testTrainResult.result.data : null,
+  );
+
 /*Logs*/
 const makeSelectLogs = () =>
   createSelector(
@@ -629,4 +635,5 @@ export {
   makeSelectLoadingCurrentUser,
   makeSelectUser,
   makeSelectUserDataTouched,
+  makeSelectTestTrain
 };

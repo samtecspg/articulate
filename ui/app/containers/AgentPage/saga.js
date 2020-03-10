@@ -172,7 +172,7 @@ export function* putAgent(payload) {
   mutableAgent.categoryClassifierThreshold =
     agent.categoryClassifierThreshold / 100;
   mutableAgent.originalAgentVersionName = mutableAgent.agentName;
-  mutableAgent.loadedAgentVersionName = mutableAgent.agentName;
+  mutableAgent.loadedAgentVersionName = mutableAgent.agentName + '_v' + mutableAgent.currentAgentVersionCounter;
   const { api } = payload;
   delete mutableAgent.id;
   delete mutableAgent.settings;

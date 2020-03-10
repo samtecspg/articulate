@@ -325,8 +325,8 @@ class SayingsDataForm extends React.Component {
                                     <span>{`${action.substring(0, 15)}...`}</span>
                                   </Tooltip>
                                 ) : (
-                                  action
-                                )}
+                                    action
+                                  )}
                               </span>
                               <a
                                 onClick={() => {
@@ -536,8 +536,8 @@ class SayingsDataForm extends React.Component {
                         evt.target.value === ''
                           ? this.props.changeSayingsPage(1)
                           : evt.target.value <= this.props.numberOfSayingsPages && evt.target.value >= 1
-                          ? this.props.changeSayingsPage(Number(evt.target.value))
-                          : false;
+                            ? this.props.changeSayingsPage(Number(evt.target.value))
+                            : false;
                       }}
                       fullWidth
                       InputLabelProps={{

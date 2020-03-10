@@ -294,7 +294,8 @@ class AgentValidate {
                     originalAgentVersionId: AgentSchema.originalAgentVersionId,
                     originalAgentVersionName: AgentSchema.originalAgentVersionName,
                     agentVersionNotes: AgentSchema.agentVersionNotes.allow(''),
-                    loadedAgentVersionName: AgentSchema.loadedAgentVersionName
+                    loadedAgentVersionName: AgentSchema.loadedAgentVersionName,
+                    currentAgentVersionCounter: AgentSchema.currentAgentVersionCounter
                 };
             })()
         };
@@ -1022,6 +1023,7 @@ class AgentValidate {
                     originalAgentVersionName: AgentSchema.originalAgentVersionName,
                     agentVersionNotes: AgentSchema.agentVersionNotes.allow(''),
                     loadedAgentVersionName: AgentSchema.loadedAgentVersionName,
+                    currentAgentVersionCounter: AgentSchema.currentAgentVersionCounter,
                     creationDate: KeywordSchema.creationDate,
                     modificationDate: KeywordSchema.modificationDate,
                     accessPolicies: AgentSchema.accessPolicies,

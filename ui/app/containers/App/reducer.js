@@ -716,6 +716,7 @@ const initialState = Immutable({
   accessPolicyGroups: [],
   user: null,
   userDataTouched: false,
+  testTrainResult: null
 });
 
 function appReducer(state = initialState, action) {
@@ -1385,7 +1386,8 @@ function appReducer(state = initialState, action) {
           type: 'error',
           subtype: 'testTrainError'
         }),
-      );
+      )
+        .set('testTrainResult', action.result);
     case LOAD_AGENT_VERSION:
       return state
         .set('loadingAgentVersion', true)

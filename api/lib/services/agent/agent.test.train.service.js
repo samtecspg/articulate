@@ -20,6 +20,8 @@ module.exports = async function ({ id, debug = false }) {
         var sayingCounter;
         let result = {};
         result.data = [];
+        result.keywords = [];
+        result.actions = [];
         let errorCounter = 0;
         for (sayingCounter = 0; sayingCounter < agentSayings.data.length; sayingCounter++) {
 
@@ -30,12 +32,15 @@ module.exports = async function ({ id, debug = false }) {
             let recognizedAction = ParsedDocument.recognized_action;
             let sayingAction = agentSayings.data[sayingCounter].actions.join('+__+');
             if (recognizedAction !== sayingAction) {
+                upsertResultAction(result, sayingAction, 'bad', agentSayings.data[sayingCounter].id);
                 result.data[errorCounter] = {};
                 result.data[errorCounter].saying = agentSayings.data[sayingCounter];
-                result.data[errorCounter].recognizedAction = recognizedAction;
-                result.data[errorCounter].sayingAction = sayingAction
-                result.data[errorCounter].actionError = true;
+                result.data[errorCounter].saying.recognizedAction = recognizedAction;
+                result.data[errorCounter].saying.sayingAction = sayingAction
+                result.data[errorCounter].saying.actionError = true;
                 errorPresent = true;
+            } else {
+                upsertResultAction(result, sayingAction, 'good', agentSayings.data[sayingCounter].id);
             }
 
             let recognizedKeywords = ParsedDocument.rasa_results[0].keywords.map((keyword) => { return { start: keyword.start, end: keyword.end, keyword: keyword.keyword, value: keyword.value.value } });
@@ -48,17 +53,25 @@ module.exports = async function ({ id, debug = false }) {
                     result.data[errorCounter].saying = agentSayings.data[sayingCounter];
                 }
 
-                result.data[errorCounter].recognizedKeywordsMissing = recognizedKeywordsMissing;
-                result.data[errorCounter].sayingKeywordsMissing = sayingKeywordsMissing;
-                result.data[errorCounter].recognizedKeywordsMissingError = recognizedKeywordsMissing.length > 0;
-                result.data[errorCounter].sayingKeywordsMissingError = sayingKeywordsMissing.length > 0;
+                result.data[errorCounter].saying.recognizedKeywordsMissing = recognizedKeywordsMissing;
+                result.data[errorCounter].saying.sayingKeywordsMissing = sayingKeywordsMissing;
+                result.data[errorCounter].saying.recognizedKeywordsMissingError = recognizedKeywordsMissing.length > 0;
+                result.data[errorCounter].saying.sayingKeywordsMissingError = sayingKeywordsMissing.length > 0;
                 errorPresent = true;
             }
+
+            upsertResultKeywords(result, sayingKeywords, recognizedKeywords, agentSayings.data[sayingCounter].id);
 
             if (errorPresent) {
                 errorCounter++;
             }
         }
+
+        result.agentId = id;
+        result.totalSayings = agentSayings.data.length;
+        result.goodSayings = agentSayings.data.length - errorCounter;
+        result.badSayings = errorCounter;
+
         return result;
     }
     catch (error) {
@@ -88,4 +101,57 @@ const getKeywordArraysDifference = function (recognizedKeywords, sayingKeywords)
     });
 
     return { recognizedKeywordsMissing, sayingKeywordsMissing };
+}
+
+const upsertResultAction = function (result, sayingAction, condition, sayingId) {
+    let actionIndex = result.actions.findIndex(action => { return action.actionName === sayingAction })
+    if (actionIndex === -1) {
+        result.actions.push({
+            actionName: sayingAction,
+            good: condition === 'good' ? 1 : 0,
+            bad: condition === 'bad' ? 1 : 0,
+            badSayings: condition === 'bad' ? [sayingId] : []
+        })
+    } else {
+        if (condition === 'good') {
+            result.actions[actionIndex].good++;
+        } else {
+            result.actions[actionIndex].bad++;
+            result.actions[actionIndex].badSayings.push(sayingId);
+        }
+    }
+    var a = 1;
+}
+
+const upsertResultKeywords = function (result, sayingKeywords, recognizedKeywords, sayingId) {
+    sayingKeywords.forEach(sayingKeyword => {
+        let recognizedKeywordsIndex = recognizedKeywords.findIndex(
+            recognizedKeyword => {
+                return recognizedKeyword.end == sayingKeyword.end &&
+                    recognizedKeyword.start == sayingKeyword.start &&
+                    recognizedKeyword.keyword == sayingKeyword.keyword
+            });
+        let condition = 'bad';
+        if (recognizedKeywordsIndex !== -1) {
+            condition = 'good';
+        }
+
+        let resultKeywordIndex = result.keywords.findIndex(keyword => { return keyword.keywordName === sayingKeyword.keyword });
+        if (resultKeywordIndex === -1) {
+            result.keywords.push({
+                keywordName: sayingKeyword.keyword,
+                good: condition === 'good' ? 1 : 0,
+                bad: condition === 'bad' ? 1 : 0,
+                badSayings: condition === 'bad' ? [sayingId] : []
+            })
+        } else {
+            if (condition === 'good') {
+                result.keywords[resultKeywordIndex].good++;
+            } else {
+                result.keywords[resultKeywordIndex].bad++;
+                result.keywords[resultKeywordIndex].badSayings.push(sayingId);
+            }
+        }
+        let a = 1;
+    });
 }

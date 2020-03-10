@@ -18,10 +18,12 @@ import {
   ROUTE_WEBHOOK,
   ROUTE_TEST_TRAIN,
   ROUTE_EXPORT,
-  ROUTE_IMPORT
+  ROUTE_IMPORT,
+  ROUTE_KEYWORD
 
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
+import Immutable from 'seamless-immutable';
 import {
   getSettings,
   putSetting,
@@ -57,7 +59,10 @@ import {
   updateSettingsError,
   updateSettingSuccess,
   testAgentTrainError,
-  testAgentTrainSuccess
+  testAgentTrainSuccess,
+  loadKeywords,
+  loadKeywordsError,
+  loadKeywordsSuccess
 } from './actions';
 import {
   LOAD_AGENT,
@@ -75,7 +80,8 @@ import {
   UPDATE_SETTING,
   TEST_AGENT_TRAIN,
   UPDATE_AGENT_VERSION,
-  DELETE_AGENT_VERSION
+  DELETE_AGENT_VERSION,
+  LOAD_KEYWORDS
 } from './constants';
 import {
   makeSelectAgent,
@@ -182,11 +188,30 @@ export function* getAgent(payload) {
 export function* postagentVersion(payload) {
   const { api, id } = payload;
   try {
-    var agent = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
+    debugger;
+    var agent = yield select(makeSelectAgent());
+    debugger;
+    const mutableAgent = Immutable.asMutable(agent, { deep: true });
+    debugger;
+    mutableAgent.categoryClassifierThreshold =
+      agent.categoryClassifierThreshold / 100;
+    debugger;
+    mutableAgent.currentAgentVersionCounter = mutableAgent.currentAgentVersionCounter + 1;
+    debugger;
+    delete mutableAgent.id;
+    delete mutableAgent.settings;
+    delete mutableAgent.status;
+    delete mutableAgent.lastTraining;
+    debugger;
+    const response = yield call(
+      api.put,
+      toAPIPath([ROUTE_AGENT, id]),
+      mutableAgent,
+    );
+    debugger;
+    agent = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
     agent.originalAgentVersionName = agent.agentName;
-    var date = new Date();
-    date = date.toString();
-    agent.agentName = date + '_' + agent.agentName;
+    agent.agentName = agent.agentName + '_v' + agent.currentAgentVersionCounter;
     agent.loadedAgentVersionName = agent.agentName;
     agent.isOriginalAgentVersion = false;
     agent.originalAgentVersionId = Number(id);
@@ -195,6 +220,7 @@ export function* postagentVersion(payload) {
     yield put(addAgentVersionSuccess(importResponse));
     yield put(loadAgentVersions(id));
   } catch (err) {
+    debugger;
     yield put(addAgentVersionError(err));
   }
 }
@@ -324,8 +350,42 @@ export function* testAgentTrain(payload) {
   try {
     const result = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_TEST_TRAIN]));
     yield put(testAgentTrainSuccess({ result }));
+    yield put(loadKeywords())
   } catch (error) {
     yield put(testAgentTrainError(error));
+  }
+}
+
+export function* getKeywords(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, filter, page, pageSize } = payload;
+  let skip = 0;
+  let limit = -1;
+  if (page) {
+    skip = (page - 1) * pageSize;
+    limit = pageSize;
+  }
+  try {
+    const params = {
+      filter: filter === '' ? undefined : filter,
+      skip,
+      limit,
+    };
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_KEYWORD]),
+      { params },
+    );
+    // TODO: Fix in the api the return of total sayings
+    yield put(
+      loadKeywordsSuccess({
+        keywords: response.data,
+        total: response.totalCount,
+      }),
+    );
+  } catch (err) {
+    debugger;
+    yield put(loadKeywordsError(err));
   }
 }
 
@@ -348,4 +408,5 @@ export default function* rootSaga() {
   yield takeLatest(LOGOUT_USER, logoutUser);
   yield takeLatest(LOAD_CURRENT_USER, getCurrentUser);
   yield takeLatest(TEST_AGENT_TRAIN, testAgentTrain);
+  yield takeLatest(LOAD_KEYWORDS, getKeywords);
 }

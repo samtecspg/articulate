@@ -43,6 +43,7 @@ class AgentModel {
       originalAgentVersionName: Joi.string(),
       agentVersionNotes: Joi.string(),
       loadedAgentVersionName: Joi.string(),
+      currentAgentVersionCounter: Joi.number(),
       enableAgentVersions: Joi.boolean(),
     };
   }

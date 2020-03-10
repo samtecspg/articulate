@@ -17,8 +17,7 @@ import {
   MenuItem,
   Button,
   Select,
-  Tooltip,
-  Modal
+  Tooltip
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { createStructuredSelector } from 'reselect';
@@ -45,6 +44,9 @@ import {
   makeSelectSessionLoaded,
   makeSelectLoading,
   makeSelectConnection,
+  makeSelectTestTrain,
+  makeSelectActions,
+  makeSelectKeywords,
 } from '../../containers/App/selectors';
 
 import {
@@ -58,9 +60,12 @@ import {
   showWarning,
   respondMessage,
   storeSourceData,
+  untagKeyword,
+  deleteSaying
 } from '../../containers/App/actions';
 
 import LoadingWave from '../LoadingWave';
+import TestTrainModal from '../TestTrainModal'
 import CodeModal from '../CodeModal';
 import Notifications from './components/Notifications';
 import gravatars from '../Gravatar';
@@ -876,14 +881,16 @@ export class ConversationBar extends React.PureComponent {
             CSO={this.state.CSO}
             open={this.state.openCodeModal}
           />
-          <Modal
+          <TestTrainModal
             open={this.state.openTestTrainModal}
             onClose={() => { this.setState({ openTestTrainModal: false }) }}
-          >
-            <div>
-              Hi
-            </div>
-          </Modal>
+            agent={this.props.agent}
+            testTrain={this.props.testTrain}
+            onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
+            onDeleteSaying={this.props.onDeleteSaying.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
+            agentActions={this.props.agentActions}
+            agentKeywords={this.props.agentKeywords}
+          />
         </Grid>
       </Grid >
     );
@@ -916,6 +923,9 @@ const mapStateToProps = createStructuredSelector({
   sessionId: makeSelectSessionId(),
   sessionLoaded: makeSelectSessionLoaded(),
   connection: makeSelectConnection(),
+  testTrain: makeSelectTestTrain(),
+  agentActions: makeSelectActions(),
+  agentKeywords: makeSelectKeywords(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -955,7 +965,14 @@ function mapDispatchToProps(dispatch) {
     },
     onStoreSourceData: (payload) => {
       dispatch(storeSourceData(payload));
-    }
+    },
+    onUntagKeyword: (filter, page, pageSize, saying, start, end) => {
+      dispatch(untagKeyword(filter, page, pageSize, saying, start, end));
+    },
+    onDeleteSaying: (filter, page, pageSize, sayingId, categoryId) => {
+      debugger;
+      dispatch(deleteSaying(filter, page, pageSize, sayingId, categoryId, isTestTrain = true));
+    },
   };
 }
 
