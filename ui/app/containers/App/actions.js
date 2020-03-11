@@ -289,7 +289,8 @@ import {
   RECOGNIZE_UPDATED_KEYWORDS,
   ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
   DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
-  CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING
+  CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING,
+  CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY,
 } from './constants';
 
 /*
@@ -2514,6 +2515,13 @@ export function deleteNewActionResponseQuickResponse(index) {
 export function changeDialoguePageFilterSearchSaying(newValue) {
   return {
     type: CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING,
+    newValue,
+  }
+}
+
+export function changeDialoguePageFilterCategory(newValue) {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY,
     newValue,
   }
 }

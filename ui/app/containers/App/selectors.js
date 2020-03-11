@@ -504,6 +504,11 @@ const makeSelectDialoguePageFilterSearchSaying = () =>
     selectGlobal,
     globalState => globalState.dialoguePageFilterSearchSaying
   )
+const makeSelectDialoguePageFilterCategory = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterCategory
+  )
 
 export {
   makeSelectServerStatus,
@@ -583,5 +588,6 @@ export {
   makeSelectCurrentUser,
   makeSelectLoadingCurrentUser,
   makeSelectRichResponses,
-  makeSelectDialoguePageFilterSearchSaying
+  makeSelectDialoguePageFilterSearchSaying,
+  makeSelectDialoguePageFilterCategory
 };

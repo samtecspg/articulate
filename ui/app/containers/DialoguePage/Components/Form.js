@@ -266,6 +266,8 @@ class Form extends React.Component {
                   processSelectedFilters={this.processSelectedPopoverFilters}
                   onChangeCurrentTextFilterValue={this.props.onChangeDialoguePageFilterSearchSaying}
                   textFilterValue={this.props.dialoguePageFilterSearchSaying}
+                  onChangeDropDownValuePicked={this.props.onChangeDialoguePageFilterCategory}
+                  dropDownValuePicked={this.props.dialoguePageFilterCategory}
                 />
               )}
             </Grid>
@@ -401,7 +403,13 @@ Form.propTypes = {
   handleTabChange: PropTypes.func,
   onChangeSayingCategory: PropTypes.func,
   onChangeDialoguePageFilterSearchSaying: PropTypes.func,
-  dialoguePageFilterSearchSaying: PropTypes.string
+  dialoguePageFilterSearchSaying: PropTypes.string,
+  onChangeDialoguePageFilterCategory: PropTypes.func,
+  dialoguePageFilterCategory: PropTypes.string,
+  onChangeDialoguePageFilterSearchSaying: PropTypes.func,
+  dialoguePageFilterSearchSaying: PropTypes.string,
+  onChangeDialoguePageFilterCategory: PropTypes.func,
+  dialoguePageFilterCategory: PropTypes.string
 };
 
 export default injectIntl(withStyles(styles)(Form));
