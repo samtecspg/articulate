@@ -264,6 +264,8 @@ class Form extends React.Component {
                   dropDownFilterLabel={intl.formatMessage(messages.pickCategoryLabel)}
                   filtersDescription={intl.formatMessage(messages.filtersDescription)}
                   processSelectedFilters={this.processSelectedPopoverFilters}
+                  onChangeCurrentTextFilterValue={this.props.onChangeDialoguePageFilterSearchSaying}
+                  textFilterValue={this.props.dialoguePageFilterSearchSaying}
                 />
               )}
             </Grid>
@@ -398,6 +400,8 @@ Form.propTypes = {
   selectedTab: PropTypes.string,
   handleTabChange: PropTypes.func,
   onChangeSayingCategory: PropTypes.func,
+  onChangeDialoguePageFilterSearchSaying: PropTypes.func,
+  dialoguePageFilterSearchSaying: PropTypes.string
 };
 
 export default injectIntl(withStyles(styles)(Form));

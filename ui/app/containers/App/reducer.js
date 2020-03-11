@@ -263,6 +263,7 @@ import {
   ADD_RICH_RESPONSE,
   DELETE_RICH_RESPONSE,
   EDIT_RICH_RESPONSE,
+  CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING,
 } from './constants';
 import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
@@ -557,6 +558,7 @@ const initialState = Immutable({
   serverStatus: '',
   users: [],
   totalUsers: null,
+  dialoguePageFilterSearchSaying: ''
 });
 
 function appReducer(state = initialState, action) {
@@ -1857,7 +1859,7 @@ function appReducer(state = initialState, action) {
           }),
         )
         .set('actionTouched', true);
-    case EDIT_TEXT_RESPONSE_FLAG :
+    case EDIT_TEXT_RESPONSE_FLAG:
       return state
         .updateIn(['action', 'responses'], responses =>
           responses.map((response, index) => {
@@ -2750,6 +2752,10 @@ function appReducer(state = initialState, action) {
       return state
         .set('currentUser', null)
         .set('loadingCurrentUser', true);
+    case CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING:
+      debugger;
+      return state
+        .set('dialoguePageFilterSearchSaying', action.newValue);
     default:
       return state;
   }

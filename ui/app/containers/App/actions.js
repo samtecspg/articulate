@@ -288,7 +288,8 @@ import {
   RESET_SUCCESS_AGENT,
   RECOGNIZE_UPDATED_KEYWORDS,
   ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
-  DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE
+  DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+  CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING
 } from './constants';
 
 /*
@@ -1842,7 +1843,7 @@ export function loadRichResponsesSuccess(richResponses) {
   };
 }
 
-export function addRichResponse(responseIndex, richResponse){
+export function addRichResponse(responseIndex, richResponse) {
   return {
     type: ADD_RICH_RESPONSE,
     responseIndex,
@@ -1850,7 +1851,7 @@ export function addRichResponse(responseIndex, richResponse){
   }
 }
 
-export function editRichResponse(responseIndex, richResponse){
+export function editRichResponse(responseIndex, richResponse) {
   return {
     type: EDIT_RICH_RESPONSE,
     responseIndex,
@@ -1858,7 +1859,7 @@ export function editRichResponse(responseIndex, richResponse){
   }
 }
 
-export function deleteRichResponse(responseIndex, richResponse){
+export function deleteRichResponse(responseIndex, richResponse) {
   return {
     type: DELETE_RICH_RESPONSE,
     responseIndex,
@@ -2508,4 +2509,11 @@ export function deleteNewActionResponseQuickResponse(index) {
     type: DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
     index,
   };
+}
+
+export function changeDialoguePageFilterSearchSaying(newValue) {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING,
+    newValue,
+  }
 }

@@ -37,6 +37,7 @@ import {
   makeSelectTotalKeywords,
   makeSelectTotalActionsPage,
   makeSelectServerStatus,
+  makeSelectDialoguePageFilterSearchSaying
 } from '../App/selectors';
 
 import {
@@ -65,7 +66,8 @@ import {
   changeActionsPageSize,
   changeSayingCategory,
   resetSayings,
-  toggleChatButton
+  toggleChatButton,
+  changeDialoguePageFilterSearchSaying
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -591,6 +593,8 @@ export class DialoguePage extends React.PureComponent {
                 newSayingActions={this.props.newSayingActions}
                 onClearSayingToAction={this.props.onClearSayingToAction}
                 filter={this.state.filter}
+                onChangeDialoguePageFilterSearchSaying={this.props.onChangeDialoguePageFilterSearchSaying}
+                dialoguePageFilterSearchSaying={this.props.dialoguePageFilterSearchSaying}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -658,6 +662,7 @@ const mapStateToProps = createStructuredSelector({
   locale: makeSelectLocale(),
   totalKeywords: makeSelectTotalKeywords(),
   totalActions: makeSelectTotalActionsPage(),
+  dialoguePageFilterSearchSaying: makeSelectDialoguePageFilterSearchSaying(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -778,6 +783,9 @@ function mapDispatchToProps(dispatch) {
     },
     onShowChatButton: value => {
       dispatch(toggleChatButton(value));
+    },
+    onChangeDialoguePageFilterSearchSaying: newValue => {
+      dispatch(changeDialoguePageFilterSearchSaying(newValue));
     }
   };
 }

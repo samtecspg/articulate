@@ -426,3 +426,6 @@ export const LOAD_USERS_ERROR = 'app/user/LOAD_USERS_ERROR';
 export const DELETE_USER = 'app/user/DELETE_USER';
 export const DELETE_USER_SUCCESS = 'app/user/DELETE_USER_SUCCESS';
 export const DELETE_USER_ERROR = 'app/user/DELETE_USER_ERROR';
+
+/*Filters */
+export const CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING = 'app/DialoguePage/CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING';

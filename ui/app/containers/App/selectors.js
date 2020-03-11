@@ -499,6 +499,11 @@ const makeSelectLoadingCurrentUser = () =>
     selectGlobal,
     globalState => globalState.loadingCurrentUser,
   );
+const makeSelectDialoguePageFilterSearchSaying = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterSearchSaying
+  )
 
 export {
   makeSelectServerStatus,
@@ -578,4 +583,5 @@ export {
   makeSelectCurrentUser,
   makeSelectLoadingCurrentUser,
   makeSelectRichResponses,
+  makeSelectDialoguePageFilterSearchSaying
 };
