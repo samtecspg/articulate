@@ -40,7 +40,8 @@ import {
   makeSelectDialoguePageFilterSearchSaying,
   makeSelectDialoguePageFilterCategory,
   makeSelectDialoguePageFilterActions,
-  makeSelectDialoguePageNumberOfFiltersApplied
+  makeSelectDialoguePageNumberOfFiltersApplied,
+  makeSelectDialoguePageFilterString,
 } from '../App/selectors';
 
 import {
@@ -73,7 +74,8 @@ import {
   changeDialoguePageFilterSearchSaying,
   changeDialoguePageFilterCategory,
   changeDialoguePageFilterActions,
-  changeDialoguePageNumberOfFiltersApplied
+  changeDialoguePageNumberOfFiltersApplied,
+  changeDialoguePageFilterString
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -112,7 +114,7 @@ export class DialoguePage extends React.PureComponent {
     }).tab
       ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab
       : 'sayings',
-    filter: '',
+    filter: this.props.dialoguePageFilterString,
     categoryFilter: '',
     actionFilter: '',
     currentSayingsPage: 1,
@@ -142,7 +144,7 @@ export class DialoguePage extends React.PureComponent {
     const agentSayingsPageSize = this.props.agent.settings.sayingsPageSize;
     this.throttledOnLoadSayings = _.throttle(
       (
-        filter,
+        filter = this.props.dialoguePageFilterString,
         currentSayingsPage = this.state.currentSayingsPage,
         pageSize = agentSayingsPageSize,
       ) => {
@@ -153,7 +155,7 @@ export class DialoguePage extends React.PureComponent {
     );
 
     const locationSearchParams = qs.parse(this.props.location.search);
-    const filter = this.state.filter;
+    const filter = this.props.dialoguePageFilterString;
     const currentSayingsPage = this.state.currentSayingsPage;
     this.setState({
       filter,
@@ -243,7 +245,7 @@ export class DialoguePage extends React.PureComponent {
       currentSayingsPage: pageNumber,
     });
     this.props.onLoadSayings(
-      this.state.filter,
+      this.props.dialoguePageFilterString,
       pageNumber,
       this.state.sayingsPageSize,
     );
@@ -276,15 +278,15 @@ export class DialoguePage extends React.PureComponent {
       ),
     });
     this.props.onChangeSayingsPageSize(this.props.agent.id, sayingsPageSize);
-    this.props.onLoadSayings(this.state.filter, 1, sayingsPageSize);
+    this.props.onLoadSayings(this.props.dialoguePageFilterString, 1, sayingsPageSize);
   }
 
   onSearchSaying(filter, ignoreKeywords) {
     this.setState({
-      filter,
       currentSayingsPage: 1,
     });
     this.props.onLoadSayings(filter, 1, this.state.sayingsPageSize, ignoreKeywords);
+    this.props.onChangeDialoguePageFilterString(filter);
   }
 
   onSearchCategory(categoryFilter) {
@@ -460,7 +462,7 @@ export class DialoguePage extends React.PureComponent {
     });
     if (value === 'sayings') {
       this.props.onLoadSayings(
-        this.state.filter,
+        this.props.dialoguePageFilterString,
         this.state.currentSayingsPage,
         this.state.sayingsPageSize,
       );
@@ -663,7 +665,9 @@ DialoguePage.propTypes = {
   onChangeDialoguePageFilterActions: PropTypes.func,
   dialoguePageFilterActions: PropTypes.array,
   onChangeDialoguePageNumberOfFiltersApplied: PropTypes.func,
-  dialoguePageNumberOfFiltersApplied: PropTypes.number
+  dialoguePageNumberOfFiltersApplied: PropTypes.number,
+  onChangeDialoguePageFilterString: PropTypes.func,
+  dialoguePageFilterString: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -685,7 +689,8 @@ const mapStateToProps = createStructuredSelector({
   dialoguePageFilterSearchSaying: makeSelectDialoguePageFilterSearchSaying(),
   dialoguePageFilterCategory: makeSelectDialoguePageFilterCategory(),
   dialoguePageFilterActions: makeSelectDialoguePageFilterActions(),
-  dialoguePageNumberOfFiltersApplied: makeSelectDialoguePageNumberOfFiltersApplied()
+  dialoguePageNumberOfFiltersApplied: makeSelectDialoguePageNumberOfFiltersApplied(),
+  dialoguePageFilterString: makeSelectDialoguePageFilterString(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -818,7 +823,10 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeDialoguePageNumberOfFiltersApplied: newValue => {
       dispatch(changeDialoguePageNumberOfFiltersApplied(newValue));
-    }
+    },
+    onChangeDialoguePageFilterString: newValue => {
+      dispatch(changeDialoguePageFilterString(newValue));
+    },
   };
 }
 

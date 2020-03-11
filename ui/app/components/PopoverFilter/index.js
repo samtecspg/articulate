@@ -463,8 +463,8 @@ export class PopoverFilter extends React.Component {
     }
 
     componentWillUnmount() {
-        const { dropDownValuePicked, chipValuesPicked, textFilterValue, currentMin, currentMax, checkboxValuesPicked, currentJustMax } = this.initialState
-        this.props.processSelectedFilters({ dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval: [currentMin / 100, currentMax / 100], checkboxValuesPicked, currentJustMax });
+        //const { dropDownValuePicked, chipValuesPicked, textFilterValue, currentMin, currentMax, checkboxValuesPicked, currentJustMax } = this.initialState
+        //this.props.processSelectedFilters({ dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval: [currentMin / 100, currentMax / 100], checkboxValuesPicked, currentJustMax });
     }
 
     renderNumberFiltersApplied(classes, intl) {

@@ -521,6 +521,11 @@ const makeSelectDialoguePageNumberOfFiltersApplied = () =>
     selectGlobal,
     globalState => globalState.dialoguePageNumberOfFiltersApplied
   )
+const makeSelectDialoguePageFilterString = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterString
+  )
 
 export {
   makeSelectServerStatus,
@@ -603,5 +608,6 @@ export {
   makeSelectDialoguePageFilterSearchSaying,
   makeSelectDialoguePageFilterCategory,
   makeSelectDialoguePageFilterActions,
-  makeSelectDialoguePageNumberOfFiltersApplied
+  makeSelectDialoguePageNumberOfFiltersApplied,
+  makeSelectDialoguePageFilterString
 };

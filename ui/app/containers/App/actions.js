@@ -292,7 +292,8 @@ import {
   CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING,
   CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY,
   CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS,
-  CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED
+  CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
+  CHANGE_DIALOGUE_PAGE_FILTER_STRING
 } from './constants';
 
 /*
@@ -2538,6 +2539,13 @@ export function changeDialoguePageFilterActions(newValue) {
 export function changeDialoguePageNumberOfFiltersApplied(newValue) {
   return {
     type: CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
+    newValue,
+  }
+}
+
+export function changeDialoguePageFilterString(newValue) {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_FILTER_STRING,
     newValue,
   }
 }
