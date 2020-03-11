@@ -265,6 +265,7 @@ import {
   EDIT_RICH_RESPONSE,
   CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING,
   CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY,
+  CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS
 } from './constants';
 import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
@@ -560,7 +561,8 @@ const initialState = Immutable({
   users: [],
   totalUsers: null,
   dialoguePageFilterSearchSaying: '',
-  dialoguePageFilterCategory: ''
+  dialoguePageFilterCategory: '',
+  dialoguePageFilterActions: [],
 });
 
 function appReducer(state = initialState, action) {
@@ -2760,6 +2762,9 @@ function appReducer(state = initialState, action) {
     case CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY:
       return state
         .set('dialoguePageFilterCategory', action.newValue);
+    case CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS:
+      return state
+        .set('dialoguePageFilterActions', action.newValue);
     default:
       return state;
   }

@@ -268,6 +268,8 @@ class Form extends React.Component {
                   textFilterValue={this.props.dialoguePageFilterSearchSaying}
                   onChangeDropDownValuePicked={this.props.onChangeDialoguePageFilterCategory}
                   dropDownValuePicked={this.props.dialoguePageFilterCategory}
+                  onChangeChipValuesPicked={this.props.onChangeDialoguePageFilterActions}
+                  chipValuesPicked={this.props.dialoguePageFilterActions}
                 />
               )}
             </Grid>
@@ -409,7 +411,9 @@ Form.propTypes = {
   onChangeDialoguePageFilterSearchSaying: PropTypes.func,
   dialoguePageFilterSearchSaying: PropTypes.string,
   onChangeDialoguePageFilterCategory: PropTypes.func,
-  dialoguePageFilterCategory: PropTypes.string
+  dialoguePageFilterCategory: PropTypes.string,
+  onChangeDialoguePageFilterActions: PropTypes.func,
+  dialoguePageFilterActions: PropTypes.array
 };
 
 export default injectIntl(withStyles(styles)(Form));

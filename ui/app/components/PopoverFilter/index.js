@@ -269,7 +269,7 @@ export class PopoverFilter extends React.Component {
             popOverAnchorEl: null,
             textFilterValue: this.props.textFilterValue,
             dropDownValuePicked: this.props.dropDownValuePicked === '' ? this.props.dropDownMainOptionLabel : this.props.dropDownValuePicked,
-            chipValuesPicked: [],
+            chipValuesPicked: this.props.chipValuesPicked,
             checkboxValuesPicked: [],
             numberFiltersApplied: 0,
             currentTextFilterValue: '',
@@ -323,16 +323,22 @@ export class PopoverFilter extends React.Component {
                     return value !== valueToRemove
                 })
             });
+
+            await this.props.onChangeChipValuesPicked(this.state.chipValuesPicked.filter(function (valueToRemove) {
+                return value !== valueToRemove
+            }));
         } else {
             await this.setStateAsync(prevState => ({
                 chipValuesPicked: [...prevState.chipValuesPicked, value]
-            })
-            )
+            }))
+
+            await this.props.onChangeChipValuesPicked([...this.props.chipValuesPicked, value]);
         }
     }
 
     chipIsSelected(value) {
-        return includes(this.state.chipValuesPicked, value);
+        //return includes(this.state.chipValuesPicked, value);
+        return includes(this.props.chipValuesPicked, value);
     }
 
     async handleCheckboxClick(value) {
@@ -997,6 +1003,8 @@ PopoverFilter.propTypes = {
     textFilterValue: PropTypes.string,
     onChangeDropDownValuePicked: PropTypes.func,
     dropDownValuePicked: PropTypes.string,
+    onChangeChipValuesPicked: PropTypes.func,
+    chipValuesPicked: PropTypes.array,
 };
 
 export default injectIntl(withStyles(styles)(PopoverFilter));

@@ -38,7 +38,8 @@ import {
   makeSelectTotalActionsPage,
   makeSelectServerStatus,
   makeSelectDialoguePageFilterSearchSaying,
-  makeSelectDialoguePageFilterCategory
+  makeSelectDialoguePageFilterCategory,
+  makeSelectDialoguePageFilterActions
 } from '../App/selectors';
 
 import {
@@ -69,7 +70,8 @@ import {
   resetSayings,
   toggleChatButton,
   changeDialoguePageFilterSearchSaying,
-  changeDialoguePageFilterCategory
+  changeDialoguePageFilterCategory,
+  changeDialoguePageFilterActions
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -599,6 +601,8 @@ export class DialoguePage extends React.PureComponent {
                 dialoguePageFilterSearchSaying={this.props.dialoguePageFilterSearchSaying}
                 onChangeDialoguePageFilterCategory={this.props.onChangeDialoguePageFilterCategory}
                 dialoguePageFilterCategory={this.props.dialoguePageFilterCategory}
+                onChangeDialoguePageFilterActions={this.props.onChangeDialoguePageFilterActions}
+                dialoguePageFilterActions={this.props.dialoguePageFilterActions}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -651,7 +655,9 @@ DialoguePage.propTypes = {
   onChangeDialoguePageFilterSearchSaying: PropTypes.func,
   dialoguePageFilterSearchSaying: PropTypes.string,
   onChangeDialoguePageFilterCategory: PropTypes.func,
-  dialoguePageFilterCategory: PropTypes.string
+  dialoguePageFilterCategory: PropTypes.string,
+  onChangeDialoguePageFilterActions: PropTypes.func,
+  dialoguePageFilterActions: PropTypes.array
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -672,6 +678,7 @@ const mapStateToProps = createStructuredSelector({
   totalActions: makeSelectTotalActionsPage(),
   dialoguePageFilterSearchSaying: makeSelectDialoguePageFilterSearchSaying(),
   dialoguePageFilterCategory: makeSelectDialoguePageFilterCategory(),
+  dialoguePageFilterActions: makeSelectDialoguePageFilterActions()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -798,6 +805,9 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeDialoguePageFilterCategory: newValue => {
       dispatch(changeDialoguePageFilterCategory(newValue));
+    },
+    onChangeDialoguePageFilterActions: newValue => {
+      dispatch(changeDialoguePageFilterActions(newValue));
     }
   };
 }

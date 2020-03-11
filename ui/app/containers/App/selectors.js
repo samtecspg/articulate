@@ -499,6 +499,8 @@ const makeSelectLoadingCurrentUser = () =>
     selectGlobal,
     globalState => globalState.loadingCurrentUser,
   );
+
+/* Filters */
 const makeSelectDialoguePageFilterSearchSaying = () =>
   createSelector(
     selectGlobal,
@@ -508,6 +510,11 @@ const makeSelectDialoguePageFilterCategory = () =>
   createSelector(
     selectGlobal,
     globalState => globalState.dialoguePageFilterCategory
+  )
+const makeSelectDialoguePageFilterActions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterActions
   )
 
 export {
@@ -589,5 +596,6 @@ export {
   makeSelectLoadingCurrentUser,
   makeSelectRichResponses,
   makeSelectDialoguePageFilterSearchSaying,
-  makeSelectDialoguePageFilterCategory
+  makeSelectDialoguePageFilterCategory,
+  makeSelectDialoguePageFilterActions
 };

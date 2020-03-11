@@ -291,6 +291,7 @@ import {
   DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
   CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING,
   CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY,
+  CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS
 } from './constants';
 
 /*
@@ -2522,6 +2523,13 @@ export function changeDialoguePageFilterSearchSaying(newValue) {
 export function changeDialoguePageFilterCategory(newValue) {
   return {
     type: CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY,
+    newValue,
+  }
+}
+
+export function changeDialoguePageFilterActions(newValue) {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS,
     newValue,
   }
 }
