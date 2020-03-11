@@ -500,7 +500,7 @@ const makeSelectLoadingCurrentUser = () =>
     globalState => globalState.loadingCurrentUser,
   );
 
-/* Filters */
+/* Dialogue Page Filters */
 const makeSelectDialoguePageFilterSearchSaying = () =>
   createSelector(
     selectGlobal,
@@ -525,6 +525,33 @@ const makeSelectDialoguePageFilterString = () =>
   createSelector(
     selectGlobal,
     globalState => globalState.dialoguePageFilterString
+  )
+
+/* Review Page Filters */
+const makeSelectReviewPageFilterSearchSaying = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterSearchSaying
+  )
+const makeSelectReviewPageFilterCategory = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterCategory
+  )
+const makeSelectReviewPageFilterActions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterActions
+  )
+const makeSelectReviewPageNumberOfFiltersApplied = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageNumberOfFiltersApplied
+  )
+const makeSelectReviewPageFilterString = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterString
   )
 
 export {
@@ -609,5 +636,10 @@ export {
   makeSelectDialoguePageFilterCategory,
   makeSelectDialoguePageFilterActions,
   makeSelectDialoguePageNumberOfFiltersApplied,
-  makeSelectDialoguePageFilterString
+  makeSelectDialoguePageFilterString,
+  makeSelectReviewPageFilterSearchSaying,
+  makeSelectReviewPageFilterCategory,
+  makeSelectReviewPageFilterActions,
+  makeSelectReviewPageNumberOfFiltersApplied,
+  makeSelectReviewPageFilterString
 };

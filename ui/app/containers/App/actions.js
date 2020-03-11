@@ -293,7 +293,12 @@ import {
   CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY,
   CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS,
   CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
-  CHANGE_DIALOGUE_PAGE_FILTER_STRING
+  CHANGE_DIALOGUE_PAGE_FILTER_STRING,
+  CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING,
+  CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
+  CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
+  CHANGE_REVIEW_PAGE_NUMBER_OF_FILTERS_APPLIED,
+  CHANGE_REVIEW_PAGE_FILTER_STRING
 } from './constants';
 
 /*
@@ -2546,6 +2551,41 @@ export function changeDialoguePageNumberOfFiltersApplied(newValue) {
 export function changeDialoguePageFilterString(newValue) {
   return {
     type: CHANGE_DIALOGUE_PAGE_FILTER_STRING,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterSearchSaying(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterCategory(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterActions(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
+    newValue,
+  }
+}
+
+export function changeReviewPageNumberOfFiltersApplied(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_NUMBER_OF_FILTERS_APPLIED,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterString(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_STRING,
     newValue,
   }
 }

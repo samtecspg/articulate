@@ -267,7 +267,12 @@ import {
   CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY,
   CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS,
   CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
-  CHANGE_DIALOGUE_PAGE_FILTER_STRING
+  CHANGE_DIALOGUE_PAGE_FILTER_STRING,
+  CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING,
+  CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
+  CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
+  CHANGE_REVIEW_PAGE_NUMBER_OF_FILTERS_APPLIED,
+  CHANGE_REVIEW_PAGE_FILTER_STRING
 } from './constants';
 import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
@@ -566,7 +571,12 @@ const initialState = Immutable({
   dialoguePageFilterCategory: '',
   dialoguePageFilterActions: [],
   dialoguePageNumberOfFiltersApplied: 0,
-  dialoguePageFilterString: ''
+  dialoguePageFilterString: '',
+  reviewPageFilterSearchSaying: '',
+  reviewPageFilterCategory: '',
+  reviewPageFilterActions: [],
+  reviewPageNumberOfFiltersApplied: 0,
+  reviewPageFilterString: ''
 });
 
 function appReducer(state = initialState, action) {
@@ -2775,6 +2785,21 @@ function appReducer(state = initialState, action) {
     case CHANGE_DIALOGUE_PAGE_FILTER_STRING:
       return state
         .set('dialoguePageFilterString', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING:
+      return state
+        .set('reviewPageFilterSearchSaying', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_CATEGORY:
+      return state
+        .set('reviewPageFilterCategory', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_ACTIONS:
+      return state
+        .set('reviewPageFilterActions', action.newValue);
+    case CHANGE_REVIEW_PAGE_NUMBER_OF_FILTERS_APPLIED:
+      return state
+        .set('reviewPageNumberOfFiltersApplied', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_STRING:
+      return state
+        .set('reviewPageFilterString', action.newValue);
     default:
       return state;
   }

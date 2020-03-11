@@ -43,6 +43,11 @@ import {
   makeSelectServerStatus,
   makeSelectLoadingCurrentUser,
   makeSelectLoading,
+  makeSelectReviewPageFilterSearchSaying,
+  makeSelectReviewPageFilterCategory,
+  makeSelectReviewPageFilterActions,
+  makeSelectReviewPageNumberOfFiltersApplied,
+  makeSelectReviewPageFilterString,
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -73,7 +78,7 @@ export class ReviewPage extends React.Component {
     }).tab
       ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab
       : 'documents',
-    filter: '',
+    filter: this.props.reviewPageFilterString,
     documents: [],
     sessions: [],
     pageStatus: {
@@ -145,7 +150,7 @@ export class ReviewPage extends React.Component {
       pageSize: this.state.pageStatus.documents.pageSize,
       field: this.state.pageStatus.documents.sortField,
       direction: this.state.pageStatus.documents.sortDirection,
-      filter: this.state.filter
+      filter: this.props.reviewPageFilterString
     });
 
     onLoadAgentSessions(
@@ -160,7 +165,7 @@ export class ReviewPage extends React.Component {
       pageSize: this.state.pageStatus.logs.pageSize,
       field: this.state.pageStatus.logs.sortField,
       direction: this.state.pageStatus.logs.sortDirection,
-      filter: this.state.filter
+      filter: this.props.reviewPageFilterString
     });
 
     const newPageStatus = this.state.pageStatus;
@@ -290,7 +295,7 @@ export class ReviewPage extends React.Component {
         pageSize: this.state.pageStatus.documents.pageSize,
         field: this.state.pageStatus.documents.sortField,
         direction: this.state.pageStatus.documents.sortDirection,
-        filter: this.state.filter
+        filter: this.props.reviewPageFilterString
       });
     }
     if (this.state.selectedTab === 'sessions') {
@@ -342,7 +347,7 @@ export class ReviewPage extends React.Component {
         pageSize,
         field: this.state.pageStatus[this.state.selectedTab].sortField,
         direction: this.state.pageStatus[this.state.selectedTab].sortDirection,
-        filter: this.state.filter
+        filter: this.props.reviewPageFilterString
       });
     }
     if (this.state.selectedTab === 'sessions') {
@@ -357,7 +362,7 @@ export class ReviewPage extends React.Component {
   }
 
   onSearchSaying(filter) {
-    const { onLoadAgentDocuments } = this.props.actions;
+    const { onLoadAgentDocuments, onChangeReviewPageFilterString } = this.props.actions;
     const newPageStatus = this.state.pageStatus;
     newPageStatus['documents'].currentPage = 1;
     this.setState({
@@ -372,6 +377,7 @@ export class ReviewPage extends React.Component {
       direction: this.state.pageStatus['documents'].sortDirection,
       filter: filter
     });
+    onChangeReviewPageFilterString(filter);
   }
 
   onSearchLog(filter, logsNumber) {
@@ -450,7 +456,7 @@ export class ReviewPage extends React.Component {
         pageSize: this.state.pageStatus[this.state.selectedTab].pageSize,
         field: sortField,
         direction: sortDirection,
-        filter: this.state.filter
+        filter: this.props.reviewPageFilterString
       });
     }
     if (this.state.selectedTab === 'sessions') {
@@ -516,7 +522,11 @@ export class ReviewPage extends React.Component {
       onTrain,
       onToggleConversationBar,
       onSendMessage,
-      onLoadSessionId
+      onLoadSessionId,
+      onChangeReviewPageFilterSearchSaying,
+      onChangeReviewPageFilterCategory,
+      onChangeReviewPageFilterActions,
+      onChangeReviewPageNumberOfFiltersApplied
     } = this.props.actions;
 
     const {
@@ -529,8 +539,11 @@ export class ReviewPage extends React.Component {
       agentActions,
       category,
       newSayingActions,
+      reviewPageFilterSearchSaying,
+      reviewPageFilterCategory,
+      reviewPageFilterActions,
+      reviewPageNumberOfFiltersApplied
     } = this.props;
-
     return this.props.agent.id ? (
       <Grid container>
         <MainTab
@@ -591,6 +604,14 @@ export class ReviewPage extends React.Component {
               //logs={this.props.logs}
               logsText={this.props.logsText}
               loading={this.props.loading}
+              onChangeReviewPageFilterSearchSaying={onChangeReviewPageFilterSearchSaying}
+              reviewPageFilterSearchSaying={reviewPageFilterSearchSaying}
+              onChangeReviewPageFilterCategory={onChangeReviewPageFilterCategory}
+              reviewPageFilterCategory={reviewPageFilterCategory}
+              onChangeReviewPageFilterActions={onChangeReviewPageFilterActions}
+              reviewPageFilterActions={reviewPageFilterActions}
+              onChangeReviewPageNumberOfFiltersApplied={onChangeReviewPageNumberOfFiltersApplied}
+              reviewPageNumberOfFiltersApplied={reviewPageNumberOfFiltersApplied}
             />
           }
           dialogueForm={Link}
@@ -629,6 +650,11 @@ ReviewPage.propTypes = {
     onChangeSessionsPageSize: PropTypes.func.isRequired,
     onRefreshDocuments: PropTypes.func.isRequired,
     onLoadSessionId: PropTypes.func.isRequired,
+    onChangeReviewPageFilterSearchSaying: PropTypes.func.isRequired,
+    onChangeReviewPageFilterCategory: PropTypes.func.isRequired,
+    onChangeReviewPageFilterActions: PropTypes.func.isRequired,
+    onChangeReviewPageNumberOfFiltersApplied: PropTypes.func.isRequired,
+    onChangeReviewPageFilterString: PropTypes.func.isRequired,
   }),
   agent: PropTypes.object.isRequired,
   serverStatus: PropTypes.string,
@@ -644,7 +670,12 @@ ReviewPage.propTypes = {
   newSayingActions: PropTypes.array,
   onGoToUrl: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
-  locale: PropTypes.string
+  locale: PropTypes.string,
+  reviewPageFilterSearchSaying: PropTypes.string,
+  reviewPageFilterCategory: PropTypes.string,
+  reviewPageFilterActions: PropTypes.array,
+  reviewPageNumberOfFiltersApplied: PropTypes.number,
+  reviewPageFilterString: PropTypes.string,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -664,6 +695,11 @@ const mapStateToProps = createStructuredSelector({
   sessions: makeSelectSessions(),
   locale: makeSelectLocale(),
   loading: makeSelectLoading(),
+  reviewPageFilterSearchSaying: makeSelectReviewPageFilterSearchSaying(),
+  reviewPageFilterCategory: makeSelectReviewPageFilterCategory(),
+  reviewPageFilterActions: makeSelectReviewPageFilterActions(),
+  reviewPageNumberOfFiltersApplied: makeSelectReviewPageNumberOfFiltersApplied(),
+  reviewPageFilterString: makeSelectReviewPageFilterString(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -690,7 +726,12 @@ function mapDispatchToProps(dispatch) {
         onChangeSessionsPageSize: Actions.changeSessionsPageSize,
         onRefreshDocuments: Actions.loadAgentDocumentsSuccess,
         onLoadSessionId: Actions.loadSession,
-        onShowChatButton: Actions.toggleChatButton
+        onShowChatButton: Actions.toggleChatButton,
+        onChangeReviewPageFilterSearchSaying: Actions.changeReviewPageFilterSearchSaying,
+        onChangeReviewPageFilterCategory: Actions.changeReviewPageFilterCategory,
+        onChangeReviewPageFilterActions: Actions.changeReviewPageFilterActions,
+        onChangeReviewPageNumberOfFiltersApplied: Actions.changeReviewPageNumberOfFiltersApplied,
+        onChangeReviewPageFilterString: Actions.changeReviewPageFilterString
       },
       dispatch,
     ),

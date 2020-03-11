@@ -306,6 +306,14 @@ class Form extends React.Component {
                   processSelectedFilters={this.processSelectedPopoverFiltersDocuments}
                   absoluteMin={0}
                   absoluteMax={100}
+                  onChangeCurrentTextFilterValue={this.props.onChangeReviewPageFilterSearchSaying}
+                  textFilterValue={this.props.reviewPageFilterSearchSaying}
+                  onChangeDropDownValuePicked={this.props.onChangeReviewPageFilterCategory}
+                  dropDownValuePicked={this.props.reviewPageFilterCategory}
+                  onChangeChipValuesPicked={this.props.onChangeReviewPageFilterActions}
+                  chipValuesPicked={this.props.reviewPageFilterActions}
+                  onChangeNumberFiltersApplied={this.props.onChangeReviewPageNumberOfFiltersApplied}
+                  numberFiltersApplied={this.props.reviewPageNumberOfFiltersApplied}
                 />
               )}
               {this.props.selectedTab === 'logs' && (
@@ -449,7 +457,15 @@ Form.propTypes = {
   handleTabChange: PropTypes.func,
   onLoadSessionId: PropTypes.func,
   loading: PropTypes.bool,
-  onSearchLog: PropTypes.func
+  onSearchLog: PropTypes.func,
+  onChangeReviewPageFilterSearchSaying: PropTypes.func,
+  reviewPageFilterSearchSaying: PropTypes.string,
+  onChangeReviewPageFilterCategory: PropTypes.func,
+  reviewPageFilterCategory: PropTypes.string,
+  onChangeReviewPageFilterActions: PropTypes.func,
+  reviewPageFilterActions: PropTypes.array,
+  onChangeReviewPageNumberOfFiltersApplied: PropTypes.func,
+  reviewPageNumberOfFiltersApplied: PropTypes.number
 };
 
 export default injectIntl(withStyles(styles)(Form));
