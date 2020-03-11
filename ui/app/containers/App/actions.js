@@ -291,7 +291,8 @@ import {
   DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
   CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING,
   CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY,
-  CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS
+  CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS,
+  CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED
 } from './constants';
 
 /*
@@ -2530,6 +2531,13 @@ export function changeDialoguePageFilterCategory(newValue) {
 export function changeDialoguePageFilterActions(newValue) {
   return {
     type: CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS,
+    newValue,
+  }
+}
+
+export function changeDialoguePageNumberOfFiltersApplied(newValue) {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
     newValue,
   }
 }

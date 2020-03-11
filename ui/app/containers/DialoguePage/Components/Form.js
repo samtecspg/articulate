@@ -270,6 +270,8 @@ class Form extends React.Component {
                   dropDownValuePicked={this.props.dialoguePageFilterCategory}
                   onChangeChipValuesPicked={this.props.onChangeDialoguePageFilterActions}
                   chipValuesPicked={this.props.dialoguePageFilterActions}
+                  onChangeNumberFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
+                  numberFiltersApplied={this.props.dialoguePageNumberOfFiltersApplied}
                 />
               )}
             </Grid>
@@ -413,7 +415,9 @@ Form.propTypes = {
   onChangeDialoguePageFilterCategory: PropTypes.func,
   dialoguePageFilterCategory: PropTypes.string,
   onChangeDialoguePageFilterActions: PropTypes.func,
-  dialoguePageFilterActions: PropTypes.array
+  dialoguePageFilterActions: PropTypes.array,
+  onChangeDialoguePageNumberOfFiltersApplied: PropTypes.func,
+  dialoguePageNumberOfFiltersApplied: PropTypes.number
 };
 
 export default injectIntl(withStyles(styles)(Form));

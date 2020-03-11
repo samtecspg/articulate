@@ -39,7 +39,8 @@ import {
   makeSelectServerStatus,
   makeSelectDialoguePageFilterSearchSaying,
   makeSelectDialoguePageFilterCategory,
-  makeSelectDialoguePageFilterActions
+  makeSelectDialoguePageFilterActions,
+  makeSelectDialoguePageNumberOfFiltersApplied
 } from '../App/selectors';
 
 import {
@@ -71,7 +72,8 @@ import {
   toggleChatButton,
   changeDialoguePageFilterSearchSaying,
   changeDialoguePageFilterCategory,
-  changeDialoguePageFilterActions
+  changeDialoguePageFilterActions,
+  changeDialoguePageNumberOfFiltersApplied
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -603,6 +605,8 @@ export class DialoguePage extends React.PureComponent {
                 dialoguePageFilterCategory={this.props.dialoguePageFilterCategory}
                 onChangeDialoguePageFilterActions={this.props.onChangeDialoguePageFilterActions}
                 dialoguePageFilterActions={this.props.dialoguePageFilterActions}
+                onChangeDialoguePageNumberOfFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
+                dialoguePageNumberOfFiltersApplied={this.props.dialoguePageNumberOfFiltersApplied}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -657,7 +661,9 @@ DialoguePage.propTypes = {
   onChangeDialoguePageFilterCategory: PropTypes.func,
   dialoguePageFilterCategory: PropTypes.string,
   onChangeDialoguePageFilterActions: PropTypes.func,
-  dialoguePageFilterActions: PropTypes.array
+  dialoguePageFilterActions: PropTypes.array,
+  onChangeDialoguePageNumberOfFiltersApplied: PropTypes.func,
+  dialoguePageNumberOfFiltersApplied: PropTypes.number
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -678,7 +684,8 @@ const mapStateToProps = createStructuredSelector({
   totalActions: makeSelectTotalActionsPage(),
   dialoguePageFilterSearchSaying: makeSelectDialoguePageFilterSearchSaying(),
   dialoguePageFilterCategory: makeSelectDialoguePageFilterCategory(),
-  dialoguePageFilterActions: makeSelectDialoguePageFilterActions()
+  dialoguePageFilterActions: makeSelectDialoguePageFilterActions(),
+  dialoguePageNumberOfFiltersApplied: makeSelectDialoguePageNumberOfFiltersApplied()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -808,6 +815,9 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeDialoguePageFilterActions: newValue => {
       dispatch(changeDialoguePageFilterActions(newValue));
+    },
+    onChangeDialoguePageNumberOfFiltersApplied: newValue => {
+      dispatch(changeDialoguePageNumberOfFiltersApplied(newValue));
     }
   };
 }

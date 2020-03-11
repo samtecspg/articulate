@@ -271,7 +271,7 @@ export class PopoverFilter extends React.Component {
             dropDownValuePicked: this.props.dropDownValuePicked === '' ? this.props.dropDownMainOptionLabel : this.props.dropDownValuePicked,
             chipValuesPicked: this.props.chipValuesPicked,
             checkboxValuesPicked: [],
-            numberFiltersApplied: 0,
+            numberFiltersApplied: this.props.numberFiltersApplied,
             currentTextFilterValue: '',
             currentMax: 100,
             currentMin: 0,
@@ -384,6 +384,7 @@ export class PopoverFilter extends React.Component {
             numFilters++;
         }
         await this.setStateAsync({ numberFiltersApplied: numFilters });
+        await this.props.onChangeNumberFiltersApplied(numFilters);
     }
 
     handlePopoverClose = () => {
@@ -1005,6 +1006,8 @@ PopoverFilter.propTypes = {
     dropDownValuePicked: PropTypes.string,
     onChangeChipValuesPicked: PropTypes.func,
     chipValuesPicked: PropTypes.array,
+    onChangeNumberFiltersApplied: PropTypes.func,
+    numberFiltersApplied: PropTypes.number
 };
 
 export default injectIntl(withStyles(styles)(PopoverFilter));
