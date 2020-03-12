@@ -106,8 +106,6 @@ class Form extends React.Component {
     numberLogsFilter: 1000
   };
 
-  handle
-
   handleOpen = () => {
     this.setState({
       openModal: true,
@@ -121,12 +119,17 @@ class Form extends React.Component {
   };
 
   processSelectedPopoverFiltersDocuments(filtersSet) {
-    const { dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval } = filtersSet;
+    //const { dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval } = filtersSet;
+    const dropDownValuePicked = this.props.reviewPageFilterCategory;
+    const chipValuesPicked = this.props.reviewPageFilterActions;
+    const textFilterValue = this.props.reviewPageFilterSearchSaying;
+    const actionInterval = [this.props.reviewPageFilterActionIntervalMin / 100, this.props.reviewPageFilterActionIntervalMax / 100];
+
     var filter = '';
     if (textFilterValue != '') {
       filter = filter + textFilterValue + ' ';
     }
-    if (dropDownValuePicked != 'Pick Category') {
+    if (dropDownValuePicked != 'Pick Category' && dropDownValuePicked != '') {
       filter = filter + 'category:"' + dropDownValuePicked + '"';
     }
     if (chipValuesPicked.length > 0) {
@@ -144,7 +147,9 @@ class Form extends React.Component {
   }
 
   processSelectedPopoverFiltersLogs(filtersSet) {
-    const { checkboxValuesPicked, currentJustMax } = filtersSet;
+    //const { checkboxValuesPicked, currentJustMax } = filtersSet;
+    const checkboxValuesPicked = this.props.reviewPageFilterContainers;
+    const currentJustMax = this.props.reviewPageFilterMaxLogs;
     var filter = '';
     if (checkboxValuesPicked.length > 0) {
       filter = filter + ' containers:"';
@@ -152,10 +157,10 @@ class Form extends React.Component {
       filter = filter + '"';
     }
     this.props.onSearchLog(filter, currentJustMax);
-    this.setState({
-      refreshLogFilter: filter,
-      numberLogsFilter: currentJustMax
-    });
+    //this.setState({
+    //  refreshLogFilter: filter,
+    //  numberLogsFilter: currentJustMax
+    //});
   }
 
   render() {
@@ -336,6 +341,10 @@ class Form extends React.Component {
                   processSelectedFilters={this.processSelectedPopoverFiltersLogs}
                   absoluteJustMax={10000}
                   initialJustMax={1000}
+                  onChangeCheckboxValuesPicked={this.props.onChangeReviewPageFilterContainers}
+                  checkboxValuesPicked={this.props.reviewPageFilterContainers}
+                  onChangeCurrentJustMax={this.props.onChangeReviewPageFilterMaxLogs}
+                  justMax={this.props.reviewPageFilterMaxLogs}
                 />
               )}
             </Grid>
@@ -407,7 +416,7 @@ class Form extends React.Component {
                 logsText={this.props.logsText}
                 loading={this.props.loading}
                 processSelectedFilters={this.processSelectedPopoverFiltersLogs}
-                refreshLogs={() => { this.props.onSearchLog(this.state.refreshLogFilter, this.state.numberLogsFilter) }}
+                refreshLogs={() => { this.props.onSearchLog(this.props.reviewPageFilterLogsString, reviewPageFilterMaxLogs) }}
               />
             </Fragment>
           )
@@ -474,6 +483,12 @@ Form.propTypes = {
   reviewPageFilterActionIntervalMax: PropTypes.number,
   onChangeReviewPageFilterActionIntervalMin: PropTypes.func,
   reviewPageFilterActionIntervalMin: PropTypes.number,
+  reviewPageFilterContainers: PropTypes.array,
+  reviewPageFilterMaxLogs: PropTypes.number,
+  reviewPageFilterLogsString: PropTypes.string,
+  onChangeReviewPageFilterContainers: PropTypes.func.isRequired,
+  onChangeReviewPageFilterMaxLogs: PropTypes.func.isRequired,
+  onChangeReviewPageFilterLogsString: PropTypes.func.isRequired
 };
 
 export default injectIntl(withStyles(styles)(Form));

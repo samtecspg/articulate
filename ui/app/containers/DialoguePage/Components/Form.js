@@ -131,13 +131,18 @@ class Form extends React.Component {
     });
   };
 
-  processSelectedPopoverFilters(filtersSet) {
-    const { dropDownValuePicked, chipValuesPicked, textFilterValue } = filtersSet;
+  processSelectedPopoverFilters() {
+    //const { dropDownValuePicked, chipValuesPicked, textFilterValue } = filtersSet;
+    const dropDownValuePicked = this.props.dialoguePageFilterCategory;
+    const chipValuesPicked = this.props.dialoguePageFilterActions;
+    const textFilterValue = this.props.dialoguePageFilterSearchSaying;
+
+
     var filter = '';
     if (textFilterValue != '') {
       filter = filter + textFilterValue + ' ';
     }
-    if (dropDownValuePicked != 'Pick Category') {
+    if (dropDownValuePicked != 'Pick Category' && dropDownValuePicked != '') {
       filter = filter + 'category:"' + dropDownValuePicked + '"';
     }
     if (chipValuesPicked.length > 0) {
