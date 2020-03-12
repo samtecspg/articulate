@@ -373,23 +373,23 @@ export class PopoverFilter extends React.Component {
 
     async updateFilterNumber() {
         var numFilters = 0;
-        if (this.props.dropDownValuePicked != this.props.dropDownMainOptionLabel) {
+        if (this.props.showDropDownFilter && this.props.dropDownValuePicked != this.props.dropDownMainOptionLabel) {
             numFilters++;
         }
-        if (this.props.chipValuesPicked) {
+        if (this.props.showChips && this.props.chipValuesPicked) {
             numFilters += this.props.chipValuesPicked.length;
         }
-        if (this.props.textFilterValue != '') {
+        if (this.props.showTextFilter && this.props.textFilterValue != '') {
             numFilters++;
         }
         if (this.props.showMinMaxFilter && ((this.props.currentMax !== this.props.absoluteMax) ||
             (this.props.currentMin !== this.props.absoluteMin))) {
             numFilters++;
         }
-        if (this.props.checkboxValuesPicked) {
+        if (this.props.showCheckboxFilter && this.props.checkboxValuesPicked) {
             numFilters += this.props.checkboxValuesPicked.length;
         }
-        if (this.props.showCheckboxFilter && this.props.currentJustMax !== this.props.initialJustMax) {
+        if (this.props.showCheckboxFilter && Number(this.props.currentJustMax) !== this.props.initialJustMax) {
             numFilters++;
         }
         // await this.setStateAsync({ numberFiltersApplied: numFilters });
@@ -986,7 +986,7 @@ export class PopoverFilter extends React.Component {
                         {this.props.showCheckboxFilter && this.renderJustMax(classes, intl)}
                         {this.props.showTextFilter && this.renderTextFilter(classes, intl)}
                         {this.props.showTextFilter && this.renderTextFilterAppliedLabel(classes, intl)}
-                        {this.props.textFilterValue != '' && this.renderTextFilterAppliedChip(classes, intl)}
+                        {this.props.showTextFilter && this.props.textFilterValue != '' && this.renderTextFilterAppliedChip(classes, intl)}
                         {this.props.showDropDownFilter && this.renderDropDownFilter(classes, intl)}
                         {this.props.showChips && this.renderChipsFilterLabel(classes, intl)}
                         {this.props.showChips && this.renderChips(classes, intl)}
@@ -1041,7 +1041,6 @@ PopoverFilter.propTypes = {
     onChangeCurrentMin: PropTypes.func,
     currentMin: PropTypes.number,
     onChangeCurrentJustMax: PropTypes.func,
-    justMax: PropTypes.number,
     onChangeCheckboxValuesPicked: PropTypes.func,
     checkboxValuesPicked: PropTypes.array
 };

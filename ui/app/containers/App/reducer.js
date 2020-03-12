@@ -277,7 +277,8 @@ import {
   CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MAX,
   CHANGE_REVIEW_PAGE_FILTER_CONTAINERS,
   CHANGE_REVIEW_PAGE_FILTER_MAX_LOGS,
-  CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING
+  CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING,
+  CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED
 } from './constants';
 import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
@@ -586,7 +587,8 @@ const initialState = Immutable({
   reviewPageFilterActionIntervalMax: 100,
   reviewPageFilterContainers: [],
   reviewPageFilterMaxLogs: 1000,
-  reviewPageFilterLogsString: ''
+  reviewPageFilterLogsString: '',
+  reviewPageLogsNumberOfFiltersApplied: 0
 });
 
 function appReducer(state = initialState, action) {
@@ -2825,6 +2827,9 @@ function appReducer(state = initialState, action) {
     case CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING:
       return state
         .set('reviewPageFilterLogsString', action.newValue);
+    case CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED:
+      return state
+        .set('reviewPageLogsNumberOfFiltersApplied', action.newValue)
     default:
       return state;
   }

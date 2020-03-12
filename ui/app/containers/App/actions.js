@@ -303,7 +303,8 @@ import {
   CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MAX,
   CHANGE_REVIEW_PAGE_FILTER_CONTAINERS,
   CHANGE_REVIEW_PAGE_FILTER_MAX_LOGS,
-  CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING
+  CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING,
+  CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED
 } from './constants';
 
 /*
@@ -2626,6 +2627,20 @@ export function changeReviewPageFilterMaxLogs(newValue) {
 export function changeReviewPageFilterLogsString(newValue) {
   return {
     type: CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING,
+    newValue,
+  }
+}
+
+export function changeReviewPageNUMBERT(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING,
+    newValue,
+  }
+}
+
+export function changeReviewPageLogsNumberOfFiltersApplied(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED,
     newValue,
   }
 }

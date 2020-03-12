@@ -578,6 +578,11 @@ const makeSelectReviewPageFilterLogsString = () =>
     selectGlobal,
     globalState => globalState.reviewPageFilterLogsString
   )
+const makeSelectReviewPageLogsNumberOfFiltersApplied = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageLogsNumberOfFiltersApplied
+  )
 
 export {
   makeSelectServerStatus,
@@ -671,5 +676,6 @@ export {
   makeSelectReviewPageFilterActionIntervalMin,
   makeSelectReviewPageFilterContainers,
   makeSelectReviewPageFilterMaxLogs,
-  makeSelectReviewPageFilterLogsString
+  makeSelectReviewPageFilterLogsString,
+  makeSelectReviewPageLogsNumberOfFiltersApplied
 };

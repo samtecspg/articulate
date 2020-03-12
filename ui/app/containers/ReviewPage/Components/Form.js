@@ -344,7 +344,9 @@ class Form extends React.Component {
                   onChangeCheckboxValuesPicked={this.props.onChangeReviewPageFilterContainers}
                   checkboxValuesPicked={this.props.reviewPageFilterContainers}
                   onChangeCurrentJustMax={this.props.onChangeReviewPageFilterMaxLogs}
-                  justMax={this.props.reviewPageFilterMaxLogs}
+                  currentJustMax={this.props.reviewPageFilterMaxLogs}
+                  onChangeNumberFiltersApplied={this.props.onChangeReviewPageLogsNumberOfFiltersApplied}
+                  numberFiltersApplied={this.props.reviewPageLogsNumberOfFiltersApplied}
                 />
               )}
             </Grid>
@@ -484,11 +486,12 @@ Form.propTypes = {
   onChangeReviewPageFilterActionIntervalMin: PropTypes.func,
   reviewPageFilterActionIntervalMin: PropTypes.number,
   reviewPageFilterContainers: PropTypes.array,
-  reviewPageFilterMaxLogs: PropTypes.number,
   reviewPageFilterLogsString: PropTypes.string,
-  onChangeReviewPageFilterContainers: PropTypes.func.isRequired,
-  onChangeReviewPageFilterMaxLogs: PropTypes.func.isRequired,
-  onChangeReviewPageFilterLogsString: PropTypes.func.isRequired
+  onChangeReviewPageFilterContainers: PropTypes.func,
+  onChangeReviewPageFilterMaxLogs: PropTypes.func,
+  onChangeReviewPageFilterLogsString: PropTypes.func,
+  onChangeReviewPageLogsNumberOfFiltersApplied: PropTypes.func,
+  reviewPageLogsNumberOfFiltersApplied: PropTypes.number
 };
 
 export default injectIntl(withStyles(styles)(Form));
