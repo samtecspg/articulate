@@ -273,8 +273,8 @@ export class PopoverFilter extends React.Component {
             checkboxValuesPicked: [],
             numberFiltersApplied: this.props.numberFiltersApplied,
             currentTextFilterValue: '',
-            currentMax: 100,
-            currentMin: 0,
+            currentMax: this.props.currentMax,
+            currentMin: this.props.currentMin,
             currentJustMax: this.props.initialJustMax
         };
         this.state = this.initialState;
@@ -396,34 +396,50 @@ export class PopoverFilter extends React.Component {
     handleMinChange = async (ev) => {
         if (ev.target.value < this.props.absoluteMin) {
             await this.setStateAsync({ currentMin: this.props.absoluteMin });
+
+            this.props.onChangeCurrentMin(this.props.absoluteMin);
         }
         else {
             await this.setStateAsync({ currentMin: Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, '') });
+
+            this.props.onChangeCurrentMin(Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, ''));
         }
     }
 
     handleMinValidation = async () => {
         if (this.state.currentMin === '') {
             await this.setStateAsync({ currentMin: this.props.absoluteMin });
+
+            this.props.onChangeCurrentMin(this.props.absoluteMin);
         } else if (this.state.currentMin > this.state.currentMax) {
             await this.setStateAsync({ currentMin: this.state.currentMax });
+
+            this.props.onChangeCurrentMin(this.props.absoluteMax);
         }
     }
 
     handleMaxChange = async (ev) => {
         if (ev.target.value > this.props.absoluteMax) {
             await this.setStateAsync({ currentMax: this.props.absoluteMax });
+
+            this.props.onChangeCurrentMax(this.props.absoluteMax);
         }
         else {
             await this.setStateAsync({ currentMax: Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, '') });
+
+            this.props.onChangeCurrentMax(Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, ''));
         }
     }
 
     handleMaxValidation = async () => {
         if (this.state.currentMax === '') {
             await this.setStateAsync({ currentMax: this.props.absoluteMax });
+
+            this.props.onChangeCurrentMax(this.props.absoluteMax);
         } else if (this.state.currentMax < this.state.currentMin) {
             await this.setStateAsync({ currentMax: this.state.currentMin });
+
+            this.props.onChangeCurrentMax(this.props.currentMin);
         }
     }
 
@@ -1007,7 +1023,12 @@ PopoverFilter.propTypes = {
     onChangeChipValuesPicked: PropTypes.func,
     chipValuesPicked: PropTypes.array,
     onChangeNumberFiltersApplied: PropTypes.func,
-    numberFiltersApplied: PropTypes.number
+    numberFiltersApplied: PropTypes.number,
+    onChangeCurrentMax: PropTypes.func,
+    currentMax: PropTypes.number,
+    onChangeCurrentMin: PropTypes.func,
+    currentMin: PropTypes.number,
+
 };
 
 export default injectIntl(withStyles(styles)(PopoverFilter));

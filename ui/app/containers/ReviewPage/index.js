@@ -48,6 +48,8 @@ import {
   makeSelectReviewPageFilterActions,
   makeSelectReviewPageNumberOfFiltersApplied,
   makeSelectReviewPageFilterString,
+  makeSelectReviewPageFilterActionIntervalMax,
+  makeSelectReviewPageFilterActionIntervalMin
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -526,7 +528,9 @@ export class ReviewPage extends React.Component {
       onChangeReviewPageFilterSearchSaying,
       onChangeReviewPageFilterCategory,
       onChangeReviewPageFilterActions,
-      onChangeReviewPageNumberOfFiltersApplied
+      onChangeReviewPageNumberOfFiltersApplied,
+      onChangeReviewPageFilterActionIntervalMax,
+      onChangeReviewPageFilterActionIntervalMin
     } = this.props.actions;
 
     const {
@@ -542,7 +546,9 @@ export class ReviewPage extends React.Component {
       reviewPageFilterSearchSaying,
       reviewPageFilterCategory,
       reviewPageFilterActions,
-      reviewPageNumberOfFiltersApplied
+      reviewPageNumberOfFiltersApplied,
+      reviewPageFilterActionIntervalMax,
+      reviewPageFilterActionIntervalMin
     } = this.props;
     return this.props.agent.id ? (
       <Grid container>
@@ -612,6 +618,10 @@ export class ReviewPage extends React.Component {
               reviewPageFilterActions={reviewPageFilterActions}
               onChangeReviewPageNumberOfFiltersApplied={onChangeReviewPageNumberOfFiltersApplied}
               reviewPageNumberOfFiltersApplied={reviewPageNumberOfFiltersApplied}
+              onChangeReviewPageFilterActionIntervalMax={onChangeReviewPageFilterActionIntervalMax}
+              reviewPageFilterActionIntervalMax={reviewPageFilterActionIntervalMax}
+              onChangeReviewPageFilterActionIntervalMin={onChangeReviewPageFilterActionIntervalMin}
+              reviewPageFilterActionIntervalMin={reviewPageFilterActionIntervalMin}
             />
           }
           dialogueForm={Link}
@@ -655,6 +665,8 @@ ReviewPage.propTypes = {
     onChangeReviewPageFilterActions: PropTypes.func.isRequired,
     onChangeReviewPageNumberOfFiltersApplied: PropTypes.func.isRequired,
     onChangeReviewPageFilterString: PropTypes.func.isRequired,
+    onChangeReviewPageFilterActionIntervalMin: PropTypes.func.isRequired,
+    onChangeReviewPageFilterActionIntervalMax: PropTypes.func.isRequired,
   }),
   agent: PropTypes.object.isRequired,
   serverStatus: PropTypes.string,
@@ -700,6 +712,8 @@ const mapStateToProps = createStructuredSelector({
   reviewPageFilterActions: makeSelectReviewPageFilterActions(),
   reviewPageNumberOfFiltersApplied: makeSelectReviewPageNumberOfFiltersApplied(),
   reviewPageFilterString: makeSelectReviewPageFilterString(),
+  reviewPageFilterActionIntervalMin: makeSelectReviewPageFilterActionIntervalMin(),
+  reviewPageFilterActionIntervalMax: makeSelectReviewPageFilterActionIntervalMax(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -731,7 +745,9 @@ function mapDispatchToProps(dispatch) {
         onChangeReviewPageFilterCategory: Actions.changeReviewPageFilterCategory,
         onChangeReviewPageFilterActions: Actions.changeReviewPageFilterActions,
         onChangeReviewPageNumberOfFiltersApplied: Actions.changeReviewPageNumberOfFiltersApplied,
-        onChangeReviewPageFilterString: Actions.changeReviewPageFilterString
+        onChangeReviewPageFilterString: Actions.changeReviewPageFilterString,
+        onChangeReviewPageFilterActionIntervalMax: Actions.changeReviewPageFilterActionIntervalMax,
+        onChangeReviewPageFilterActionIntervalMin: Actions.changeReviewPageFilterActionIntervalMin,
       },
       dispatch,
     ),

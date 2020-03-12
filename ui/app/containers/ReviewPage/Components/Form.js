@@ -314,6 +314,10 @@ class Form extends React.Component {
                   chipValuesPicked={this.props.reviewPageFilterActions}
                   onChangeNumberFiltersApplied={this.props.onChangeReviewPageNumberOfFiltersApplied}
                   numberFiltersApplied={this.props.reviewPageNumberOfFiltersApplied}
+                  onChangeCurrentMax={this.props.onChangeReviewPageFilterActionIntervalMax}
+                  currentMax={this.props.reviewPageFilterActionIntervalMax}
+                  onChangeCurrentMin={this.props.onChangeReviewPageFilterActionIntervalMin}
+                  currentMin={this.props.reviewPageFilterActionIntervalMin}
                 />
               )}
               {this.props.selectedTab === 'logs' && (
@@ -465,7 +469,11 @@ Form.propTypes = {
   onChangeReviewPageFilterActions: PropTypes.func,
   reviewPageFilterActions: PropTypes.array,
   onChangeReviewPageNumberOfFiltersApplied: PropTypes.func,
-  reviewPageNumberOfFiltersApplied: PropTypes.number
+  reviewPageNumberOfFiltersApplied: PropTypes.number,
+  onChangeReviewPageFilterActionIntervalMax: PropTypes.func,
+  reviewPageFilterActionIntervalMax: PropTypes.number,
+  onChangeReviewPageFilterActionIntervalMin: PropTypes.func,
+  reviewPageFilterActionIntervalMin: PropTypes.number,
 };
 
 export default injectIntl(withStyles(styles)(Form));

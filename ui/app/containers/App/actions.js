@@ -298,7 +298,9 @@ import {
   CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
   CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
   CHANGE_REVIEW_PAGE_NUMBER_OF_FILTERS_APPLIED,
-  CHANGE_REVIEW_PAGE_FILTER_STRING
+  CHANGE_REVIEW_PAGE_FILTER_STRING,
+  CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MIN,
+  CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MAX
 } from './constants';
 
 /*
@@ -2589,3 +2591,19 @@ export function changeReviewPageFilterString(newValue) {
     newValue,
   }
 }
+
+export function changeReviewPageFilterActionIntervalMin(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MIN,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterActionIntervalMax(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MAX,
+    newValue,
+  }
+}
+
+

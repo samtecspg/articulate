@@ -272,7 +272,9 @@ import {
   CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
   CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
   CHANGE_REVIEW_PAGE_NUMBER_OF_FILTERS_APPLIED,
-  CHANGE_REVIEW_PAGE_FILTER_STRING
+  CHANGE_REVIEW_PAGE_FILTER_STRING,
+  CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MIN,
+  CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MAX
 } from './constants';
 import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
@@ -576,7 +578,9 @@ const initialState = Immutable({
   reviewPageFilterCategory: '',
   reviewPageFilterActions: [],
   reviewPageNumberOfFiltersApplied: 0,
-  reviewPageFilterString: ''
+  reviewPageFilterString: '',
+  reviewPageFilterActionIntervalMin: 0,
+  reviewPageFilterActionIntervalMax: 100,
 });
 
 function appReducer(state = initialState, action) {
@@ -2800,6 +2804,12 @@ function appReducer(state = initialState, action) {
     case CHANGE_REVIEW_PAGE_FILTER_STRING:
       return state
         .set('reviewPageFilterString', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MAX:
+      return state
+        .set('reviewPageFilterActionIntervalMax', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MIN:
+      return state
+        .set('reviewPageFilterActionIntervalMin', action.newValue);
     default:
       return state;
   }

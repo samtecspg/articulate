@@ -553,6 +553,16 @@ const makeSelectReviewPageFilterString = () =>
     selectGlobal,
     globalState => globalState.reviewPageFilterString
   )
+const makeSelectReviewPageFilterActionIntervalMax = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterActionIntervalMax
+  )
+const makeSelectReviewPageFilterActionIntervalMin = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterActionIntervalMin
+  )
 
 export {
   makeSelectServerStatus,
@@ -641,5 +651,7 @@ export {
   makeSelectReviewPageFilterCategory,
   makeSelectReviewPageFilterActions,
   makeSelectReviewPageNumberOfFiltersApplied,
-  makeSelectReviewPageFilterString
+  makeSelectReviewPageFilterString,
+  makeSelectReviewPageFilterActionIntervalMax,
+  makeSelectReviewPageFilterActionIntervalMin
 };
