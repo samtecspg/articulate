@@ -277,6 +277,7 @@ class Form extends React.Component {
                   chipValuesPicked={this.props.dialoguePageFilterActions}
                   onChangeNumberFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
                   numberFiltersApplied={this.props.dialoguePageNumberOfFiltersApplied}
+                  onResetFilters={this.props.onResetDialoguePageFilters}
                 />
               )}
             </Grid>
@@ -422,7 +423,8 @@ Form.propTypes = {
   onChangeDialoguePageFilterActions: PropTypes.func,
   dialoguePageFilterActions: PropTypes.array,
   onChangeDialoguePageNumberOfFiltersApplied: PropTypes.func,
-  dialoguePageNumberOfFiltersApplied: PropTypes.number
+  dialoguePageNumberOfFiltersApplied: PropTypes.number,
+  onResetDialoguePageFilters: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(Form));

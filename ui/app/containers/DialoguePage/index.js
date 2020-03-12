@@ -75,7 +75,8 @@ import {
   changeDialoguePageFilterCategory,
   changeDialoguePageFilterActions,
   changeDialoguePageNumberOfFiltersApplied,
-  changeDialoguePageFilterString
+  changeDialoguePageFilterString,
+  resetDialoguePageFilters
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -609,6 +610,7 @@ export class DialoguePage extends React.PureComponent {
                 dialoguePageFilterActions={this.props.dialoguePageFilterActions}
                 onChangeDialoguePageNumberOfFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
                 dialoguePageNumberOfFiltersApplied={this.props.dialoguePageNumberOfFiltersApplied}
+                onResetDialoguePageFilters={this.props.onResetDialoguePageFilters}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -668,6 +670,7 @@ DialoguePage.propTypes = {
   dialoguePageNumberOfFiltersApplied: PropTypes.number,
   onChangeDialoguePageFilterString: PropTypes.func,
   dialoguePageFilterString: PropTypes.string,
+  onResetDialoguePageFilters: PropTypes.func
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -827,6 +830,9 @@ function mapDispatchToProps(dispatch) {
     onChangeDialoguePageFilterString: newValue => {
       dispatch(changeDialoguePageFilterString(newValue));
     },
+    onResetDialoguePageFilters: () => {
+      dispatch(resetDialoguePageFilters());
+    }
   };
 }
 

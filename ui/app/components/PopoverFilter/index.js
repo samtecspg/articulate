@@ -373,7 +373,7 @@ export class PopoverFilter extends React.Component {
 
     async updateFilterNumber() {
         var numFilters = 0;
-        if (this.props.showDropDownFilter && this.props.dropDownValuePicked != this.props.dropDownMainOptionLabel) {
+        if (this.props.showDropDownFilter && this.props.dropDownValuePicked != '' && this.props.dropDownValuePicked != this.props.dropDownMainOptionLabel) {
             numFilters++;
         }
         if (this.props.showChips && this.props.chipValuesPicked) {
@@ -474,18 +474,10 @@ export class PopoverFilter extends React.Component {
 
     async resetState(exit) {
         if (exit) {
+            await this.props.onResetFilters();
             await this.setStateAsync(this.initialState);
         } else {
-            //await this.setStateAsync({
-            //    textFilterValue: '',
-            //    dropDownValuePicked: this.props.dropDownMainOptionLabel,
-            //    chipValuesPicked: [],
-            //    numberFiltersApplied: 0,
-            //    currentMin: this.props.absoluteMin,
-            //    currentMax: this.props.absoluteMax,
-            //    checkboxValuesPicked: [],
-            //    currentJustMax: this.props.initialJustMax
-            //})
+            await this.props.onResetFilters();
         }
         await this.handleFiltersChange();
     }
@@ -759,7 +751,7 @@ export class PopoverFilter extends React.Component {
                         inputProps={{
                             className: classes.dropDownInput
                         }}
-                        value={this.props.dropDownValuePicked}
+                        value={this.props.dropDownValuePicked === '' ? this.props.dropDownMainOptionLabel : this.props.dropDownValuePicked}
                         onChange={async ev => {
                             await this.handleDropDownValuePicked(ev.target.value)
                             await this.handleFiltersChange();
@@ -1042,7 +1034,8 @@ PopoverFilter.propTypes = {
     currentMin: PropTypes.number,
     onChangeCurrentJustMax: PropTypes.func,
     onChangeCheckboxValuesPicked: PropTypes.func,
-    checkboxValuesPicked: PropTypes.array
+    checkboxValuesPicked: PropTypes.array,
+    onResetFilters: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(PopoverFilter));

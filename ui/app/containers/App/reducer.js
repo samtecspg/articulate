@@ -278,7 +278,10 @@ import {
   CHANGE_REVIEW_PAGE_FILTER_CONTAINERS,
   CHANGE_REVIEW_PAGE_FILTER_MAX_LOGS,
   CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING,
-  CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED
+  CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED,
+  RESET_DIALOGUE_PAGE_FILTERS,
+  RESET_REVIEW_PAGE_FILTERS,
+  RESET_REVIEW_PAGE_LOGS_FILTERS
 } from './constants';
 import { DEFAULT_LOCALE } from '../../i18n';
 const happyEmojies = [
@@ -2797,6 +2800,13 @@ function appReducer(state = initialState, action) {
     case CHANGE_DIALOGUE_PAGE_FILTER_STRING:
       return state
         .set('dialoguePageFilterString', action.newValue);
+    case RESET_DIALOGUE_PAGE_FILTERS:
+      return state
+        .set('dialoguePageFilterSearchSaying', '')
+        .set('dialoguePageFilterCategory', '')
+        .set('dialoguePageFilterActions', [])
+        .set('dialoguePageNumberOfFiltersApplied', 0)
+        .set('dialoguePageFilterString', '')
     case CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING:
       return state
         .set('reviewPageFilterSearchSaying', action.newValue);
@@ -2830,6 +2840,18 @@ function appReducer(state = initialState, action) {
     case CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED:
       return state
         .set('reviewPageLogsNumberOfFiltersApplied', action.newValue)
+    case RESET_REVIEW_PAGE_FILTERS:
+      return state
+        .set('reviewPageFilterSearchSaying', '')
+        .set('reviewPageFilterActions', [])
+        .set('reviewPageFilterActionIntervalMax', 100)
+        .set('reviewPageFilterActionIntervalMax', 0)
+        .set('reviewPageFilterString', '')
+    case RESET_REVIEW_PAGE_LOGS_FILTERS:
+      return state
+        .set('reviewPageFilterContainers', [])
+        .set('reviewPageFilterMaxLogs', 1000)
+        .set('reviewPageFilterLogsString', '')
     default:
       return state;
   }

@@ -304,7 +304,10 @@ import {
   CHANGE_REVIEW_PAGE_FILTER_CONTAINERS,
   CHANGE_REVIEW_PAGE_FILTER_MAX_LOGS,
   CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING,
-  CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED
+  CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED,
+  RESET_DIALOGUE_PAGE_FILTERS,
+  RESET_REVIEW_PAGE_FILTERS,
+  RESET_REVIEW_PAGE_LOGS_FILTERS
 } from './constants';
 
 /*
@@ -2642,5 +2645,23 @@ export function changeReviewPageLogsNumberOfFiltersApplied(newValue) {
   return {
     type: CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED,
     newValue,
+  }
+}
+
+export function resetDialoguePageFilters() {
+  return {
+    type: RESET_DIALOGUE_PAGE_FILTERS
+  }
+}
+
+export function resetReviewPageFilters() {
+  return {
+    type: RESET_REVIEW_PAGE_FILTERS
+  }
+}
+
+export function resetReviewPageLogsFilters() {
+  return {
+    type: RESET_REVIEW_PAGE_LOGS_FILTERS
   }
 }
