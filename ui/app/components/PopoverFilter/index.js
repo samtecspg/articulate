@@ -14,6 +14,7 @@ import xIcon from '../../images/x-icon2.svg';
 import checkboxCheckedIcon from '../../images/checkbox-checked-icon.svg';
 import checkboxUncheckedIcon from '../../images/checkbox-unchecked-icon.svg';
 import messages from './messages';
+import ChipGroup from './components/ChipGroup';
 
 const styles = {
 
@@ -279,7 +280,6 @@ export class PopoverFilter extends React.Component {
         };
         this.state = this.initialState;
 
-        this.handleChipClick = this.handleChipClick.bind(this);
         this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
         this.checkboxIsSelected = this.checkboxIsSelected.bind(this);
         this.handleDropDownValuePicked = this.handleDropDownValuePicked.bind(this);
@@ -314,31 +314,6 @@ export class PopoverFilter extends React.Component {
         await this.setStateAsync({
             currentTextFilterValue: newValue
         })
-    }
-
-    async handleChipClick(value) {
-        if (this.chipIsSelected(value)) {
-            //await this.setStateAsync({
-            //    chipValuesPicked: this.props.chipValuesPicked.filter(function (valueToRemove) {
-            //        return value !== valueToRemove
-            //    })
-            //});
-
-            await this.props.onChangeChipValuesPicked(this.props.chipValuesPicked.filter(function (valueToRemove) {
-                return value !== valueToRemove
-            }));
-        } else {
-            //await this.setStateAsync(prevState => ({
-            //    chipValuesPicked: [...prevState.chipValuesPicked, value]
-            //}))
-
-            await this.props.onChangeChipValuesPicked([...this.props.chipValuesPicked, value]);
-        }
-    }
-
-    chipIsSelected(value) {
-        //return includes(this.state.chipValuesPicked, value);
-        return includes(this.props.chipValuesPicked, value);
     }
 
     async handleCheckboxClick(value) {
@@ -787,51 +762,17 @@ export class PopoverFilter extends React.Component {
 
     }
 
-    renderChips(classes, intl) {
-        return <Grid style={{ marginLeft: '10px', marginBottom: '10px' }}>
-            {this.props.showChips && this.props.showCustomFirstChip === true && this.renderCustomFirstChip(classes, intl)}
-            {this.props.showChips && this.renderNormalChips(classes, intl)}
-        </Grid>
-    }
-
-    renderCustomFirstChip(classes, intl) {
-        return <Fragment>
-            <div
-                key={""}
-                className={this.chipIsSelected("") ? classes.chipBackgroundContainerSelected : classes.chipBackgroundContainer}
-                onClick={async () => {
-                    await this.handleChipClick("");
-                    await this.handleFiltersChange();
-                }}
-            >
-                <span
-                    className={this.chipIsSelected("") ? classes.chipLabelSelected : classes.chipLabel}
-                >
-                    {this.props.customFirstChipLabel}
-                </span>
-            </div>
-        </Fragment>
-    }
-
-    renderNormalChips(classes, intl) {
-        return this.props.chipValues.sort().map(data => {
-            return (
-                <div
-                    key={data}
-                    className={this.chipIsSelected(data) ? classes.chipBackgroundContainerSelected : classes.chipBackgroundContainer}
-                    onClick={async () => {
-                        await this.handleChipClick(data);
-                        await this.handleFiltersChange();
-                    }}
-                >
-                    <span
-                        className={this.chipIsSelected(data) ? classes.chipLabelSelected : classes.chipLabel}
-                    >
-                        {data}
-                    </span>
-                </div>
-            );
-        })
+    renderChipGroup(classes, intl, parameters) {
+        return <ChipGroup
+            chipsFilterLabel={parameters.chipsFilterLabel}
+            showChips={parameters.showChips}
+            showCustomFirstChip={parameters.showCustomFirstChip}
+            handleFiltersChange={this.handleFiltersChange.bind(this)}
+            customFirstChipLabel={parameters.customFirstChipLabel}
+            chipValues={parameters.chipValues}
+            chipValuesPicked={parameters.chipValuesPicked}
+            onChangeChipValuesPicked={parameters.onChangeChipValuesPicked}
+        />
     }
 
     renderFilterIcon(classes, intl) {
@@ -980,8 +921,15 @@ export class PopoverFilter extends React.Component {
                         {this.props.showTextFilter && this.renderTextFilterAppliedLabel(classes, intl)}
                         {this.props.showTextFilter && this.props.textFilterValue != '' && this.renderTextFilterAppliedChip(classes, intl)}
                         {this.props.showDropDownFilter && this.renderDropDownFilter(classes, intl)}
-                        {this.props.showChips && this.renderChipsFilterLabel(classes, intl)}
-                        {this.props.showChips && this.renderChips(classes, intl)}
+                        {this.props.showChipsG1 && this.renderChipGroup(classes, intl, {
+                            chipsFilterLabel: this.props.chipsFilterLabelG1,
+                            showChips: this.props.showChipsG1,
+                            showCustomFirstChip: this.props.showCustomFirstChipG1,
+                            customFirstChipLabel: this.props.customFirstChipLabelG1,
+                            chipValues: this.props.chipValuesG1,
+                            chipValuesPicked: this.props.chipValuesPickedG1,
+                            onChangeChipValuesPicked: this.props.onChangeChipValuesPickedG1
+                        })}
                         {this.props.showMinMaxFilter && this.renderMinMax(classes, intl)}
                     </Grid>
                 </Popover >
@@ -1004,12 +952,11 @@ PopoverFilter.propTypes = {
     showMinMaxFilter: PropTypes.bool,
     showTextFilter: PropTypes.bool,
     dropDownValues: PropTypes.array,
-    chipValues: PropTypes.array,
-    chipsFilterLabel: PropTypes.string,
+    chipValuesG1: PropTypes.array,
+    chipsFilterLabelG1: PropTypes.string,
     filtersDescription: PropTypes.string,
     textFilterPlaceholder: PropTypes.string,
     dropDownMainOptionLabel: PropTypes.string,
-    chipsFilterLabel: PropTypes.string,
     dropDownFilterLabel: PropTypes.string,
     minMaxFilterLabel: PropTypes.string,
     filtersDescription: PropTypes.string,
@@ -1025,7 +972,7 @@ PopoverFilter.propTypes = {
     onChangeDropDownValuePicked: PropTypes.func,
     dropDownValuePicked: PropTypes.string,
     onChangeChipValuesPicked: PropTypes.func,
-    chipValuesPicked: PropTypes.array,
+    chipValuesPickedG1: PropTypes.array,
     onChangeNumberFiltersApplied: PropTypes.func,
     numberFiltersApplied: PropTypes.number,
     onChangeCurrentMax: PropTypes.func,
