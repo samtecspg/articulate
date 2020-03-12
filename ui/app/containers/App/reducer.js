@@ -2845,7 +2845,7 @@ function appReducer(state = initialState, action) {
         .set('reviewPageFilterSearchSaying', '')
         .set('reviewPageFilterActions', [])
         .set('reviewPageFilterActionIntervalMax', 100)
-        .set('reviewPageFilterActionIntervalMax', 0)
+        .set('reviewPageFilterActionIntervalMin', 0)
         .set('reviewPageFilterString', '')
     case RESET_REVIEW_PAGE_LOGS_FILTERS:
       return state

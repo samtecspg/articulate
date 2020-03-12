@@ -540,7 +540,9 @@ export class ReviewPage extends React.Component {
       onChangeReviewPageFilterContainers,
       onChangeReviewPageFilterMaxLogs,
       onChangeReviewPageFilterLogsString,
-      onChangeReviewPageLogsNumberOfFiltersApplied
+      onChangeReviewPageLogsNumberOfFiltersApplied,
+      onResetReviewPageFilters,
+      onResetReviewPageLogsFilters
     } = this.props.actions;
 
     const {
@@ -562,7 +564,7 @@ export class ReviewPage extends React.Component {
       reviewPageFilterContainers,
       reviewPageFilterMaxLogs,
       reviewPageFilterLogsString,
-      reviewPageLogsNumberOfFiltersApplied
+      reviewPageLogsNumberOfFiltersApplied,
     } = this.props;
     return this.props.agent.id ? (
       <Grid container>
@@ -644,6 +646,8 @@ export class ReviewPage extends React.Component {
               reviewPageFilterLogsString={reviewPageFilterLogsString}
               onChangeReviewPageLogsNumberOfFiltersApplied={onChangeReviewPageLogsNumberOfFiltersApplied}
               reviewPageLogsNumberOfFiltersApplied={reviewPageLogsNumberOfFiltersApplied}
+              onResetReviewPageFilters={onResetReviewPageFilters}
+              onResetReviewPageLogsFilters={onResetReviewPageLogsFilters}
             />
           }
           dialogueForm={Link}
@@ -692,7 +696,9 @@ ReviewPage.propTypes = {
     onChangeReviewPageFilterContainers: PropTypes.func.isRequired,
     onChangeReviewPageFilterMaxLogs: PropTypes.func.isRequired,
     onChangeReviewPageFilterLogsString: PropTypes.func.isRequired,
-    onChangeReviewPageLogsNumberOfFiltersApplied: PropTypes.func.isRequired
+    onChangeReviewPageLogsNumberOfFiltersApplied: PropTypes.func.isRequired,
+    onResetReviewPageFilters: PropTypes.func.isRequired,
+    onResetReviewPageLogsFilters: PropTypes.func.isRequired
   }),
   agent: PropTypes.object.isRequired,
   serverStatus: PropTypes.string,
@@ -785,7 +791,9 @@ function mapDispatchToProps(dispatch) {
         onChangeReviewPageFilterContainers: Actions.changeReviewPageFilterContainers,
         onChangeReviewPageFilterMaxLogs: Actions.changeReviewPageFilterMaxLogs,
         onChangeReviewPageFilterLogsString: Actions.changeReviewPageFilterLogsString,
-        onChangeReviewPageLogsNumberOfFiltersApplied: Actions.changeReviewPageLogsNumberOfFiltersApplied
+        onChangeReviewPageLogsNumberOfFiltersApplied: Actions.changeReviewPageLogsNumberOfFiltersApplied,
+        onResetReviewPageFilters: Actions.resetReviewPageFilters,
+        onResetReviewPageLogsFilters: Actions.resetReviewPageLogsFilters,
       },
       dispatch,
     ),

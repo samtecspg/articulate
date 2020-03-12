@@ -323,6 +323,7 @@ class Form extends React.Component {
                   currentMax={this.props.reviewPageFilterActionIntervalMax}
                   onChangeCurrentMin={this.props.onChangeReviewPageFilterActionIntervalMin}
                   currentMin={this.props.reviewPageFilterActionIntervalMin}
+                  onResetFilters={this.props.onResetReviewPageFilters}
                 />
               )}
               {this.props.selectedTab === 'logs' && (
@@ -347,6 +348,7 @@ class Form extends React.Component {
                   currentJustMax={this.props.reviewPageFilterMaxLogs}
                   onChangeNumberFiltersApplied={this.props.onChangeReviewPageLogsNumberOfFiltersApplied}
                   numberFiltersApplied={this.props.reviewPageLogsNumberOfFiltersApplied}
+                  onResetFilters={this.props.onResetReviewPageLogsFilters}
                 />
               )}
             </Grid>
@@ -491,7 +493,9 @@ Form.propTypes = {
   onChangeReviewPageFilterMaxLogs: PropTypes.func,
   onChangeReviewPageFilterLogsString: PropTypes.func,
   onChangeReviewPageLogsNumberOfFiltersApplied: PropTypes.func,
-  reviewPageLogsNumberOfFiltersApplied: PropTypes.number
+  reviewPageLogsNumberOfFiltersApplied: PropTypes.number,
+  onResetReviewPageFilters: PropTypes.func,
+  onResetReviewPageLogsFilters: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(Form));
