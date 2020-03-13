@@ -278,11 +278,12 @@ export class ReviewPage extends React.Component {
     if (this.state.pageStatus.sessions.client) {
       this.state.pageStatus.sessions.client.unsubscribe(`/${ROUTE_CONTEXT}`);
     }
-    if (this.props.resetReviewPageFilters) {
-      this.props.resetReviewPageFilters();
+    debugger;
+    if (this.props.actions.onResetReviewPageFilters) {
+      this.props.actions.onResetReviewPageFilters();
     }
-    if (this.props.resetReviewPageLogsFilters) {
-      this.props.resetReviewPageLogsFilters();
+    if (this.props.actions.onResetReviewPageLogsFilters) {
+      this.props.actions.onResetReviewPageLogsFilters();
     }
   }
 

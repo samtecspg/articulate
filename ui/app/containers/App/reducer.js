@@ -2853,11 +2853,13 @@ function appReducer(state = initialState, action) {
         .set('reviewPageFilterActionIntervalMax', 100)
         .set('reviewPageFilterActionIntervalMin', 0)
         .set('reviewPageFilterString', '')
+        .set('reviewPageNumberOfFiltersApplied', 0)
     case RESET_REVIEW_PAGE_LOGS_FILTERS:
       return state
         .set('reviewPageFilterContainers', [])
         .set('reviewPageFilterMaxLogs', 1000)
         .set('reviewPageFilterLogsString', '')
+        .set('reviewPageLogsNumberOfFiltersApplied', 0)
     default:
       return state;
   }
