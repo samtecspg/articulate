@@ -18,6 +18,7 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
         let {
             category: categoryFilter = [],
             actions: actionFilter = [],
+            keywords: keywordFilter = [],
             query,
             ...restOfFilters
         } = filter;
@@ -35,6 +36,7 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
         }));
         categoryFilter = _.isArray(categoryFilter) ? categoryFilter : [categoryFilter];
         actionFilter = _.isArray(actionFilter) ? actionFilter : [actionFilter];
+        keywordFilter = _.isArray(keywordFilter) ? keywordFilter : [keywordFilter];
         let filteredSayings = allSayings;
         if (categoryFilter.length > 0) {
             filteredSayings = filteredSayings.filter((saying) => {
@@ -47,6 +49,13 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
             filteredSayings = filteredSayings.filter((saying) => {
                 return actionFilter.some(fil => saying.actions.indexOf(fil) !== -1) ? saying : undefined
             });
+        }
+
+        if (keywordFilter.length > 0) {
+            filteredSayings = filteredSayings.filter((saying) => {
+                let keywordsNames = saying.keywords.map(keyword => { return keyword.keyword });
+                return keywordFilter.some(fil => keywordsNames.indexOf(fil) !== -1) ? saying : undefined
+            })
         }
 
         const SayingModel = await redis.factory(MODEL_SAYING);

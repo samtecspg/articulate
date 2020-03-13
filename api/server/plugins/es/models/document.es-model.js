@@ -51,8 +51,40 @@ const mappings = {
                 actions: {
                     type: 'text'
                 },
+                quickResponses: {
+                    type: 'text'
+                },
+                richResponses: {
+                    type: 'text'
+                },
+                disableTextResponse: {
+                    type: 'boolean'
+                },
                 responses: {
-                    type: 'object'
+                    type: 'nested',
+                    properties: {
+                        docId: {
+                            type: 'text'
+                        },
+                        textResponse: {
+                            type: 'text'
+                        },
+                        fulfilled: {
+                            type: 'boolean'
+                        },
+                        actions: {
+                            type: 'text'
+                        },
+                        quickResponses: {
+                            type: 'text'
+                        },
+                        richResponses: {
+                            type: 'text'
+                        },
+                        disableTextResponse: {
+                            type: 'boolean'
+                        },
+                    }
                 },
                 CSO: {
                     type: 'nested',

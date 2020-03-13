@@ -1,10 +1,11 @@
 import _ from 'lodash';
 
-module.exports = function ({ responses, templateContext, isTextPrompt = false, promptCount }) {
+module.exports = async function ({ responses, templateContext, isTextPrompt = false, promptCount }) {
 
     const { handlebars } = this.server.app;
+    const { agentService } = await this.server.services();
 
-    let parsedResponses = _.map(responses, (response, index) => {
+    let parsedResponses = await Promise.all(_.map(responses, async (response, index) => {
 
         if (!promptCount || (promptCount && ((promptCount - 1) === index) || (promptCount > responses.length && index === (responses.length - 1) )) ){
             response = isTextPrompt ? { textResponse: response, actions: [] } : response;
@@ -12,7 +13,8 @@ module.exports = function ({ responses, templateContext, isTextPrompt = false, p
             const numberOfSlots = match ? match.length : 0;
             const compiledResponse = handlebars.compile(response.textResponse, { strict: true });
             try {
-                return { textResponse: compiledResponse(templateContext), numberOfSlots, actions: response.actions };
+                const richResponses = await agentService.converseCompileRichResponsesTemplates({ richResponses: response.richResponses, templateContext });
+                return { textResponse: compiledResponse(templateContext), numberOfSlots, actions: response.actions, richResponses, disableTextResponse: response.disableTextResponse };
             }
             catch (error) {
                 console.error(error);
@@ -22,7 +24,7 @@ module.exports = function ({ responses, templateContext, isTextPrompt = false, p
         else {
             return null;
         }
-    });
+    }));
 
     parsedResponses = _.compact(parsedResponses);
     if (parsedResponses.length > 0) {
@@ -32,7 +34,7 @@ module.exports = function ({ responses, templateContext, isTextPrompt = false, p
             return parsedResponse.textResponse !== '';
         });
     }
-    
+
     if (parsedResponses.length > 0) {
 
         const maxNumberOfExpressions = _.max(_.map(parsedResponses, 'numberOfSlots'));

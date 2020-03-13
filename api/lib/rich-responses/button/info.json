@@ -1,0 +1,13 @@
+{
+    "name": "Button",
+    "type": "buttons",
+    "enabled": true,
+    "description": "Button that will have a payload to execute an action",
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/rich-responses/button/README.MD",
+    "defaultPayload": [
+        {
+            "label": "Button 1",
+            "linkURL": "<go to this link on click>"
+        }
+    ]
+}

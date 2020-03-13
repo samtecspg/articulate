@@ -25,6 +25,17 @@ module.exports = async function ({ id, data }) {
                 }
             });
         }
+        if (merged.converseResult && merged.converseResult.responses){
+            merged.converseResult.responses = merged.converseResult.responses.map((response) => {
+                if (response.richResponses){
+                    response.richResponses = JSON.stringify(response.richResponses);
+                }
+                return response;
+            });
+        }
+        if (merged.converseResult.richResponses){
+            merged.converseResult.richResponses = JSON.stringify(merged.converseResult.richResponses);
+        }
         await DocumentModel.updateInstance({ id, data: merged });
         this.server.publish(`/${ROUTE_AGENT}/${original.agent_id}/${ROUTE_DOCUMENT}/${PARAM_SEARCH}`, {});
         return { ...merged, ...{ id } };

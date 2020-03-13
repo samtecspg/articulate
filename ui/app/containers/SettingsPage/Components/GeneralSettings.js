@@ -287,15 +287,15 @@ export class GeneralSettings extends React.Component {
               xs={12}
             >
               <TextField
-                id="defaultaFallbackActionName"
-                label={intl.formatMessage(messages.defaultaFallbackActionName)}
-                value={settings.defaultaFallbackActionName}
+                id="defaultFallbackActionName"
+                label={intl.formatMessage(messages.defaultFallbackActionName)}
+                value={settings.defaultFallbackActionName}
                 placeholder={intl.formatMessage(
-                  messages.defaultaFallbackActionNamePlaceholder,
+                  messages.defaultFallbackActionNamePlaceholder,
                 )}
                 onChange={evt => {
                   this.props.onChangeSettingsData(
-                    'defaultaFallbackActionName',
+                    'defaultFallbackActionName',
                     evt.target.value,
                   );
                 }}
@@ -305,7 +305,7 @@ export class GeneralSettings extends React.Component {
                   shrink: true,
                 }}
                 helperText={intl.formatMessage(messages.requiredField)}
-                error={this.props.errorState.defaultaFallbackActionName}
+                error={this.props.errorState.defaultFallbackActionName}
               />
             </Grid>
             <Grid item lg={12} md={12} sm={12} xs={12}>

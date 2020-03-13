@@ -21,7 +21,26 @@ import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
 import AC from '../../utils/accessControl';
 
 import {
+  makeSelectAction,
+  makeSelectActionWebhook,
+  makeSelectActionPostFormat,
+  makeSelectKeywords,
+  makeSelectAgent,
+  makeSelectSayingForAction,
+  makeSelectActions,
+  makeSelectFilteredActions,
+  makeSelectSuccessAction,
+  makeSelectLoading,
+  makeSelectActionTouched,
+  makeSelectNewActionResponse,
+  makeSelectRichResponses,
+  makeSelectCurrentUser,
+} from '../App/selectors';
+
+import {
   addAction,
+  changeActionName,
+  changeActionData,
   addActionResponse,
   addNewActionResponseQuickResponse,
   addNewHeaderActionWebhook,
@@ -29,8 +48,6 @@ import {
   addNewSlot,
   addSlotTextPrompt,
   chainActionToResponse,
-  changeActionData,
-  changeActionName,
   changeActionPostFormatData,
   changeActionWebhookData,
   changeActionWebhookPayloadType,
@@ -60,23 +77,13 @@ import {
   unchainActionFromResponse,
   updateAction,
   updateNewResponse,
+  loadRichResponses,
+  addRichResponse,
+  deleteRichResponse,
+  editRichResponse,
+  changeTextResponseFlag,
 } from '../App/actions';
 
-import {
-  makeSelectAction,
-  makeSelectActionPostFormat,
-  makeSelectActions,
-  makeSelectActionTouched,
-  makeSelectActionWebhook,
-  makeSelectAgent,
-  makeSelectCurrentUser,
-  makeSelectFilteredActions,
-  makeSelectKeywords,
-  makeSelectLoading,
-  makeSelectNewActionResponse,
-  makeSelectSayingForAction,
-  makeSelectSuccessAction,
-} from '../App/selectors';
 import ActionForm from './Components/ActionForm';
 import MainTab from './Components/MainTab';
 import ResponseForm from './Components/ResponseForm';
@@ -181,16 +188,16 @@ export class ActionPage extends React.Component {
       this.state.ref === 'agent'
         ? `/agent/${this.props.agent.id}`
         : this.state.ref === 'action'
-        ? `/agent/${this.props.agent.id}/actionDummy/${
+          ? `/agent/${this.props.agent.id}/actionDummy/${
           this.state.refActionId
-        }?filter=${this.state.filter}&page=${
+          }?filter=${this.state.filter}&page=${
           this.state.page
-        }&actionTab=response`
-        : `/agent/${this.props.agent.id}/dialogue?filter=${
+          }&actionTab=response`
+          : `/agent/${this.props.agent.id}/dialogue?filter=${
           this.state.filter
-        }&page=${this.state.page}${
+          }&page=${this.state.page}${
           this.state.tab ? `&tab=${this.state.tab}` : '&tab=sayings'
-        }`;
+          }`;
     this.setState({
       exitUrl,
     });
@@ -397,24 +404,26 @@ export class ActionPage extends React.Component {
   }
 
   render() {
-    const { classes, agent, currentUser} = this.props;
+
+    const { classes, agent, currentUser, richResponses } = this.props;
     const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
 
+
     return this.props.agent.id &&
-    (this.props.saying.keywords.length === 0 ||
-      (this.props.saying.keywords.length > 0 &&
-        this.props.agentKeywords.length > 0)) ? (
-      <Grid container>
+      (this.props.saying.keywords.length === 0 ||
+        (this.props.saying.keywords.length > 0 &&
+          this.props.agentKeywords.length > 0)) ? (
         <Grid container>
-          <Grid
-            className={classes.goBackCard}
-            onClick={() => {
-              this.props.onGoToUrl(this.state.exitUrl);
-            }}
-          />
-        </Grid>
-        <MainTab
-          isReadOnly={isReadOnly}
+          <Grid container>
+            <Grid
+              className={classes.goBackCard}
+              onClick={() => {
+                this.props.onGoToUrl(this.state.exitUrl);
+              }}
+            />
+          </Grid>
+          <MainTab
+            isReadOnly={isReadOnly}
             touched={this.props.touched}
             loading={this.props.loading}
             success={this.props.success}
@@ -438,7 +447,7 @@ export class ActionPage extends React.Component {
             errorState={this.state.errorState}
             actionForm={
               <ActionForm
-              isReadOnly={isReadOnly}
+                isReadOnly={isReadOnly}
                 action={this.props.action}
                 onChangeActionName={this.props.onChangeActionName}
                 errorState={this.state.errorState}
@@ -452,7 +461,7 @@ export class ActionPage extends React.Component {
             }
             slotsForm={
               <SlotsForm
-              isReadOnly={isReadOnly}
+                isReadOnly={isReadOnly}
                 action={this.props.action}
                 newSlot={this.props.newSlot}
                 onChangeSlotData={this.props.onChangeSlotData}
@@ -476,12 +485,12 @@ export class ActionPage extends React.Component {
                 onAddNewQuickResponse={this.props.onAddNewQuickResponse}
                 onEditSlotTextPrompt={this.props.onEditSlotTextPrompt}
                 onCopyTextPrompt={this.props.onCopyTextPrompt}
-                agentSettings = {agent.settings}
+                agentSettings={agent.settings}
               />
             }
             webhookForm={
               <WebhookForm
-              isReadOnly={isReadOnly}
+                isReadOnly={isReadOnly}
                 action={this.props.action}
                 webhook={this.props.webhook}
                 onChangeActionData={this.props.onChangeActionData}
@@ -502,9 +511,9 @@ export class ActionPage extends React.Component {
             }
             responseForm={
               <ResponseForm
-              isReadOnly={isReadOnly}
+                isReadOnly={isReadOnly}
                 agentId={this.props.agent.id}
-                agentSettings = {agent.settings}
+                agentSettings={agent.settings}
                 action={this.props.action}
                 postFormat={this.props.postFormat}
                 onChangeActionData={this.props.onChangeActionData}
@@ -529,11 +538,16 @@ export class ActionPage extends React.Component {
                 onUpdateNewResponse={this.props.onUpdateNewResponse}
                 onCopyResponse={this.props.onCopyResponse}
                 onEditActionResponse={this.props.onEditActionResponse}
+                onChangeTextResponseFlag={this.props.onChangeTextResponseFlag}
                 onSearchActions={this.onSearchActions}
                 agentFilteredActions={this.props.agentFilteredActions}
                 onGoToUrl={this.props.onGoToUrl}
-              onAddNewActionResponseQuickResponse={this.props.onAddNewActionResponseQuickResponse}
-              onDeleteNewActionResponseQuickResponse={this.props.onDeleteNewActionResponseQuickResponse}
+                onAddNewActionResponseQuickResponse={this.props.onAddNewActionResponseQuickResponse}
+                onDeleteNewActionResponseQuickResponse={this.props.onDeleteNewActionResponseQuickResponse}
+                richResponses={richResponses}
+                onAddRichResponse={this.props.onAddRichResponse}
+                onDeleteRichResponse={this.props.onDeleteRichResponse}
+                onEditRichResponse={this.props.onEditRichResponse}
               />
             }
             onChangeTab={this.onChangeTab}
@@ -588,6 +602,7 @@ ActionPage.propTypes = {
   onCopyResponse: PropTypes.func,
   newResponse: PropTypes.string,
   onEditActionResponse: PropTypes.func,
+  onChangeTextResponseFlag: PropTypes.func,
   onLoadActions: PropTypes.func,
   onChangeQuickResponse: PropTypes.func.isRequired,
   onDeleteQuickResponse: PropTypes.func.isRequired,
@@ -601,6 +616,10 @@ ActionPage.propTypes = {
   currentUser: PropTypes.object,
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
+  richResponses: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  onAddRichResponse: PropTypes.func.isRequired,
+  onDeleteRichResponse: PropTypes.func.isRequired,
+  onEditRichResponse: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -617,6 +636,7 @@ const mapStateToProps = createStructuredSelector({
   newResponse: makeSelectNewActionResponse(),
   agentFilteredActions: makeSelectFilteredActions(),
   currentUser: makeSelectCurrentUser(),
+  richResponses: makeSelectRichResponses(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -626,6 +646,7 @@ function mapDispatchToProps(dispatch) {
     },
     onLoadAction: (actionId, isDuplicate) => {
       dispatch(loadAction(actionId, isDuplicate));
+      dispatch(loadRichResponses());
     },
     onLoadKeywords: () => {
       dispatch(loadKeywords());
@@ -715,6 +736,9 @@ function mapDispatchToProps(dispatch) {
     onEditActionResponse: (newResponse, responseIndex) => {
       dispatch(editActionResponse(newResponse, responseIndex));
     },
+    onChangeTextResponseFlag: (value, responseIndex) => {
+      dispatch(changeTextResponseFlag(value, responseIndex));
+    },
     onLoadFilteredActions: filter => {
       dispatch(loadFilteredActions(filter));
     },
@@ -748,6 +772,15 @@ function mapDispatchToProps(dispatch) {
     onDeleteNewActionResponseQuickResponse: (index) => {
       dispatch(deleteNewActionResponseQuickResponse(index));
     },
+    onAddRichResponse: (responseIndex, richResponse) => {
+      dispatch(addRichResponse(responseIndex, richResponse));
+    },
+    onDeleteRichResponse: (responseIndex, richResponse) => {
+      dispatch(deleteRichResponse(responseIndex, richResponse));
+    },
+    onEditRichResponse: (responseIndex, richResponse) => {
+      dispatch(editRichResponse(responseIndex, richResponse));
+    }
   };
 }
 

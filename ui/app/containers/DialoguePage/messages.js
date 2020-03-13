@@ -149,6 +149,10 @@ export default defineMessages({
     id: 'app.containers.DialoguePage.component.PopoverFilter.pickActions',
     defaultMessage: 'Actions: ',
   },
+  pickKeywords: {
+    id: 'app.containers.DialoguePage.component.PopoverFilter.pickKeywords',
+    defaultMessage: 'Keywords: ',
+  },
   filtersDescription: {
     id: 'app.containers.ReviewPage.component.PopoverFilter.filtersDescription',
     defaultMessage: 'Filter sayings, category, actions and action confidence intervals.',

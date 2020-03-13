@@ -188,27 +188,20 @@ export function* getAgent(payload) {
 export function* postagentVersion(payload) {
   const { api, id } = payload;
   try {
-    debugger;
     var agent = yield select(makeSelectAgent());
-    debugger;
     const mutableAgent = Immutable.asMutable(agent, { deep: true });
-    debugger;
     mutableAgent.categoryClassifierThreshold =
       agent.categoryClassifierThreshold / 100;
-    debugger;
     mutableAgent.currentAgentVersionCounter = mutableAgent.currentAgentVersionCounter + 1;
-    debugger;
     delete mutableAgent.id;
     delete mutableAgent.settings;
     delete mutableAgent.status;
     delete mutableAgent.lastTraining;
-    debugger;
     const response = yield call(
       api.put,
       toAPIPath([ROUTE_AGENT, id]),
       mutableAgent,
     );
-    debugger;
     agent = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
     agent.originalAgentVersionName = agent.agentName;
     agent.agentName = agent.agentName + '_v' + agent.currentAgentVersionCounter;
@@ -220,7 +213,6 @@ export function* postagentVersion(payload) {
     yield put(addAgentVersionSuccess(importResponse));
     yield put(loadAgentVersions(id));
   } catch (err) {
-    debugger;
     yield put(addAgentVersionError(err));
   }
 }
@@ -384,7 +376,6 @@ export function* getKeywords(payload) {
       }),
     );
   } catch (err) {
-    debugger;
     yield put(loadKeywordsError(err));
   }
 }

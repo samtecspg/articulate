@@ -24,7 +24,6 @@ import {
   ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
   ADD_NEW_MODIFIER,
   ADD_NEW_QUICK_RESPONSE,
-  ADD_NEW_SLOT,
   ADD_SAYING,
   ADD_SAYING_ERROR,
   ADD_SLOT_TEXT_PROMPT_SLOT,
@@ -242,8 +241,10 @@ import {
   SEND_SAYING_TO_ACTION,
   SET_AGENT_DEFAULTS,
   SHOW_WARNING,
-  SORT_MODIFIERS,
+  ADD_NEW_SLOT,
+  EDIT_TEXT_RESPONSE_FLAG,
   SORT_SLOTS,
+  SORT_MODIFIERS,
   STORE_SOURCE_DATA,
   TAG_KEYWORD,
   TAG_MODIFIER_KEYWORD,
@@ -275,9 +276,6 @@ import {
   UPDATE_NEW_RESPONSE,
   UPDATE_SAYING_ERROR,
   UPDATE_SAYING_SUCCESS,
-  UPDATE_SETTING,
-  UPDATE_SETTING_ERROR,
-  UPDATE_SETTING_SUCCESS,
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
@@ -286,6 +284,35 @@ import {
   UPDATE_USER_ERROR,
   UPDATE_USER_SUCCESS,
   TEST_AGENT_TRAIN_SUCCESS,
+  UPDATE_SETTING,
+  UPDATE_SETTING_ERROR,
+  UPDATE_SETTING_SUCCESS,
+  LOAD_RICH_RESPONSES,
+  LOAD_RICH_RESPONSES_ERROR,
+  LOAD_RICH_RESPONSES_SUCCESS,
+  ADD_RICH_RESPONSE,
+  DELETE_RICH_RESPONSE,
+  EDIT_RICH_RESPONSE,
+  CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING,
+  CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY,
+  CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS,
+  CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
+  CHANGE_DIALOGUE_PAGE_FILTER_STRING,
+  CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS,
+  CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING,
+  CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
+  CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
+  CHANGE_REVIEW_PAGE_NUMBER_OF_FILTERS_APPLIED,
+  CHANGE_REVIEW_PAGE_FILTER_STRING,
+  CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MIN,
+  CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MAX,
+  CHANGE_REVIEW_PAGE_FILTER_CONTAINERS,
+  CHANGE_REVIEW_PAGE_FILTER_MAX_LOGS,
+  CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING,
+  CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED,
+  RESET_DIALOGUE_PAGE_FILTERS,
+  RESET_REVIEW_PAGE_FILTERS,
+  RESET_REVIEW_PAGE_LOGS_FILTERS
 } from './constants';
 
 const happyEmojies = [
@@ -500,6 +527,7 @@ const initialState = Immutable({
   filteredCategories: [],
   filteredActions: [],
   channels: false,
+  richResponses: false,
   connections: false,
   agents: false,
   agentVersions: [],
@@ -516,6 +544,7 @@ const initialState = Immutable({
     enableModelsPerCategory: false,
     multiCategory: false,
     fallbackAction: '',
+    welcomeAction: '',
     categoryClassifierThreshold: 50,
     parameters: {},
   },
@@ -533,6 +562,7 @@ const initialState = Immutable({
     enableModelsPerCategory: false,
     multiCategory: false,
     fallbackAction: '',
+    welcomeAction: '',
     categoryClassifierThreshold: 50,
     parameters: {},
   },
@@ -607,8 +637,7 @@ const initialState = Immutable({
     useWebhook: false,
     usePostFormat: false,
     slots: [],
-    responses: [],
-    responsesQuickResponses: []
+    responses: []
   },
   actionWebhook: {
     webhookKey: '',
@@ -716,7 +745,24 @@ const initialState = Immutable({
   accessPolicyGroups: [],
   user: null,
   userDataTouched: false,
-  testTrainResult: null
+  testTrainResult: null,
+  dialoguePageFilterSearchSaying: '',
+  dialoguePageFilterCategory: '',
+  dialoguePageFilterActions: [],
+  dialoguePageNumberOfFiltersApplied: 0,
+  dialoguePageFilterString: '',
+  dialoguePageFilterKeywords: [],
+  reviewPageFilterSearchSaying: '',
+  reviewPageFilterCategory: '',
+  reviewPageFilterActions: [],
+  reviewPageNumberOfFiltersApplied: 0,
+  reviewPageFilterString: '',
+  reviewPageFilterActionIntervalMin: 0,
+  reviewPageFilterActionIntervalMax: 100,
+  reviewPageFilterContainers: [],
+  reviewPageFilterMaxLogs: 1000,
+  reviewPageFilterLogsString: '',
+  reviewPageLogsNumberOfFiltersApplied: 0
 });
 
 function appReducer(state = initialState, action) {
@@ -1032,7 +1078,10 @@ function appReducer(state = initialState, action) {
         .setIn(['agent', 'timezone'], state.settings.defaultTimezone)
         .setIn(
           ['agent', 'fallbackAction'],
-          state.settings.defaultaFallbackActionName,
+          state.settings.defaultFallbackActionName,
+        ).setIn(
+          ['agent', 'welcomeAction'],
+          state.settings.defaultWelcomeActionName,
         )
         .setIn(['agentSettings', 'rasaURL'], state.settings.rasaURL)
         .setIn(
@@ -1713,7 +1762,7 @@ function appReducer(state = initialState, action) {
     case ADD_ACTION_RESPONSE:
       return state
         .updateIn(['action', 'responses'], responses =>
-          responses.concat({ textResponse: action.newResponse, actions: [] }),
+          responses.concat({ richResponses: [], textResponse: action.newResponse, actions: [] }),
         )
         .set('newActionResponse', '')
         .set('actionTouched', true);
@@ -2054,6 +2103,17 @@ function appReducer(state = initialState, action) {
           }),
         )
         .set('actionTouched', true);
+    case EDIT_TEXT_RESPONSE_FLAG:
+      return state
+        .updateIn(['action', 'responses'], responses =>
+          responses.map((response, index) => {
+            if (index === action.responseIndex) {
+              return response.set('disableTextResponse', action.value);
+            }
+            return response;
+          }),
+        )
+        .set('actionTouched', true);
     case ADD_NEW_QUICK_RESPONSE:
       if (!state.action.slots[action.slotIndex].quickResponses) {
         state = state.setIn(['action', 'slots'], state.action.slots.map((slot, index) => {
@@ -2125,7 +2185,67 @@ function appReducer(state = initialState, action) {
           }),
         )
         .set('actionTouched', true);
-
+    case LOAD_RICH_RESPONSES:
+      return state
+        .set('richResponses', false)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_RICH_RESPONSES_ERROR:
+      return state
+        .set('richResponses', false)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_RICH_RESPONSES_SUCCESS:
+      return state
+        .set('richResponses', action.richResponses)
+        .set('loading', false)
+        .set('error', false);
+    case ADD_RICH_RESPONSE:
+      return state
+        .updateIn(['action', 'responses'], responses =>
+          responses.map((response, index) => {
+            if (index === action.responseIndex) {
+              return response.update('richResponses', richResponses =>
+                richResponses.concat(action.richResponse),
+              );
+            }
+            return response;
+          }),
+        )
+        .set('actionTouched', true);
+    case EDIT_RICH_RESPONSE:
+      return state
+        .updateIn(['action', 'responses'], responses =>
+          responses.map((response, index) => {
+            if (index === action.responseIndex) {
+              return response.update('richResponses', richResponses =>
+                richResponses.map((richResponse) => {
+                  if (richResponse.type === action.richResponse.type) {
+                    return action.richResponse;
+                  }
+                  return richResponse;
+                })
+              );
+            }
+            return response;
+          })
+        )
+        .set('actionTouched', true);
+    case DELETE_RICH_RESPONSE:
+      return state
+        .updateIn(['action', 'responses'], responses =>
+          responses.map((response, index) => {
+            if (index === action.responseIndex) {
+              return response.update('richResponses', richResponses =>
+                richResponses.filter((richResponse) => {
+                  return richResponse.type !== action.richResponse.type;
+                })
+              );
+            }
+            return response;
+          })
+        )
+        .set('actionTouched', true);
     case ADD_NEW_MODIFIER:
       return state.updateIn(['keyword', 'modifiers'], modifiers =>
         modifiers.concat(state.newModifier),
@@ -2983,6 +3103,79 @@ function appReducer(state = initialState, action) {
         .set('user', action.user)
         .set('error', false)
         .set('userDataTouched', false);
+    case CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING:
+      return state
+        .set('dialoguePageFilterSearchSaying', action.newValue);
+    case CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY:
+      return state
+        .set('dialoguePageFilterCategory', action.newValue);
+    case CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS:
+      return state
+        .set('dialoguePageFilterActions', action.newValue);
+    case CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED:
+      return state
+        .set('dialoguePageNumberOfFiltersApplied', action.newValue);
+    case CHANGE_DIALOGUE_PAGE_FILTER_STRING:
+      return state
+        .set('dialoguePageFilterString', action.newValue);
+    case CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS:
+      return state
+        .set('dialoguePageFilterKeywords', action.newValue);
+    case RESET_DIALOGUE_PAGE_FILTERS:
+      return state
+        .set('dialoguePageFilterSearchSaying', '')
+        .set('dialoguePageFilterCategory', '')
+        .set('dialoguePageFilterActions', [])
+        .set('dialoguePageNumberOfFiltersApplied', 0)
+        .set('dialoguePageFilterString', '')
+        .set('dialoguePageFilterKeywords', [])
+    case CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING:
+      return state
+        .set('reviewPageFilterSearchSaying', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_CATEGORY:
+      return state
+        .set('reviewPageFilterCategory', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_ACTIONS:
+      return state
+        .set('reviewPageFilterActions', action.newValue);
+    case CHANGE_REVIEW_PAGE_NUMBER_OF_FILTERS_APPLIED:
+      return state
+        .set('reviewPageNumberOfFiltersApplied', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_STRING:
+      return state
+        .set('reviewPageFilterString', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MAX:
+      return state
+        .set('reviewPageFilterActionIntervalMax', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MIN:
+      return state
+        .set('reviewPageFilterActionIntervalMin', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_CONTAINERS:
+      return state
+        .set('reviewPageFilterContainers', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_MAX_LOGS:
+      return state
+        .set('reviewPageFilterMaxLogs', action.newValue);
+    case CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING:
+      return state
+        .set('reviewPageFilterLogsString', action.newValue);
+    case CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED:
+      return state
+        .set('reviewPageLogsNumberOfFiltersApplied', action.newValue)
+    case RESET_REVIEW_PAGE_FILTERS:
+      return state
+        .set('reviewPageFilterSearchSaying', '')
+        .set('reviewPageFilterActions', [])
+        .set('reviewPageFilterActionIntervalMax', 100)
+        .set('reviewPageFilterActionIntervalMin', 0)
+        .set('reviewPageFilterString', '')
+        .set('reviewPageNumberOfFiltersApplied', 0)
+    case RESET_REVIEW_PAGE_LOGS_FILTERS:
+      return state
+        .set('reviewPageFilterContainers', [])
+        .set('reviewPageFilterMaxLogs', 1000)
+        .set('reviewPageFilterLogsString', '')
+        .set('reviewPageLogsNumberOfFiltersApplied', 0)
     default:
       return state;
   }

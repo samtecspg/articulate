@@ -1,0 +1,15 @@
+{
+    "name": "Card Carousel",
+    "type": "cardsCarousel",
+    "enabled": true,
+    "description": "Clickable cards to display relevant information to the user",
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/rich-responses/collapsible/README.MD",
+    "defaultPayload": [
+        {
+            "title": "Card 1",
+            "description": "This is a card",
+            "imageURL": "<card image url>",
+            "linkURL": "<go to this link on click>"
+        }
+    ]
+}

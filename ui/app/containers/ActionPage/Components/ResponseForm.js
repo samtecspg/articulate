@@ -173,7 +173,9 @@ class ResponseForm extends React.Component {
   }
 
   render() {
-    const { classes, intl, action, postFormat, agentSettings, isReadOnly } = this.props;
+
+    const { classes, intl, action, postFormat, agentSettings, isReadOnly, richResponses } = this.props;
+
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -281,14 +283,27 @@ class ResponseForm extends React.Component {
                                 responseIndex={responseIndex}
                                 action={action}
                                 agentActions={this.props.agentActions}
-                                onChainActionToResponse={this.props.onChainActionToResponse}
-                                onUnchainActionFromResponse={this.props.onUnchainActionFromResponse}
-                                onEditActionResponse={this.props.onEditActionResponse}
+                                onChainActionToResponse={
+                                  this.props.onChainActionToResponse
+                                }
+                                onUnchainActionFromResponse={
+                                  this.props.onUnchainActionFromResponse
+                                }
+                                onEditActionResponse={
+                                  this.props.onEditActionResponse
+                                }
+                                onChangeTextResponseFlag={
+                                  this.props.onChangeTextResponseFlag
+                                }
                                 onCopyResponse={this.props.onCopyResponse}
                                 onDeleteResponse={this.props.onDeleteResponse}
                                 onSearchActions={this.props.onSearchActions}
                                 agentFilteredActions={this.props.agentFilteredActions}
                                 onGoToUrl={this.props.onGoToUrl}
+                                richResponses={richResponses}
+                                onAddRichResponse={this.props.onAddRichResponse}
+                                onDeleteRichResponse={this.props.onDeleteRichResponse}
+                                onEditRichResponse={this.props.onEditRichResponse}
                               />
                             </TableCell>
                           </TableRow>
@@ -297,7 +312,7 @@ class ResponseForm extends React.Component {
                     </Table>
                   ) : null}
                 </Grid>
-                <Grid item xs={12}>
+                {/*<Grid item xs={12}>
                   <TextField
                     id="newActionResponseQuickResponse"
                     label={intl.formatMessage(messages.actionResponseQuickResponseValue)}
@@ -366,7 +381,7 @@ class ResponseForm extends React.Component {
                       </TableBody>
                     </Table>
                   ) : null}
-                </Grid>
+                </Grid>*/}
                 <Grid item xs={12}>
                   <Typography
                     className={classes.postFormatLabel}
@@ -413,6 +428,7 @@ ResponseForm.propTypes = {
   agentActions: PropTypes.array,
   newResponse: PropTypes.string,
   onEditActionResponse: PropTypes.func,
+  onChangeTextResponseFlag: PropTypes.func,
   agentFilteredActions: PropTypes.array,
   onSearchActions: PropTypes.func,
   onGoToUrl: PropTypes.func,
@@ -425,6 +441,10 @@ ResponseForm.propTypes = {
 
 ResponseForm.defaultProps = {
   isReadOnly: false,
+  richResponses: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  onAddRichResponse: PropTypes.func.isRequired,
+  onDeleteRichResponse: PropTypes.func.isRequired,
+  onEditRichResponse: PropTypes.func.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(ResponseForm));

@@ -10,6 +10,10 @@ import {
     CSO_TIMEZONE_DEFAULT
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
+import { Semaphore } from 'await-semaphore';
+
+var mainSemaphore = new Semaphore(1);
+var semaphores = {};
 
 //Reduce the remaining life of the saved slots
 const updateLifespanOfSlots = ({ CSO }) => {
@@ -100,7 +104,24 @@ const getActionToModify = ({ recognizedModifier, recognizedKeyword, CSO }) => {
     return actionToModify;
 };
 
+const forceUseWelcomeAction = CSO => {
+    return CSO.welcomeActionOptions && CSO.welcomeActionOptions.forceUseWelcomeAction;
+}
+
+const welcomeActionNeeded = CSO => {
+    return CSO.welcomeActionOptions && ((CSO.welcomeActionOptions.useWelcomeActionIfFirstMessage &&
+        CSO.context.docIds.length === 0))
+}
+
 module.exports = async function ({ id, sessionId, text, timezone, debug = false, additionalKeys = null }) {
+
+    var release = await mainSemaphore.acquire();
+    if (!semaphores[sessionId]) {
+        semaphores[sessionId] = new Semaphore(1);
+    }
+    release();
+
+    release = await semaphores[sessionId].acquire();
 
     try {
         const { redis } = this.server.app;
@@ -150,267 +171,278 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             });
         }
 
-        //We extract the keywords from the best rasa result
-        CSO.recognizedKeywords = await agentService.converseGetKeywordsFromRasaResults({ rasaResults: [CSO.rasaResult] })
+        //If the welcome action is forced (session just created) then no more processing is done
+        //If the welcome action is needed (it's the first message of the user) then that message is also processed
+        if (forceUseWelcomeAction(CSO) || welcomeActionNeeded(CSO)) {
+            CSO.response = await agentService.converseGenerateResponseWelcome({ CSO });
+            await agentService.converseSendResponseToUbiquity({ CSO });
+        }
 
-        if ((CSO.rasaResult.action && CSO.rasaResult.action.name) || CSO.recognizedKeywords.length > 0 || CSO.context.listenFreeText) {
+        if (!forceUseWelcomeAction(CSO)) {
 
-            updateLifespanOfSlots({ CSO });
+            //We extract the keywords from the best rasa result
+            CSO.recognizedKeywords = await agentService.converseGetKeywordsFromRasaResults({ rasaResults: [CSO.rasaResult] })
 
-            var newActionIndex;
-            if (!CSO.context.listenFreeText) {
+            if ((CSO.rasaResult.action && CSO.rasaResult.action.name) || CSO.recognizedKeywords.length > 0 || CSO.context.listenFreeText) {
 
-                /*
-                * This is the result action of RASA it could be a multiaction, a single action or a modifier
-                * We don't support action + modifiers recognition, we can just do single action, 
-                * multi action or single modifier recognition
-                */
-                const recognizedActionsNames = CSO.rasaResult.action.name.split(RASA_INTENT_SPLIT_SYMBOL);
+                updateLifespanOfSlots({ CSO });
 
-                //We extract from the rasa result the recognized actions names
-                CSO.recognizedActions = _.filter(recognizedActionsNames, (recognizedActionName) => {
+                var newActionIndex;
+                if (!CSO.context.listenFreeText) {
 
-                    return CSO.agent.actions.some((agentAction) => {
+                    /*
+                    * This is the result action of RASA it could be a multiaction, a single action or a modifier
+                    * We don't support action + modifiers recognition, we can just do single action, 
+                    * multi action or single modifier recognition
+                    */
+                    const recognizedActionsNames = CSO.rasaResult.action.name.split(RASA_INTENT_SPLIT_SYMBOL);
 
-                        return agentAction.actionName === recognizedActionName;
+                    //We extract from the rasa result the recognized actions names
+                    CSO.recognizedActions = _.filter(recognizedActionsNames, (recognizedActionName) => {
+
+                        return CSO.agent.actions.some((agentAction) => {
+
+                            return agentAction.actionName === recognizedActionName;
+                        });
                     });
-                });
 
-                /*
-                * We extract from the rasa result the recognized modifiers
-                * Currently we don't have a multimodifier recognition, but, this can support it
-                */
-                CSO.recognizedModifiers = _.filter(recognizedActionsNames, (recognizedActionName) => {
+                    /*
+                    * We extract from the rasa result the recognized modifiers
+                    * Currently we don't have a multimodifier recognition, but, this can support it
+                    */
+                    CSO.recognizedModifiers = _.filter(recognizedActionsNames, (recognizedActionName) => {
 
-                    return CSO.agent.modifiers.some((agentModifier) => {
+                        return CSO.agent.modifiers.some((agentModifier) => {
 
-                        return agentModifier.modifierName === recognizedActionName;
+                            return agentModifier.modifierName === recognizedActionName;
+                        });
                     });
-                });
 
-                /*
-                * Given that we don't have actions + modifiers models, we know that if there is a modifier, then we know that this is
-                * what we need to process. Remember we don't support multi modifier models, but, we iterate as if we have it
-                */
-                if (CSO.recognizedModifiers.length > 0) {
+                    /*
+                    * Given that we don't have actions + modifiers models, we know that if there is a modifier, then we know that this is
+                    * what we need to process. Remember we don't support multi modifier models, but, we iterate as if we have it
+                    */
+                    if (CSO.recognizedModifiers.length > 0) {
 
-                    for (const recognizedModifierName of CSO.recognizedModifiers) {
-                        if (CSO.context.actionQueue.length > 0) {
+                        for (const recognizedModifierName of CSO.recognizedModifiers) {
+                            if (CSO.context.actionQueue.length > 0) {
 
-                            const recognizedModifier = getModifierData({ recognizedModifierName, CSO });
-                            CSO.actionToModify = getActionToModify({ recognizedModifier, CSO });
+                                const recognizedModifier = getModifierData({ recognizedModifierName, CSO });
+                                CSO.actionToModify = getActionToModify({ recognizedModifier, CSO });
 
-                            if (CSO.actionToModify && CSO.actionToModify.actionData.slots && CSO.actionToModify.actionData.slots.length > 0) {
-                                CSO.currentAction = CSO.context.actionQueue[CSO.actionToModify.index];
-                                await agentService.converseFillActionSlots({ actionData: CSO.actionToModify.actionData, CSO, recognizedModifier });
+                                if (CSO.actionToModify && CSO.actionToModify.actionData.slots && CSO.actionToModify.actionData.slots.length > 0) {
+                                    CSO.currentAction = CSO.context.actionQueue[CSO.actionToModify.index];
+                                    await agentService.converseFillActionSlots({ actionData: CSO.actionToModify.actionData, CSO, recognizedModifier });
+                                }
+                                else {
+                                    //Return fallback because this means user send a modifier for an action that doesn't exists in the queue
+                                    CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
+                                    await agentService.converseSendResponseToUbiquity({ CSO });
+                                }
                             }
                             else {
-                                //Return fallback because this means user send a modifier for an action that doesn't exists in the queue
+                                //Return fallback because this means user started the conversation with a modifier
+                                CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
+                                await agentService.converseSendResponseToUbiquity({ CSO });
+                            }
+                        }
+                    }
+
+                    /*
+                    * This is known as the keyword flow 
+                    * In case no modifiers neither actions were recognized we are going to use recognized keywords to try to fulfill
+                    * an action in the queue that can be fulfilled with those recognized values
+                    */
+                    if (CSO.recognizedKeywords.length > 0 && CSO.recognizedModifiers.length === 0 && CSO.recognizedActions.length === 0) {
+                        let noActionToModify = true;
+                        if (CSO.context.actionQueue.length > 0) {
+                            for (const recognizedKeyword of CSO.recognizedKeywords) {
+
+                                CSO.actionToModify = getActionToModify({ recognizedKeyword, CSO });
+
+                                if (CSO.actionToModify && CSO.actionToModify.actionData.slots && CSO.actionToModify.actionData.slots.length > 0) {
+                                    noActionToModify = false;
+                                    CSO.currentAction = CSO.context.actionQueue[CSO.actionToModify.index];
+                                    CSO.currentAction.fulfilled = false;
+                                    await agentService.converseFillActionSlots({ actionData: CSO.actionToModify.actionData, CSO });
+                                }
+                            }
+                            if (noActionToModify) {
+                                //Return fallback because this means a keyword was recognized for an action that doesn't exists in the queue
                                 CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
                                 await agentService.converseSendResponseToUbiquity({ CSO });
                             }
                         }
                         else {
-                            //Return fallback because this means user started the conversation with a modifier
+                            //Return fallback because this means user started the conversation with the keyword flow
                             CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
                             await agentService.converseSendResponseToUbiquity({ CSO });
                         }
                     }
+
+                    /*
+                    * We are going to concat the recognized actions to the action queue of the context.
+                    * If a modifier was recognized, then nothing will be concatenated as we don't recognize modifiers
+                    * and actions at the same time
+                    * The actions to concatenate are going to be inserted right before the oldest unfulfilled action
+                    * So we are going to generate the response for the new action and we will recover the unfulfilled action later
+                    */
+                    newActionIndex = _.findIndex(CSO.context.actionQueue, (action) => {
+
+                        return !action.fulfilled;
+                    });
+                    newActionIndex = newActionIndex === -1 ? CSO.context.actionQueue.length : newActionIndex;
+
+                    for (var i = 0; i < CSO.recognizedActions.length; i++) {
+                        var recognizedAction = CSO.recognizedActions[i];
+                        CSO.context.actionQueue.splice(newActionIndex, 0, {
+                            name: recognizedAction,
+                            fulfilled: false
+                        });
+
+                        /*
+                        * Sometimes when there are unfullfilled actions waiting for slots, if the use enters a slot value
+                        * this value is recognized both as a keyword to fulfill the pending action but also as a whole new 
+                        * identical action, resulting in two identical actions resolved. We are ignoring the most recent 
+                        * action based on the following conditions:
+                        *   - There must be no modifiers identified
+                        *   - There must be at least one action and one keyword recognized
+                        *   - There must be at least one unfulfilled action in the queue of the same type as the recognized action
+                        *   - At least one of the empty required slots of the pending action should be filled with the recognized keywords
+                        */
+                        var mostRecentActionData;
+                        mostRecentActionData = getActionData({ actionName: CSO.context.actionQueue[newActionIndex].name, CSO });
+
+                        var mostRecentActionShouldBeIgnored = await agentService.converseMostRecentActionShoulBeIgnored({
+                            actionData: mostRecentActionData,
+                            CSO,
+                            newActionIndex: newActionIndex,
+                            getActionData
+                        });
+
+                        if (mostRecentActionShouldBeIgnored) {
+                            CSO.context.actionQueue[newActionIndex].fulfilled = true;
+                        }
+
+                        newActionIndex++;
+                    };
                 }
 
                 /*
-                * This is known as the keyword flow 
-                * In case no modifiers neither actions were recognized we are going to use recognized keywords to try to fulfill
-                * an action in the queue that can be fulfilled with those recognized values
+                * Once we have every action in the actionQueue, we are going to process that action queue to get responses
                 */
-                if (CSO.recognizedKeywords.length > 0 && CSO.recognizedModifiers.length === 0 && CSO.recognizedActions.length === 0) {
-                    let noActionToModify = true;
-                    if (CSO.context.actionQueue.length > 0) {
-                        for (const recognizedKeyword of CSO.recognizedKeywords) {
-
-                            CSO.actionToModify = getActionToModify({ recognizedKeyword, CSO });
-
-                            if (CSO.actionToModify && CSO.actionToModify.actionData.slots && CSO.actionToModify.actionData.slots.length > 0) {
-                                noActionToModify = false;
-                                CSO.currentAction = CSO.context.actionQueue[CSO.actionToModify.index];
-                                CSO.currentAction.fulfilled = false;
-                                await agentService.converseFillActionSlots({ actionData: CSO.actionToModify.actionData, CSO });
-                            }
-                        }
-                        if (noActionToModify) {
-                            //Return fallback because this means a keyword was recognized for an action that doesn't exists in the queue
-                            CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
-                            await agentService.converseSendResponseToUbiquity({ CSO });
-                        }
-                    }
-                    else {
-                        //Return fallback because this means user started the conversation with the keyword flow
-                        CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
-                        await agentService.converseSendResponseToUbiquity({ CSO });
-                    }
-                }
-
-                /*
-                * We are going to concat the recognized actions to the action queue of the context.
-                * If a modifier was recognized, then nothing will be concatenated as we don't recognize modifiers
-                * and actions at the same time
-                * The actions to concatenate are going to be inserted right before the oldest unfulfilled action
-                * So we are going to generate the response for the new action and we will recover the unfulfilled action later
-                */
-                newActionIndex = _.findIndex(CSO.context.actionQueue, (action) => {
-
+                const unfulfilledActionsInQueue = CSO.context.actionQueue.some((action) => {
                     return !action.fulfilled;
                 });
-                newActionIndex = newActionIndex === -1 ? CSO.context.actionQueue.length : newActionIndex;
-
-                for (var i = 0; i < CSO.recognizedActions.length; i++) {
-                    var recognizedAction = CSO.recognizedActions[i];
-                    CSO.context.actionQueue.splice(newActionIndex, 0, {
-                        name: recognizedAction,
-                        fulfilled: false
-                    });
-
-                    /*
-                    * Sometimes when there are unfullfilled actions waiting for slots, if the use enters a slot value
-                    * this value is recognized both as a keyword to fulfill the pending action but also as a whole new 
-                    * identical action, resulting in two identical actions resolved. We are ignoring the most recent 
-                    * action based on the following conditions:
-                    *   - There must be no modifiers identified
-                    *   - There must be at least one action and one keyword recognized
-                    *   - There must be at least one unfulfilled action in the queue of the same type as the recognized action
-                    *   - At least one of the empty required slots of the pending action should be filled with the recognized keywords
-                    */
-                    var mostRecentActionData;
-                    mostRecentActionData = getActionData({ actionName: CSO.context.actionQueue[newActionIndex].name, CSO });
-
-                    var mostRecentActionShouldBeIgnored = await agentService.converseMostRecentActionShoulBeIgnored({
-                        actionData: mostRecentActionData,
-                        CSO,
-                        newActionIndex: newActionIndex,
-                        getActionData
-                    });
-
-                    if (mostRecentActionShouldBeIgnored) {
-                        CSO.context.actionQueue[newActionIndex].fulfilled = true;
+                if (!unfulfilledActionsInQueue) {
+                    if (CSO.recognizedModifiers.length > 0 && CSO.actionToModify) {
+                        CSO.context.actionQueue[CSO.actionToModify.index].fulfilled = false;
                     }
-
-                    newActionIndex++;
-                };
-            }
-
-            /*
-            * Once we have every action in the actionQueue, we are going to process that action queue to get responses
-            */
-            const unfulfilledActionsInQueue = CSO.context.actionQueue.some((action) => {
-
-                return !action.fulfilled;
-            });
-            if (!unfulfilledActionsInQueue) {
-                if (CSO.recognizedModifiers.length > 0 && CSO.actionToModify) {
-                    CSO.context.actionQueue[CSO.actionToModify.index].fulfilled = false;
                 }
-            }
-            CSO.actionIndex = 0;
-            while (CSO.context.actionQueue[CSO.actionIndex] !== undefined) {
+                CSO.actionIndex = 0;
+                while (CSO.context.actionQueue[CSO.actionIndex] !== undefined) {
 
-                const action = CSO.context.actionQueue[CSO.actionIndex];
-                if (!action.fulfilled) {
-                    const actionData = getActionData({ actionName: action.name, CSO });
-                    CSO.currentAction = CSO.context.actionQueue[CSO.actionIndex];
+                    const action = CSO.context.actionQueue[CSO.actionIndex];
+                    if (!action.fulfilled) {
+                        const actionData = getActionData({ actionName: action.name, CSO });
+                        CSO.currentAction = CSO.context.actionQueue[CSO.actionIndex];
 
-                    /*
-                    * We include CSO.recognizedModifiers.length === 0 to avoid duplicate filling if a modifier was recognized
-                    * If in the future we enable action + modifier model we will need another strategy
-                    */
-                    if (actionData.slots &&
-                        actionData.slots.length > 0 &&
-                        (CSO.recognizedModifiers.length === 0 ||
-                            (CSO.recognizedModifiers.length > 0 &&
-                                CSO.actionToModify &&
-                                CSO.actionToModify.actionData.actionName !== actionData.actionName)
-                        )
-                    ) {
-                        await agentService.converseFillActionSlots({ actionData, CSO });
-                    }
-
-                    if (CSO.sendMessage) {
-
-                        CSO.response = await agentService.converseGenerateResponse({ actionData, CSO });
-
-                        if (CSO.response.slotPromptLimitReached) {
-                            CSO.currentAction.fulfilled = true;
+                        /*
+                        * We include CSO.recognizedModifiers.length === 0 to avoid duplicate filling if a modifier was recognized
+                        * If in the future we enable action + modifier model we will need another strategy
+                        */
+                        if (actionData.slots &&
+                            actionData.slots.length > 0 &&
+                            (CSO.recognizedModifiers.length === 0 ||
+                                (CSO.recognizedModifiers.length > 0 &&
+                                    CSO.actionToModify &&
+                                    CSO.actionToModify.actionData.actionName !== actionData.actionName)
+                            )
+                        ) {
+                            await agentService.converseFillActionSlots({ actionData, CSO });
                         }
-                        else {
-                            //As the action wasn't fulfilled we are not going to send any more messages to the user
-                            if (!CSO.response.fulfilled) {
-                                CSO.sendMessage = false
+
+                        if (CSO.sendMessage) {
+
+                            CSO.response = await agentService.converseGenerateResponse({ actionData, CSO });
+
+                            if (CSO.response.slotPromptLimitReached) {
+                                CSO.currentAction.fulfilled = true;
                             }
                             else {
-                                CSO.currentAction.fulfilled = true;
-
-                                //If there is any chained action
-                                if (CSO.response.actions && CSO.response.actions.length > 0) {
-                                    let newActionIndex = CSO.actionIndex + 1;
-                                    CSO.response.actions.forEach((chainedAction) => {
-
-                                        CSO.context.actionQueue.splice(newActionIndex, 0, {
-                                            name: chainedAction,
-                                            fulfilled: false
-                                        });
-                                        newActionIndex++;
-                                    });
+                                //As the action wasn't fulfilled we are not going to send any more messages to the user
+                                if (!CSO.response.fulfilled) {
+                                    CSO.sendMessage = false
                                 }
+                                else {
+                                    CSO.currentAction.fulfilled = true;
+
+                                    //If there is any chained action
+                                    if (CSO.response.actions && CSO.response.actions.length > 0) {
+                                        let newActionIndex = CSO.actionIndex + 1;
+                                        CSO.response.actions.forEach((chainedAction) => {
+
+                                            CSO.context.actionQueue.splice(newActionIndex, 0, {
+                                                name: chainedAction,
+                                                fulfilled: false
+                                            });
+                                            newActionIndex++;
+                                        });
+                                    }
+                                }
+                                /*
+                                * This would either send a response, a text promt or a fallback
+                                * CSO.ubiquity could be filled by using the additionalKeys param
+                                */
+                                await agentService.converseSendResponseToUbiquity({ actionData, CSO });
                             }
-                            /*
-                            * This would either send a response, a text promt or a fallback
-                            * CSO.ubiquity could be filled by using the additionalKeys param
-                            */
-                            await agentService.converseSendResponseToUbiquity({ actionData, CSO });
+                        } else {
+                            await contextService.update({
+                                sessionId: CSO.context.sessionId,
+                                data: {
+                                    savedSlots: CSO.context.savedSlots,
+                                    docIds: CSO.context.docIds,
+                                    actionQueue: CSO.context.actionQueue,
+                                    listenFreeText: CSO.context.listenFreeText ? true : false
+                                }
+                            });
                         }
-                    } else {
-                        await contextService.update({
-                            sessionId: CSO.context.sessionId,
-                            data: {
-                                savedSlots: CSO.context.savedSlots,
-                                docIds: CSO.context.docIds,
-                                actionQueue: CSO.context.actionQueue,
-                                listenFreeText: CSO.context.listenFreeText ? true : false
-                            }
-                        });
                     }
+                    CSO.actionIndex++;
                 }
-                CSO.actionIndex++;
             }
-        }
-        else {
-            CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
-            await agentService.converseSendResponseToUbiquity({ CSO });
-        }
+            else {
+                CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
+                await agentService.converseSendResponseToUbiquity({ CSO });
+            }
 
-        CSO.textResponse = CSO.processedResponses.map((processedResponse) => {
+            CSO.textResponse = CSO.processedResponses.map((processedResponse) => {
 
-            return processedResponse.textResponse;
-        }).join(' ');
+                return processedResponse.textResponse;
+            }).join(' ');
 
-        const converseResult = {
-            textResponse: CSO.textResponse,
-            docId: CSO.docId,
-            responses: CSO.processedResponses
-        };
-
-        if (debug) {
-            const { context, parse, currentAction, docId, webhooks } = CSO;
-            converseResult.CSO = {
-                docId,
-                parse,
-                currentAction,
-                context,
-                webhooks
+            const converseResult = {
+                textResponse: CSO.textResponse,
+                docId: CSO.docId,
+                responses: CSO.processedResponses
             };
+
+            if (debug) {
+                const { context, parse, currentAction, docId, webhooks } = CSO;
+                converseResult.CSO = {
+                    docId,
+                    parse,
+                    currentAction,
+                    context,
+                    webhooks
+                };
+            }
+            release();
+            return converseResult;
         }
-        return converseResult;
     }
     catch (error) {
+        release();
         if (error.isParseError) {
             if (error.missingCategories) {
                 return {

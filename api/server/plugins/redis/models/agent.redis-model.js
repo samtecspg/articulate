@@ -19,7 +19,7 @@ const schema = {
         type: 'number'
     },
     uiColor: {
-        type: 'string'
+        type: 'string',
     },
     agentName: {
         type: 'string',
@@ -50,6 +50,9 @@ const schema = {
         type: 'float'
     },
     fallbackAction: {
+        type: 'string'
+    },
+    welcomeAction: {
         type: 'string'
     },
     status: {

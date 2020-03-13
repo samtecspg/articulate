@@ -2,10 +2,11 @@ import Schmervice from 'schmervice';
 import ConverseFulfillEmptySlotsWithSavedValues from './agent/agent.converse-fulfill-empty-slots-with-saved-values.service';
 import ConverseCallWebhook from './agent/agent.converse-call-webhook.service';
 import ConverseCompileResponseTemplates from './agent/agent.converse-compile-response-templates.service';
-import ConverseCompileQuickResponsesTemplates from './agent/agent.converse-compile-quick-responses-templates.service';
 import ConverseGenerateAutomaticMissingSlotQuickResponses from './agent/agent.converse-generate-automatic-missing-slot-quick-responses.service';
 import ConverseGenerateAutomaticActionsQuickResponses from './agent/agent.converse-generate-automatic-actions-quick-responses.service';
+import ConverseCompileRichResponsesTemplates from './agent/agent.converse-compile-rich-responses-templates.service';
 import ConverseGenerateResponseFallback from './agent/agent.converse-generate-response-fallback.service';
+import ConverseGenerateResponseWelcome from './agent/agent.converse-generate-response-welcome.service';
 import ConverseGenerateResponse from './agent/agent.converse-generate-response.service';
 import ConverseGetKeywordsFromRasaResults from './agent/agent.converse-get-keywords-from-rasa-results';
 import ConverseGetBestRasaResult from './agent/agent.converse-get-best-rasa-result.service';
@@ -271,6 +272,11 @@ module.exports = class AgentService extends Schmervice.Service {
         return await ConverseGenerateResponseFallback.apply(this, arguments);
     }
 
+    async converseGenerateResponseWelcome() {
+
+        return await ConverseGenerateResponseWelcome.apply(this, arguments);
+    }
+
     async converseGenerateResponse() {
 
         return await ConverseGenerateResponse.apply(this, arguments);
@@ -281,9 +287,9 @@ module.exports = class AgentService extends Schmervice.Service {
         return await ConverseCompileResponseTemplates.apply(this, arguments);
     }
 
-    async converseCompileQuickResponsesTemplates() {
+    async converseCompileRichResponsesTemplates() {
 
-        return await ConverseCompileQuickResponsesTemplates.apply(this, arguments);
+        return await ConverseCompileRichResponsesTemplates.apply(this, arguments);
     }
 
     async converseGenerateAutomaticMissingSlotQuickResponses() {

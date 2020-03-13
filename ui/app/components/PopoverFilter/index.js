@@ -14,6 +14,7 @@ import xIcon from '../../images/x-icon2.svg';
 import checkboxCheckedIcon from '../../images/checkbox-checked-icon.svg';
 import checkboxUncheckedIcon from '../../images/checkbox-unchecked-icon.svg';
 import messages from './messages';
+import ChipGroup from './components/ChipGroup';
 
 const styles = {
 
@@ -267,19 +268,9 @@ export class PopoverFilter extends React.Component {
 
         this.initialState = {
             popOverAnchorEl: null,
-            textFilterValue: '',
-            dropDownValuePicked: this.props.dropDownMainOptionLabel,
-            chipValuesPicked: [],
-            checkboxValuesPicked: [],
-            numberFiltersApplied: 0,
-            currentTextFilterValue: '',
-            currentMax: 100,
-            currentMin: 0,
-            currentJustMax: this.props.initialJustMax
         };
         this.state = this.initialState;
 
-        this.handleChipClick = this.handleChipClick.bind(this);
         this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
         this.checkboxIsSelected = this.checkboxIsSelected.bind(this);
         this.handleDropDownValuePicked = this.handleDropDownValuePicked.bind(this);
@@ -301,11 +292,11 @@ export class PopoverFilter extends React.Component {
     }
 
     async handleDropDownValuePicked(value) {
-        await this.setStateAsync({ dropDownValuePicked: value });
+        await this.props.onChangeDropDownValuePicked(value);
     }
 
     async handleTextFilterValueChanged(value) {
-        await this.setStateAsync({ textFilterValue: value });
+        await this.props.onChangeCurrentTextFilterValue(value);
     }
 
     async handleCurrentTextFilterValueChange(newValue) {
@@ -314,68 +305,50 @@ export class PopoverFilter extends React.Component {
         })
     }
 
-    async handleChipClick(value) {
-        if (this.chipIsSelected(value)) {
-            await this.setStateAsync({
-                chipValuesPicked: this.state.chipValuesPicked.filter(function (valueToRemove) {
-                    return value !== valueToRemove
-                })
-            });
-        } else {
-            await this.setStateAsync(prevState => ({
-                chipValuesPicked: [...prevState.chipValuesPicked, value]
-            })
-            )
-        }
-    }
-
-    chipIsSelected(value) {
-        return includes(this.state.chipValuesPicked, value);
-    }
-
     async handleCheckboxClick(value) {
         if (this.checkboxIsSelected(value)) {
-            await this.setStateAsync({
-                checkboxValuesPicked: this.state.checkboxValuesPicked.filter(function (valueToRemove) {
-                    return value !== valueToRemove
-                })
-            });
+            await this.props.onChangeCheckboxValuesPicked(this.props.checkboxValuesPicked.filter(function (valueToRemove) {
+                return value !== valueToRemove
+            }));
         } else {
-            await this.setStateAsync(prevState => ({
-                checkboxValuesPicked: [...prevState.checkboxValuesPicked, value]
-            })
-            )
+            await this.props.onChangeCheckboxValuesPicked([...this.props.checkboxValuesPicked, value]);
         }
     }
 
     checkboxIsSelected(value) {
-        return includes(this.state.checkboxValuesPicked, value);
+        return includes(this.props.checkboxValuesPicked, value);
     }
 
     async handleFiltersChange() {
-        const { dropDownValuePicked, chipValuesPicked, textFilterValue, currentMin, currentMax, checkboxValuesPicked, currentJustMax } = this.state;
-        this.props.processSelectedFilters({ dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval: [currentMin / 100, currentMax / 100], checkboxValuesPicked, currentJustMax });
+        await this.props.processSelectedFilters();
         await this.updateFilterNumber();
     }
 
     async updateFilterNumber() {
         var numFilters = 0;
-        if (this.state.dropDownValuePicked != this.props.dropDownMainOptionLabel) {
+        if (this.props.showDropDownFilter && this.props.dropDownValuePicked != '' && this.props.dropDownValuePicked != this.props.dropDownMainOptionLabel) {
             numFilters++;
         }
-        numFilters += this.state.chipValuesPicked.length;
-        if (this.state.textFilterValue != '') {
+        if (this.props.showChipsG1 && this.props.chipValuesPickedG1) {
+            numFilters += this.props.chipValuesPickedG1.length;
+        }
+        if (this.props.showChipsG2 && this.props.chipValuesPickedG2) {
+            numFilters += this.props.chipValuesPickedG2.length;
+        }
+        if (this.props.showTextFilter && this.props.textFilterValue != '') {
             numFilters++;
         }
-        if (this.props.showMinMaxFilter && ((this.state.currentMax !== this.props.absoluteMax) ||
-            (this.state.currentMin !== this.props.absoluteMin))) {
+        if (this.props.showMinMaxFilter && ((this.props.currentMax !== this.props.absoluteMax) ||
+            (this.props.currentMin !== this.props.absoluteMin))) {
             numFilters++;
         }
-        numFilters += this.state.checkboxValuesPicked.length;
-        if (this.props.showCheckboxFilter && this.state.currentJustMax !== this.props.initialJustMax) {
+        if (this.props.showCheckboxFilter && this.props.checkboxValuesPicked) {
+            numFilters += this.props.checkboxValuesPicked.length;
+        }
+        if (this.props.showCheckboxFilter && Number(this.props.currentJustMax) !== this.props.initialJustMax) {
             numFilters++;
         }
-        await this.setStateAsync({ numberFiltersApplied: numFilters });
+        await this.props.onChangeNumberFiltersApplied(numFilters);
     }
 
     handlePopoverClose = () => {
@@ -386,76 +359,63 @@ export class PopoverFilter extends React.Component {
 
     handleMinChange = async (ev) => {
         if (ev.target.value < this.props.absoluteMin) {
-            await this.setStateAsync({ currentMin: this.props.absoluteMin });
+            await this.props.onChangeCurrentMin(this.props.absoluteMin);
         }
         else {
-            await this.setStateAsync({ currentMin: Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, '') });
+            await this.props.onChangeCurrentMin(Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, ''));
         }
     }
 
     handleMinValidation = async () => {
-        if (this.state.currentMin === '') {
-            await this.setStateAsync({ currentMin: this.props.absoluteMin });
-        } else if (this.state.currentMin > this.state.currentMax) {
-            await this.setStateAsync({ currentMin: this.state.currentMax });
+        if (this.props.currentMin === '') {
+            await this.props.onChangeCurrentMin(this.props.absoluteMin);
+        } else if (this.props.currentMin > this.props.currentMax) {
+            await this.props.onChangeCurrentMin(this.props.absoluteMax);
         }
     }
 
     handleMaxChange = async (ev) => {
         if (ev.target.value > this.props.absoluteMax) {
-            await this.setStateAsync({ currentMax: this.props.absoluteMax });
+            await this.props.onChangeCurrentMax(this.props.absoluteMax);
         }
         else {
-            await this.setStateAsync({ currentMax: Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, '') });
+            await this.props.onChangeCurrentMax(Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, ''));
         }
     }
 
     handleMaxValidation = async () => {
-        if (this.state.currentMax === '') {
-            await this.setStateAsync({ currentMax: this.props.absoluteMax });
-        } else if (this.state.currentMax < this.state.currentMin) {
-            await this.setStateAsync({ currentMax: this.state.currentMin });
+        if (this.props.currentMax === '') {
+            await this.props.onChangeCurrentMax(this.props.absoluteMax);
+        } else if (this.props.currentMax < this.props.currentMin) {
+            await this.props.onChangeCurrentMax(this.props.currentMin);
         }
     }
 
     handleJustMaxChange = async (ev) => {
         if (ev.target.value > this.props.absoluteJustMax) {
-            await this.setStateAsync({ currentJustMax: this.props.absoluteJustMax });
+            await this.props.onChangeCurrentJustMax(this.props.absoluteJustMax);
         } else if (ev.target.value < 0) {
-            await this.setStateAsync({ currentJustMax: 0 });
+            await this.props.onChangeCurrentJustMax(0);
         }
         else {
-            await this.setStateAsync({ currentJustMax: Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, '') });
+            await this.props.onChangeCurrentJustMax(Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, ''));
         }
     }
 
     handleJustMaxValidation = async () => {
-        if (this.state.currentJustMax === '') {
-            await this.setStateAsync({ currentJustMax: 1000 });
+        if (this.props.currentJustMax === '') {
+            await this.props.onChangeCurrentJustMax(1000);
         }
     }
 
     async resetState(exit) {
         if (exit) {
+            await this.props.onResetFilters();
             await this.setStateAsync(this.initialState);
         } else {
-            await this.setStateAsync({
-                textFilterValue: '',
-                dropDownValuePicked: this.props.dropDownMainOptionLabel,
-                chipValuesPicked: [],
-                numberFiltersApplied: 0,
-                currentMin: this.props.absoluteMin,
-                currentMax: this.props.absoluteMax,
-                checkboxValuesPicked: [],
-                currentJustMax: this.props.initialJustMax
-            })
+            await this.props.onResetFilters();
         }
         await this.handleFiltersChange();
-    }
-
-    componentWillUnmount() {
-        const { dropDownValuePicked, chipValuesPicked, textFilterValue, currentMin, currentMax, checkboxValuesPicked, currentJustMax } = this.initialState
-        this.props.processSelectedFilters({ dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval: [currentMin / 100, currentMax / 100], checkboxValuesPicked, currentJustMax });
     }
 
     renderNumberFiltersApplied(classes, intl) {
@@ -464,7 +424,7 @@ export class PopoverFilter extends React.Component {
                 style={{ marginRight: '14px', marginTop: '15px' }}
             >
                 <span className={classes.numberFiltersAppliedLabel}>
-                    {this.state.numberFiltersApplied} {this.state.numberFiltersApplied > 1 ?
+                    {this.props.numberFiltersApplied} {this.props.numberFiltersApplied > 1 ?
                         intl.formatMessage(messages.filters) :
                         intl.formatMessage(messages.filter)}
                 </span>
@@ -497,7 +457,7 @@ export class PopoverFilter extends React.Component {
                     style={{
                         textAlign: 'left'
                     }}>
-                    {this.state.numberFiltersApplied > 0 &&
+                    {this.props.numberFiltersApplied > 0 &&
                         <Fragment >
                             <span className={classes.clearAllFiltersLabel}>
                                 {intl.formatMessage(messages.clearAllFilters)}
@@ -584,7 +544,7 @@ export class PopoverFilter extends React.Component {
                 <TextField
                     id="standard-number-just-max"
                     type="number"
-                    value={this.state.currentJustMax}
+                    value={this.props.currentJustMax}
                     onChange={async (ev) => { await this.handleJustMaxChange(ev) }}
                     onKeyPress={async ev => {
                         if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
@@ -641,7 +601,7 @@ export class PopoverFilter extends React.Component {
                         inputProps={{
                             className: classes.textFilterInput
                         }}
-                        value={this.state.currentTextFilterValue}
+                        value={this.props.currentTextFilterValue}
                         placeholder={this.props.textFilterPlaceholder}
                         onKeyPress={async ev => {
                             if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
@@ -674,13 +634,13 @@ export class PopoverFilter extends React.Component {
     renderTextFilterAppliedChip(classes, intl) {
         return <Grid style={{ 'marginLeft': '10px' }}>
             <div
-                key={this.state.textFilterValue}
+                key={this.props.textFilterValue}
                 className={classes.chipBackgroundContainerSelected}
             >
                 <span
                     className={classes.chipLabelSelected}
                 >
-                    {this.state.textFilterValue}
+                    {this.props.textFilterValue}
                 </span>
                 <a
                     onClick={async () => {
@@ -722,7 +682,7 @@ export class PopoverFilter extends React.Component {
                         inputProps={{
                             className: classes.dropDownInput
                         }}
-                        value={this.state.dropDownValuePicked}
+                        value={this.props.dropDownValuePicked === '' ? this.props.dropDownMainOptionLabel : this.props.dropDownValuePicked}
                         onChange={async ev => {
                             await this.handleDropDownValuePicked(ev.target.value)
                             await this.handleFiltersChange();
@@ -758,56 +718,22 @@ export class PopoverFilter extends React.Component {
 
     }
 
-    renderChips(classes, intl) {
-        return <Grid style={{ marginLeft: '10px', marginBottom: '10px' }}>
-            {this.props.showChips && this.props.showCustomFirstChip === true && this.renderCustomFirstChip(classes, intl)}
-            {this.props.showChips && this.renderNormalChips(classes, intl)}
-        </Grid>
-    }
-
-    renderCustomFirstChip(classes, intl) {
-        return <Fragment>
-            <div
-                key={""}
-                className={this.chipIsSelected("") ? classes.chipBackgroundContainerSelected : classes.chipBackgroundContainer}
-                onClick={async () => {
-                    await this.handleChipClick("");
-                    await this.handleFiltersChange();
-                }}
-            >
-                <span
-                    className={this.chipIsSelected("") ? classes.chipLabelSelected : classes.chipLabel}
-                >
-                    {this.props.customFirstChipLabel}
-                </span>
-            </div>
-        </Fragment>
-    }
-
-    renderNormalChips(classes, intl) {
-        return this.props.chipValues.sort().map(data => {
-            return (
-                <div
-                    key={data}
-                    className={this.chipIsSelected(data) ? classes.chipBackgroundContainerSelected : classes.chipBackgroundContainer}
-                    onClick={async () => {
-                        await this.handleChipClick(data);
-                        await this.handleFiltersChange();
-                    }}
-                >
-                    <span
-                        className={this.chipIsSelected(data) ? classes.chipLabelSelected : classes.chipLabel}
-                    >
-                        {data}
-                    </span>
-                </div>
-            );
-        })
+    renderChipGroup(classes, intl, parameters) {
+        return <ChipGroup
+            chipsFilterLabel={parameters.chipsFilterLabel}
+            showChips={parameters.showChips}
+            showCustomFirstChip={parameters.showCustomFirstChip}
+            handleFiltersChange={this.handleFiltersChange.bind(this)}
+            customFirstChipLabel={parameters.customFirstChipLabel}
+            chipValues={parameters.chipValues}
+            chipValuesPicked={parameters.chipValuesPicked}
+            onChangeChipValuesPicked={parameters.onChangeChipValuesPicked}
+        />
     }
 
     renderFilterIcon(classes, intl) {
         return <Grid>
-            <img className={classes.filterIcon} src={this.state.numberFiltersApplied > 0 ? blackFilterIcon : filterIcon}
+            <img className={classes.filterIcon} src={this.props.numberFiltersApplied > 0 ? blackFilterIcon : filterIcon}
                 onClick={ev => {
                     this.setState({
                         popOverAnchorEl: ev.currentTarget
@@ -835,7 +761,7 @@ export class PopoverFilter extends React.Component {
                     <TextField
                         id="standard-number-min"
                         type="number"
-                        value={this.state.currentMin}
+                        value={this.props.currentMin}
                         onChange={async (ev) => { await this.handleMinChange(ev) }}
                         onKeyPress={async ev => {
                             if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
@@ -879,7 +805,7 @@ export class PopoverFilter extends React.Component {
                     <TextField
                         id="standard-number-max"
                         type="number"
-                        value={this.state.currentMax}
+                        value={this.props.currentMax}
                         onChange={async (ev) => { await this.handleMaxChange(ev) }}
                         onKeyPress={async ev => {
                             if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
@@ -928,7 +854,7 @@ export class PopoverFilter extends React.Component {
         const { classes, intl } = this.props;
         return (
             <React.Fragment>
-                {this.state.numberFiltersApplied > 0 && this.renderNumberFiltersApplied(classes, intl)}
+                {this.props.numberFiltersApplied > 0 && this.renderNumberFiltersApplied(classes, intl)}
                 <Popover
                     anchorEl={this.state.popOverAnchorEl}
                     open={Boolean(this.state.popOverAnchorEl)}
@@ -949,10 +875,26 @@ export class PopoverFilter extends React.Component {
                         {this.props.showCheckboxFilter && this.renderJustMax(classes, intl)}
                         {this.props.showTextFilter && this.renderTextFilter(classes, intl)}
                         {this.props.showTextFilter && this.renderTextFilterAppliedLabel(classes, intl)}
-                        {this.state.textFilterValue != '' && this.renderTextFilterAppliedChip(classes, intl)}
+                        {this.props.showTextFilter && this.props.textFilterValue != '' && this.renderTextFilterAppliedChip(classes, intl)}
                         {this.props.showDropDownFilter && this.renderDropDownFilter(classes, intl)}
-                        {this.props.showChips && this.renderChipsFilterLabel(classes, intl)}
-                        {this.props.showChips && this.renderChips(classes, intl)}
+                        {this.props.showChipsG1 && this.renderChipGroup(classes, intl, {
+                            chipsFilterLabel: this.props.chipsFilterLabelG1,
+                            showChips: this.props.showChipsG1,
+                            showCustomFirstChip: this.props.showCustomFirstChipG1,
+                            customFirstChipLabel: this.props.customFirstChipLabelG1,
+                            chipValues: this.props.chipValuesG1,
+                            chipValuesPicked: this.props.chipValuesPickedG1,
+                            onChangeChipValuesPicked: this.props.onChangeChipValuesPickedG1
+                        })}
+                        {this.props.showChipsG2 && this.renderChipGroup(classes, intl, {
+                            chipsFilterLabel: this.props.chipsFilterLabelG2,
+                            showChips: this.props.showChipsG2,
+                            showCustomFirstChip: this.props.showCustomFirstChipG2,
+                            customFirstChipLabel: this.props.customFirstChipLabelG2,
+                            chipValues: this.props.chipValuesG2,
+                            chipValuesPicked: this.props.chipValuesPickedG2,
+                            onChangeChipValuesPicked: this.props.onChangeChipValuesPickedG2
+                        })}
                         {this.props.showMinMaxFilter && this.renderMinMax(classes, intl)}
                     </Grid>
                 </Popover >
@@ -975,12 +917,11 @@ PopoverFilter.propTypes = {
     showMinMaxFilter: PropTypes.bool,
     showTextFilter: PropTypes.bool,
     dropDownValues: PropTypes.array,
-    chipValues: PropTypes.array,
-    chipsFilterLabel: PropTypes.string,
+    chipValuesG1: PropTypes.array,
+    chipsFilterLabelG1: PropTypes.string,
     filtersDescription: PropTypes.string,
     textFilterPlaceholder: PropTypes.string,
     dropDownMainOptionLabel: PropTypes.string,
-    chipsFilterLabel: PropTypes.string,
     dropDownFilterLabel: PropTypes.string,
     minMaxFilterLabel: PropTypes.string,
     filtersDescription: PropTypes.string,
@@ -991,6 +932,20 @@ PopoverFilter.propTypes = {
     absoluteMin: PropTypes.number,
     initialJustMax: PropTypes.number,
     checkBoxesFilterLabel: PropTypes.string,
+    onChangeCurrentTextFilterValue: PropTypes.func,
+    textFilterValue: PropTypes.string,
+    onChangeDropDownValuePicked: PropTypes.func,
+    dropDownValuePicked: PropTypes.string,
+    onChangeChipValuesPicked: PropTypes.func,
+    chipValuesPickedG1: PropTypes.array,
+    onChangeNumberFiltersApplied: PropTypes.func,
+    numberFiltersApplied: PropTypes.number,
+    onChangeCurrentMax: PropTypes.func,
+    onChangeCurrentMin: PropTypes.func,
+    onChangeCurrentJustMax: PropTypes.func,
+    onChangeCheckboxValuesPicked: PropTypes.func,
+    checkboxValuesPicked: PropTypes.array,
+    onResetFilters: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(PopoverFilter));

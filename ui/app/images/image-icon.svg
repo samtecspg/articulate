@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.04 15.04">
+    <defs>
+        <style>.cls-1{fill:#4e4e4e;}</style>
+    </defs>
+    <title>image-icon</title>
+    <g id="Layer_2" data-name="Layer 2">
+        <g id="Layer_1-2" data-name="Layer 1">
+            <path class="cls-1" d="M14.29,0H.75A.76.76,0,0,0,0,.75V14.29A.75.75,0,0,0,.75,15H14.29a.74.74,0,0,0,.75-.75V.75A.75.75,0,0,0,14.29,0Zm-.75,1.5V9.59L11.89,7.93a.77.77,0,0,0-1.06,0L9.21,9.56,6.38,6.73a.74.74,0,0,0-1.06,0L1.5,10.54v-9Zm-12,12v-.88L5.85,8.32l2.83,2.83a.77.77,0,0,0,1.06,0l1.62-1.63,2.18,2.19v1.83Z" />
+            <circle class="cls-1" cx="9.42" cy="4.54" r="1.11" />
+        </g>
+    </g>
+</svg>

@@ -18,7 +18,10 @@ module.exports = async function ({ actionData, CSO }) {
         fulfilled: CSO.response.fulfilled,
         actions: CSO.response.actions ? CSO.response.actions : [],
         isFallback: CSO.response.isFallback,
-        quickResponses: CSO.response.quickResponses
+        isWelcome: CSO.response.isWelcome,
+        quickResponses: CSO.response.quickResponses ? CSO.response.quickResponses : [],
+        richResponses: CSO.response.richResponses,
+        disableTextResponse: CSO.response.disableTextResponse
     };
 
     //This will store the final response in CSO.finalResponse
@@ -80,11 +83,24 @@ module.exports = async function ({ actionData, CSO }) {
         }
     });
 
+    //Also we need to convert richResponses back to object
+    if (CSO.finalResponse.richResponses) {
+        CSO.finalResponse.richResponses = JSON.parse(CSO.finalResponse.richResponses);
+    }
+    if (fullConverseResult.richResponses) {
+        fullConverseResult.richResponses = JSON.parse(fullConverseResult.richResponses);
+    }
+    if (CSO.finalResponse.responses && CSO.finalResponse.responses.length > 0) {
+        CSO.finalResponse.responses.forEach((response) => {
+
+            response.richResponses = JSON.parse(response.richResponses);
+        });
+    }
+
     const responseForUbiquity = CSO.debug ? fullConverseResult : converseResult;
 
     if (CSO.ubiquity && CSO.ubiquity.connection && CSO.ubiquity.connection.details.outgoingMessages) {
-
-        await channelService.reply({ connection: CSO.ubiquity.connection, event: CSO.ubiquity.event, response: responseForUbiquity, sessionId: CSO.sessionId });
+        await channelService.reply({ connection: CSO.ubiquity.connection, event: CSO.ubiquity.event, response: responseForUbiquity, sessionId: CSO.sessionId, server: this.server });
         await timeout(CSO.ubiquity.connection.details.waitTimeBetweenMessages);
     }
     else {

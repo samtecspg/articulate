@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Grid, Tooltip } from '@material-ui/core';
+import { Grid, Tooltip, Select, MenuItem, Dialog, DialogContent, DialogTitle, Typography, Button, FormControlLabel, Switch } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import ContentEditable from 'react-contenteditable';
 
@@ -9,8 +9,19 @@ import { intlShape, injectIntl } from 'react-intl';
 import addActionIcon from '../../../images/add-action-icon.svg';
 import trashIcon from '../../../images/trash-icon.svg';
 import copyIcon from '../../../images/icon-copy.svg';
+import richResponsesIcon from '../../../images/rich-responses-icon.svg';
+import pencilIcon from '../../../images/pencil-icon.svg';
 import FilterSelect from '../../../components/FilterSelect';
+import RichResponsesIcons from '../../../components/RichResponsesIcons';
 import messages from '../messages';
+import _ from 'lodash';
+
+import brace from 'brace';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/xml';
+import 'brace/mode/json';
+import 'brace/theme/terminal';
 
 const styles = {
   actionBackgroundContainer: {
@@ -70,6 +81,81 @@ const styles = {
     border: 'none',
     padding: '0px',
   },
+  richResponsesActions: {
+    float: 'right',
+  },
+  responseTypeActiveIndicator: {
+    height: '10px',
+    width: '10px',
+    borderRadius: '50px',
+    display: 'inline-flex',
+    marginRight: '5px'
+  },
+  dialogRichResponse: {
+    borderRadius: '5px',
+    border: "1px solid #4e4e4e",
+    width: '550px'
+  },
+  dialogTitleContainer: {
+    backgroundColor: "#f6f7f8",
+    borderBottom: "1px solid #4e4e4e",
+    borderTopLeftRadius: '5px',
+    borderTopRightRadius: '5px',
+  },
+  dialogContentContainer: {
+    paddingTop: '20px'
+  },
+  dialogRichResponseIcon: {
+    height: '20px'
+  },
+  dialogRichResponseTitle: {
+    fontSize: '18px',
+    marginLeft: '5px',
+    position: 'relative',
+    bottom: '2px'
+  },
+  dialogRichResponseDescription: {
+    fontSize: '14px'
+  },
+  dialogEditor: {
+    borderRadius: '5px'
+  },
+  addButton: {
+    float: 'right'
+  },
+  hintText: {
+    color: '#a2a7b1',
+    marginTop: '20px',
+    fontSize: '12px'
+  },
+  hintBorder: {
+    border: '1px solid #c5cbd8',
+    borderRadius: '5px',
+    padding: '2px 3px'
+  },
+  dropdownRichResponseIcon: {
+    height: '15px',
+    position: 'relative',
+    top: '2px',
+    marginLeft: '5px'
+  },
+  activeRichResponsesDot: {
+    borderRadius: '50px',
+    backgroundColor: '#4e4e4e',
+    height: '10px',
+    width: '10px',
+    display: 'inline-flex',
+    position: 'absolute',
+    zIndex: 9
+  },
+  switchLabel: {
+    position: 'relative',
+    left: '14px',
+    bottom: '5px'
+  },
+  switchContainer: {
+    borderBottom: '1px solid #4e4e4e'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -77,15 +163,58 @@ class ResponseRow extends React.Component {
   constructor() {
     super();
     this.contentEditable = React.createRef();
+    this.toggleRichResponseEditor = this.toggleRichResponseEditor.bind(this);
   }
 
   state = {
     openActions: false,
+    openRichResponses: false,
+    openRichResponseEditor: false,
     anchorEl: null,
+    anchorRichResponsesEl: null,
+    editingRichResponse: false,
+    richResponseType: '',
+    richResponseTitle: '',
+    richResponseDescription: '',
+    richResponsePayload: ''
   };
 
+  toggleRichResponseEditor = (value, richResponse) => {
+    const { richResponses, response } = this.props;
+    this.setState({
+      openRichResponseEditor: value
+    })
+    if (value) {
+      const existingRichResponse = response.richResponses.filter((richResponseTemp) => {
+
+        return richResponseTemp.type === richResponses[richResponse].type;
+      });
+      let payload = JSON.stringify(richResponses[richResponse].defaultPayload, null, 2);
+      if (existingRichResponse.length > 0) {
+        payload = existingRichResponse[0].data;
+      }
+      this.setState({
+        editingRichResponse: existingRichResponse.length > 0,
+        richResponseType: richResponses[richResponse].type,
+        richResponseTitle: richResponses[richResponse].name,
+        richResponseDescription: richResponses[richResponse].description,
+        richResponsePayload: payload
+      });
+    }
+    else {
+      this.setState({
+        editingRichResponse: false,
+        richResponseType: '',
+        richResponseTitle: '',
+        richResponseDescription: '',
+        richResponsePayload: null
+      });
+    }
+  }
+
   render() {
-    const { classes, action, response, responseIndex, intl , isReadOnly} = this.props;
+    const { classes, action, response, responseIndex, intl, richResponses, onAddRichResponse, onDeleteRichResponse, onEditRichResponse, isReadOnly } = this.props;
+    const usedRichResponses = _.map(response.richResponses, 'type');
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -118,9 +247,9 @@ class ResponseRow extends React.Component {
                   onClick={() => {
                     this.props.onGoToUrl(
                       `/agent/${
-                        this.props.agentId
+                      this.props.agentId
                       }/actionDummy/${actionId}?ref=action&actionId=${
-                        action.id
+                      action.id
                       }`,
                     );
                   }}
@@ -141,103 +270,288 @@ class ResponseRow extends React.Component {
               </div>
             );
           })}
-          {!isReadOnly && (
+          <Tooltip
+            key="addAction"
+            title={intl.formatMessage(messages.addAction)}
+            placement="top"
+          >
+            <img
+              onClick={evt =>
+                this.setState({
+                  anchorEl: evt.target,
+                  openActions: true,
+                })
+              }
+              className={classes.addActionIcon}
+              src={addActionIcon}
+            />
+          </Tooltip>
+          {richResponses &&
             <React.Fragment>
-              <img
-                onClick={evt =>
-                  this.setState({
-                    anchorEl: evt.target,
-                    openActions: true,
-                  })
-                }
-                className={classes.addActionIcon}
-                src={addActionIcon}
-              />
+              {usedRichResponses.length > 0 && <div className={classes.activeRichResponsesDot}></div>}
               <Tooltip
-                key="copyResponse"
-                title={intl.formatMessage(messages.copyResponses)}
+                key="richResponses"
+                title={intl.formatMessage(messages.richResponses)}
                 placement="top"
               >
                 <img
-                  onClick={() => {
-                    this.props.onCopyResponse(response.textResponse);
+                  onClick={evt =>
+                    this.setState({
+                      anchorRichResponsesEl: evt.target,
+                      openRichResponses: true,
+                    })
+                  }
+                  style={{
+                    paddingLeft: '0px !important'
                   }}
                   className={classes.icon}
-                  src={copyIcon}
+                  src={richResponsesIcon}
                 />
               </Tooltip>
-              <img
-                key="deleteResponse"
-                onClick={() => {
-                  this.props.onDeleteResponse(responseIndex);
-                }}
-                className={classes.icon}
-                src={trashIcon}
-              />
-              <FilterSelect
-                showRecent
-                value="select"
-                valueDisplayField="actionName"
-                valueField="actionName"
-                onSelect={value => {
-                  if (value) {
-                    this.props.onChainActionToResponse(responseIndex, value);
-                  }
-                }}
-                onSearch={this.props.onSearchActions}
-                onGoToUrl={({ isEdit = false, url = '' }) => {
-                  if (isEdit) {
-                    this.props.onGoToUrl(`${url}?ref=action&actionId=${action.id}`);
-                  } else {
-                    this.props.onGoToUrl(
-                      `/agent/${
-                        this.props.agentId
-                      }/actionDummy/create?ref=action&actionId=${action.id}`,
-                    );
-                  }
-                }}
-                onEditRoutePrefix={`/agent/${this.props.agentId}/actionDummy/`}
-                onCreateRoute={`/agent/${
-                  this.props.agentId
-                }/actionDummy/create?ref=action&actionId=${action.id}`}
-                filteredValues={this.props.agentFilteredActions.filter(
-                  agentFilteredAction => {
-                    return (
-                      agentFilteredAction.actionName !== action.actionName &&
-                      response.actions.indexOf(agentFilteredAction.actionName) ===
-                      -1
-                    );
-                  },
-                )}
-                values={this.props.agentActions.filter(agentAction => {
-                  return (
-                    agentAction.actionName !== action.actionName &&
-                    response.actions.indexOf(agentAction.actionName) === -1
-                  );
-                })}
-                SelectProps={{
-                  open: this.state.openActions,
-                  onClose: () =>
-                    this.setState({
-                      openActions: false,
-                      anchorEl: null,
-                    }),
-                  onOpen: evt =>
-                    this.setState({
-                      anchorEl: evt.target,
-                      openActions: true,
-                    }),
-                  MenuProps: {
-                    anchorEl: this.state.anchorEl,
-                  },
-                }}
-                style={{
-                  display: 'none',
-                }}
-                displayEdit
-              />
             </React.Fragment>
-          )}
+          }
+          <Tooltip
+            key="copyResponse"
+            title={intl.formatMessage(messages.copyResponses)}
+            placement="top"
+          >
+            <img
+              onClick={() => {
+                this.props.onCopyResponse(response.textResponse);
+              }}
+              className={classes.icon}
+              src={copyIcon}
+            />
+          </Tooltip>
+          <Tooltip
+            key="deleteResponse"
+            title={intl.formatMessage(messages.deleteResponse)}
+            placement="top"
+          >
+            <img
+              key="deleteResponse"
+              onClick={() => {
+                this.props.onDeleteResponse(responseIndex);
+              }}
+              className={classes.icon}
+              src={trashIcon}
+            />
+          </Tooltip>
+          {
+            richResponses &&
+            <Select
+              value=''
+              open={this.state.openRichResponses}
+              onClose={() => {
+                this.setState({
+                  openRichResponses: false,
+                  anchorRichResponsesEl: null
+                });
+              }}
+              MenuProps={{
+                anchorEl: this.state.anchorRichResponsesEl,
+                PaperProps: {
+                  style: {
+                    minWidth: usedRichResponses.length > 0 ? '300px' : '250px',
+                  }
+                }
+              }}
+              style={{
+                display: 'none'
+              }}
+              onChange={(evt) => {
+                evt.preventDefault();
+                if (!evt._targetInst || (evt._targetInst && ['img', 'input'].indexOf(evt._targetInst.type) === -1)) {
+                  if (evt.target.value !== 'disableRichResponse') {
+                    this.toggleRichResponseEditor(true, evt.target.value);
+                  }
+                }
+                else {
+                  if (evt.target.value === 'disableRichResponse') {
+                    this.props.onChangeTextResponseFlag(!response.disableTextResponse, responseIndex);
+                  }
+                  this.setState({
+                    openRichResponses: true
+                  });
+                }
+              }}
+            >
+              <MenuItem className={classes.switchContainer} value='disableRichResponse'>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={response.disableTextResponse ? response.disableTextResponse : false}
+                      value="disableTextResponse"
+                      color="primary"
+                    />
+                  }
+                  className={classes.switchLabel}
+                  label={intl.formatMessage(messages.disableTextResponse)}
+                />
+              </MenuItem>
+              {
+                Object.keys(richResponses).map((richResponse, index) => {
+                  return (
+                    richResponses[richResponse].enabled &&
+                    <MenuItem value={richResponse} key={`richResponseType_${index}`}>
+                      <Grid container>
+                        {
+                          usedRichResponses.length > 0 &&
+                          <Grid item xs={1}>
+                            {usedRichResponses.indexOf(richResponses[richResponse].type) > -1 &&
+                              <div className={classes.responseTypeActiveIndicator} style={{ backgroundColor: "#00c582" }}></div>
+                            }
+                          </Grid>
+                        }
+                        <Grid item xs={2}>
+                          <RichResponsesIcons className={classes.dropdownRichResponseIcon} logo={richResponses[richResponse].type} />
+                        </Grid>
+                        <Grid item xs={usedRichResponses.length > 0 ? 9 : 10}>
+                          {richResponses[richResponse].name}
+                          {usedRichResponses.indexOf(richResponses[richResponse].type) > -1 &&
+                            <div className={classes.richResponsesActions}>
+                              <img style={{ zIndex: 99999999999 }} onClick={() => { this.toggleRichResponseEditor(true, richResponse); }} className={classes.addActionIcon} src={pencilIcon} />
+                              <img style={{ zIndex: 99999999999 }} onClick={() => { onDeleteRichResponse(responseIndex, { type: richResponses[richResponse].type }); }} className={classes.icon} src={trashIcon} />
+                            </div>
+                          }
+                        </Grid>
+                      </Grid>
+                    </MenuItem>
+                  )
+                })
+              }
+            </Select>
+          }
+          <Dialog
+            PaperProps={{
+              className: classes.dialogRichResponse
+            }}
+            open={this.state.openRichResponseEditor}
+            onClose={() => { this.toggleRichResponseEditor(false) }}
+          >
+            <DialogTitle className={classes.dialogTitleContainer}>
+              <Grid item xs={12}>
+                <RichResponsesIcons className={classes.dialogRichResponseIcon} logo={this.state.richResponseType} />
+                <span className={classes.dialogRichResponseTitle}>{this.state.richResponseTitle}</span>
+                <Button
+                  className={classes.addButton}
+                  onClick={() => {
+                    this.state.editingRichResponse ?
+                      onEditRichResponse(responseIndex, {
+                        type: this.state.richResponseType,
+                        data: this.state.richResponsePayload
+                      })
+                      :
+                      onAddRichResponse(responseIndex, {
+                        type: this.state.richResponseType,
+                        data: this.state.richResponsePayload
+                      });
+                    this.toggleRichResponseEditor(false);
+                  }}
+                  variant="contained"
+                >
+                  {intl.formatMessage(this.state.editingRichResponse ? messages.editButton : messages.addButton)}
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <span className={classes.dialogRichResponseDescription}>{this.state.richResponseDescription}</span>
+                <div className={classes.hintText}>
+                  <span>{intl.formatMessage(messages.hint1)}&nbsp;</span>
+                  <span className={classes.hintBorder}>{'{{}}'}</span>
+                  <span>&nbsp;{intl.formatMessage(messages.hint2)}</span>
+                </div>
+              </Grid>
+            </DialogTitle>
+            <DialogContent className={classes.dialogContentContainer}>
+              <AceEditor
+                className={classes.dialogEditor}
+                width="100%"
+                height="300px"
+                mode="json"
+                theme="terminal"
+                name="richResponsePayload"
+                readOnly={false}
+                onChange={value =>
+                  this.setState({ richResponsePayload: value })
+                }
+                fontSize={14}
+                showPrintMargin
+                showGutter
+                highlightActiveLine
+                value={typeof this.state.richResponsePayload === 'string' ? this.state.richResponsePayload : ''}
+                setOptions={{
+                  useWorker: false,
+                  showLineNumbers: true,
+                  tabSize: 2,
+                }}
+                editorProps={{
+                  $blockScrolling: Infinity,
+                }}
+              />
+            </DialogContent>
+          </Dialog>
+          <FilterSelect
+            showRecent
+            value="select"
+            valueDisplayField="actionName"
+            valueField="actionName"
+            onSelect={value => {
+              if (value) {
+                this.props.onChainActionToResponse(responseIndex, value);
+              }
+            }}
+            onSearch={this.props.onSearchActions}
+            onGoToUrl={({ isEdit = false, url = '' }) => {
+              if (isEdit) {
+                this.props.onGoToUrl(`${url}?ref=action&actionId=${action.id}`);
+              } else {
+                this.props.onGoToUrl(
+                  `/agent/${
+                  this.props.agentId
+                  }/actionDummy/create?ref=action&actionId=${action.id}`,
+                );
+              }
+            }}
+            onEditRoutePrefix={`/agent/${this.props.agentId}/actionDummy/`}
+            onCreateRoute={`/agent/${
+              this.props.agentId
+              }/actionDummy/create?ref=action&actionId=${action.id}`}
+            filteredValues={this.props.agentFilteredActions.filter(
+              agentFilteredAction => {
+                return (
+                  agentFilteredAction.actionName !== action.actionName &&
+                  response.actions.indexOf(agentFilteredAction.actionName) ===
+                  -1
+                );
+              },
+            )}
+            values={this.props.agentActions.filter(agentAction => {
+              return (
+                agentAction.actionName !== action.actionName &&
+                response.actions.indexOf(agentAction.actionName) === -1
+              );
+            })}
+            SelectProps={{
+              open: this.state.openActions,
+              onClose: () =>
+                this.setState({
+                  openActions: false,
+                  anchorEl: null,
+                }),
+              onOpen: evt =>
+                this.setState({
+                  anchorEl: evt.target,
+                  openActions: true,
+                }),
+              MenuProps: {
+                anchorEl: this.state.anchorEl,
+              },
+            }}
+            style={{
+              display: 'none',
+            }}
+            displayEdit
+          />
         </Grid>
       </Grid>
     );
@@ -254,6 +568,7 @@ ResponseRow.propTypes = {
   onChainActionToResponse: PropTypes.func,
   onUnchainActionFromResponse: PropTypes.func,
   onEditActionResponse: PropTypes.func,
+  onChangeTextResponseFlag: PropTypes.func,
   onCopyResponse: PropTypes.func,
   onDeleteResponse: PropTypes.func,
   agentFilteredActions: PropTypes.array,
@@ -261,6 +576,10 @@ ResponseRow.propTypes = {
   onGoToUrl: PropTypes.func,
   agentId: PropTypes.string,
   isReadOnly: PropTypes.bool,
+  richResponses: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  onAddRichResponse: PropTypes.func.isRequired,
+  onDeleteRichResponse: PropTypes.func.isRequired,
+  onEditRichResponse: PropTypes.func.isRequired,
 };
 
 ResponseRow.defaultProps = {

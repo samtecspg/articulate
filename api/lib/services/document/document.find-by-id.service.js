@@ -19,8 +19,19 @@ module.exports = async function ({ id, returnModel = false }) {
 
                 if (docData.converseResult.CSO.webhooks[webhookKey].response){
                     docData.converseResult.CSO.webhooks[webhookKey].response = JSON.parse(docData.converseResult.CSO.webhooks[webhookKey].response);
-                }                
+                }
             });
+        }
+        if (docData.converseResult && docData.converseResult.responses){
+            docData.converseResult.responses = docData.converseResult.responses.map((response) => {
+                if (response.richResponses){
+                    response.richResponses = JSON.parse(response.richResponses);
+                }
+                return response;
+            });
+        }
+        if (docData.converseResult && docData.converseResult.richResponses){
+            docData.converseResult.richResponses = JSON.parse(docData.converseResult.richResponses);
         }
         return docData;
     }

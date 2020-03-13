@@ -54,10 +54,10 @@ module.exports = async function ({ actionData, CSO }) {
             const missingSlot = missingSlots[missingSlotIndex];
             const response = await agentService.converseCompileResponseTemplates({ responses: missingSlot.textPrompts, templateContext: CSO, isTextPrompt: true, promptCount: CSO.currentAction.slots[missingSlot.slotName].promptCount });
             var missingSlotQuickResponses = [];
-            if(missingSlots[0].quickResponses && missingSlots[0].quickResponses.length > 0){
+            if (missingSlots[0].quickResponses && missingSlots[0].quickResponses.length > 0) {
                 missingSlotQuickResponses = missingSlots[0].quickResponses;
-            }else if (CSO.agent.settings.generateSlotsQuickResponses){
-                missingSlotQuickResponses =  await agentService.converseGenerateAutomaticMissingSlotQuickResponses({CSO, missingSlot})
+            } else if (CSO.agent.settings.generateSlotsQuickResponses) {
+                missingSlotQuickResponses = await agentService.converseGenerateAutomaticMissingSlotQuickResponses({ CSO, missingSlot })
             }
             return { ...response, quickResponses: missingSlotQuickResponses, fulfilled: false };
         }
@@ -127,24 +127,24 @@ module.exports = async function ({ actionData, CSO }) {
         if (webhookResponse.textResponse) {
             return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: { [webhook.webhookKey]: webhookResponse } };
         }
-        let quickResponses = [];
-        if(actionData.responsesQuickResponses && actionData.responsesQuickResponses.length > 0){
-            quickResponses = await agentService.converseCompileQuickResponsesTemplates({ quickResponses: actionData.responsesQuickResponses, templateContext: CSO });
-        }else if (CSO.agent.settings.generateActionsQuickResponses){
-            quickResponses = await agentService.converseGenerateAutomaticActionsQuickResponses({CSO});
-        }
+        //let quickResponses = [];
+        //if (actionData.responsesQuickResponses && actionData.responsesQuickResponses.length > 0) {
+        //    quickResponses = await agentService.converseCompileQuickResponsesTemplates({ quickResponses: actionData.responsesQuickResponses, templateContext: CSO });
+        //} else if (CSO.agent.settings.generateActionsQuickResponses) {
+        //    quickResponses = await agentService.converseGenerateAutomaticActionsQuickResponses({ CSO });
+        //}
         const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
-        return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: quickResponses, webhook: { [webhook.webhookKey]: webhookResponse }, fulfilled: true };
+        return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, webhook: { [webhook.webhookKey]: webhookResponse }, fulfilled: true };
     }
-    let quickResponses;
+    //let quickResponses;
 
-    if (actionData.responsesQuickResponses && actionData.responsesQuickResponses.length > 0) {
-        quickResponses = await agentService.converseCompileQuickResponsesTemplates({ quickResponses: actionData.responsesQuickResponses, templateContext: CSO });
-    }
-    else if (CSO.agent.settings.generateActionsQuickResponses) {
-        quickResponses = await agentService.converseGenerateAutomaticActionsQuickResponses({ CSO });
-    }
-    quickResponses = await agentService.converseCompileQuickResponsesTemplates({ quickResponses: actionData.responsesQuickResponses, templateContext: CSO });
+    //if (actionData.responsesQuickResponses && actionData.responsesQuickResponses.length > 0) {
+    //    quickResponses = await agentService.converseCompileQuickResponsesTemplates({ quickResponses: actionData.responsesQuickResponses, templateContext: CSO });
+    //}
+    //else if (CSO.agent.settings.generateActionsQuickResponses) {
+    //    quickResponses = await agentService.converseGenerateAutomaticActionsQuickResponses({ CSO });
+    //}
+    //quickResponses = await agentService.converseCompileQuickResponsesTemplates({ quickResponses: actionData.responsesQuickResponses, templateContext: CSO });
     const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
-    return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, quickResponses: quickResponses, fulfilled: true };
+    return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, fulfilled: true };
 };

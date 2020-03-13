@@ -90,6 +90,16 @@ export default defineMessages({
     defaultMessage:
       'What your agent should say if he weren\'t able to recognize what user said?',
   },
+  welcomeTextField: {
+    id: 'app.containers.AgentPage.component.AgentDataForm.welcomeTextField',
+    defaultMessage: 'Welcome Action:',
+  },
+  welcomeTextFieldPlaceholder: {
+    id:
+      'app.containers.AgentPage.component.AgentDataForm.welcomeTextFieldPlaceholder',
+    defaultMessage:
+      "What your agent should say if welcome message is enabled",
+  },
   requiredField: {
     id: 'app.containers.AgentPage.component.AgentDataForm.requiredField',
     defaultMessage: '*Required',
@@ -105,6 +115,10 @@ export default defineMessages({
   noFallbacks: {
     id: 'app.containers.AgentPage.component.AgentDataForm.noFallbacks',
     defaultMessage: 'You haven\'t specified any fallback response',
+  },
+  noWelcomes: {
+    id: 'app.containers.AgentPage.component.AgentDataForm.noWelcomes',
+    defaultMessage: "You haven't specified any welcome response",
   },
   webhookSetting: {
     id: 'app.containers.AgentPage.component.AgentSettingsForm.webhookSetting',

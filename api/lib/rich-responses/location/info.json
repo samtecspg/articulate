@@ -1,0 +1,8 @@
+{
+    "name": "Location",
+    "type": "location",
+    "enabled": false,
+    "description": "A special type of response that will request user location.",
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/rich-responses/location/README.MD",
+    "defaultPayload": null
+}

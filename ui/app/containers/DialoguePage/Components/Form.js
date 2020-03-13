@@ -131,21 +131,33 @@ class Form extends React.Component {
     });
   };
 
-  processSelectedPopoverFilters(filtersSet) {
-    const { dropDownValuePicked, chipValuesPicked, textFilterValue } = filtersSet;
+  processSelectedPopoverFilters() {
+    const dropDownValuePicked = this.props.dialoguePageFilterCategory;
+    const chipValuesPickedG1 = this.props.dialoguePageFilterActions;
+    const textFilterValue = this.props.dialoguePageFilterSearchSaying;
+    const chipValuesPickedG2 = this.props.dialoguePageFilterKeywords;
+
+
     var filter = '';
     if (textFilterValue != '') {
       filter = filter + textFilterValue + ' ';
     }
-    if (dropDownValuePicked != 'Pick Category') {
+    if (dropDownValuePicked != 'Pick Category' && dropDownValuePicked != '') {
       filter = filter + 'category:"' + dropDownValuePicked + '"';
     }
-    if (chipValuesPicked.length > 0) {
+    if (chipValuesPickedG1.length > 0) {
       filter = filter + ' actions:"'
-      filter = filter + chipValuesPicked.join('" actions:"')
+      filter = filter + chipValuesPickedG1.join('" actions:"')
       filter = filter + '"';
     }
-    this.props.onSearchSaying(filter, true);
+
+    if (chipValuesPickedG2.length > 0) {
+      filter = filter + ' keywords:"'
+      filter = filter + chipValuesPickedG2.join('" keywords:"')
+      filter = filter + '"';
+    }
+    this.props.onChangeDialoguePageFilterString(filter);
+    this.props.onSearchSaying(true);
   }
 
   render() {
@@ -253,17 +265,32 @@ class Form extends React.Component {
                   showTextFilter={true}
                   showDropDownFilter={true}
                   showMinMaxFilter={false}
-                  showChips={true}
+                  showChipsG1={true}
                   showMinMaxFilter={false}
-                  showCustomFirstChip={false}
+                  showCustomFirstChipG1={false}
                   dropDownValues={map(this.props.agentCategories, 'categoryName')}
-                  chipValues={map(this.props.agentActions, 'actionName')}
+                  chipValuesG1={map(this.props.agentActions, 'actionName')}
                   textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
                   dropDownMainOptionLabel={intl.formatMessage(messages.pickCategory)}
-                  chipsFilterLabel={intl.formatMessage(messages.pickActions)}
+                  chipsFilterLabelG1={intl.formatMessage(messages.pickActions)}
                   dropDownFilterLabel={intl.formatMessage(messages.pickCategoryLabel)}
                   filtersDescription={intl.formatMessage(messages.filtersDescription)}
                   processSelectedFilters={this.processSelectedPopoverFilters}
+                  onChangeCurrentTextFilterValue={this.props.onChangeDialoguePageFilterSearchSaying}
+                  textFilterValue={this.props.dialoguePageFilterSearchSaying}
+                  onChangeDropDownValuePicked={this.props.onChangeDialoguePageFilterCategory}
+                  dropDownValuePicked={this.props.dialoguePageFilterCategory}
+                  onChangeChipValuesPickedG1={this.props.onChangeDialoguePageFilterActions}
+                  chipValuesPickedG1={this.props.dialoguePageFilterActions}
+                  onChangeNumberFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
+                  numberFiltersApplied={this.props.dialoguePageNumberOfFiltersApplied}
+                  onResetFilters={this.props.onResetDialoguePageFilters}
+                  showChipsG2={true}
+                  showCustomFirstChipG2={false}
+                  chipValuesG2={map(this.props.agentKeywords, 'keywordName')}
+                  chipsFilterLabelG2={intl.formatMessage(messages.pickKeywords)}
+                  onChangeChipValuesPickedG2={this.props.onChangeDialoguePageFilterKeywords}
+                  chipValuesPickedG2={this.props.dialoguePageFilterKeywords}
                 />
               )}
             </Grid>
@@ -402,6 +429,21 @@ Form.propTypes = {
   handleTabChange: PropTypes.func,
   onChangeSayingCategory: PropTypes.func,
   isReadOnly: PropTypes.bool,
+  onChangeDialoguePageFilterSearchSaying: PropTypes.func,
+  dialoguePageFilterSearchSaying: PropTypes.string,
+  onChangeDialoguePageFilterCategory: PropTypes.func,
+  dialoguePageFilterCategory: PropTypes.string,
+  onChangeDialoguePageFilterSearchSaying: PropTypes.func,
+  dialoguePageFilterSearchSaying: PropTypes.string,
+  onChangeDialoguePageFilterCategory: PropTypes.func,
+  dialoguePageFilterCategory: PropTypes.string,
+  onChangeDialoguePageFilterActions: PropTypes.func,
+  dialoguePageFilterActions: PropTypes.array,
+  onChangeDialoguePageNumberOfFiltersApplied: PropTypes.func,
+  dialoguePageNumberOfFiltersApplied: PropTypes.number,
+  onResetDialoguePageFilters: PropTypes.func,
+  onChangeDialoguePageFilterKeywords: PropTypes.func,
+  dialoguePageFilterKeywords: PropTypes.array,
 };
 
 Form.defaultProps = {

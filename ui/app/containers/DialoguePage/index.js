@@ -16,8 +16,38 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
 import MainTab from '../../components/MainTab';
+import Form from './Components/Form';
 import AC from '../../utils/accessControl';
 import injectSaga from '../../utils/injectSaga';
+import saga from './saga';
+
+import {
+  makeSelectActions,
+  makeSelectAgent,
+  makeSelectCategories,
+  makeSelectFilteredCategories,
+  makeSelectFilteredActions,
+  makeSelectKeywords,
+  makeSelectActionsPage,
+  makeSelectNewSayingActions,
+  makeSelectSayings,
+  makeSelectSelectedCategory,
+  makeSelectTotalSayings,
+  makeSelectLocale,
+  makeSelectTotalKeywords,
+  makeSelectTotalActionsPage,
+  makeSelectServerStatus,
+  makeSelectDialoguePageFilterSearchSaying,
+  makeSelectDialoguePageFilterCategory,
+  makeSelectDialoguePageFilterActions,
+  makeSelectDialoguePageNumberOfFiltersApplied,
+  makeSelectDialoguePageFilterString,
+  makeSelectDialoguePageFilterKeywords,
+  makeSelectAgentVersions,
+  makeSelectCurrentUser,
+  makeSelectLoadingAgentVersion,
+} from '../App/selectors';
+
 import {
   addActionNewSaying,
   addActionSaying,
@@ -49,29 +79,14 @@ import {
   loadAgentVersion,
   updateAgentVersion,
   deleteAgentVersion,
+  changeDialoguePageFilterSearchSaying,
+  changeDialoguePageFilterCategory,
+  changeDialoguePageFilterActions,
+  changeDialoguePageNumberOfFiltersApplied,
+  changeDialoguePageFilterString,
+  resetDialoguePageFilters,
+  changeDialoguePageFilterKeywords,
 } from '../App/actions';
-import {
-  makeSelectActions,
-  makeSelectActionsPage,
-  makeSelectAgent,
-  makeSelectAgentVersions,
-  makeSelectCategories,
-  makeSelectCurrentUser,
-  makeSelectFilteredActions,
-  makeSelectFilteredCategories,
-  makeSelectKeywords,
-  makeSelectLocale,
-  makeSelectNewSayingActions,
-  makeSelectSayings,
-  makeSelectSelectedCategory,
-  makeSelectServerStatus,
-  makeSelectTotalActionsPage,
-  makeSelectTotalKeywords,
-  makeSelectTotalSayings,
-  makeSelectLoadingAgentVersion,
-} from '../App/selectors';
-import Form from './Components/Form';
-import saga from './saga';
 
 /* eslint-disable react/prefer-stateless-function */
 export class DialoguePage extends React.PureComponent {
@@ -109,7 +124,7 @@ export class DialoguePage extends React.PureComponent {
     }).tab
       ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab
       : 'sayings',
-    filter: '',
+    filter: this.props.dialoguePageFilterString,
     categoryFilter: '',
     actionFilter: '',
     currentSayingsPage: 1,
@@ -129,7 +144,11 @@ export class DialoguePage extends React.PureComponent {
   initForm() {
     const agentSayingsPageSize = this.props.agent.settings.sayingsPageSize;
     this.throttledOnLoadSayings = _.throttle(
-      (filter, currentSayingsPage = this.state.currentSayingsPage, pageSize = agentSayingsPageSize) => {
+      (
+        filter = this.props.dialoguePageFilterString,
+        currentSayingsPage = this.state.currentSayingsPage,
+        pageSize = agentSayingsPageSize,
+      ) => {
         this.props.onLoadSayings(filter, currentSayingsPage, pageSize);
       },
       2000,
@@ -137,7 +156,7 @@ export class DialoguePage extends React.PureComponent {
     );
 
     const locationSearchParams = qs.parse(this.props.location.search);
-    const filter = this.state.filter;
+    const filter = this.props.dialoguePageFilterString;
     const currentSayingsPage = this.state.currentSayingsPage;
     this.setState({
       filter,
@@ -176,6 +195,7 @@ export class DialoguePage extends React.PureComponent {
   componentWillUnmount() {
     this.throttledOnLoadSayings = null;
     this.props.onResetSayings();
+    this.props.onResetDialoguePageFilters();
   }
 
   componentDidUpdate(prevProps) {
@@ -209,7 +229,11 @@ export class DialoguePage extends React.PureComponent {
     this.setState({
       currentSayingsPage: pageNumber,
     });
-    this.props.onLoadSayings(this.state.filter, pageNumber, this.state.sayingsPageSize);
+    this.props.onLoadSayings(
+      this.props.dialoguePageFilterString,
+      pageNumber,
+      this.state.sayingsPageSize,
+    );
   }
 
   moveSayingsPageBack() {
@@ -231,15 +255,14 @@ export class DialoguePage extends React.PureComponent {
       numberOfSayingsPages: Math.ceil(this.props.totalSayings / sayingsPageSize),
     });
     this.props.onChangeSayingsPageSize(this.props.agent.id, sayingsPageSize);
-    this.props.onLoadSayings(this.state.filter, 1, sayingsPageSize);
+    this.props.onLoadSayings(this.props.dialoguePageFilterString, 1, sayingsPageSize);
   }
 
-  onSearchSaying(filter, ignoreKeywords) {
+  onSearchSaying(ignoreKeywords) {
     this.setState({
-      filter,
       currentSayingsPage: 1,
     });
-    this.props.onLoadSayings(filter, 1, this.state.sayingsPageSize, ignoreKeywords);
+    this.props.onLoadSayings(this.props.dialoguePageFilterString, 1, this.state.sayingsPageSize, ignoreKeywords);
   }
 
   onSearchCategory(categoryFilter) {
@@ -384,7 +407,11 @@ export class DialoguePage extends React.PureComponent {
       selectedTab: value,
     });
     if (value === 'sayings') {
-      this.props.onLoadSayings(this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize);
+      this.props.onLoadSayings(
+        this.props.dialoguePageFilterString,
+        this.state.currentSayingsPage,
+        this.state.sayingsPageSize,
+      );
     }
     if (value === 'keywords') {
       this.props.onLoadKeywords('', this.state.currentKeywordsPage, this.state.keywordsPageSize);
@@ -491,6 +518,18 @@ export class DialoguePage extends React.PureComponent {
                 onClearSayingToAction={this.props.onClearSayingToAction}
                 filter={this.state.filter}
                 isReadOnly={isReadOnly}
+                onChangeDialoguePageFilterSearchSaying={this.props.onChangeDialoguePageFilterSearchSaying}
+                dialoguePageFilterSearchSaying={this.props.dialoguePageFilterSearchSaying}
+                onChangeDialoguePageFilterCategory={this.props.onChangeDialoguePageFilterCategory}
+                dialoguePageFilterCategory={this.props.dialoguePageFilterCategory}
+                onChangeDialoguePageFilterActions={this.props.onChangeDialoguePageFilterActions}
+                dialoguePageFilterActions={this.props.dialoguePageFilterActions}
+                onChangeDialoguePageNumberOfFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
+                dialoguePageNumberOfFiltersApplied={this.props.dialoguePageNumberOfFiltersApplied}
+                onResetDialoguePageFilters={this.props.onResetDialoguePageFilters}
+                onChangeDialoguePageFilterKeywords={this.props.onChangeDialoguePageFilterKeywords}
+                dialoguePageFilterKeywords={this.props.dialoguePageFilterKeywords}
+                onChangeDialoguePageFilterString={this.props.onChangeDialoguePageFilterString}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -545,6 +584,19 @@ DialoguePage.propTypes = {
   onChangeSayingCategory: PropTypes.func,
   onShowChatButton: PropTypes.func,
   currentUser: PropTypes.object,
+  onChangeDialoguePageFilterSearchSaying: PropTypes.func,
+  dialoguePageFilterSearchSaying: PropTypes.string,
+  onChangeDialoguePageFilterCategory: PropTypes.func,
+  dialoguePageFilterCategory: PropTypes.string,
+  onChangeDialoguePageFilterActions: PropTypes.func,
+  dialoguePageFilterActions: PropTypes.array,
+  onChangeDialoguePageNumberOfFiltersApplied: PropTypes.func,
+  dialoguePageNumberOfFiltersApplied: PropTypes.number,
+  onChangeDialoguePageFilterString: PropTypes.func,
+  dialoguePageFilterString: PropTypes.string,
+  onResetDialoguePageFilters: PropTypes.func,
+  onChangeDialoguePageFilterKeywords: PropTypes.func,
+  dialoguePageFilterKeywords: PropTypes.array
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -565,7 +617,13 @@ const mapStateToProps = createStructuredSelector({
   totalKeywords: makeSelectTotalKeywords(),
   totalActions: makeSelectTotalActionsPage(),
   currentUser: makeSelectCurrentUser(),
-  loadingAgentVersion: makeSelectLoadingAgentVersion()
+  loadingAgentVersion: makeSelectLoadingAgentVersion(),
+  dialoguePageFilterSearchSaying: makeSelectDialoguePageFilterSearchSaying(),
+  dialoguePageFilterCategory: makeSelectDialoguePageFilterCategory(),
+  dialoguePageFilterActions: makeSelectDialoguePageFilterActions(),
+  dialoguePageNumberOfFiltersApplied: makeSelectDialoguePageNumberOfFiltersApplied(),
+  dialoguePageFilterString: makeSelectDialoguePageFilterString(),
+  dialoguePageFilterKeywords: makeSelectDialoguePageFilterKeywords(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -669,6 +727,27 @@ function mapDispatchToProps(dispatch) {
     onAddAgentVersion: id => {
       dispatch(addAgentVersion(id));
     },
+    onChangeDialoguePageFilterSearchSaying: newValue => {
+      dispatch(changeDialoguePageFilterSearchSaying(newValue));
+    },
+    onChangeDialoguePageFilterCategory: newValue => {
+      dispatch(changeDialoguePageFilterCategory(newValue));
+    },
+    onChangeDialoguePageFilterActions: newValue => {
+      dispatch(changeDialoguePageFilterActions(newValue));
+    },
+    onChangeDialoguePageNumberOfFiltersApplied: newValue => {
+      dispatch(changeDialoguePageNumberOfFiltersApplied(newValue));
+    },
+    onChangeDialoguePageFilterString: newValue => {
+      dispatch(changeDialoguePageFilterString(newValue));
+    },
+    onResetDialoguePageFilters: () => {
+      dispatch(resetDialoguePageFilters());
+    },
+    onChangeDialoguePageFilterKeywords: newValue => {
+      dispatch(changeDialoguePageFilterKeywords(newValue));
+    }
   };
 }
 

@@ -96,6 +96,12 @@ import {
   DELETE_ACTION_RESPONSE,
   DELETE_ACTION_SAYING,
   DELETE_ACTION_SUCCESS,
+  LOAD_RICH_RESPONSES,
+  LOAD_RICH_RESPONSES_ERROR,
+  LOAD_RICH_RESPONSES_SUCCESS,
+  ADD_RICH_RESPONSE,
+  DELETE_RICH_RESPONSE,
+  EDIT_RICH_RESPONSE,
   DELETE_AGENT,
   DELETE_AGENT_ERROR,
   DELETE_AGENT_FALLBACK,
@@ -123,11 +129,8 @@ import {
   DELETE_QUICK_RESPONSE,
   DELETE_SAYING,
   DELETE_SAYING_ERROR,
-  DELETE_SESSION,
   DELETE_SESSION_DATA,
   DELETE_SESSION_DATA_ERROR,
-  DELETE_SESSION_ERROR,
-  DELETE_SESSION_SUCCESS,
   DELETE_SLOT,
   DELETE_SLOT_TEXT_PROMPT_SLOT,
   DELETE_USER,
@@ -135,15 +138,13 @@ import {
   DELETE_USER_SUCCESS,
   EDIT_ACTION_RESPONSE,
   EDIT_SLOT_TEXT_PROMPT,
+  EDIT_TEXT_RESPONSE_FLAG,
   EXPORT_AGENT,
   EXPORT_AGENT_ERROR,
   EXPORT_AGENT_SUCCESS,
   IMPORT_AGENT,
   IMPORT_AGENT_ERROR,
   IMPORT_AGENT_SUCCESS,
-  IMPORT_CATEGORY,
-  IMPORT_CATEGORY_ERROR,
-  IMPORT_CATEGORY_SUCCESS,
   LOAD_ACCESS_CONTROL,
   LOAD_ACCESS_CONTROL_SUCCESS,
   LOAD_ACTION,
@@ -250,7 +251,6 @@ import {
   LOGOUT_USER_SUCCESS,
   RECOGNIZE_UPDATED_KEYWORDS,
   REFRESH_KEYWORD_EXAMPLE_UPDATE,
-  REFRESH_SERVER_INFO,
   REMOVE_ACCESS_CONTROL,
   REMOVE_ACCESS_CONTROL_ERROR,
   REMOVE_ACCESS_CONTROL_SUCCESS,
@@ -322,6 +322,34 @@ import {
   UPDATE_USER,
   UPDATE_USER_ERROR,
   UPDATE_USER_SUCCESS,
+  DELETE_SESSION,
+  DELETE_SESSION_SUCCESS,
+  DELETE_SESSION_ERROR,
+  IMPORT_CATEGORY,
+  IMPORT_CATEGORY_ERROR,
+  IMPORT_CATEGORY_SUCCESS,
+  REFRESH_SERVER_INFO,
+  DELETE_SLOT_TEXT_PROMPT,
+  CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING,
+  CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY,
+  CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS,
+  CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
+  CHANGE_DIALOGUE_PAGE_FILTER_STRING,
+  CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS,
+  CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING,
+  CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
+  CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
+  CHANGE_REVIEW_PAGE_NUMBER_OF_FILTERS_APPLIED,
+  CHANGE_REVIEW_PAGE_FILTER_STRING,
+  CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MIN,
+  CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MAX,
+  CHANGE_REVIEW_PAGE_FILTER_CONTAINERS,
+  CHANGE_REVIEW_PAGE_FILTER_MAX_LOGS,
+  CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING,
+  CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED,
+  RESET_DIALOGUE_PAGE_FILTERS,
+  RESET_REVIEW_PAGE_FILTERS,
+  RESET_REVIEW_PAGE_LOGS_FILTERS
 } from './constants';
 
 /*
@@ -1929,6 +1957,14 @@ export function editActionResponse(newResponse, responseIndex) {
   };
 }
 
+export function changeTextResponseFlag(value, responseIndex) {
+  return {
+    type: EDIT_TEXT_RESPONSE_FLAG,
+    value,
+    responseIndex,
+  };
+}
+
 export function editSlotTextPrompt(slotIndex, textPromptIndex, textPrompt) {
   return {
     type: EDIT_SLOT_TEXT_PROMPT,
@@ -1961,6 +1997,51 @@ export function changeQuickResponse(slotIndex, quickResponseIndex, response) {
     quickResponseIndex,
     response,
   };
+}
+
+export function loadRichResponses() {
+  return {
+    type: LOAD_RICH_RESPONSES,
+    apiCall: true,
+  };
+}
+
+export function loadRichResponsesError(error) {
+  return {
+    type: LOAD_RICH_RESPONSES_ERROR,
+    error,
+  };
+}
+
+export function loadRichResponsesSuccess(richResponses) {
+  return {
+    type: LOAD_RICH_RESPONSES_SUCCESS,
+    richResponses,
+  };
+}
+
+export function addRichResponse(responseIndex, richResponse) {
+  return {
+    type: ADD_RICH_RESPONSE,
+    responseIndex,
+    richResponse
+  }
+}
+
+export function editRichResponse(responseIndex, richResponse) {
+  return {
+    type: EDIT_RICH_RESPONSE,
+    responseIndex,
+    richResponse
+  }
+}
+
+export function deleteRichResponse(responseIndex, richResponse) {
+  return {
+    type: DELETE_RICH_RESPONSE,
+    responseIndex,
+    richResponse
+  }
 }
 
 /* Keyword */
@@ -2786,4 +2867,147 @@ export function updateUserSuccess({ user }) {
     type: UPDATE_USER_SUCCESS,
     user,
   };
+}
+export function changeDialoguePageFilterSearchSaying(newValue) {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING,
+    newValue,
+  }
+}
+
+export function changeDialoguePageFilterCategory(newValue) {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_FILTER_CATEGORY,
+    newValue,
+  }
+}
+
+export function changeDialoguePageFilterActions(newValue) {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS,
+    newValue,
+  }
+}
+
+export function changeDialoguePageNumberOfFiltersApplied(newValue) {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
+    newValue,
+  }
+}
+
+export function changeDialoguePageFilterString(newValue) {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_FILTER_STRING,
+    newValue,
+  }
+}
+
+export function changeDialoguePageFilterKeywords(newValue) {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterSearchSaying(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterCategory(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterActions(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
+    newValue,
+  }
+}
+
+export function changeReviewPageNumberOfFiltersApplied(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_NUMBER_OF_FILTERS_APPLIED,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterString(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_STRING,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterActionIntervalMin(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MIN,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterActionIntervalMax(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_ACTION_INTERVAL_MAX,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterContainers(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_CONTAINERS,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterMaxLogs(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_MAX_LOGS,
+    newValue,
+  }
+}
+
+export function changeReviewPageFilterLogsString(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING,
+    newValue,
+  }
+}
+
+export function changeReviewPageNUMBERT(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING,
+    newValue,
+  }
+}
+
+export function changeReviewPageLogsNumberOfFiltersApplied(newValue) {
+  return {
+    type: CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED,
+    newValue,
+  }
+}
+
+export function resetDialoguePageFilters() {
+  return {
+    type: RESET_DIALOGUE_PAGE_FILTERS
+  }
+}
+
+export function resetReviewPageFilters() {
+  return {
+    type: RESET_REVIEW_PAGE_FILTERS
+  }
+}
+
+export function resetReviewPageLogsFilters() {
+  return {
+    type: RESET_REVIEW_PAGE_LOGS_FILTERS
+  }
 }

@@ -343,6 +343,12 @@ const makeSelectNewSayingActions = () =>
   );
 
 /* Actions */
+const makeSelectRichResponses = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.richResponses,
+  );
+
 const makeSelectActionsPage = () =>
   createSelector(
     selectGlobal,
@@ -551,6 +557,95 @@ const makeSelectUserDataTouched = () =>
     selectGlobal,
     globalState => globalState.userDataTouched,
   );
+/* Dialogue Page Filters */
+const makeSelectDialoguePageFilterSearchSaying = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterSearchSaying
+  )
+const makeSelectDialoguePageFilterCategory = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterCategory
+  )
+const makeSelectDialoguePageFilterActions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterActions
+  )
+const makeSelectDialoguePageNumberOfFiltersApplied = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageNumberOfFiltersApplied
+  )
+const makeSelectDialoguePageFilterString = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterString
+  )
+const makeSelectDialoguePageFilterKeywords = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterKeywords
+  )
+
+/* Review Page Filters */
+const makeSelectReviewPageFilterSearchSaying = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterSearchSaying
+  )
+const makeSelectReviewPageFilterCategory = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterCategory
+  )
+const makeSelectReviewPageFilterActions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterActions
+  )
+const makeSelectReviewPageNumberOfFiltersApplied = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageNumberOfFiltersApplied
+  )
+const makeSelectReviewPageFilterString = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterString
+  )
+const makeSelectReviewPageFilterActionIntervalMax = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterActionIntervalMax
+  )
+const makeSelectReviewPageFilterActionIntervalMin = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterActionIntervalMin
+  )
+const makeSelectReviewPageFilterContainers = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterContainers
+  )
+const makeSelectReviewPageFilterMaxLogs = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterMaxLogs
+  )
+const makeSelectReviewPageFilterLogsString = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageFilterLogsString
+  )
+const makeSelectReviewPageLogsNumberOfFiltersApplied = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.reviewPageLogsNumberOfFiltersApplied
+  )
+
 export {
   makeSelectServerStatus,
   makeSelectLocation,
@@ -635,5 +730,23 @@ export {
   makeSelectLoadingCurrentUser,
   makeSelectUser,
   makeSelectUserDataTouched,
-  makeSelectTestTrain
+  makeSelectTestTrain,
+  makeSelectRichResponses,
+  makeSelectDialoguePageFilterSearchSaying,
+  makeSelectDialoguePageFilterCategory,
+  makeSelectDialoguePageFilterActions,
+  makeSelectDialoguePageNumberOfFiltersApplied,
+  makeSelectDialoguePageFilterString,
+  makeSelectDialoguePageFilterKeywords,
+  makeSelectReviewPageFilterSearchSaying,
+  makeSelectReviewPageFilterCategory,
+  makeSelectReviewPageFilterActions,
+  makeSelectReviewPageNumberOfFiltersApplied,
+  makeSelectReviewPageFilterString,
+  makeSelectReviewPageFilterActionIntervalMax,
+  makeSelectReviewPageFilterActionIntervalMin,
+  makeSelectReviewPageFilterContainers,
+  makeSelectReviewPageFilterMaxLogs,
+  makeSelectReviewPageFilterLogsString,
+  makeSelectReviewPageLogsNumberOfFiltersApplied
 };

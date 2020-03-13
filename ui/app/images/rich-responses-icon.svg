@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="15px" viewBox="0 0 19 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="card-icon">
+            <path d="M10,0 L0.75,0 C0.338037936,0.00538581231 0.00538581231,0.338037936 0,0.75 L0,13.66 C0.00538581231,14.0719621 0.338037936,14.4046142 0.75,14.41 L10,14.41 C10.4119621,14.4046142 10.7446142,14.0719621 10.75,13.66 L10.75,0.75 C10.7446142,0.338037936 10.4119621,0.00538581231 10,0 Z M1.5,1.5 L9.23,1.5 L9.23,9.23 L1.5,9.23 L1.5,1.5 Z M9.23,12.91 L1.5,12.91 L1.5,10.73 L9.23,10.73 L9.23,12.91 Z" id="Shape" fill="#4E4E4E" fill-rule="nonzero"></path>
+            <path d="M10.75,1.75 L14.5,2.5" id="Line" stroke="#4E4E4E" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M13.875,4.375 L17.5,6.5" id="Line" stroke="#4E4E4E" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M10.5,13.5 L14.5,2.5" id="Line" stroke="#4E4E4E" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M10.5,13.5 L17.5,6.5" id="Line" stroke="#4E4E4E" stroke-width="1.5" stroke-linecap="round"></path>
+        </g>
+    </g>
+</svg>

@@ -29,6 +29,7 @@ const AgentSchema = require('../models/agent.model').schema;
 const CategorySchema = require('../models/category.model').schema;
 const ActionSchema = require('../models/action.model').schema;
 const ActionResponseSchema = require('../models/action.response.model').schema;
+const ActionResponseRichResponseSchema = require('../models/action.response.rich-response.model').schema;
 const SlotSchema = require('../models/slot.model').schema;
 const KeywordSchema = require('../models/keyword.model').schema;
 const PostFormatSchema = require('../models/postFormat.model').schema;
@@ -75,6 +76,7 @@ class AgentValidate {
                     modifiersRecognizerJustER: AgentSchema.modifiersRecognizerJustER,
                     categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
                     fallbackAction: AgentSchema.fallbackAction,
+                    welcomeAction: AgentSchema.welcomeAction,
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     parameters: Joi.object(),
@@ -157,10 +159,14 @@ class AgentValidate {
                     useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fulfilment.')),
                     usePostFormat: ActionSchema.usePostFormat.required().error(new Error('Please specify if this action use a post format for fulfilment.')),
                     responses: Joi.array().items({
+                        richResponses: Joi.array().items({
+                            type: ActionResponseRichResponseSchema.type,
+                            data: ActionResponseRichResponseSchema.data
+                        }).allow([]),
                         textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
-                        actions: ActionResponseSchema.actions
+                        actions: ActionResponseSchema.actions,
+                        disableTextResponse: ActionResponseSchema.disableTextResponse
                     }).required().min(1).error(new Error('Please specify at least one response.')),
-                    responsesQuickResponses: ActionSchema.responsesQuickResponses,
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
                         uiColor: SlotSchema.uiColor.required(),
@@ -193,10 +199,14 @@ class AgentValidate {
                     useWebhook: ActionSchema.useWebhook,
                     usePostFormat: ActionSchema.usePostFormat,
                     responses: Joi.array().items({
+                        richResponses: Joi.array().items({
+                            type: ActionResponseRichResponseSchema.type,
+                            data: ActionResponseRichResponseSchema.data
+                        }).allow([]),
                         textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
-                        actions: ActionResponseSchema.actions
+                        actions: ActionResponseSchema.actions,
+                        disableTextResponse: ActionResponseSchema.disableTextResponse
                     }).min(1).error(new Error('Please specify at least one response.')),
-                    responsesQuickResponses: ActionSchema.responsesQuickResponses,
                     slots: Joi.array().items({
                         slotName: SlotSchema.slotName.required(),
                         uiColor: SlotSchema.uiColor.required(),
@@ -276,6 +286,7 @@ class AgentValidate {
                     multiCategory: AgentSchema.multiCategory,
                     categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold,
                     fallbackAction: AgentSchema.fallbackAction,
+                    welcomeAction: AgentSchema.welcomeAction,
                     status: AgentSchema.status,
                     lastTraining: AgentSchema.lastTraining.allow(''),
                     extraTrainingData: AgentSchema.extraTrainingData,
@@ -887,6 +898,7 @@ class AgentValidate {
                     modifiersRecognizer: AgentSchema.modifiersRecognizer,
                     modifiersRecognizerJustER: AgentSchema.modifiersRecognizerJustER,
                     fallbackAction: AgentSchema.fallbackAction,
+                    welcomeAction: AgentSchema.welcomeAction,
                     useWebhook: AgentSchema.useWebhook.required(),
                     multiCategory: AgentSchema.multiCategory.required(),
                     usePostFormat: AgentSchema.usePostFormat.required(),
@@ -1000,10 +1012,14 @@ class AgentValidate {
                             modificationDate: ActionSchema.modificationDate
                         },
                         responses: Joi.array().items({
+                            richResponses: Joi.array().items({
+                                type: ActionResponseRichResponseSchema.type,
+                                data: ActionResponseRichResponseSchema.data
+                            }).allow([]),
                             textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
-                            actions: ActionResponseSchema.actions
+                            actions: ActionResponseSchema.actions,
+                            disableTextResponse: ActionResponseSchema.disableTextResponse
                         }).required().min(1).error(new Error('Please specify at least one response.')),
-                        responsesQuickResponses: Joi.alternatives().try(ActionSchema.responsesQuickResponses, Joi.number().valid(0)),
                         slots: Joi.array().items({
                             slotName: SlotSchema.slotName.required(),
                             uiColor: SlotSchema.uiColor.required(),

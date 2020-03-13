@@ -44,7 +44,18 @@ import {
   makeSelectLoadingCurrentUser,
   makeSelectLoading,
   makeSelectAgentVersions,
-  makeSelectLoadingAgentVersion
+  makeSelectLoadingAgentVersion,
+  makeSelectReviewPageFilterSearchSaying,
+  makeSelectReviewPageFilterCategory,
+  makeSelectReviewPageFilterActions,
+  makeSelectReviewPageNumberOfFiltersApplied,
+  makeSelectReviewPageFilterString,
+  makeSelectReviewPageFilterActionIntervalMax,
+  makeSelectReviewPageFilterActionIntervalMin,
+  makeSelectReviewPageFilterContainers,
+  makeSelectReviewPageFilterMaxLogs,
+  makeSelectReviewPageFilterLogsString,
+  makeSelectReviewPageLogsNumberOfFiltersApplied
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -75,7 +86,8 @@ export class ReviewPage extends React.Component {
     }).tab
       ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab
       : 'documents',
-    filter: '',
+    filter: this.props.reviewPageFilterString,
+    logsFilter: this.props.reviewPageFilterLogsString,
     documents: [],
     sessions: [],
     pageStatus: {
@@ -147,7 +159,7 @@ export class ReviewPage extends React.Component {
       pageSize: this.state.pageStatus.documents.pageSize,
       field: this.state.pageStatus.documents.sortField,
       direction: this.state.pageStatus.documents.sortDirection,
-      filter: this.state.filter
+      filter: this.props.reviewPageFilterString
     });
 
     onLoadAgentSessions(
@@ -162,7 +174,7 @@ export class ReviewPage extends React.Component {
       pageSize: this.state.pageStatus.logs.pageSize,
       field: this.state.pageStatus.logs.sortField,
       direction: this.state.pageStatus.logs.sortDirection,
-      filter: this.state.filter
+      filter: this.props.reviewPageFilterLogsString
     });
 
     const newPageStatus = this.state.pageStatus;
@@ -268,6 +280,12 @@ export class ReviewPage extends React.Component {
     if (this.state.pageStatus.sessions.client) {
       this.state.pageStatus.sessions.client.unsubscribe(`/${ROUTE_CONTEXT}`);
     }
+    if (this.props.actions.onResetReviewPageFilters) {
+      this.props.actions.onResetReviewPageFilters();
+    }
+    if (this.props.actions.onResetReviewPageLogsFilters) {
+      this.props.actions.onResetReviewPageLogsFilters();
+    }
   }
 
   setNumberOfPages(pageSize, type) {
@@ -292,7 +310,7 @@ export class ReviewPage extends React.Component {
         pageSize: this.state.pageStatus.documents.pageSize,
         field: this.state.pageStatus.documents.sortField,
         direction: this.state.pageStatus.documents.sortDirection,
-        filter: this.state.filter
+        filter: this.props.reviewPageFilterString
       });
     }
     if (this.state.selectedTab === 'sessions') {
@@ -344,7 +362,7 @@ export class ReviewPage extends React.Component {
         pageSize,
         field: this.state.pageStatus[this.state.selectedTab].sortField,
         direction: this.state.pageStatus[this.state.selectedTab].sortDirection,
-        filter: this.state.filter
+        filter: this.props.reviewPageFilterString
       });
     }
     if (this.state.selectedTab === 'sessions') {
@@ -358,48 +376,36 @@ export class ReviewPage extends React.Component {
     }
   }
 
-  onSearchSaying(filter) {
+  onSearchSaying() {
     const { onLoadAgentDocuments } = this.props.actions;
     const newPageStatus = this.state.pageStatus;
     newPageStatus['documents'].currentPage = 1;
-    this.setState({
-      pageStatus: newPageStatus,
-      filter
-    });
 
     onLoadAgentDocuments({
       page: 1,
       pageSize: this.state.pageStatus['documents'].pageSize,
       field: this.state.pageStatus['documents'].sortField,
       direction: this.state.pageStatus['documents'].sortDirection,
-      filter: filter
+      filter: this.props.reviewPageFilterString,
     });
   }
 
-  onSearchLog(filter, logsNumber) {
+  onSearchLog() {
     const { onLoadLogs } = this.props.actions;
     const newPageStatus = this.state.pageStatus;
     newPageStatus['documents'].currentPage = 1;
-    this.setState({
-      filter
-    });
 
     onLoadLogs({
       page: this.state.pageStatus.logs.currentPage,
-      pageSize: logsNumber,
+      pageSize: this.props.reviewPageFilterMaxLogs,
       field: this.state.pageStatus.logs.sortField,
       direction: this.state.pageStatus.logs.sortDirection,
-      filter: filter
+      filter: this.props.reviewPageFilterLogsString
     });
   }
 
   copySayingFromDocument(userSays, saying) {
     const { agentCategories, agentKeywords, onGoToUrl, agent } = this.props;
-    /*if (saying.categoryScore === 0) {
-      onGoToUrl(`/agent/${agent.id}/dialogue?tab=sayings&userSays=${userSays}`);
-    } else {
-    }*/
-
     const { onCopySaying } = this.props.actions;
     const category = _.find(agentCategories, {
       categoryName: saying.category,
@@ -452,7 +458,7 @@ export class ReviewPage extends React.Component {
         pageSize: this.state.pageStatus[this.state.selectedTab].pageSize,
         field: sortField,
         direction: sortDirection,
-        filter: this.state.filter
+        filter: this.props.reviewPageFilterString
       });
     }
     if (this.state.selectedTab === 'sessions') {
@@ -518,7 +524,20 @@ export class ReviewPage extends React.Component {
       onTrain,
       onToggleConversationBar,
       onSendMessage,
-      onLoadSessionId
+      onLoadSessionId,
+      onChangeReviewPageFilterSearchSaying,
+      onChangeReviewPageFilterCategory,
+      onChangeReviewPageFilterActions,
+      onChangeReviewPageNumberOfFiltersApplied,
+      onChangeReviewPageFilterActionIntervalMax,
+      onChangeReviewPageFilterActionIntervalMin,
+      onChangeReviewPageFilterContainers,
+      onChangeReviewPageFilterMaxLogs,
+      onChangeReviewPageFilterLogsString,
+      onChangeReviewPageLogsNumberOfFiltersApplied,
+      onResetReviewPageFilters,
+      onResetReviewPageLogsFilters,
+      onChangeReviewPageFilterString
     } = this.props.actions;
 
     const {
@@ -531,8 +550,17 @@ export class ReviewPage extends React.Component {
       agentActions,
       category,
       newSayingActions,
+      reviewPageFilterSearchSaying,
+      reviewPageFilterCategory,
+      reviewPageFilterActions,
+      reviewPageNumberOfFiltersApplied,
+      reviewPageFilterActionIntervalMax,
+      reviewPageFilterActionIntervalMin,
+      reviewPageFilterContainers,
+      reviewPageFilterMaxLogs,
+      reviewPageFilterLogsString,
+      reviewPageLogsNumberOfFiltersApplied,
     } = this.props;
-
     return this.props.agent.id ? (
       <Grid container>
         <MainTab
@@ -593,6 +621,29 @@ export class ReviewPage extends React.Component {
               //logs={this.props.logs}
               logsText={this.props.logsText}
               loading={this.props.loading}
+              onChangeReviewPageFilterSearchSaying={onChangeReviewPageFilterSearchSaying}
+              reviewPageFilterSearchSaying={reviewPageFilterSearchSaying}
+              onChangeReviewPageFilterCategory={onChangeReviewPageFilterCategory}
+              reviewPageFilterCategory={reviewPageFilterCategory}
+              onChangeReviewPageFilterActions={onChangeReviewPageFilterActions}
+              reviewPageFilterActions={reviewPageFilterActions}
+              onChangeReviewPageNumberOfFiltersApplied={onChangeReviewPageNumberOfFiltersApplied}
+              reviewPageNumberOfFiltersApplied={reviewPageNumberOfFiltersApplied}
+              onChangeReviewPageFilterActionIntervalMax={onChangeReviewPageFilterActionIntervalMax}
+              reviewPageFilterActionIntervalMax={reviewPageFilterActionIntervalMax}
+              onChangeReviewPageFilterActionIntervalMin={onChangeReviewPageFilterActionIntervalMin}
+              reviewPageFilterActionIntervalMin={reviewPageFilterActionIntervalMin}
+              onChangeReviewPageFilterContainers={onChangeReviewPageFilterContainers}
+              reviewPageFilterContainers={reviewPageFilterContainers}
+              onChangeReviewPageFilterMaxLogs={onChangeReviewPageFilterMaxLogs}
+              reviewPageFilterMaxLogs={reviewPageFilterMaxLogs}
+              onChangeReviewPageFilterLogsString={onChangeReviewPageFilterLogsString}
+              reviewPageFilterLogsString={reviewPageFilterLogsString}
+              onChangeReviewPageLogsNumberOfFiltersApplied={onChangeReviewPageLogsNumberOfFiltersApplied}
+              reviewPageLogsNumberOfFiltersApplied={reviewPageLogsNumberOfFiltersApplied}
+              onResetReviewPageFilters={onResetReviewPageFilters}
+              onResetReviewPageLogsFilters={onResetReviewPageLogsFilters}
+              onChangeReviewPageFilterString={onChangeReviewPageFilterString}
             />
           }
           dialogueForm={Link}
@@ -638,6 +689,19 @@ ReviewPage.propTypes = {
     onChangeSessionsPageSize: PropTypes.func.isRequired,
     onRefreshDocuments: PropTypes.func.isRequired,
     onLoadSessionId: PropTypes.func.isRequired,
+    onChangeReviewPageFilterSearchSaying: PropTypes.func.isRequired,
+    onChangeReviewPageFilterCategory: PropTypes.func.isRequired,
+    onChangeReviewPageFilterActions: PropTypes.func.isRequired,
+    onChangeReviewPageNumberOfFiltersApplied: PropTypes.func.isRequired,
+    onChangeReviewPageFilterString: PropTypes.func.isRequired,
+    onChangeReviewPageFilterActionIntervalMin: PropTypes.func.isRequired,
+    onChangeReviewPageFilterActionIntervalMax: PropTypes.func.isRequired,
+    onChangeReviewPageFilterContainers: PropTypes.func.isRequired,
+    onChangeReviewPageFilterMaxLogs: PropTypes.func.isRequired,
+    onChangeReviewPageFilterLogsString: PropTypes.func.isRequired,
+    onChangeReviewPageLogsNumberOfFiltersApplied: PropTypes.func.isRequired,
+    onResetReviewPageFilters: PropTypes.func.isRequired,
+    onResetReviewPageLogsFilters: PropTypes.func.isRequired
   }),
   agent: PropTypes.object.isRequired,
   serverStatus: PropTypes.string,
@@ -653,7 +717,15 @@ ReviewPage.propTypes = {
   newSayingActions: PropTypes.array,
   onGoToUrl: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
-  locale: PropTypes.string
+  locale: PropTypes.string,
+  reviewPageFilterSearchSaying: PropTypes.string,
+  reviewPageFilterCategory: PropTypes.string,
+  reviewPageFilterActions: PropTypes.array,
+  reviewPageNumberOfFiltersApplied: PropTypes.number,
+  reviewPageFilterString: PropTypes.string,
+  reviewPageFilterContainers: PropTypes.array,
+  reviewPageFilterLogsString: PropTypes.string,
+  reviewPageLogsNumberOfFiltersApplied: PropTypes.number
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -675,6 +747,17 @@ const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   agentVersions: makeSelectAgentVersions(),
   loadingAgentVersion: makeSelectLoadingAgentVersion(),
+  reviewPageFilterSearchSaying: makeSelectReviewPageFilterSearchSaying(),
+  reviewPageFilterCategory: makeSelectReviewPageFilterCategory(),
+  reviewPageFilterActions: makeSelectReviewPageFilterActions(),
+  reviewPageNumberOfFiltersApplied: makeSelectReviewPageNumberOfFiltersApplied(),
+  reviewPageFilterString: makeSelectReviewPageFilterString(),
+  reviewPageFilterActionIntervalMin: makeSelectReviewPageFilterActionIntervalMin(),
+  reviewPageFilterActionIntervalMax: makeSelectReviewPageFilterActionIntervalMax(),
+  reviewPageFilterContainers: makeSelectReviewPageFilterContainers(),
+  reviewPageFilterMaxLogs: makeSelectReviewPageFilterMaxLogs(),
+  reviewPageFilterLogsString: makeSelectReviewPageFilterLogsString(),
+  reviewPageLogsNumberOfFiltersApplied: makeSelectReviewPageLogsNumberOfFiltersApplied()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -701,7 +784,20 @@ function mapDispatchToProps(dispatch) {
         onChangeSessionsPageSize: Actions.changeSessionsPageSize,
         onRefreshDocuments: Actions.loadAgentDocumentsSuccess,
         onLoadSessionId: Actions.loadSession,
-        onShowChatButton: Actions.toggleChatButton
+        onShowChatButton: Actions.toggleChatButton,
+        onChangeReviewPageFilterSearchSaying: Actions.changeReviewPageFilterSearchSaying,
+        onChangeReviewPageFilterCategory: Actions.changeReviewPageFilterCategory,
+        onChangeReviewPageFilterActions: Actions.changeReviewPageFilterActions,
+        onChangeReviewPageNumberOfFiltersApplied: Actions.changeReviewPageNumberOfFiltersApplied,
+        onChangeReviewPageFilterString: Actions.changeReviewPageFilterString,
+        onChangeReviewPageFilterActionIntervalMax: Actions.changeReviewPageFilterActionIntervalMax,
+        onChangeReviewPageFilterActionIntervalMin: Actions.changeReviewPageFilterActionIntervalMin,
+        onChangeReviewPageFilterContainers: Actions.changeReviewPageFilterContainers,
+        onChangeReviewPageFilterMaxLogs: Actions.changeReviewPageFilterMaxLogs,
+        onChangeReviewPageFilterLogsString: Actions.changeReviewPageFilterLogsString,
+        onChangeReviewPageLogsNumberOfFiltersApplied: Actions.changeReviewPageLogsNumberOfFiltersApplied,
+        onResetReviewPageFilters: Actions.resetReviewPageFilters,
+        onResetReviewPageLogsFilters: Actions.resetReviewPageLogsFilters,
       },
       dispatch,
     ),

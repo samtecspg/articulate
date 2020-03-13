@@ -26,6 +26,9 @@ function* agentMessageIterator(message, response) {
       CSO: message.converseResult
         ? message.converseResult.CSO
         : null,
+      quickResponses: response.quickResponses ? response.quickResponses : [],
+      richResponses: response.richResponses ? response.richResponses : [],
+      disableTextResponse: response.disableTextResponse
     }),
   );
 }

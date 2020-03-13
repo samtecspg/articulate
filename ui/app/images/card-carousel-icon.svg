@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.2 14.22">
+    <defs>
+        <style>.cls-1{fill:#4e4e4e;}</style>
+    </defs>
+    <title>card-carousel-icon</title>
+    <g id="Layer_2" data-name="Layer 2">
+        <g id="Layer_1-2" data-name="Layer 1">
+            <path class="cls-1" d="M14.45,1.69H12.08V.75A.75.75,0,0,0,11.33,0H3.8a.75.75,0,0,0-.75.75v.94H.75A.75.75,0,0,0,0,2.44v9.34a.75.75,0,0,0,.75.75h2.3v.94a.75.75,0,0,0,.75.75h7.53a.75.75,0,0,0,.75-.75v-.94h2.37a.75.75,0,0,0,.75-.75V2.44A.75.75,0,0,0,14.45,1.69Zm-.75,1.5V8.42H12.08V3.19ZM4.55,1.5h6V9.16h-6Zm-3,1.69H3.05V8.42H1.5ZM1.5,11V9.92H3.05V11Zm9.08,1.69h-6V10.66h6ZM12.08,11V9.92H13.7V11Z" />
+        </g>
+    </g>
+</svg>

@@ -10,11 +10,12 @@
   "multiCategory": false,
   "categoryClassifierThreshold": 0.5,
   "fallbackAction": "Default Fallback Action",
+  "welcomeAction": "Default Welcome Action",
   "status": "Ready",
-  "lastTraining": "2020-01-07T17:44:35Z",
+  "lastTraining": "2020-01-20T17:13:02Z",
   "extraTrainingData": false,
   "enableModelsPerCategory": false,
-  "model": "default_50d18b4e-8f2f-16eb-970a-e31a593c4c3e",
+  "model": "default_941d8fbe-b9f2-643e-efe8-dd0fb25736e1",
   "parameters": {},
   "settings": {
     "rasaURL": "http://localhost:5000",
@@ -132,10 +133,10 @@
       "responses": [
         {
           "textResponse": "Default Response",
-          "actions": []
+          "actions": [],
+          "disableTextResponse": false
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1578418789000",
@@ -147,10 +148,10 @@
       "responses": [
         {
           "textResponse": "Normal Action Response",
-          "actions": []
+          "actions": [],
+          "disableTextResponse": false
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1578418789000",
@@ -162,14 +163,14 @@
       "responses": [
         {
           "textResponse": "Normal Action Response 2",
-          "actions": []
+          "actions": [],
+          "disableTextResponse": false
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000"
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
     },
     {
       "actionName": "modifierAction",
@@ -190,14 +191,14 @@
       "responses": [
         {
           "textResponse": "The slots: {{slots.modifierRequiredSlot.original}}",
-          "actions": []
+          "actions": [],
+          "disableTextResponse": false
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000"
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
     },
     {
       "actionName": "rememberSlot",
@@ -217,14 +218,14 @@
       "responses": [
         {
           "textResponse": "Remember slot response",
-          "actions": []
+          "actions": [],
+          "disableTextResponse": false
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000"
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
     },
     {
       "actionName": "listAction",
@@ -244,14 +245,14 @@
       "responses": [
         {
           "textResponse": "The list: {{andList slots.listSlot.value}}",
-          "actions": []
+          "actions": [],
+          "disableTextResponse": false
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000"
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
     },
     {
       "actionName": "chainedActionResponse",
@@ -259,14 +260,14 @@
       "responses": [
         {
           "textResponse": "Chained action response",
-          "actions": []
+          "actions": [],
+          "disableTextResponse": false
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000"
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
     },
     {
       "actionName": "regexActions",
@@ -288,14 +289,14 @@
       "responses": [
         {
           "textResponse": "The answer {{ slots.regexSlot.original}}",
-          "actions": []
+          "actions": [],
+          "disableTextResponse": false
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000"
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
     },
     {
       "actionName": "webhookAction",
@@ -303,14 +304,14 @@
       "responses": [
         {
           "textResponse": "This is the answer {{webhook.webhookKey.response.name}}",
-          "actions": []
+          "actions": [],
+          "disableTextResponse": false
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": true,
       "usePostFormat": false,
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000",
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
       "webhook": {
         "webhookKey": "webhookKey",
         "webhookUrl": "https://pokeapi.co/api/v2/pokemon/pikachu/",
@@ -321,8 +322,8 @@
         "webhookUser": "",
         "webhookPassword": "",
         "postScript": "",
-        "creationDate": "1578418789000",
-        "modificationDate": "1578418789000"
+        "creationDate": "1579540078000",
+        "modificationDate": "1579540078000"
       }
     },
     {
@@ -347,32 +348,40 @@
       "responses": [
         {
           "textResponse": "The answer {{{ slots.freeTextSlot.original }}}",
-          "actions": []
+          "actions": [],
+          "disableTextResponse": false
         }
       ],
-      "responsesQuickResponses": 0,
       "useWebhook": false,
       "usePostFormat": false,
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000"
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
     },
     {
       "actionName": "quickResponseAction",
       "slots": [],
       "responses": [
         {
+          "richResponses": [
+            {
+              "type": "quickResponses",
+              "data": {
+                "quickResponses": [
+                  "With a quick reply",
+                  "With another quick reply"
+                ]
+              }
+            }
+          ],
           "textResponse": "This is an action",
-          "actions": []
+          "actions": [],
+          "disableTextResponse": false
         }
-      ],
-      "responsesQuickResponses": [
-        "With a quick reply",
-        "With another quick reply"
       ],
       "useWebhook": false,
       "usePostFormat": false,
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000"
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
     },
     {
       "actionName": "keywordVsActionsAction",
@@ -394,10 +403,26 @@
       "responses": [
         {
           "textResponse": "This keywordVsAction response should only appear once",
-          "actions": []
+          "actions": [],
+          "disableTextResponse": false
         }
       ],
-      "responsesQuickResponses": [],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "actionName": "Default Welcome Action",
+      "slots": [],
+      "responses": [
+        {
+          "richResponses": [],
+          "textResponse": "This is a welcome action",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
       "useWebhook": false,
       "usePostFormat": false,
       "creationDate": "1578418789000",
@@ -444,6 +469,55 @@
       "usePostFormat": false,
       "creationDate": "1578418789000",
       "modificationDate": "1578418789000"
+    },
+    {
+      "actionName": "richResponsesAction",
+      "slots": [],
+      "responses": [
+        {
+          "richResponses": [
+            {
+              "type": "video",
+              "data": "{\n  \"video\": \"http://techslides.com/demos/sample-videos/small.mp4\"\n}"
+            },
+            {
+              "type": "richText",
+              "data": "{\n  \"text\": \"<h2>This is a title</h2><p>This is text</p><a href='https://www.w3schools.com'>This is a link</a>\"\n}"
+            },
+            {
+              "type": "quickResponses",
+              "data": "{\n  \"quickResponses\": [\n    \"Quick response 1\",\n    \"Quick Response 2\",\n    \"Quick Response 3\"\n  ]\n}"
+            },
+            {
+              "type": "image",
+              "data": "{\n  \"imageURL\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tree_example_VIS.jpg/1600px-Tree_example_VIS.jpg\"\n}"
+            },
+            {
+              "type": "collapsible",
+              "data": "[\n  {\n    \"title\": \"Title 1\",\n    \"content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"\n  }\n]"
+            },
+            {
+              "type": "cardsCarousel",
+              "data": "[\n  {\n    \"title\": \"Card 1\",\n    \"description\": \"This is a card\",\n    \"imageURL\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tree_example_VIS.jpg/1600px-Tree_example_VIS.jpg\",\n    \"linkURL\": \"https://www.google.com\"\n  }\n]"
+            },
+            {
+              "type": "buttons",
+              "data": "[\n  {\n    \"label\": \"Button 1\",\n    \"linkURL\": \"http://www.google.com\"\n  }\n]"
+            },
+            {
+              "type": "audio",
+              "data": "{\n  \"audio\": \"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3\"\n}"
+            }
+          ],
+          "textResponse": "This response contains rich responses",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1579540233000",
+      "modificationDate": "1579540886000"
     }
   ],
   "categories": [
@@ -456,8 +530,8 @@
       "model": "",
       "extraTrainingData": true,
       "parameters": {},
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000",
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
       "sayings": [
         {
           "userSays": "This is normalKeyword1 action",
@@ -467,15 +541,14 @@
               "end": 22,
               "value": "normalKeyword1",
               "keyword": "normalKeyword",
-              "keywordId": 129
+              "keywordId": 26
             }
           ],
           "actions": [
             "normalAction"
           ],
-          "creationDate": "1578418789000",
-          "modificationDate": "1578418789000",
-          "starred": false
+          "creationDate": "1579540078000",
+          "modificationDate": "1579540078000"
         },
         {
           "userSays": "This is normalKeyword2Synonym action",
@@ -485,15 +558,14 @@
               "end": 29,
               "value": "normalKeyword2Synonym",
               "keyword": "normalKeyword",
-              "keywordId": 129
+              "keywordId": 26
             }
           ],
           "actions": [
             "normalAction"
           ],
-          "creationDate": "1578418789000",
-          "modificationDate": "1578418789000",
-          "starred": false
+          "creationDate": "1579540078000",
+          "modificationDate": "1579540078000"
         },
         {
           "userSays": "This is normalKeyword3",
@@ -503,7 +575,7 @@
               "end": 22,
               "value": "normalKeyword3",
               "keyword": "normalKeyword",
-              "keywordId": 129
+              "keywordId": 26
             }
           ],
           "actions": [
@@ -521,7 +593,7 @@
               "end": 27,
               "value": "normalKeyword3",
               "keyword": "normalKeyword",
-              "keywordId": 129
+              "keywordId": 26
             }
           ],
           "actions": [
@@ -539,7 +611,7 @@
               "end": 23,
               "value": "normalKeyword2",
               "keyword": "normalKeyword",
-              "keywordId": 129
+              "keywordId": 26
             }
           ],
           "actions": [
@@ -557,7 +629,7 @@
               "end": 28,
               "value": "normalKeyword3",
               "keyword": "normalKeyword",
-              "keywordId": 129
+              "keywordId": 26
             }
           ],
           "actions": [
@@ -578,8 +650,8 @@
       "model": "",
       "extraTrainingData": true,
       "parameters": {},
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000",
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
       "sayings": [
         {
           "userSays": "Request a modifier",
@@ -599,7 +671,7 @@
               "end": 26,
               "value": "modifierKeyword1",
               "keyword": "modifierKeyword",
-              "keywordId": 130
+              "keywordId": 27
             }
           ],
           "actions": [
@@ -638,8 +710,8 @@
       "model": "",
       "extraTrainingData": true,
       "parameters": {},
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000",
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
       "sayings": [
         {
           "userSays": "The list is listKeyword1, listKeyword2 and listKeyword3",
@@ -649,21 +721,21 @@
               "end": 24,
               "value": "listKeyword1",
               "keyword": "listKeyword",
-              "keywordId": 131
+              "keywordId": 28
             },
             {
               "start": 26,
               "end": 38,
               "value": "listKeyword2",
               "keyword": "listKeyword",
-              "keywordId": 131
+              "keywordId": 28
             },
             {
               "start": 43,
               "end": 55,
               "value": "listKeyword3",
               "keyword": "listKeyword",
-              "keywordId": 131
+              "keywordId": 28
             }
           ],
           "actions": [
@@ -682,21 +754,21 @@
               "end": 30,
               "value": "listKeyword2",
               "keyword": "listKeyword",
-              "keywordId": 131
+              "keywordId": 28
             },
             {
               "start": 32,
               "end": 44,
               "value": "listKeyword1",
               "keyword": "listKeyword",
-              "keywordId": 131
+              "keywordId": 28
             },
             {
               "start": 49,
               "end": 61,
               "value": "listKeyword3",
               "keyword": "listKeyword",
-              "keywordId": 131
+              "keywordId": 28
             }
           ],
           "actions": [
@@ -718,8 +790,8 @@
       "model": "",
       "extraTrainingData": true,
       "parameters": {},
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000",
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
       "sayings": [
         {
           "userSays": "This is a regexSlot",
@@ -754,8 +826,8 @@
       "parameters": {
         "": ""
       },
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000",
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
       "sayings": [
         {
           "userSays": "Get a webhook reponse",
@@ -788,8 +860,8 @@
       "model": "",
       "extraTrainingData": true,
       "parameters": {},
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000",
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
       "sayings": [
         {
           "userSays": "This is a freeTextSlot",
@@ -822,8 +894,8 @@
       "model": "",
       "extraTrainingData": false,
       "parameters": {},
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000",
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
       "sayings": [
         {
           "userSays": "Get a quick response from action",
@@ -856,9 +928,18 @@
       "model": "",
       "extraTrainingData": false,
       "parameters": {},
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000",
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
       "sayings": [
+        {
+          "userSays": "I want a keywordsVsActions action",
+          "keywords": [],
+          "actions": [
+            "keywordVsActionsAction"
+          ],
+          "creationDate": "1579540078000",
+          "modificationDate": "1579540078000"
+        },
         {
           "userSays": "I want a keywordsVsActions action with value1",
           "keywords": [
@@ -867,7 +948,7 @@
               "end": 45,
               "value": "value1",
               "keyword": "keywordVsActionKeyword",
-              "keywordId": 133
+              "keywordId": 30
             }
           ],
           "actions": [
@@ -885,7 +966,7 @@
               "end": 45,
               "value": "value2",
               "keyword": "keywordVsActionKeyword",
-              "keywordId": 133
+              "keywordId": 30
             }
           ],
           "actions": [
@@ -913,7 +994,7 @@
               "end": 45,
               "value": "value3",
               "keyword": "keywordVsActionKeyword",
-              "keywordId": 133
+              "keywordId": 30
             }
           ],
           "actions": [
@@ -931,21 +1012,21 @@
               "end": 45,
               "value": "value1",
               "keyword": "keywordVsActionKeyword",
-              "keywordId": 133
+              "keywordId": 30
             },
             {
               "start": 47,
               "end": 53,
               "value": "value2",
               "keyword": "keywordVsActionKeyword",
-              "keywordId": 133
+              "keywordId": 30
             },
             {
               "start": 55,
               "end": 61,
               "value": "value3",
               "keyword": "keywordVsActionKeyword",
-              "keywordId": 133
+              "keywordId": 30
             }
           ],
           "actions": [
@@ -1041,6 +1122,38 @@
           "starred": false
         }
       ]
+    },
+    {
+      "categoryName": "unitTestRichResponses",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Out of Date",
+      "lastTraining": "2020-01-20T17:11:46Z",
+      "model": "",
+      "extraTrainingData": false,
+      "parameters": {},
+      "creationDate": "1579540306000",
+      "modificationDate": "1579540337000",
+      "sayings": [
+        {
+          "userSays": "I test rich responses",
+          "keywords": [],
+          "actions": [
+            "richResponsesAction"
+          ],
+          "creationDate": "1579540326000",
+          "modificationDate": "1579540326000"
+        },
+        {
+          "userSays": "I test rich responses too",
+          "keywords": [],
+          "actions": [
+            "richResponsesAction"
+          ],
+          "creationDate": "1579540337000",
+          "modificationDate": "1579540337000"
+        }
+      ]
     }
   ],
   "keywords": [
@@ -1072,8 +1185,8 @@
       "regex": "",
       "type": "learned",
       "modifiers": [],
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000"
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
     },
     {
       "keywordName": "modifierKeyword",
@@ -1109,7 +1222,7 @@
                   "end": 25,
                   "value": "modifierKeyword2",
                   "keyword": "modifierKeyword",
-                  "keywordId": 130
+                  "keywordId": 27
                 }
               ]
             },
@@ -1121,7 +1234,7 @@
                   "end": 20,
                   "value": "modifierKeyword1",
                   "keyword": "modifierKeyword",
-                  "keywordId": 130
+                  "keywordId": 27
                 }
               ]
             }
@@ -1141,7 +1254,7 @@
                   "end": 22,
                   "value": "modifierKeyword1",
                   "keyword": "modifierKeyword",
-                  "keywordId": 130
+                  "keywordId": 27
                 }
               ]
             },
@@ -1153,7 +1266,7 @@
                   "end": 27,
                   "value": "modifierKeyword2",
                   "keyword": "modifierKeyword",
-                  "keywordId": 130
+                  "keywordId": 27
                 }
               ]
             },
@@ -1165,7 +1278,7 @@
                   "end": 22,
                   "value": "modifierKeyword1",
                   "keyword": "modifierKeyword",
-                  "keywordId": 130
+                  "keywordId": 27
                 }
               ]
             }
@@ -1185,7 +1298,7 @@
                   "end": 25,
                   "value": "modifierKeyword2",
                   "keyword": "modifierKeyword",
-                  "keywordId": 130
+                  "keywordId": 27
                 }
               ]
             },
@@ -1197,7 +1310,7 @@
                   "end": 20,
                   "value": "modifierKeyword1",
                   "keyword": "modifierKeyword",
-                  "keywordId": 130
+                  "keywordId": 27
                 }
               ]
             }
@@ -1217,7 +1330,7 @@
                   "end": 23,
                   "value": "modifierKeyword1",
                   "keyword": "modifierKeyword",
-                  "keywordId": 130
+                  "keywordId": 27
                 }
               ]
             },
@@ -1229,7 +1342,7 @@
                   "end": 23,
                   "value": "modifierKeyword2",
                   "keyword": "modifierKeyword",
-                  "keywordId": 130
+                  "keywordId": 27
                 }
               ]
             },
@@ -1241,15 +1354,15 @@
                   "end": 28,
                   "value": "modifierKeyword2",
                   "keyword": "modifierKeyword",
-                  "keywordId": 130
+                  "keywordId": 27
                 }
               ]
             }
           ]
         }
       ],
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000"
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
     },
     {
       "keywordName": "listKeyword",
@@ -1277,8 +1390,8 @@
       "regex": "",
       "type": "learned",
       "modifiers": [],
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000"
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
     },
     {
       "keywordName": "regexKeyword",
@@ -1294,8 +1407,8 @@
       "regex": "^\\d{9}$",
       "type": "regex",
       "modifiers": [],
-      "creationDate": "1578418789000",
-      "modificationDate": "1578418789000"
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
     },
     {
       "keywordName": "keywordVsActionKeyword",

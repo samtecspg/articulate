@@ -128,13 +128,16 @@ class Form extends React.Component {
   };
 
   render() {
-    const { classes, intl , isReadOnly} = this.props;
+    const { classes, intl, isReadOnly } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
           {this.props.agent.gravatar === ''
             ? null
-            : gravatars[this.props.agent.gravatar - 1]({ color: this.props.agent.uiColor, className: classes.agentIcon })}
+            : gravatars[this.props.agent.gravatar - 1]({
+              color: this.props.agent.uiColor,
+              className: classes.agentIcon,
+            })}
           <Grid className={classes.titleTextHelpContainer} container>
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.title} />
@@ -237,7 +240,8 @@ class Form extends React.Component {
               agentActions={this.props.agentActions}
               newAgent={this.props.newAgent}
               onGoToUrl={this.props.onGoToUrl}
-              defaultaFallbackActionName={this.props.defaultaFallbackActionName}
+              defaultFallbackActionName={this.props.defaultFallbackActionName}
+              defaultWelcomeActionName={this.props.defaultWelcomeActionName}
             />
           )}
           {this.state.selectedTab === 1 && (
@@ -307,7 +311,8 @@ Form.propTypes = {
   newAgent: PropTypes.bool,
   agentActions: PropTypes.array,
   onGoToUrl: PropTypes.func,
-  defaultaFallbackActionName: PropTypes.string,
+  defaultFallbackActionName: PropTypes.string,
+  defaultWelcomeActionName: PropTypes.string,
   onAddNewParameter: PropTypes.func,
   onDeleteParameter: PropTypes.func,
   onChangeParameterName: PropTypes.func,

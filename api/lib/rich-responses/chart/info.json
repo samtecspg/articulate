@@ -1,0 +1,31 @@
+{
+    "name": "Chart",
+    "type": "chart",
+    "enabled": false,
+    "description": "Charts based on Chart.js",
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/rich-respones/chart/README.MD",
+    "defaultPayload": {
+        "title": "Leaves",
+        "labels": [
+            "Sick Leave",
+            "Casual Leave",
+            "Earned Leave",
+            "Flexi Leave"
+        ],
+        "backgroundColor": [
+            "#36a2eb",
+            "#ffcd56",
+            "#ff6384",
+            "#009688",
+            "#c45850"
+        ],
+        "chartsData": [
+            5,
+            10,
+            22,
+            3
+        ],
+        "chartType": "pie",
+        "displayLegend": "true"
+    }
+}

@@ -65,7 +65,6 @@ const HighlightedSaying = withStyles(styles)(props => {
     const highlightColor = filteredKeyword
       ? filteredKeyword.uiColor
       : 'transparent';
-    debugger;
     formattedElement = (
       <span key={`keywordTag_${props.keywordIndex}`}>
         <span key={`beforeKeywordTagText_${props.keywordIndex}`}>

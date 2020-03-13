@@ -361,24 +361,18 @@ class AgentsCards extends React.Component {
           ))}
           {this.addEmptyCards(agents.length)}
         </Grid>
-        <Grid
-          onClick={() => {
-            document.getElementById('dvCardsContainer').scrollLeft -= -205;
-            console.log(document.getElementById('dvCardsContainer').scrollLeft);
-            this.setState({
-              showRightArrow:
-                document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth >
-                document.getElementById('dvCardsContainer').scrollLeft,
-              showLeftArrow: document.getElementById('dvCardsContainer').scrollLeft > 0,
-            });
-          }}
-          className={classes.scrollerContainer}
-          item
-          xs={1}
-        >
-          {this.state.showRightArrow ? (
-            <img src={rightArrowIcon} style={{ cursor: 'pointer', height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40 }} />
-          ) : null}
+        <Grid onClick={() => {
+          document.getElementById('dvCardsContainer').scrollLeft -= -205;
+          this.setState({
+            showRightArrow: document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth > document.getElementById('dvCardsContainer').scrollLeft,
+            showLeftArrow: document.getElementById('dvCardsContainer').scrollLeft > 0
+          });
+        }} className={classes.scrollerContainer} item xs={1}>
+          {
+            this.state.showRightArrow ?
+              <img src={rightArrowIcon} style={{ cursor: 'pointer', height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40 }} /> :
+              null
+          }
         </Grid>
       </Grid>
     );

@@ -265,7 +265,6 @@ class SayingsDataForm extends React.Component {
                                   this.setState({
                                     currentlyDeletingSaying: true,
                                   });
-                                  debugger;
                                   this.props.onDeleteSaying(saying.saying.id, saying.saying.Category[0].id);
                                 }
                               }}

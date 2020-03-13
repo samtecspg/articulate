@@ -63,6 +63,9 @@ module.exports = async function({ connection, request }) {
                   ubiquity: {
                     connection,
                     event
+                  },
+                  welcomeActionOptions: {
+                    useWelcomeActionIfFirstMessage: connection.details.useAgentWelcomeAction
                   }
                 }
               });

@@ -1,11 +1,14 @@
 import _ from 'lodash';
 import {
     CONFIG_SETTINGS_DEFAULT_AGENT,
-    CONFIG_SETTINGS_DEFAULT_FALLBACK_ACTION_NAME,
-    CONFIG_SETTINGS_RESPONSES_AGENT_DEFAULT,
     MODEL_AGENT,
     STATUS_OUT_OF_DATE,
-    STATUS_READY
+    STATUS_READY,
+    CONFIG_SETTINGS_DEFAULT_FALLBACK_ACTION_NAME,
+    CONFIG_SETTINGS_RESPONSES_AGENT_DEFAULT,
+    CONFIG_SETTINGS_DEFAULT_WELCOME_ACTION_NAME,
+    CONFIG_SETTINGS_WELCOME_RESPONSES_AGENT_DEFAULT
+
 } from '../../../util/constants';
 import OverLimitErrorHandler from '../../errors/global.over-limit';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -18,6 +21,13 @@ module.exports = async function ({ data, isImport = false, returnModel = false, 
         responses: [],
         slots: []
     };
+
+    const defaultWelcomeAction = {
+        useWebhook: false,
+        usePostFormat: false,
+        responses: [],
+        slots: []
+    }
 
     const { redis } = this.server.app;
     const { settingsService, agentService } = await this.server.services();
@@ -51,12 +61,22 @@ module.exports = async function ({ data, isImport = false, returnModel = false, 
             });
         });
 
+        defaultWelcomeAction.actionName = allSettings[CONFIG_SETTINGS_DEFAULT_WELCOME_ACTION_NAME];
+        _.each(allSettings[CONFIG_SETTINGS_WELCOME_RESPONSES_AGENT_DEFAULT], (welcomeResponse) => {
+
+            defaultWelcomeAction.responses.push({
+                textResponse: welcomeResponse,
+                actions: []
+            });
+        });
+
         _.each(CONFIG_SETTINGS_DEFAULT_AGENT, (value) => {
 
             data.settings[value] = allSettings[value];
         });
 
         data.fallbackAction = isImport ? data.fallbackAction : allSettings[CONFIG_SETTINGS_DEFAULT_FALLBACK_ACTION_NAME];
+        data.welcomeAction = isImport ? data.welcomeAction : allSettings[CONFIG_SETTINGS_DEFAULT_WELCOME_ACTION_NAME];
 
         if (isImport && data.model) {
             delete data.model;
@@ -67,6 +87,10 @@ module.exports = async function ({ data, isImport = false, returnModel = false, 
             await agentService.createAction({
                 AgentModel,
                 actionData: defaultFallbackAction
+            });
+            await agentService.createAction({
+                AgentModel,
+                actionData: defaultWelcomeAction
             });
         }
         return returnModel ? AgentModel : AgentModel.allProperties();

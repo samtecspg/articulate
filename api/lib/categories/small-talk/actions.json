@@ -4,6 +4,7 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "Hello 👋.",
           "actions": [
             "Ask Mood"
@@ -20,6 +21,7 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "Bye!",
           "actions": []
         }
@@ -34,10 +36,12 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "You are very welcome.",
           "actions": []
         },
         {
+          "richResponses": [],
           "textResponse": "Just doing my part.",
           "actions": []
         }
@@ -52,10 +56,12 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "I'm a bot.",
           "actions": []
         },
         {
+          "richResponses": [],
           "textResponse": "Just your friendly neighborhood chatbot.",
           "actions": []
         }
@@ -70,6 +76,7 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "I was created {{moment agent.creationDate \"fromNow\"}}. At first I didn't know much, but I'm learning all the time.",
           "actions": []
         }
@@ -84,6 +91,7 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "I can do anything that I've been taught to do. Very meta, I know.",
           "actions": []
         }
@@ -98,10 +106,12 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "I always have time for you.",
           "actions": []
         },
         {
+          "richResponses": [],
           "textResponse": "Never too busy to chitchat.",
           "actions": []
         }
@@ -116,10 +126,12 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "I am always here for you.",
           "actions": []
         },
         {
+          "richResponses": [],
           "textResponse": "yep, unless there's a power outage. They're my kryptonite.",
           "actions": []
         }
@@ -145,14 +157,17 @@
       ],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "{{#eq slots.mood.value 'bad'}}I'm sorry to hear that, maybe the sun will come out tomorrow.{{/eq}}",
           "actions": []
         },
         {
+          "richResponses": [],
           "textResponse": "{{#eq slots.mood.value 'okay'}}Okay's better than bad.{{/eq}}",
           "actions": []
         },
         {
+          "richResponses": [],
           "textResponse": "{{#eq slots.mood.value 'good'}}That is good to hear!{{/eq}}",
           "actions": []
         }
@@ -167,10 +182,12 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "Well I'm alive.",
           "actions": []
         },
         {
+          "richResponses": [],
           "textResponse": "I am doing absolutely superb.",
           "actions": []
         }
@@ -185,6 +202,7 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "I know right. I laugh at my own jokes all of the time.",
           "actions": []
         }
@@ -199,10 +217,12 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "Aww shucks 😊, I like you too.",
           "actions": []
         },
         {
+          "richResponses": [],
           "textResponse": "Thanks, that really boosts my spirits.",
           "actions": []
         }
@@ -217,10 +237,12 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "Of Course. I would be happy to be.",
           "actions": []
         },
         {
+          "richResponses": [],
           "textResponse": "I already consider you my friend.",
           "actions": []
         }
@@ -235,6 +257,7 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "I'm glad you agree.",
           "actions": []
         }
@@ -249,10 +272,12 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "I'm sorry to disappoint. I am trying my best.",
           "actions": []
         },
         {
+          "richResponses": [],
           "textResponse": "I can blame it on someone else.",
           "actions": []
         }
@@ -267,6 +292,7 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "Well, thanks. You're pretty awesome too.",
           "actions": []
         }
@@ -281,6 +307,7 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "😊",
           "actions": []
         }
@@ -295,6 +322,7 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "I'm already spoken for.",
           "actions": []
         }
@@ -309,6 +337,7 @@
       "slots": [],
       "responses": [
         {
+          "richResponses": [],
           "textResponse": "Don't worry 🎵 be happy.",
           "actions": []
         }

@@ -106,8 +106,6 @@ class Form extends React.Component {
     numberLogsFilter: 1000
   };
 
-  handle
-
   handleOpen = () => {
     this.setState({
       openModal: true,
@@ -120,13 +118,17 @@ class Form extends React.Component {
     });
   };
 
-  processSelectedPopoverFiltersDocuments(filtersSet) {
-    const { dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval } = filtersSet;
+  processSelectedPopoverFiltersDocuments() {
+    const dropDownValuePicked = this.props.reviewPageFilterCategory;
+    const chipValuesPicked = this.props.reviewPageFilterActions;
+    const textFilterValue = this.props.reviewPageFilterSearchSaying;
+    const actionInterval = [this.props.reviewPageFilterActionIntervalMin / 100, this.props.reviewPageFilterActionIntervalMax / 100];
+
     var filter = '';
     if (textFilterValue != '') {
       filter = filter + textFilterValue + ' ';
     }
-    if (dropDownValuePicked != 'Pick Category') {
+    if (dropDownValuePicked != 'Pick Category' && dropDownValuePicked != '') {
       filter = filter + 'category:"' + dropDownValuePicked + '"';
     }
     if (chipValuesPicked.length > 0) {
@@ -140,22 +142,20 @@ class Form extends React.Component {
       filter = filter + actionInterval.join('" actionIntervals:"')
       filter = filter + '"';
     }
-    this.props.onSearchSaying(filter);
+    this.props.onChangeReviewPageFilterString(filter);
+    this.props.onSearchSaying();
   }
 
-  processSelectedPopoverFiltersLogs(filtersSet) {
-    const { checkboxValuesPicked, currentJustMax } = filtersSet;
+  processSelectedPopoverFiltersLogs() {
+    const checkboxValuesPicked = this.props.reviewPageFilterContainers;
     var filter = '';
     if (checkboxValuesPicked.length > 0) {
       filter = filter + ' containers:"';
       filter = filter + checkboxValuesPicked.map(container => { return container.toLowerCase() }).join('" containers:"');
       filter = filter + '"';
     }
-    this.props.onSearchLog(filter, currentJustMax);
-    this.setState({
-      refreshLogFilter: filter,
-      numberLogsFilter: currentJustMax
-    });
+    this.props.onChangeReviewPageFilterLogsString(filter);
+    this.props.onSearchLog();
   }
 
   render() {
@@ -294,18 +294,31 @@ class Form extends React.Component {
                   showTextFilter={true}
                   showDropDownFilter={false}
                   showMinMaxFilter={true}
-                  showChips={true}
-                  showCustomFirstChip={true}
-                  chipValues={map(this.props.agentActions, 'actionName')}
+                  showChipsG1={true}
+                  showCustomFirstChipG1={true}
+                  chipValuesG1={map(this.props.agentActions, 'actionName')}
                   filtersDescription={intl.formatMessage(messages.filtersDescriptionSayingsTab)}
                   textFilterPlaceholder={intl.formatMessage(messages.searchSayingPlaceholder)}
-                  chipsFilterLabel={intl.formatMessage(messages.pickActions)}
+                  chipsFilterLabelG1={intl.formatMessage(messages.pickActions)}
                   minMaxFilterLabel={intl.formatMessage(messages.actionIntervals)}
                   minMaxIntervalsWarning={intl.formatMessage(messages.actionIntervalsWarning)}
-                  customFirstChipLabel={intl.formatMessage(messages.customFirstActionLabel)}
+                  customFirstChipLabelG1={intl.formatMessage(messages.customFirstActionLabel)}
                   processSelectedFilters={this.processSelectedPopoverFiltersDocuments}
                   absoluteMin={0}
                   absoluteMax={100}
+                  onChangeCurrentTextFilterValue={this.props.onChangeReviewPageFilterSearchSaying}
+                  textFilterValue={this.props.reviewPageFilterSearchSaying}
+                  onChangeDropDownValuePicked={this.props.onChangeReviewPageFilterCategory}
+                  dropDownValuePicked={this.props.reviewPageFilterCategory}
+                  onChangeChipValuesPickedG1={this.props.onChangeReviewPageFilterActions}
+                  chipValuesPickedG1={this.props.reviewPageFilterActions}
+                  onChangeNumberFiltersApplied={this.props.onChangeReviewPageNumberOfFiltersApplied}
+                  numberFiltersApplied={this.props.reviewPageNumberOfFiltersApplied}
+                  onChangeCurrentMax={this.props.onChangeReviewPageFilterActionIntervalMax}
+                  currentMax={this.props.reviewPageFilterActionIntervalMax}
+                  onChangeCurrentMin={this.props.onChangeReviewPageFilterActionIntervalMin}
+                  currentMin={this.props.reviewPageFilterActionIntervalMin}
+                  onResetFilters={this.props.onResetReviewPageFilters}
                 />
               )}
               {this.props.selectedTab === 'logs' && (
@@ -316,14 +329,21 @@ class Form extends React.Component {
                   showTextFilter={false}
                   showDropDownFilter={false}
                   showMinMaxFilter={false}
-                  showChips={false}
-                  showCustomFirstChip={false}
+                  showChipsG1={false}
+                  showCustomFirstChipG1={false}
                   checkBoxesFilterLabel={intl.formatMessage(messages.noLogsView)}
                   checkBoxesValues={['API', 'UI', 'Redis', 'Duckling', 'Nginx', 'Rasa']}
                   filtersDescription={intl.formatMessage(messages.filtersDescriptionLogsTab)}
                   processSelectedFilters={this.processSelectedPopoverFiltersLogs}
                   absoluteJustMax={10000}
                   initialJustMax={1000}
+                  onChangeCheckboxValuesPicked={this.props.onChangeReviewPageFilterContainers}
+                  checkboxValuesPicked={this.props.reviewPageFilterContainers}
+                  onChangeCurrentJustMax={this.props.onChangeReviewPageFilterMaxLogs}
+                  currentJustMax={this.props.reviewPageFilterMaxLogs}
+                  onChangeNumberFiltersApplied={this.props.onChangeReviewPageLogsNumberOfFiltersApplied}
+                  numberFiltersApplied={this.props.reviewPageLogsNumberOfFiltersApplied}
+                  onResetFilters={this.props.onResetReviewPageLogsFilters}
                 />
               )}
             </Grid>
@@ -395,7 +415,7 @@ class Form extends React.Component {
                 logsText={this.props.logsText}
                 loading={this.props.loading}
                 processSelectedFilters={this.processSelectedPopoverFiltersLogs}
-                refreshLogs={() => { this.props.onSearchLog(this.state.refreshLogFilter, this.state.numberLogsFilter) }}
+                refreshLogs={() => { this.props.onSearchLog(this.props.reviewPageFilterLogsString, reviewPageFilterMaxLogs) }}
               />
             </Fragment>
           )
@@ -449,7 +469,25 @@ Form.propTypes = {
   handleTabChange: PropTypes.func,
   onLoadSessionId: PropTypes.func,
   loading: PropTypes.bool,
-  onSearchLog: PropTypes.func
+  onSearchLog: PropTypes.func,
+  onChangeReviewPageFilterSearchSaying: PropTypes.func,
+  reviewPageFilterSearchSaying: PropTypes.string,
+  onChangeReviewPageFilterCategory: PropTypes.func,
+  reviewPageFilterCategory: PropTypes.string,
+  onChangeReviewPageFilterActions: PropTypes.func,
+  reviewPageFilterActions: PropTypes.array,
+  onChangeReviewPageNumberOfFiltersApplied: PropTypes.func,
+  reviewPageNumberOfFiltersApplied: PropTypes.number,
+  onChangeReviewPageFilterActionIntervalMax: PropTypes.func,
+  reviewPageFilterContainers: PropTypes.array,
+  reviewPageFilterLogsString: PropTypes.string,
+  onChangeReviewPageFilterContainers: PropTypes.func,
+  onChangeReviewPageFilterMaxLogs: PropTypes.func,
+  onChangeReviewPageFilterLogsString: PropTypes.func,
+  onChangeReviewPageLogsNumberOfFiltersApplied: PropTypes.func,
+  reviewPageLogsNumberOfFiltersApplied: PropTypes.number,
+  onResetReviewPageFilters: PropTypes.func,
+  onResetReviewPageLogsFilters: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(Form));

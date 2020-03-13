@@ -1,0 +1,10 @@
+{
+    "name": "Video",
+    "type": "video",
+    "enabled": true,
+    "description": "Video message that will be playable by the user.",
+    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/rich-responses/video/README.MD",
+    "defaultPayload": {
+        "video": "http://example/video.mp4"
+    }
+}

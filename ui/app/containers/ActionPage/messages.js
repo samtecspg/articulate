@@ -202,9 +202,21 @@ export default defineMessages({
     id: 'app.containers.ActionPage.component.SlotForm.slotIsList',
     defaultMessage: 'Is List?',
   },
+  addAction: {
+    id: 'app.containers.ActionPage.component.ResponseRow.addAction',
+    defaultMessage: 'Chain an action to this response',
+  },
+  richResponses: {
+    id: 'app.containers.ActionPage.component.ResponseRow.richResponses',
+    defaultMessage: 'Add rich responses to this response',
+  },
   copyResponses: {
     id: 'app.containers.ActionPage.component.ResponseRow.copyResponses',
     defaultMessage: 'Copy response in the response input',
+  },
+  deleteResponse: {
+    id: 'app.containers.ActionPage.component.ResponseRow.copyResponses',
+    defaultMessage: 'Delete this response',
   },
   copyTextPrompt: {
     id: 'app.containers.ActionPage.component.ResponseRow.copyTextPrompt',
@@ -243,4 +255,24 @@ export default defineMessages({
     defaultMessage:
       '*Automatic suggestions are enabled. If you add quick responses they will override any automatic suggestions',
   },
+  addButton: {
+    id: 'app.containers.ActionPage.component.ResponseRow.addButton',
+    defaultMessage: 'Add',
+  },
+  editButton: {
+    id: 'app.containers.ActionPage.component.ResponseRow.editButton',
+    defaultMessage: 'Edit',
+  },
+  hint1: {
+    id: 'app.containers.ActionPage.component.ResponseRow.hint',
+    defaultMessage: 'Hint: Use',
+  },
+  hint2: {
+    id: 'app.containers.ActionPage.component.ResponseRow.hint',
+    defaultMessage: 'for template values',
+  },
+  disableTextResponse: {
+    id: 'app.containers.ActionPage.component.ResponseRow.disableTextResponse',
+    defaultMessage: 'Disable text response',
+  }
 });

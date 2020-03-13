@@ -123,13 +123,16 @@ export default defineMessages({
     id: 'app.containers.SettingsPage.component.GeneralSettings.uiLanguagesError',
     defaultMessage: 'Please verify this value. It should be an array of JSON objects with text and value attributes',
   },
-  defaultaFallbackActionName: {
-    id: 'app.containers.SettingsPage.component.GeneralSettings.defaultaFallbackActionName',
+  defaultFallbackActionName: {
+    id:
+      'app.containers.SettingsPage.component.GeneralSettings.defaultFallbackActionName',
     defaultMessage: 'Default Fallback Action Name:',
   },
-  defaultaFallbackActionNamePlaceholder: {
-    id: 'app.containers.SettingsPage.component.GeneralSettings.defaultaFallbackActionNamePlaceholder',
-    defaultMessage: 'Enter the name for the default fallback action that will be created for new agents',
+  defaultFallbackActionNamePlaceholder: {
+    id:
+      'app.containers.SettingsPage.component.GeneralSettings.defaultFallbackActionNamePlaceholder',
+    defaultMessage:
+      'Enter the name for the default fallback action that will be created for new agents',
   },
   backButton: {
     id: 'app.containers.SettingsPage.component.GeneralSettings.backButton',

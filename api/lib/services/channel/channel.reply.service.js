@@ -5,25 +5,22 @@ import { MODEL_AGENT } from '../../../util/constants';
 
 import Channels from '../../channels';
 
-module.exports = async function({ connection, event, response, sessionId }) {
+module.exports = async function ({ connection, event, response, sessionId, server }) {
   try {
     const { redis } = this.server.app;
     const channel = Channels[connection.channel];
-
     const AgentModel = await redis.factory(MODEL_AGENT, connection.agent);
-
     const url = AgentModel.property('settings').slackLoggingURL;
 
     if (url) {
       const webhook = new IncomingWebhook(url);
-
       await webhook.send({
         attachments: [
           {
             color: '#36a64f',
             pretext: `${AgentModel.property('agentName')} received a new ${
               channel.info.name
-            } request from ${_.get(event, channel.info.userField.split('.'))}`,
+              } request from ${_.get(event, channel.info.userField.split('.'))}`,
             author_name: _.get(event, channel.info.userField.split('.')),
             author_link: `${connection.requestURL}/context/${sessionId}`,
             author_icon: channel.info.iconURL,
@@ -43,8 +40,7 @@ module.exports = async function({ connection, event, response, sessionId }) {
         ]
       });
     }
-
-    return channel.reply({ connection, event, response, sessionId, redis });
+    return channel.reply({ connection, event, response, server, sessionId, redis });
   } catch ({ message, statusCode }) {
     return new Boom(message, { statusCode });
   }

@@ -159,7 +159,7 @@ export function* getSayings(payload) {
   const { api, filter, page, pageSize, ignoreKeywords = false } = payload;
   const { remainingText, found } = ExtractTokensFromString({
     text: filter,
-    tokens: ['category', 'actions'],
+    tokens: ['category', 'actions', 'keywords'],
   });
   const tempFilter =
     filter === ''
@@ -167,6 +167,7 @@ export function* getSayings(payload) {
       : JSON.stringify({
         category: found.category,
         actions: found.actions,
+        keywords: found.keywords,
         query: remainingText,
       });
   let skip = 0;
