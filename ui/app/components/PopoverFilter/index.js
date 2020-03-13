@@ -325,7 +325,6 @@ export class PopoverFilter extends React.Component {
     }
 
     async updateFilterNumber() {
-        debugger;
         var numFilters = 0;
         if (this.props.showDropDownFilter && this.props.dropDownValuePicked != '' && this.props.dropDownValuePicked != this.props.dropDownMainOptionLabel) {
             numFilters++;
