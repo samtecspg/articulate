@@ -278,6 +278,12 @@ export class ReviewPage extends React.Component {
     if (this.state.pageStatus.sessions.client) {
       this.state.pageStatus.sessions.client.unsubscribe(`/${ROUTE_CONTEXT}`);
     }
+    if (this.props.resetReviewPageFilters) {
+      this.props.resetReviewPageFilters();
+    }
+    if (this.props.resetReviewPageLogsFilters) {
+      this.props.resetReviewPageLogsFilters();
+    }
   }
 
   setNumberOfPages(pageSize, type) {
@@ -368,50 +374,36 @@ export class ReviewPage extends React.Component {
     }
   }
 
-  onSearchSaying(filter) {
-    const { onLoadAgentDocuments, onChangeReviewPageFilterString } = this.props.actions;
+  onSearchSaying() {
+    const { onLoadAgentDocuments } = this.props.actions;
     const newPageStatus = this.state.pageStatus;
     newPageStatus['documents'].currentPage = 1;
-    this.setState({
-      pageStatus: newPageStatus,
-      filter
-    });
 
     onLoadAgentDocuments({
       page: 1,
       pageSize: this.state.pageStatus['documents'].pageSize,
       field: this.state.pageStatus['documents'].sortField,
       direction: this.state.pageStatus['documents'].sortDirection,
-      filter: filter
+      filter: this.props.reviewPageFilterString,
     });
-    onChangeReviewPageFilterString(filter);
   }
 
-  onSearchLog(filter, logsNumber) {
-    const { onLoadLogs, onChangeReviewPageFilterLogsString } = this.props.actions;
+  onSearchLog() {
+    const { onLoadLogs } = this.props.actions;
     const newPageStatus = this.state.pageStatus;
     newPageStatus['documents'].currentPage = 1;
-    this.setState({
-      filter
-    });
 
     onLoadLogs({
       page: this.state.pageStatus.logs.currentPage,
-      pageSize: logsNumber,
+      pageSize: this.props.reviewPageFilterMaxLogs,
       field: this.state.pageStatus.logs.sortField,
       direction: this.state.pageStatus.logs.sortDirection,
-      filter: filter
+      filter: this.props.reviewPageFilterLogsString
     });
-    onChangeReviewPageFilterLogsString(filter);
   }
 
   copySayingFromDocument(userSays, saying) {
     const { agentCategories, agentKeywords, onGoToUrl, agent } = this.props;
-    /*if (saying.categoryScore === 0) {
-      onGoToUrl(`/agent/${agent.id}/dialogue?tab=sayings&userSays=${userSays}`);
-    } else {
-    }*/
-
     const { onCopySaying } = this.props.actions;
     const category = _.find(agentCategories, {
       categoryName: saying.category,
@@ -542,7 +534,8 @@ export class ReviewPage extends React.Component {
       onChangeReviewPageFilterLogsString,
       onChangeReviewPageLogsNumberOfFiltersApplied,
       onResetReviewPageFilters,
-      onResetReviewPageLogsFilters
+      onResetReviewPageLogsFilters,
+      onChangeReviewPageFilterString
     } = this.props.actions;
 
     const {
@@ -648,6 +641,7 @@ export class ReviewPage extends React.Component {
               reviewPageLogsNumberOfFiltersApplied={reviewPageLogsNumberOfFiltersApplied}
               onResetReviewPageFilters={onResetReviewPageFilters}
               onResetReviewPageLogsFilters={onResetReviewPageLogsFilters}
+              onChangeReviewPageFilterString={onChangeReviewPageFilterString}
             />
           }
           dialogueForm={Link}
@@ -721,7 +715,6 @@ ReviewPage.propTypes = {
   reviewPageNumberOfFiltersApplied: PropTypes.number,
   reviewPageFilterString: PropTypes.string,
   reviewPageFilterContainers: PropTypes.array,
-  reviewPageFilterMaxLogs: PropTypes.number,
   reviewPageFilterLogsString: PropTypes.string,
   reviewPageLogsNumberOfFiltersApplied: PropTypes.number
 };

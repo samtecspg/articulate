@@ -118,8 +118,7 @@ class Form extends React.Component {
     });
   };
 
-  processSelectedPopoverFiltersDocuments(filtersSet) {
-    //const { dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval } = filtersSet;
+  processSelectedPopoverFiltersDocuments() {
     const dropDownValuePicked = this.props.reviewPageFilterCategory;
     const chipValuesPicked = this.props.reviewPageFilterActions;
     const textFilterValue = this.props.reviewPageFilterSearchSaying;
@@ -143,24 +142,20 @@ class Form extends React.Component {
       filter = filter + actionInterval.join('" actionIntervals:"')
       filter = filter + '"';
     }
-    this.props.onSearchSaying(filter);
+    this.props.onChangeReviewPageFilterString(filter);
+    this.props.onSearchSaying();
   }
 
-  processSelectedPopoverFiltersLogs(filtersSet) {
-    //const { checkboxValuesPicked, currentJustMax } = filtersSet;
+  processSelectedPopoverFiltersLogs() {
     const checkboxValuesPicked = this.props.reviewPageFilterContainers;
-    const currentJustMax = this.props.reviewPageFilterMaxLogs;
     var filter = '';
     if (checkboxValuesPicked.length > 0) {
       filter = filter + ' containers:"';
       filter = filter + checkboxValuesPicked.map(container => { return container.toLowerCase() }).join('" containers:"');
       filter = filter + '"';
     }
-    this.props.onSearchLog(filter, currentJustMax);
-    //this.setState({
-    //  refreshLogFilter: filter,
-    //  numberLogsFilter: currentJustMax
-    //});
+    this.props.onChangeReviewPageFilterLogsString(filter);
+    this.props.onSearchLog();
   }
 
   render() {
@@ -484,9 +479,6 @@ Form.propTypes = {
   onChangeReviewPageNumberOfFiltersApplied: PropTypes.func,
   reviewPageNumberOfFiltersApplied: PropTypes.number,
   onChangeReviewPageFilterActionIntervalMax: PropTypes.func,
-  reviewPageFilterActionIntervalMax: PropTypes.number,
-  onChangeReviewPageFilterActionIntervalMin: PropTypes.func,
-  reviewPageFilterActionIntervalMin: PropTypes.number,
   reviewPageFilterContainers: PropTypes.array,
   reviewPageFilterLogsString: PropTypes.string,
   onChangeReviewPageFilterContainers: PropTypes.func,

@@ -132,7 +132,6 @@ class Form extends React.Component {
   };
 
   processSelectedPopoverFilters() {
-    //const { dropDownValuePicked, chipValuesPicked, textFilterValue } = filtersSet;
     const dropDownValuePicked = this.props.dialoguePageFilterCategory;
     const chipValuesPickedG1 = this.props.dialoguePageFilterActions;
     const textFilterValue = this.props.dialoguePageFilterSearchSaying;
@@ -157,7 +156,8 @@ class Form extends React.Component {
       filter = filter + chipValuesPickedG2.join('" keywords:"')
       filter = filter + '"';
     }
-    this.props.onSearchSaying(filter, true);
+    this.props.onChangeDialoguePageFilterString(filter);
+    this.props.onSearchSaying(true);
   }
 
   render() {

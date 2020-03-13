@@ -268,15 +268,6 @@ export class PopoverFilter extends React.Component {
 
         this.initialState = {
             popOverAnchorEl: null,
-            //textFilterValue: this.props.textFilterValue,
-            //dropDownValuePicked: this.props.dropDownValuePicked === '' ? this.props.dropDownMainOptionLabel : this.props.dropDownValuePicked,
-            //chipValuesPicked: this.props.chipValuesPicked,
-            //checkboxValuesPicked: [],
-            //numberFiltersApplied: this.props.numberFiltersApplied,
-            //currentTextFilterValue: '',
-            //currentMax: this.props.currentMax,
-            //currentMin: this.props.currentMin,
-            //currentJustMax: this.props.initialJustMax
         };
         this.state = this.initialState;
 
@@ -301,12 +292,10 @@ export class PopoverFilter extends React.Component {
     }
 
     async handleDropDownValuePicked(value) {
-        //await this.setStateAsync({ dropDownValuePicked: value });
         await this.props.onChangeDropDownValuePicked(value);
     }
 
     async handleTextFilterValueChanged(value) {
-        //await this.setStateAsync({ textFilterValue: value });
         await this.props.onChangeCurrentTextFilterValue(value);
     }
 
@@ -318,19 +307,10 @@ export class PopoverFilter extends React.Component {
 
     async handleCheckboxClick(value) {
         if (this.checkboxIsSelected(value)) {
-            //await this.setStateAsync({
-            //    checkboxValuesPicked: this.props.checkboxValuesPicked.filter(function (valueToRemove) {
-            //        return value !== valueToRemove
-            //    })
-            //});
-
             await this.props.onChangeCheckboxValuesPicked(this.props.checkboxValuesPicked.filter(function (valueToRemove) {
                 return value !== valueToRemove
             }));
         } else {
-            //await this.setStateAsync(prevState => ({
-            //    checkboxValuesPicked: [...prevState.checkboxValuesPicked, value]
-            //}))
             await this.props.onChangeCheckboxValuesPicked([...this.props.checkboxValuesPicked, value]);
         }
     }
@@ -340,19 +320,21 @@ export class PopoverFilter extends React.Component {
     }
 
     async handleFiltersChange() {
-        //const { dropDownValuePicked, chipValuesPicked, textFilterValue, currentMin, currentMax, checkboxValuesPicked, currentJustMax } = this.state;
-        //this.props.processSelectedFilters({ dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval: [currentMin / 100, currentMax / 100], checkboxValuesPicked, currentJustMax });
-        this.props.processSelectedFilters();
+        await this.props.processSelectedFilters();
         await this.updateFilterNumber();
     }
 
     async updateFilterNumber() {
+        debugger;
         var numFilters = 0;
         if (this.props.showDropDownFilter && this.props.dropDownValuePicked != '' && this.props.dropDownValuePicked != this.props.dropDownMainOptionLabel) {
             numFilters++;
         }
-        if (this.props.showChips && this.props.chipValuesPicked) {
-            numFilters += this.props.chipValuesPicked.length;
+        if (this.props.showChipsG1 && this.props.chipValuesPickedG1) {
+            numFilters += this.props.chipValuesPickedG1.length;
+        }
+        if (this.props.showChipsG2 && this.props.chipValuesPickedG2) {
+            numFilters += this.props.chipValuesPickedG2.length;
         }
         if (this.props.showTextFilter && this.props.textFilterValue != '') {
             numFilters++;
@@ -367,7 +349,6 @@ export class PopoverFilter extends React.Component {
         if (this.props.showCheckboxFilter && Number(this.props.currentJustMax) !== this.props.initialJustMax) {
             numFilters++;
         }
-        // await this.setStateAsync({ numberFiltersApplied: numFilters });
         await this.props.onChangeNumberFiltersApplied(numFilters);
     }
 
@@ -379,70 +360,51 @@ export class PopoverFilter extends React.Component {
 
     handleMinChange = async (ev) => {
         if (ev.target.value < this.props.absoluteMin) {
-            //await this.setStateAsync({ currentMin: this.props.absoluteMin });
-
             await this.props.onChangeCurrentMin(this.props.absoluteMin);
         }
         else {
-            // await this.setStateAsync({ currentMin: Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, '') });
-
             await this.props.onChangeCurrentMin(Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, ''));
         }
     }
 
     handleMinValidation = async () => {
         if (this.props.currentMin === '') {
-            //await this.setStateAsync({ currentMin: this.props.absoluteMin });
-
             await this.props.onChangeCurrentMin(this.props.absoluteMin);
         } else if (this.props.currentMin > this.props.currentMax) {
-            //await this.setStateAsync({ currentMin: this.props.currentMax });
-
             await this.props.onChangeCurrentMin(this.props.absoluteMax);
         }
     }
 
     handleMaxChange = async (ev) => {
         if (ev.target.value > this.props.absoluteMax) {
-            //await this.setStateAsync({ currentMax: this.props.absoluteMax });
-
             await this.props.onChangeCurrentMax(this.props.absoluteMax);
         }
         else {
-            //await this.setStateAsync({ currentMax: Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, '') });
             await this.props.onChangeCurrentMax(Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, ''));
         }
     }
 
     handleMaxValidation = async () => {
         if (this.props.currentMax === '') {
-            //await this.setStateAsync({ currentMax: this.props.absoluteMax });
-
             await this.props.onChangeCurrentMax(this.props.absoluteMax);
         } else if (this.props.currentMax < this.props.currentMin) {
-            //await this.setStateAsync({ currentMax: this.props.currentMin });
-
             await this.props.onChangeCurrentMax(this.props.currentMin);
         }
     }
 
     handleJustMaxChange = async (ev) => {
         if (ev.target.value > this.props.absoluteJustMax) {
-            //await this.setStateAsync({ currentJustMax: this.props.absoluteJustMax });
             await this.props.onChangeCurrentJustMax(this.props.absoluteJustMax);
         } else if (ev.target.value < 0) {
-            //await this.setStateAsync({ currentJustMax: 0 });
             await this.props.onChangeCurrentJustMax(0);
         }
         else {
-            //await this.setStateAsync({ currentJustMax: Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, '') });
             await this.props.onChangeCurrentJustMax(Number(ev.target.value) === 0 ? ev.target.value : ev.target.value.replace(/^0+/, ''));
         }
     }
 
     handleJustMaxValidation = async () => {
         if (this.props.currentJustMax === '') {
-            //await this.setStateAsync({ currentJustMax: 1000 });
             await this.props.onChangeCurrentJustMax(1000);
         }
     }
@@ -455,11 +417,6 @@ export class PopoverFilter extends React.Component {
             await this.props.onResetFilters();
         }
         await this.handleFiltersChange();
-    }
-
-    componentWillUnmount() {
-        //const { dropDownValuePicked, chipValuesPicked, textFilterValue, currentMin, currentMax, checkboxValuesPicked, currentJustMax } = this.initialState
-        //this.props.processSelectedFilters({ dropDownValuePicked, chipValuesPicked, textFilterValue, actionInterval: [currentMin / 100, currentMax / 100], checkboxValuesPicked, currentJustMax });
     }
 
     renderNumberFiltersApplied(classes, intl) {
@@ -985,9 +942,7 @@ PopoverFilter.propTypes = {
     onChangeNumberFiltersApplied: PropTypes.func,
     numberFiltersApplied: PropTypes.number,
     onChangeCurrentMax: PropTypes.func,
-    currentMax: PropTypes.number,
     onChangeCurrentMin: PropTypes.func,
-    currentMin: PropTypes.number,
     onChangeCurrentJustMax: PropTypes.func,
     onChangeCheckboxValuesPicked: PropTypes.func,
     checkboxValuesPicked: PropTypes.array,

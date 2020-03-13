@@ -209,6 +209,7 @@ export class DialoguePage extends React.PureComponent {
   componentWillUnmount() {
     this.throttledOnLoadSayings = null;
     this.props.onResetSayings();
+    this.props.onResetDialoguePageFilters();
   }
 
   componentDidUpdate(prevProps) {
@@ -284,12 +285,11 @@ export class DialoguePage extends React.PureComponent {
     this.props.onLoadSayings(this.props.dialoguePageFilterString, 1, sayingsPageSize);
   }
 
-  onSearchSaying(filter, ignoreKeywords) {
+  onSearchSaying(ignoreKeywords) {
     this.setState({
       currentSayingsPage: 1,
     });
-    this.props.onLoadSayings(filter, 1, this.state.sayingsPageSize, ignoreKeywords);
-    this.props.onChangeDialoguePageFilterString(filter);
+    this.props.onLoadSayings(this.props.dialoguePageFilterString, 1, this.state.sayingsPageSize, ignoreKeywords);
   }
 
   onSearchCategory(categoryFilter) {
@@ -615,6 +615,7 @@ export class DialoguePage extends React.PureComponent {
                 onResetDialoguePageFilters={this.props.onResetDialoguePageFilters}
                 onChangeDialoguePageFilterKeywords={this.props.onChangeDialoguePageFilterKeywords}
                 dialoguePageFilterKeywords={this.props.dialoguePageFilterKeywords}
+                onChangeDialoguePageFilterString={this.props.onChangeDialoguePageFilterString}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}

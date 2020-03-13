@@ -67,34 +67,18 @@ const styles = {
 
 /* eslint-disable react/prefer-stateless-function */
 export class ChipGroup extends React.Component {
-  componentDidMount() {
-
-  }
-
-  componentWillUnmount() {
-
-  }
 
   async handleChipClick(value) {
     if (this.chipIsSelected(value)) {
-      //await this.setStateAsync({
-      //    chipValuesPicked: this.props.chipValuesPicked.filter(function (valueToRemove) {
-      //        return value !== valueToRemove
-      //    })
-      //});
       await this.props.onChangeChipValuesPicked(this.props.chipValuesPicked.filter(function (valueToRemove) {
         return value !== valueToRemove
       }));
     } else {
-      //await this.setStateAsync(prevState => ({
-      //    chipValuesPicked: [...prevState.chipValuesPicked, value]
-      //}))
       await this.props.onChangeChipValuesPicked([...this.props.chipValuesPicked, value]);
     }
   }
 
   chipIsSelected(value) {
-    //return includes(this.state.chipValuesPicked, value);
     return includes(this.props.chipValuesPicked, value);
   }
 
