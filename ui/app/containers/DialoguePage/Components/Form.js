@@ -134,8 +134,9 @@ class Form extends React.Component {
   processSelectedPopoverFilters() {
     //const { dropDownValuePicked, chipValuesPicked, textFilterValue } = filtersSet;
     const dropDownValuePicked = this.props.dialoguePageFilterCategory;
-    const chipValuesPicked = this.props.dialoguePageFilterActions;
+    const chipValuesPickedG1 = this.props.dialoguePageFilterActions;
     const textFilterValue = this.props.dialoguePageFilterSearchSaying;
+    const chipValuesPickedG2 = this.props.dialoguePageFilterKeywords;
 
 
     var filter = '';
@@ -145,9 +146,15 @@ class Form extends React.Component {
     if (dropDownValuePicked != 'Pick Category' && dropDownValuePicked != '') {
       filter = filter + 'category:"' + dropDownValuePicked + '"';
     }
-    if (chipValuesPicked.length > 0) {
+    if (chipValuesPickedG1.length > 0) {
       filter = filter + ' actions:"'
-      filter = filter + chipValuesPicked.join('" actions:"')
+      filter = filter + chipValuesPickedG1.join('" actions:"')
+      filter = filter + '"';
+    }
+
+    if (chipValuesPickedG2.length > 0) {
+      filter = filter + ' keywords:"'
+      filter = filter + chipValuesPickedG2.join('" keywords:"')
       filter = filter + '"';
     }
     this.props.onSearchSaying(filter, true);
@@ -278,6 +285,12 @@ class Form extends React.Component {
                   onChangeNumberFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
                   numberFiltersApplied={this.props.dialoguePageNumberOfFiltersApplied}
                   onResetFilters={this.props.onResetDialoguePageFilters}
+                  showChipsG2={true}
+                  showCustomFirstChipG2={false}
+                  chipValuesG2={map(this.props.agentKeywords, 'keywordName')}
+                  chipsFilterLabelG2={intl.formatMessage(messages.pickKeywords)}
+                  onChangeChipValuesPickedG2={this.props.onChangeDialoguePageFilterKeywords}
+                  chipValuesPickedG2={this.props.dialoguePageFilterKeywords}
                 />
               )}
             </Grid>
@@ -424,7 +437,9 @@ Form.propTypes = {
   dialoguePageFilterActions: PropTypes.array,
   onChangeDialoguePageNumberOfFiltersApplied: PropTypes.func,
   dialoguePageNumberOfFiltersApplied: PropTypes.number,
-  onResetDialoguePageFilters: PropTypes.func
+  onResetDialoguePageFilters: PropTypes.func,
+  onChangeDialoguePageFilterKeywords: PropTypes.func,
+  dialoguePageFilterKeywords: PropTypes.array,
 };
 
 export default injectIntl(withStyles(styles)(Form));

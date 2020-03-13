@@ -526,6 +526,11 @@ const makeSelectDialoguePageFilterString = () =>
     selectGlobal,
     globalState => globalState.dialoguePageFilterString
   )
+const makeSelectDialoguePageFilterKeywords = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterKeywords
+  )
 
 /* Review Page Filters */
 const makeSelectReviewPageFilterSearchSaying = () =>
@@ -667,6 +672,7 @@ export {
   makeSelectDialoguePageFilterActions,
   makeSelectDialoguePageNumberOfFiltersApplied,
   makeSelectDialoguePageFilterString,
+  makeSelectDialoguePageFilterKeywords,
   makeSelectReviewPageFilterSearchSaying,
   makeSelectReviewPageFilterCategory,
   makeSelectReviewPageFilterActions,

@@ -294,6 +294,7 @@ import {
   CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS,
   CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
   CHANGE_DIALOGUE_PAGE_FILTER_STRING,
+  CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS,
   CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING,
   CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
   CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
@@ -2560,6 +2561,13 @@ export function changeDialoguePageNumberOfFiltersApplied(newValue) {
 export function changeDialoguePageFilterString(newValue) {
   return {
     type: CHANGE_DIALOGUE_PAGE_FILTER_STRING,
+    newValue,
+  }
+}
+
+export function changeDialoguePageFilterKeywords(newValue) {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS,
     newValue,
   }
 }

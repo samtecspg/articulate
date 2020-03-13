@@ -42,6 +42,7 @@ import {
   makeSelectDialoguePageFilterActions,
   makeSelectDialoguePageNumberOfFiltersApplied,
   makeSelectDialoguePageFilterString,
+  makeSelectDialoguePageFilterKeywords,
 } from '../App/selectors';
 
 import {
@@ -76,7 +77,8 @@ import {
   changeDialoguePageFilterActions,
   changeDialoguePageNumberOfFiltersApplied,
   changeDialoguePageFilterString,
-  resetDialoguePageFilters
+  resetDialoguePageFilters,
+  changeDialoguePageFilterKeywords,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -611,6 +613,8 @@ export class DialoguePage extends React.PureComponent {
                 onChangeDialoguePageNumberOfFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
                 dialoguePageNumberOfFiltersApplied={this.props.dialoguePageNumberOfFiltersApplied}
                 onResetDialoguePageFilters={this.props.onResetDialoguePageFilters}
+                onChangeDialoguePageFilterKeywords={this.props.onChangeDialoguePageFilterKeywords}
+                dialoguePageFilterKeywords={this.props.dialoguePageFilterKeywords}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -670,7 +674,9 @@ DialoguePage.propTypes = {
   dialoguePageNumberOfFiltersApplied: PropTypes.number,
   onChangeDialoguePageFilterString: PropTypes.func,
   dialoguePageFilterString: PropTypes.string,
-  onResetDialoguePageFilters: PropTypes.func
+  onResetDialoguePageFilters: PropTypes.func,
+  onChangeDialoguePageFilterKeywords: PropTypes.func,
+  dialoguePageFilterKeywords: PropTypes.array
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -694,6 +700,7 @@ const mapStateToProps = createStructuredSelector({
   dialoguePageFilterActions: makeSelectDialoguePageFilterActions(),
   dialoguePageNumberOfFiltersApplied: makeSelectDialoguePageNumberOfFiltersApplied(),
   dialoguePageFilterString: makeSelectDialoguePageFilterString(),
+  dialoguePageFilterKeywords: makeSelectDialoguePageFilterKeywords(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -832,6 +839,9 @@ function mapDispatchToProps(dispatch) {
     },
     onResetDialoguePageFilters: () => {
       dispatch(resetDialoguePageFilters());
+    },
+    onChangeDialoguePageFilterKeywords: newValue => {
+      dispatch(changeDialoguePageFilterKeywords(newValue));
     }
   };
 }

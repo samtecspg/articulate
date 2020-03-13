@@ -268,6 +268,7 @@ import {
   CHANGE_DIALOGUE_PAGE_FILTER_ACTIONS,
   CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
   CHANGE_DIALOGUE_PAGE_FILTER_STRING,
+  CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS,
   CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING,
   CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
   CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
@@ -581,6 +582,7 @@ const initialState = Immutable({
   dialoguePageFilterActions: [],
   dialoguePageNumberOfFiltersApplied: 0,
   dialoguePageFilterString: '',
+  dialoguePageFilterKeywords: [],
   reviewPageFilterSearchSaying: '',
   reviewPageFilterCategory: '',
   reviewPageFilterActions: [],
@@ -2800,6 +2802,9 @@ function appReducer(state = initialState, action) {
     case CHANGE_DIALOGUE_PAGE_FILTER_STRING:
       return state
         .set('dialoguePageFilterString', action.newValue);
+    case CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS:
+      return state
+        .set('dialoguePageFilterKeywords', action.newValue);
     case RESET_DIALOGUE_PAGE_FILTERS:
       return state
         .set('dialoguePageFilterSearchSaying', '')
@@ -2807,6 +2812,7 @@ function appReducer(state = initialState, action) {
         .set('dialoguePageFilterActions', [])
         .set('dialoguePageNumberOfFiltersApplied', 0)
         .set('dialoguePageFilterString', '')
+        .set('dialoguePageFilterKeywords', [])
     case CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING:
       return state
         .set('reviewPageFilterSearchSaying', action.newValue);

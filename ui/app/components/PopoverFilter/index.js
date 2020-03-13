@@ -930,6 +930,15 @@ export class PopoverFilter extends React.Component {
                             chipValuesPicked: this.props.chipValuesPickedG1,
                             onChangeChipValuesPicked: this.props.onChangeChipValuesPickedG1
                         })}
+                        {this.props.showChipsG2 && this.renderChipGroup(classes, intl, {
+                            chipsFilterLabel: this.props.chipsFilterLabelG2,
+                            showChips: this.props.showChipsG2,
+                            showCustomFirstChip: this.props.showCustomFirstChipG2,
+                            customFirstChipLabel: this.props.customFirstChipLabelG2,
+                            chipValues: this.props.chipValuesG2,
+                            chipValuesPicked: this.props.chipValuesPickedG2,
+                            onChangeChipValuesPicked: this.props.onChangeChipValuesPickedG2
+                        })}
                         {this.props.showMinMaxFilter && this.renderMinMax(classes, intl)}
                     </Grid>
                 </Popover >

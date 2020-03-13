@@ -82,7 +82,6 @@ export class ChipGroup extends React.Component {
       //        return value !== valueToRemove
       //    })
       //});
-
       await this.props.onChangeChipValuesPicked(this.props.chipValuesPicked.filter(function (valueToRemove) {
         return value !== valueToRemove
       }));
