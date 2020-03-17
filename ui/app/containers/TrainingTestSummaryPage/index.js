@@ -48,6 +48,9 @@ import {
   makeSelectAgentVersions,
   makeSelectCurrentUser,
   makeSelectLoadingAgentVersion,
+
+
+  makeSelectTestTrain
 } from '../App/selectors';
 
 import {
@@ -69,7 +72,6 @@ import {
   loadFilteredActions,
   loadFilteredCategories,
   loadKeywords,
-  loadSayings,
   resetSayings,
   selectCategory,
   sendSayingToAction,
@@ -81,19 +83,24 @@ import {
   loadAgentVersion,
   updateAgentVersion,
   deleteAgentVersion,
-  changeDialoguePageFilterSearchSaying,
-  changeDialoguePageFilterCategory,
-  changeDialoguePageFilterActions,
-  changeDialoguePageNumberOfFiltersApplied,
-  changeDialoguePageFilterString,
-  resetDialoguePageFilters,
+
+
+
+  loadTestTrain,
+  loadTestTrainLoading,
+  loadTestTrainError,
+  loadSayings,
   changeDialoguePageFilterKeywords,
+  changeDialoguePageFilterActions,
+  changeDialoguePageFilterKeywordIssues,
+  changeDialoguePageFilterString,
+  changeDialoguePageNumberOfFiltersApplied,
   changeDialoguePageFilterActionIssues,
-  changeDialoguePageFilterKeywordIssues
+  resetDialoguePageFilters,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
-export class DialoguePage extends React.PureComponent {
+export class TrainingTestSummaryPage extends React.PureComponent {
   constructor(props) {
     super(props);
     this.moveSayingsPageBack = this.moveSayingsPageBack.bind(this);
@@ -127,7 +134,7 @@ export class DialoguePage extends React.PureComponent {
       ignoreQueryPrefix: true,
     }).tab
       ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).tab
-      : 'sayings',
+      : 'keywords',
     filter: this.props.dialoguePageFilterString,
     categoryFilter: '',
     actionFilter: '',
@@ -198,7 +205,6 @@ export class DialoguePage extends React.PureComponent {
 
   componentWillUnmount() {
     this.throttledOnLoadSayings = null;
-    this.props.onResetDialoguePageFilters();
   }
 
   componentDidUpdate(prevProps) {
@@ -537,6 +543,21 @@ export class DialoguePage extends React.PureComponent {
                 dialoguePageFilterActionIssues={this.props.dialoguePageFilterActionIssues}
                 onChangeDialoguePageFilterKeywordIssues={this.props.onChangeDialoguePageFilterKeywordIssues}
                 dialoguePageFilterKeywordIssues={this.props.dialoguePageFilterKeywordIssues}
+
+
+
+
+                testTrain={this.props.testTrain}
+                onSearchSaying={this.onSearchSaying}
+                onChangeDialoguePageFilterKeywords={this.props.onChangeDialoguePageFilterKeywords}
+                onChangeDialoguePageFilterActions={this.props.onChangeDialoguePageFilterActions}
+                onChangeDialoguePageFilterString={this.props.onChangeDialoguePageFilterString}
+                onChangeDialoguePageFilterKeywordIssues={this.props.onChangeDialoguePageFilterKeywordIssues}
+                onChangeDialoguePageFilterActionIssues={this.props.onChangeDialoguePageFilterActionIssues}
+                onResetDialoguePageFilter={this.props.onResetDialoguePageFilter}
+                onChangeDialoguePageNumberOfFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
+                onGoToUrl={this.props.onGoToUrl}
+                agent={this.props.agent}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -557,7 +578,7 @@ export class DialoguePage extends React.PureComponent {
   }
 }
 
-DialoguePage.propTypes = {
+TrainingTestSummaryPage.propTypes = {
   agent: PropTypes.object,
   serverStatus: PropTypes.string,
   onLoadSayings: PropTypes.func,
@@ -636,7 +657,11 @@ const mapStateToProps = createStructuredSelector({
   dialoguePageFilterString: makeSelectDialoguePageFilterString(),
   dialoguePageFilterKeywords: makeSelectDialoguePageFilterKeywords(),
   dialoguePageFilterActionIssues: makeSelectDialoguePageFilterActionIssues(),
-  dialoguePageFilterKeywordIssues: makeSelectDialoguePageFilterKeywordIssues()
+  dialoguePageFilterKeywordIssues: makeSelectDialoguePageFilterKeywordIssues(),
+
+
+  testTrain: makeSelectTestTrain(),
+
 });
 
 function mapDispatchToProps(dispatch) {
@@ -766,7 +791,54 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeDialoguePageFilterActionIssues: () => {
       dispatch(changeDialoguePageFilterActionIssues())
-    }
+    },
+
+
+
+
+
+    onLoadTestTrain: () => {
+      dispatch(loadTestTrain());
+    },
+    onLoadTestTrainLoading: () => {
+      dispatch(loadTestTrainLoading());
+    },
+    onLoadTestTrainError: () => {
+      dispatch(loadTestTrainError());
+    },
+    onLoadSayings: (filter, page, pageSize, ignoreKeywords) => {
+      dispatch(loadSayings(filter, page, pageSize, ignoreKeywords));
+    },
+    onChangeDialoguePageFilterActions: newValue => {
+      dispatch(changeDialoguePageFilterActions(newValue));
+    },
+    onChangeDialoguePageNumberOfFiltersApplied: newValue => {
+      dispatch(changeDialoguePageNumberOfFiltersApplied(newValue));
+    },
+    onChangeDialoguePageFilterString: newValue => {
+      dispatch(changeDialoguePageFilterString(newValue));
+    },
+    onChangeDialoguePageFilterKeywords: newValue => {
+      dispatch(changeDialoguePageFilterKeywords(newValue));
+    },
+    onChangeDialoguePageFilterKeywordIssues: () => {
+      dispatch(changeDialoguePageFilterKeywordIssues())
+    },
+    onChangeDialoguePageFilterActionIssues: () => {
+      dispatch(changeDialoguePageFilterActionIssues())
+    },
+    onResetDialoguePageFilter: () => {
+      dispatch(resetDialoguePageFilters())
+    },
+    onChangeDialoguePageNumberOfFiltersApplied: newValue => {
+      dispatch(changeDialoguePageNumberOfFiltersApplied(newValue))
+    },
+    onGoToUrl: url => {
+      dispatch(push(url));
+    },
+
+
+
   };
 }
 
@@ -775,9 +847,9 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withSaga = injectSaga({ key: 'dialogue', saga });
+const withSaga = injectSaga({ key: 'trainingTestSummary', saga });
 
 export default compose(
   withSaga,
   withConnect,
-)(DialoguePage);
+)(TrainingTestSummaryPage);

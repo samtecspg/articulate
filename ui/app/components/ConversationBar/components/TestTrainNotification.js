@@ -211,6 +211,15 @@ export class TestTrainNotification extends React.Component {
             </Tabs>
             {this.state.currentTab === 'keywords' && this.renderKeywordsTable(classes, intl)}
             {this.state.currentTab === 'actions' && this.renderActionsTable(classes, intl)}
+            <a
+              onClick={async () => {
+                await this.props.onGoToUrl(
+                  `/agent/${this.props.agent.id}/trainingTestSummary`,
+                )
+              }}
+            >
+              View full summary
+            </a>
             <div
               onClick={() => {
                 this.props.onCloseNotification(index);

@@ -750,7 +750,6 @@ const initialState = Immutable({
   accessPolicyGroups: [],
   user: null,
   userDataTouched: false,
-  testTrainResult: null,
   testTrainResults: [],
   testTrainLoading: false,
   testTrainError: false,
@@ -1457,7 +1456,6 @@ function appReducer(state = initialState, action) {
         //)
         .set('testTrainLoading', false)
         .set('testTrainError', false)
-        .set('testTrainResult', action.result);
     case LOAD_AGENT_TRAIN_TESTS_SUCCESS:
       return state
         .set('testTrainResults', action.trainTests.trainTests)

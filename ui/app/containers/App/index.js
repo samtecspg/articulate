@@ -53,6 +53,7 @@ import SharedChatPage from '../SharedChatPage/Loadable';
 import UserAuthPage from '../UserAuthPage/Loadable';
 import UserPage from '../UserPage/Loadable';
 import UsersPage from '../UsersPage/Loadable';
+import TrainingTestSummaryPage from '../TrainingTestSummaryPage/Loadable'
 import {
   checkAPI,
   loadAgent,
@@ -245,6 +246,7 @@ class App extends React.Component {
               <PrivateRoute exact path="/agent/:id/addCategory" component={AddCategoryPage} isAuthEnabled={AUTH_ENABLED} />
               <PrivateRoute exact path="/agent/:id/category/:categoryId" component={CategoryPage} isAuthEnabled={AUTH_ENABLED} />
               <PrivateRoute exact path="/agent/:id/action/:actionId" component={ActionPage} isAuthEnabled={AUTH_ENABLED} />
+              <PrivateRoute exact path="/agent/:id/trainingTestSummary" component={TrainingTestSummaryPage} isAuthEnabled={AUTH_ENABLED} />
               <PrivateRoute exact path="/settings" component={SettingsPage} isAuthEnabled={AUTH_ENABLED} />
               <PrivateRoute exact path="/missing-api" component={MissingAPIPage} isAuthEnabled={AUTH_ENABLED} />
               <Redirect from="/agent/:id/actionDummy/:actionId" to={`/agent/:id/action/:actionId?${this.props.location.search}`} />
