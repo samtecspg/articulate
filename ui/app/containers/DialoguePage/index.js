@@ -43,6 +43,8 @@ import {
   makeSelectDialoguePageNumberOfFiltersApplied,
   makeSelectDialoguePageFilterString,
   makeSelectDialoguePageFilterKeywords,
+  makeSelectDialoguePageFilterActionIssues,
+  makeSelectDialoguePageFilterKeywordIssues,
   makeSelectAgentVersions,
   makeSelectCurrentUser,
   makeSelectLoadingAgentVersion,
@@ -86,6 +88,8 @@ import {
   changeDialoguePageFilterString,
   resetDialoguePageFilters,
   changeDialoguePageFilterKeywords,
+  changeDialoguePageFilterActionIssues,
+  changeDialoguePageFilterKeywordIssues
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -530,6 +534,10 @@ export class DialoguePage extends React.PureComponent {
                 onChangeDialoguePageFilterKeywords={this.props.onChangeDialoguePageFilterKeywords}
                 dialoguePageFilterKeywords={this.props.dialoguePageFilterKeywords}
                 onChangeDialoguePageFilterString={this.props.onChangeDialoguePageFilterString}
+                onChangeDialoguePageFilterActionIssues={this.props.onChangeDialoguePageFilterActionIssues}
+                dialoguePageFilterActionIssues={this.props.dialoguePageFilterActionIssues}
+                onChangeDialoguePageFilterKeywordIssues={this.props.onChangeDialoguePageFilterKeywordIssues}
+                dialoguePageFilterKeywordIssues={this.props.dialoguePageFilterKeywordIssues}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -596,7 +604,11 @@ DialoguePage.propTypes = {
   dialoguePageFilterString: PropTypes.string,
   onResetDialoguePageFilters: PropTypes.func,
   onChangeDialoguePageFilterKeywords: PropTypes.func,
-  dialoguePageFilterKeywords: PropTypes.array
+  dialoguePageFilterKeywords: PropTypes.array,
+  onChangeDialoguePageFilterKeywordIssues: PropTypes.func,
+  dialoguePageFilterKeywordIssues: PropTypes.bool,
+  onChangeDialoguePageFilterActionIssues: PropTypes.func,
+  dialoguePageFilterActionIssues: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -624,6 +636,8 @@ const mapStateToProps = createStructuredSelector({
   dialoguePageNumberOfFiltersApplied: makeSelectDialoguePageNumberOfFiltersApplied(),
   dialoguePageFilterString: makeSelectDialoguePageFilterString(),
   dialoguePageFilterKeywords: makeSelectDialoguePageFilterKeywords(),
+  dialoguePageFilterActionIssues: makeSelectDialoguePageFilterActionIssues(),
+  dialoguePageFilterKeywordIssues: makeSelectDialoguePageFilterKeywordIssues()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -747,6 +761,12 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeDialoguePageFilterKeywords: newValue => {
       dispatch(changeDialoguePageFilterKeywords(newValue));
+    },
+    onChangeDialoguePageFilterKeywordIssues: () => {
+      dispatch(changeDialoguePageFilterKeywordIssues())
+    },
+    onChangeDialoguePageFilterActionIssues: () => {
+      dispatch(changeDialoguePageFilterActionIssues())
     }
   };
 }

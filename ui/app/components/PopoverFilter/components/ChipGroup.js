@@ -78,6 +78,10 @@ export class ChipGroup extends React.Component {
     }
   }
 
+  async handleIssuesChipClick() {
+    await this.props.onChangeIssuesChipValuesPicked();
+  }
+
   chipIsSelected(value) {
     return includes(this.props.chipValuesPicked, value);
   }
@@ -97,6 +101,7 @@ export class ChipGroup extends React.Component {
   renderChips(classes, intl) {
     return <Grid style={{ marginLeft: '10px', marginBottom: '10px' }}>
       {this.props.showChips && this.props.showCustomFirstChip === true && this.renderCustomFirstChip(classes, intl)}
+      {this.props.showChips && this.props.showIssuesChip && this.renderIssuesChip(classes, intl)}
       {this.props.showChips && this.renderNormalChips(classes, intl)}
     </Grid>
   }
@@ -112,9 +117,28 @@ export class ChipGroup extends React.Component {
         }}
       >
         <span
-          className={this.chipIsSelected("") ? classes.chipLabelSelected : classes.chipLabel}
+          className={this.chipIsSelected('') ? classes.chipLabelSelected : classes.chipLabel}
         >
           {this.props.customFirstChipLabel}
+        </span>
+      </div>
+    </Fragment>
+  }
+
+  renderIssuesChip(classes, intl) {
+    return <Fragment>
+      <div
+        key={"Issues"}
+        className={this.props.issuesChipValuePicked ? classes.chipBackgroundContainerSelected : classes.chipBackgroundContainer}
+        onClick={async () => {
+          await this.handleIssuesChipClick();
+          await this.props.handleFiltersChange();
+        }}
+      >
+        <span
+          className={this.props.issuesChipValuePicked ? classes.chipLabelSelected : classes.chipLabel}
+        >
+          {'Issues'}
         </span>
       </div>
     </Fragment>

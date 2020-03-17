@@ -159,7 +159,7 @@ export function* getSayings(payload) {
   const { api, filter, page, pageSize, ignoreKeywords = false } = payload;
   const { remainingText, found } = ExtractTokensFromString({
     text: filter,
-    tokens: ['category', 'actions', 'keywords'],
+    tokens: ['category', 'actions', 'keywords', 'actionIssues', 'keywordIssues'],
   });
   const tempFilter =
     filter === ''
@@ -168,6 +168,8 @@ export function* getSayings(payload) {
         category: found.category,
         actions: found.actions,
         keywords: found.keywords,
+        actionIssues: found.actionIssues,
+        keywordIssues: found.keywordIssues,
         query: remainingText,
       });
   let skip = 0;

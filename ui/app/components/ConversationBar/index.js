@@ -62,8 +62,9 @@ import {
   makeSelectLoading,
   makeSelectConnection,
   makeSelectTestTrain,
-  makeSelectActions,
-  makeSelectKeywords,
+  makeSelectTestTrainLoading,
+  makeSelectTestTrainError,
+  makeSelectDialoguePageFilterString
 } from '../../containers/App/selectors';
 
 import {
@@ -77,15 +78,27 @@ import {
   showWarning,
   respondMessage,
   storeSourceData,
-  untagKeyword,
-  deleteSaying
+  loadTestTrain,
+  loadTestTrainLoading,
+  loadTestTrainError,
+  testAgentTrain,
+  loadSayings,
+  changeDialoguePageFilterKeywords,
+  changeDialoguePageFilterActions,
+  changeDialoguePageFilterKeywordIssues,
+  changeDialoguePageFilterString,
+  changeDialoguePageNumberOfFiltersApplied,
+  changeDialoguePageFilterActionIssues,
+  resetDialoguePageFilters,
 } from '../../containers/App/actions';
 
 import LoadingWave from '../LoadingWave';
 import TestTrainModal from '../TestTrainModal'
 import CodeModal from '../CodeModal';
 import Notifications from './components/Notifications';
+import TestTrainNotification from './components/TestTrainNotification'
 import gravatars from '../Gravatar';
+import { push } from 'react-router-redux';
 
 import Nes from 'nes';
 import { getWS } from '../../utils/locationResolver';
@@ -331,6 +344,11 @@ export class ConversationBar extends React.PureComponent {
     collapsibleActiveItem: -1,
   };
 
+  constructor(props) {
+    super(props);
+    this.onSearchSaying = this.onSearchSaying.bind(this);
+  }
+
   componentWillMount() {
     if (!this.props.settings.defaultAgentLanguage) {
       this.props.onLoadSettings();
@@ -512,6 +530,10 @@ export class ConversationBar extends React.PureComponent {
 
   handleOpenTestTrainModal = () => {
     this.setState({ openTestTrainModal: true });
+  }
+
+  onSearchSaying() {
+    this.props.onLoadSayings(this.props.dialoguePageFilterString, 1, 5);
   }
 
   render() {
@@ -749,10 +771,28 @@ export class ConversationBar extends React.PureComponent {
             style={{ width: this.state.newWidth + 17 }}
             className={classes.contentContainer}
           >
-            <Notifications
+            <TestTrainNotification
               notifications={this.props.notifications}
               onCloseNotification={this.props.onCloseNotification}
               onOpenTestTrainModal={this.handleOpenTestTrainModal}
+              testTrain={this.props.testTrain}
+              testTrainLoading={this.props.testTrainLoading}
+              testTrainError={this.props.loadTestTrainError}
+              onTestAgentTrain={() => { this.props.onTestAgentTrain(this.props.agent.id) }}
+              onSearchSaying={this.onSearchSaying}
+              onChangeDialoguePageFilterKeywords={this.props.onChangeDialoguePageFilterKeywords}
+              onChangeDialoguePageFilterActions={this.props.onChangeDialoguePageFilterActions}
+              onChangeDialoguePageFilterString={this.props.onChangeDialoguePageFilterString}
+              onChangeDialoguePageFilterKeywordIssues={this.props.onChangeDialoguePageFilterKeywordIssues}
+              onChangeDialoguePageFilterActionIssues={this.props.onChangeDialoguePageFilterActionIssues}
+              onResetDialoguePageFilter={this.props.onResetDialoguePageFilter}
+              onChangeDialoguePageNumberOfFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
+              onGoToUrl={this.props.onGoToUrl}
+              agent={this.props.agent}
+            />
+            <Notifications
+              notifications={this.props.notifications}
+              onCloseNotification={this.props.onCloseNotification}
             />
             <Grid className={classes.messagesContainer}>
               {this.props.messages.map((message, index) => {
@@ -1129,16 +1169,6 @@ export class ConversationBar extends React.PureComponent {
             CSO={this.state.CSO}
             open={this.state.openCodeModal}
           />
-          <TestTrainModal
-            open={this.state.openTestTrainModal}
-            onClose={() => { this.setState({ openTestTrainModal: false }) }}
-            agent={this.props.agent}
-            testTrain={this.props.testTrain}
-            onUntagKeyword={this.props.onUntagKeyword.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
-            onDeleteSaying={this.props.onDeleteSaying.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
-            agentActions={this.props.agentActions}
-            agentKeywords={this.props.agentKeywords}
-          />
         </Grid>
       </Grid >
     );
@@ -1172,8 +1202,9 @@ const mapStateToProps = createStructuredSelector({
   sessionLoaded: makeSelectSessionLoaded(),
   connection: makeSelectConnection(),
   testTrain: makeSelectTestTrain(),
-  agentActions: makeSelectActions(),
-  agentKeywords: makeSelectKeywords(),
+  testTrainLoading: makeSelectTestTrainLoading(),
+  testTrainError: makeSelectTestTrainError(),
+  dialoguePageFilterString: makeSelectDialoguePageFilterString()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -1214,12 +1245,49 @@ function mapDispatchToProps(dispatch) {
     onStoreSourceData: (payload) => {
       dispatch(storeSourceData(payload));
     },
-    onUntagKeyword: (filter, page, pageSize, saying, start, end) => {
-      dispatch(untagKeyword(filter, page, pageSize, saying, start, end));
+    onTestAgentTrain: (agentId) => {
+      dispatch(testAgentTrain(agentId));
     },
-    onDeleteSaying: (filter, page, pageSize, sayingId, categoryId) => {
-      dispatch(deleteSaying(filter, page, pageSize, sayingId, categoryId, isTestTrain = true));
+    onLoadTestTrain: () => {
+      dispatch(loadTestTrain());
     },
+    onLoadTestTrainLoading: () => {
+      dispatch(loadTestTrainLoading());
+    },
+    onLoadTestTrainError: () => {
+      dispatch(loadTestTrainError());
+    },
+    onLoadSayings: (filter, page, pageSize, ignoreKeywords) => {
+      dispatch(loadSayings(filter, page, pageSize, ignoreKeywords));
+    },
+    onChangeDialoguePageFilterActions: newValue => {
+      dispatch(changeDialoguePageFilterActions(newValue));
+    },
+    onChangeDialoguePageNumberOfFiltersApplied: newValue => {
+      dispatch(changeDialoguePageNumberOfFiltersApplied(newValue));
+    },
+    onChangeDialoguePageFilterString: newValue => {
+      dispatch(changeDialoguePageFilterString(newValue));
+    },
+    onChangeDialoguePageFilterKeywords: newValue => {
+      dispatch(changeDialoguePageFilterKeywords(newValue));
+    },
+    onChangeDialoguePageFilterKeywordIssues: () => {
+      dispatch(changeDialoguePageFilterKeywordIssues())
+    },
+    onChangeDialoguePageFilterActionIssues: () => {
+      dispatch(changeDialoguePageFilterActionIssues())
+    },
+    onResetDialoguePageFilter: () => {
+      dispatch(resetDialoguePageFilters())
+    },
+    onChangeDialoguePageNumberOfFiltersApplied: newValue => {
+      dispatch(changeDialoguePageNumberOfFiltersApplied(newValue))
+    },
+    onGoToUrl: url => {
+      dispatch(push(url));
+    },
+
   };
 }
 

@@ -136,6 +136,8 @@ class Form extends React.Component {
     const chipValuesPickedG1 = this.props.dialoguePageFilterActions;
     const textFilterValue = this.props.dialoguePageFilterSearchSaying;
     const chipValuesPickedG2 = this.props.dialoguePageFilterKeywords;
+    const issuesChipValuePickedG1 = this.props.dialoguePageFilterActionIssues;
+    const issuesChipValuePickedG2 = this.props.dialoguePageFilterKeywordIssues;
 
 
     var filter = '';
@@ -154,6 +156,18 @@ class Form extends React.Component {
     if (chipValuesPickedG2.length > 0) {
       filter = filter + ' keywords:"'
       filter = filter + chipValuesPickedG2.join('" keywords:"')
+      filter = filter + '"';
+    }
+
+    if (issuesChipValuePickedG1) {
+      filter = filter + ' actionIssues:"'
+      filter = filter + ['true'].join('" actionIssues:"')
+      filter = filter + '"';
+    }
+
+    if (issuesChipValuePickedG2) {
+      filter = filter + ' keywordIssues:"'
+      filter = filter + ['true'].join('" keywordIssues:"')
       filter = filter + '"';
     }
     this.props.onChangeDialoguePageFilterString(filter);
@@ -291,6 +305,14 @@ class Form extends React.Component {
                   chipsFilterLabelG2={intl.formatMessage(messages.pickKeywords)}
                   onChangeChipValuesPickedG2={this.props.onChangeDialoguePageFilterKeywords}
                   chipValuesPickedG2={this.props.dialoguePageFilterKeywords}
+                  showIssuesChipG1={true}
+                  onChangeIssuesChipValuesPickedG1={this.props.onChangeDialoguePageFilterActionIssues}
+                  issuesChipValuePickedG1={this.props.dialoguePageFilterActionIssues}
+                  showIssuesChipG2={true}
+                  onChangeIssuesChipValuesPickedG2={this.props.onChangeDialoguePageFilterKeywordIssues}
+                  issuesChipValuePickedG2={this.props.dialoguePageFilterKeywordIssues}
+
+
                 />
               )}
             </Grid>
@@ -444,6 +466,10 @@ Form.propTypes = {
   onResetDialoguePageFilters: PropTypes.func,
   onChangeDialoguePageFilterKeywords: PropTypes.func,
   dialoguePageFilterKeywords: PropTypes.array,
+  onChangeDialoguePageFilterKeywordIssues: PropTypes.func,
+  dialoguePageFilterKeywordIssues: PropTypes.bool,
+  onChangeDialoguePageFilterActionIssues: PropTypes.func,
+  dialoguePageFilterActionIssues: PropTypes.bool,
 };
 
 Form.defaultProps = {

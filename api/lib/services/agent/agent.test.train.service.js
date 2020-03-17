@@ -124,11 +124,10 @@ const upsertResultAction = function (result, sayingAction, condition, sayingId) 
             result.actions[actionIndex].badSayings.push(sayingId);
         }
     }
-    var a = 1;
 }
 
 const upsertResultKeywords = function (result, sayingKeywords, recognizedKeywords, sayingId) {
-    let errorPresent = false;
+    let errorPresent = true;
     sayingKeywords.forEach(sayingKeyword => {
         let recognizedKeywordsIndex = recognizedKeywords.findIndex(
             recognizedKeyword => {
@@ -137,9 +136,9 @@ const upsertResultKeywords = function (result, sayingKeywords, recognizedKeyword
                     recognizedKeyword.keyword == sayingKeyword.keyword
             });
         let condition = 'bad';
-        errorPresent = true;
         if (recognizedKeywordsIndex !== -1) {
             condition = 'good';
+            errorPresent = false;
         }
 
         let resultKeywordIndex = result.keywords.findIndex(keyword => { return keyword.keywordName === sayingKeyword.keyword });
@@ -183,12 +182,15 @@ const updateFailedSayings = async function (result, globalService, agentService,
             let category = await globalService.loadAllLinked({ parentModel: sayingModel, model: MODEL_CATEGORY, returnModel: true });
             let sayingData = sayingModel.allProperties();
             sayingData.lastFailedTestingTimestamp = result.timeStamp;
+            sayingData.lastFailedTestingByAction = actionSayingsIds.length > 0;
+            sayingData.lastFailedTestingByKeyword = keywordSayingsIds.length > 0;
             delete sayingData.id;
             await agentService.upsertSayingInCategory({
                 id: Number(AgentModel.id),
                 categoryId: Number(category[0].id),
                 sayingId: Number(sayingModel.id),
-                sayingData
+                sayingData,
+                updateStatus: false
             });
         }));
     }

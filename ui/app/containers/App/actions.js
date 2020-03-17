@@ -336,6 +336,8 @@ import {
   CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
   CHANGE_DIALOGUE_PAGE_FILTER_STRING,
   CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS,
+  CHANGE_DIALOGUE_PAGE_FILTER_ACTION_ISSUES,
+  CHANGE_DIALOGUE_PAGE_FILTER_KEYWORD_ISSUES,
   CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING,
   CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
   CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
@@ -2910,6 +2912,18 @@ export function changeDialoguePageFilterKeywords(newValue) {
   }
 }
 
+export function changeDialoguePageFilterActionIssues() {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_FILTER_ACTION_ISSUES,
+  }
+}
+
+export function changeDialoguePageFilterKeywordIssues() {
+  return {
+    type: CHANGE_DIALOGUE_PAGE_FILTER_KEYWORD_ISSUES,
+  }
+}
+
 export function changeReviewPageFilterSearchSaying(newValue) {
   return {
     type: CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING,
@@ -2974,13 +2988,6 @@ export function changeReviewPageFilterMaxLogs(newValue) {
 }
 
 export function changeReviewPageFilterLogsString(newValue) {
-  return {
-    type: CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING,
-    newValue,
-  }
-}
-
-export function changeReviewPageNUMBERT(newValue) {
   return {
     type: CHANGE_REVIEW_PAGE_FILTER_LOGS_STRING,
     newValue,

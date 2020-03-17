@@ -22,6 +22,12 @@ const schema = {
     },
     lastFailedTestingTimestamp: {
         type: 'timestamp'
+    },
+    lastFailedTestingByAction: {
+        type: 'boolean'
+    },
+    lastFailedTestingByKeyword: {
+        type: 'boolean'
     }
 };
 

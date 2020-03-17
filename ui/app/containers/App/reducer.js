@@ -299,6 +299,8 @@ import {
   CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
   CHANGE_DIALOGUE_PAGE_FILTER_STRING,
   CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS,
+  CHANGE_DIALOGUE_PAGE_FILTER_ACTION_ISSUES,
+  CHANGE_DIALOGUE_PAGE_FILTER_KEYWORD_ISSUES,
   CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING,
   CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
   CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
@@ -312,7 +314,9 @@ import {
   CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED,
   RESET_DIALOGUE_PAGE_FILTERS,
   RESET_REVIEW_PAGE_FILTERS,
-  RESET_REVIEW_PAGE_LOGS_FILTERS
+  RESET_REVIEW_PAGE_LOGS_FILTERS,
+  TEST_AGENT_TRAIN,
+  TEST_AGENT_TRAIN_ERROR
 } from './constants';
 
 const happyEmojies = [
@@ -746,9 +750,13 @@ const initialState = Immutable({
   user: null,
   userDataTouched: false,
   testTrainResult: null,
+  testTrainLoading: false,
+  testTrainError: false,
   dialoguePageFilterSearchSaying: '',
   dialoguePageFilterCategory: '',
   dialoguePageFilterActions: [],
+  dialoguePageFilterActionIssues: true,
+  dialoguePageFilterKeywordIssues: true,
   dialoguePageNumberOfFiltersApplied: 0,
   dialoguePageFilterString: '',
   dialoguePageFilterKeywords: [],
@@ -1428,14 +1436,25 @@ function appReducer(state = initialState, action) {
         .set('totalDocuments', initialState.totalDocuments)
         .set('loading', false)
         .set('error', action.error);
+    case TEST_AGENT_TRAIN:
+      return state
+        .set('testTrainLoading', true)
+        .set('testTrainError', false)
+    case TEST_AGENT_TRAIN_ERROR:
+      return state
+        .set('testTrainLoading', false)
+        .set('testTrainError', action.error);
     case TEST_AGENT_TRAIN_SUCCESS:
-      return state.update('notifications', notifications =>
-        notifications.concat({
-          template: 'agentTestTrainTemplate',
-          type: 'error',
-          subtype: 'testTrainError'
-        }),
-      )
+      return state
+        //.update('notifications', notifications =>
+        //  notifications.concat({
+        //    template: 'agentTestTrainTemplate',
+        //    type: 'error',
+        //    subtype: 'testTrainError'
+        //  }),
+        //)
+        .set('testTrainLoading', false)
+        .set('testTrainError', false)
         .set('testTrainResult', action.result);
     case LOAD_AGENT_VERSION:
       return state
@@ -3121,6 +3140,12 @@ function appReducer(state = initialState, action) {
     case CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS:
       return state
         .set('dialoguePageFilterKeywords', action.newValue);
+    case CHANGE_DIALOGUE_PAGE_FILTER_KEYWORD_ISSUES:
+      return state
+        .set('dialoguePageFilterKeywordIssues', !state.dialoguePageFilterKeywordIssues)
+    case CHANGE_DIALOGUE_PAGE_FILTER_ACTION_ISSUES:
+      return state
+        .set('dialoguePageFilterActionIssues', !state.dialoguePageFilterActionIssues)
     case RESET_DIALOGUE_PAGE_FILTERS:
       return state
         .set('dialoguePageFilterSearchSaying', '')
@@ -3129,6 +3154,8 @@ function appReducer(state = initialState, action) {
         .set('dialoguePageNumberOfFiltersApplied', 0)
         .set('dialoguePageFilterString', '')
         .set('dialoguePageFilterKeywords', [])
+        .set('dialoguePageFilterKeywordIssues', false)
+        .set('dialoguePageFilterActionIssues', false)
     case CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING:
       return state
         .set('reviewPageFilterSearchSaying', action.newValue);

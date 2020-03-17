@@ -251,7 +251,19 @@ const makeSelectTotalSessions = () =>
 const makeSelectTestTrain = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.testTrainResult ? globalState.testTrainResult.result.data : null,
+    globalState => globalState.testTrainResult,
+  );
+
+const makeSelectTestTrainLoading = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.testTrainLoading,
+  );
+
+const makeSelectTestTrainError = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.testTrainError,
   );
 
 /*Logs*/
@@ -588,6 +600,16 @@ const makeSelectDialoguePageFilterKeywords = () =>
     selectGlobal,
     globalState => globalState.dialoguePageFilterKeywords
   )
+const makeSelectDialoguePageFilterActionIssues = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterActionIssues
+  )
+const makeSelectDialoguePageFilterKeywordIssues = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterKeywordIssues
+  )
 
 /* Review Page Filters */
 const makeSelectReviewPageFilterSearchSaying = () =>
@@ -731,6 +753,8 @@ export {
   makeSelectUser,
   makeSelectUserDataTouched,
   makeSelectTestTrain,
+  makeSelectTestTrainError,
+  makeSelectTestTrainLoading,
   makeSelectRichResponses,
   makeSelectDialoguePageFilterSearchSaying,
   makeSelectDialoguePageFilterCategory,
@@ -738,6 +762,8 @@ export {
   makeSelectDialoguePageNumberOfFiltersApplied,
   makeSelectDialoguePageFilterString,
   makeSelectDialoguePageFilterKeywords,
+  makeSelectDialoguePageFilterActionIssues,
+  makeSelectDialoguePageFilterKeywordIssues,
   makeSelectReviewPageFilterSearchSaying,
   makeSelectReviewPageFilterCategory,
   makeSelectReviewPageFilterActions,

@@ -19,6 +19,8 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
             category: categoryFilter = [],
             actions: actionFilter = [],
             keywords: keywordFilter = [],
+            actionIssues: actionIssues = [],
+            keywordIssues: keywordIssues = [],
             query,
             ...restOfFilters
         } = filter;
@@ -37,6 +39,8 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
         categoryFilter = _.isArray(categoryFilter) ? categoryFilter : [categoryFilter];
         actionFilter = _.isArray(actionFilter) ? actionFilter : [actionFilter];
         keywordFilter = _.isArray(keywordFilter) ? keywordFilter : [keywordFilter];
+        actionIssues = _.isArray(actionIssues) ? actionIssues : [actionIssues];
+        keywordIssues = _.isArray(keywordIssues) ? keywordIssues : [keywordIssues];
         let filteredSayings = allSayings;
         if (categoryFilter.length > 0) {
             filteredSayings = filteredSayings.filter((saying) => {
@@ -56,6 +60,25 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
                 let keywordsNames = saying.keywords.map(keyword => { return keyword.keyword });
                 return keywordFilter.some(fil => keywordsNames.indexOf(fil) !== -1) ? saying : undefined
             })
+        }
+
+        if (actionIssues.length > 0 || keywordIssues.length > 0) {
+            let failedTestingTimestamps = allSayings.map((saying) => {
+                return Number(saying.lastFailedTestingTimestamp);
+            })
+            let maxFailedTestingTimestamps = Math.max.apply(Math, failedTestingTimestamps)
+            if (maxFailedTestingTimestamps > 0) {
+                filteredSayings = filteredSayings.filter((saying) => {
+                    return (Number(saying.lastFailedTestingTimestamp) === maxFailedTestingTimestamps
+                        && (
+                            (actionIssues.length > 0 &&
+                                saying.lastFailedTestingByAction)
+                            ||
+                            (keywordIssues.length > 0 &&
+                                saying.lastFailedTestingByKeyword)
+                        )) ? saying : undefined
+                })
+            }
         }
 
         const SayingModel = await redis.factory(MODEL_SAYING);
