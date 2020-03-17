@@ -19,7 +19,8 @@ import {
   ROUTE_TEST_TRAIN,
   ROUTE_EXPORT,
   ROUTE_IMPORT,
-  ROUTE_KEYWORD
+  ROUTE_KEYWORD,
+  ROUTE_TRAIN_TEST
 
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
@@ -28,6 +29,7 @@ import {
   getSettings,
   putSetting,
 } from '../SettingsPage/saga';
+import ExtractTokensFromString from '../../utils/extractTokensFromString';
 import {
   loadAgent,
   loadAgentError,
@@ -62,7 +64,10 @@ import {
   testAgentTrainSuccess,
   loadKeywords,
   loadKeywordsError,
-  loadKeywordsSuccess
+  loadKeywordsSuccess,
+  loadAgentTrainTests,
+  loadAgentTrainTestsError,
+  loadAgentTrainTestsSuccess
 } from './actions';
 import {
   LOAD_AGENT,
@@ -81,7 +86,8 @@ import {
   TEST_AGENT_TRAIN,
   UPDATE_AGENT_VERSION,
   DELETE_AGENT_VERSION,
-  LOAD_KEYWORDS
+  LOAD_KEYWORDS,
+  LOAD_AGENT_TRAIN_TESTS
 } from './constants';
 import {
   makeSelectAgent,
@@ -342,7 +348,8 @@ export function* testAgentTrain(payload) {
   try {
     const result = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_TEST_TRAIN]));
     yield put(testAgentTrainSuccess({ result }));
-    yield put(loadKeywords())
+    yield put(loadKeywords());
+    yield put(loadAgentTrainTests({ page: 1, pageSize: 5 }));
   } catch (error) {
     yield put(testAgentTrainError(error));
   }
@@ -380,6 +387,55 @@ export function* getKeywords(payload) {
   }
 }
 
+export function* getAgentTrainTests(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, page, pageSize, field, direction, filter } = payload;
+  let tempFilter = null;
+  if (filter) {
+    const { remainingText, found } = ExtractTokensFromString({
+      text: filter,
+      tokens: ['keywords', 'actions'],
+    });
+    tempFilter =
+      filter === ''
+        ? undefined
+        : JSON.stringify({
+          keywords: found.keywords,
+          actions: found.actions,
+        });
+  }
+  let skip = 0;
+  let limit = -1;
+  if (page) {
+    skip = (page - 1) * pageSize;
+    limit = pageSize;
+  }
+  try {
+    const params = {
+      filter: tempFilter ? tempFilter : null,
+      skip,
+      limit,
+      field,
+      direction
+    };
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_TRAIN_TEST]),
+      { params },
+    );
+    yield put(
+      loadAgentTrainTestsSuccess({
+        trainTests: response.data.map(result => {
+          return result._source;
+        }),
+        total: response.totalCount,
+      }),
+    );
+  } catch (err) {
+    yield put(loadAgentTrainTestsError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
   yield takeLatest(LOAD_AGENT_VERSIONS, getagentVersions);
@@ -400,4 +456,5 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_CURRENT_USER, getCurrentUser);
   yield takeLatest(TEST_AGENT_TRAIN, testAgentTrain);
   yield takeLatest(LOAD_KEYWORDS, getKeywords);
+  yield takeLatest(LOAD_AGENT_TRAIN_TESTS, getAgentTrainTests);
 }

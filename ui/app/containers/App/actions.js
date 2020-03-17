@@ -287,6 +287,9 @@ import {
   TEST_AGENT_TRAIN,
   TEST_AGENT_TRAIN_ERROR,
   TEST_AGENT_TRAIN_SUCCESS,
+  LOAD_AGENT_TRAIN_TESTS,
+  LOAD_AGENT_TRAIN_TESTS_ERROR,
+  LOAD_AGENT_TRAIN_TESTS_SUCCESS,
   UNCHAIN_ACTION_FROM_RESPONSE,
   UNTAG_KEYWORD,
   UNTAG_MODIFIER_KEYWORD,
@@ -3017,4 +3020,30 @@ export function resetReviewPageLogsFilters() {
   return {
     type: RESET_REVIEW_PAGE_LOGS_FILTERS
   }
+}
+
+export function loadAgentTrainTests({ page, pageSize, field, direction, filter = null }) {
+  return {
+    type: LOAD_AGENT_TRAIN_TESTS,
+    apiCall: true,
+    page,
+    pageSize,
+    field,
+    direction,
+    filter,
+  };
+}
+
+export function loadAgentTrainTestsError(error) {
+  return {
+    type: LOAD_AGENT_TRAIN_TESTS_ERROR,
+    error,
+  };
+}
+
+export function loadAgentTrainTestsSuccess(trainTests) {
+  return {
+    type: LOAD_AGENT_TRAIN_TESTS_SUCCESS,
+    trainTests,
+  };
 }

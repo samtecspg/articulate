@@ -80,6 +80,7 @@ export const ROUTE_USER_ACCOUNT = 'user';
 export const ROUTE_USER_IDENTITY = 'identity';
 export const ROUTE_ACCESS_CONTROL = 'ac';
 export const ROUTE_TEST_TRAIN = 'testTrain'
+export const ROUTE_TRAIN_TEST = 'trainTest'
 
 // STATUS
 export const STATUS_READY = 'Ready';

@@ -251,7 +251,7 @@ const makeSelectTotalSessions = () =>
 const makeSelectTestTrain = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.testTrainResult,
+    globalState => globalState.testTrainResults[0],
   );
 
 const makeSelectTestTrainLoading = () =>

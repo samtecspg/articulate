@@ -284,6 +284,7 @@ import {
   UPDATE_USER_ERROR,
   UPDATE_USER_SUCCESS,
   TEST_AGENT_TRAIN_SUCCESS,
+  LOAD_AGENT_TRAIN_TESTS_SUCCESS,
   UPDATE_SETTING,
   UPDATE_SETTING_ERROR,
   UPDATE_SETTING_SUCCESS,
@@ -750,6 +751,7 @@ const initialState = Immutable({
   user: null,
   userDataTouched: false,
   testTrainResult: null,
+  testTrainResults: [],
   testTrainLoading: false,
   testTrainError: false,
   dialoguePageFilterSearchSaying: '',
@@ -1456,6 +1458,9 @@ function appReducer(state = initialState, action) {
         .set('testTrainLoading', false)
         .set('testTrainError', false)
         .set('testTrainResult', action.result);
+    case LOAD_AGENT_TRAIN_TESTS_SUCCESS:
+      return state
+        .set('testTrainResults', action.trainTests.trainTests)
     case LOAD_AGENT_VERSION:
       return state
         .set('loadingAgentVersion', true)

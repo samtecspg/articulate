@@ -97,7 +97,7 @@ export class TestTrainNotification extends React.Component {
   renderKeywordsTable = (classes, intl) => {
     return (<Table>
       <TableBody>
-        {this.props.testTrain ? (this.props.testTrain.result.keywords.map((keyword, index) => (
+        {this.props.testTrain ? (this.props.testTrain.keywords.map((keyword, index) => (
           <TableRow
             className={classes.keywordRow}
             onClick={async () => {
@@ -129,7 +129,7 @@ export class TestTrainNotification extends React.Component {
   renderActionsTable = (classes, intl) => {
     return (<Table>
       <TableBody>
-        {this.props.testTrain ? (this.props.testTrain.result.actions.map((action, index) => (
+        {this.props.testTrain ? (this.props.testTrain.actions.map((action, index) => (
           <TableRow
             className={classes.keywordRow}
             onClick={async () => {
@@ -184,7 +184,7 @@ export class TestTrainNotification extends React.Component {
               />
             </Typography>
             <Typography>
-              {'Next, would you like to test out this trining to make sure nothing conflicts?'}
+              {'Next, would you like to test out this training to make sure nothing conflicts?'}
             </Typography>
             <Button
               onClick={this.props.onTestAgentTrain}

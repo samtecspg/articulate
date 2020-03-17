@@ -579,6 +579,45 @@ class AgentValidate {
             })()
         };
 
+        this.findAllTrainingTests = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    [PARAM_SKIP]: Joi
+                        .number()
+                        .integer()
+                        .optional()
+                        .description('Number of resources to skip. Default=0'),
+                    [PARAM_LIMIT]: Joi
+                        .number()
+                        .integer()
+                        .optional()
+                        .description('Number of resources to return. Default=50'),
+                    [PARAM_DIRECTION]: Joi
+                        .string()
+                        .optional()
+                        .allow(SORT_ASC, SORT_DESC)
+                        .description('Sort direction. Default= ASC'),
+                    [PARAM_FIELD]: Joi
+                        .string()
+                        .allow(_(DocumentSchema).keys().sort().value())
+                        .optional()
+                        .description('Field to sort with. Default= "timeStamp"'),
+                    [PARAM_FILTER]: Joi
+                        .object()
+                        .optional()
+                        .description('Values to filter the the results (experimental)')
+                };
+            })()
+        };
+
         this.findAllSessions = {
             params: (() => {
 
