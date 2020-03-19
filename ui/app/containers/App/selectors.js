@@ -96,6 +96,12 @@ const makeSelectNotifications = () =>
     globalState => globalState.notifications,
   );
 
+const makeSelectTestTrainNotification = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.testTrainNotification,
+  );
+
 const makeSelectMessages = () =>
   createSelector(
     selectGlobal,
@@ -248,10 +254,16 @@ const makeSelectTotalSessions = () =>
     globalState => globalState.totalSessions,
   );
 
-const makeSelectTestTrain = () =>
+const makeSelectTrainTests = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.testTrainResults[0],
+    globalState => globalState.testTrainResults,
+  );
+
+const makeSelectTrainTest = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.trainTest,
   );
 
 const makeSelectTestTrainLoading = () =>
@@ -682,6 +694,7 @@ export {
   makeSelectConversationBarOpen,
   makeSelectShowChatButton,
   makeSelectNotifications,
+  makeSelectTestTrainNotification,
   makeSelectMessages,
   makeSelectWaitingResponse,
   makeSelectCSO,
@@ -752,9 +765,10 @@ export {
   makeSelectLoadingCurrentUser,
   makeSelectUser,
   makeSelectUserDataTouched,
-  makeSelectTestTrain,
   makeSelectTestTrainError,
   makeSelectTestTrainLoading,
+  makeSelectTrainTests,
+  makeSelectTrainTest,
   makeSelectRichResponses,
   makeSelectDialoguePageFilterSearchSaying,
   makeSelectDialoguePageFilterCategory,
@@ -774,5 +788,5 @@ export {
   makeSelectReviewPageFilterContainers,
   makeSelectReviewPageFilterMaxLogs,
   makeSelectReviewPageFilterLogsString,
-  makeSelectReviewPageLogsNumberOfFiltersApplied
+  makeSelectReviewPageLogsNumberOfFiltersApplied,
 };

@@ -103,14 +103,6 @@ export class Notifications extends React.Component {
                     }}
                   />
                 </Typography>
-                {notification.subtype === 'testTrainError' ? (<div
-                  onClick={() => {
-                    this.props.onOpenTestTrainModal(index);
-                  }}
-                >
-                  <Typography>Solve Issues</Typography>
-                </div>) : null
-                }
                 <div
                   onClick={() => {
                     this.props.onCloseNotification(index);

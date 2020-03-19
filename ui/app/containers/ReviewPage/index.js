@@ -55,7 +55,8 @@ import {
   makeSelectReviewPageFilterContainers,
   makeSelectReviewPageFilterMaxLogs,
   makeSelectReviewPageFilterLogsString,
-  makeSelectReviewPageLogsNumberOfFiltersApplied
+  makeSelectReviewPageLogsNumberOfFiltersApplied,
+  makeSelectTrainTests
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -126,6 +127,14 @@ export class ReviewPage extends React.Component {
         numberOfPages: null,
         sortField: '@timestamp',
         sortDirection: 'desc'
+      },
+      training: {
+        total: null,
+        currentPage: 1,
+        pageSize: 5,
+        numberOfPages: null,
+        sortField: 'timeStamp',
+        sortDirection: 'desc'
       }
     },
     deleteDocModalOpen: false,
@@ -144,6 +153,8 @@ export class ReviewPage extends React.Component {
       onLoadAgentSessions,
       onLoadLogs,
       onRefreshDocuments,
+      onLoadAgentTrainTests,
+      onLoadAgentTrainTest,
     } = this.props.actions;
 
     this.setState({
@@ -176,6 +187,13 @@ export class ReviewPage extends React.Component {
       direction: this.state.pageStatus.logs.sortDirection,
       filter: this.props.reviewPageFilterLogsString
     });
+
+    onLoadAgentTrainTests({
+      page: this.state.pageStatus.training.currentPage,
+      pageSize: this.state.pageStatus.training.pageSize,
+      field: this.state.pageStatus.training.sortField,
+      direction: this.state.pageStatus.training.sortDirection,
+    })
 
     const newPageStatus = this.state.pageStatus;
 
@@ -537,7 +555,8 @@ export class ReviewPage extends React.Component {
       onChangeReviewPageLogsNumberOfFiltersApplied,
       onResetReviewPageFilters,
       onResetReviewPageLogsFilters,
-      onChangeReviewPageFilterString
+      onChangeReviewPageFilterString,
+      onLoadAgentTrainTest
     } = this.props.actions;
 
     const {
@@ -644,6 +663,9 @@ export class ReviewPage extends React.Component {
               onResetReviewPageFilters={onResetReviewPageFilters}
               onResetReviewPageLogsFilters={onResetReviewPageLogsFilters}
               onChangeReviewPageFilterString={onChangeReviewPageFilterString}
+              trainTests={this.props.trainTests}
+              onLoadAgentTrainTest={onLoadAgentTrainTest}
+              onGoToUrl={this.props.onGoToUrl}
             />
           }
           dialogueForm={Link}
@@ -701,7 +723,9 @@ ReviewPage.propTypes = {
     onChangeReviewPageFilterLogsString: PropTypes.func.isRequired,
     onChangeReviewPageLogsNumberOfFiltersApplied: PropTypes.func.isRequired,
     onResetReviewPageFilters: PropTypes.func.isRequired,
-    onResetReviewPageLogsFilters: PropTypes.func.isRequired
+    onResetReviewPageLogsFilters: PropTypes.func.isRequired,
+    onLoadAgentTrainTests: PropTypes.func.isRequired,
+    onLoadAgentTrainTest: PropTypes.func.isRequired
   }),
   agent: PropTypes.object.isRequired,
   serverStatus: PropTypes.string,
@@ -757,7 +781,8 @@ const mapStateToProps = createStructuredSelector({
   reviewPageFilterContainers: makeSelectReviewPageFilterContainers(),
   reviewPageFilterMaxLogs: makeSelectReviewPageFilterMaxLogs(),
   reviewPageFilterLogsString: makeSelectReviewPageFilterLogsString(),
-  reviewPageLogsNumberOfFiltersApplied: makeSelectReviewPageLogsNumberOfFiltersApplied()
+  reviewPageLogsNumberOfFiltersApplied: makeSelectReviewPageLogsNumberOfFiltersApplied(),
+  trainTests: makeSelectTrainTests(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -798,6 +823,9 @@ function mapDispatchToProps(dispatch) {
         onChangeReviewPageLogsNumberOfFiltersApplied: Actions.changeReviewPageLogsNumberOfFiltersApplied,
         onResetReviewPageFilters: Actions.resetReviewPageFilters,
         onResetReviewPageLogsFilters: Actions.resetReviewPageLogsFilters,
+        onLoadAgentTrainTests: Actions.loadAgentTrainTests,
+        onLoadAgentTrainTest: Actions.loadAgentTrainTest,
+        onGoToUrl: Actions.onGoToUrl
       },
       dispatch,
     ),

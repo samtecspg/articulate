@@ -13,6 +13,7 @@ import SessionsDataForm from './SessionsDataForm';
 import Logs from './Logs';
 import ExitModal from '../../../components/ExitModal';
 import PopoverFilter from './../../../components/PopoverFilter';
+import Trainings from './Trainings'
 
 const styles = {
   headerContainer: {
@@ -283,6 +284,17 @@ class Form extends React.Component {
                     this.props.selectedTab === 'logs' ? classes.selected : null
                   }
                 />
+                <Tab
+                  value="training"
+                  label={
+                    <span className={classes.tabLabel}>
+                      <span>Training</span>
+                    </span>
+                  }
+                  className={
+                    this.props.selectedTab === 'trainTests' ? classes.selected : null
+                  }
+                />
               </Tabs>
             </Grid>
             <Grid item xs={6} style={{ justifyContent: 'flex-end' }} container direction={'row'}>
@@ -416,6 +428,44 @@ class Form extends React.Component {
                 loading={this.props.loading}
                 processSelectedFilters={this.processSelectedPopoverFiltersLogs}
                 refreshLogs={() => { this.props.onSearchLog(this.props.reviewPageFilterLogsString, reviewPageFilterMaxLogs) }}
+              />
+            </Fragment>
+          )
+          }
+          {this.props.selectedTab === 'training' && (
+            <Fragment>
+              <Trainings
+                agent={this.props.agent}
+                agentId={this.props.agentId}
+                sessions={this.props.sessions}
+                onCopySaying={this.props.onCopySaying}
+                onDeleteSessionModalChange={this.props.onDeleteSessionModalChange}
+                onSendSayingToAction={this.props.onSendSayingToAction}
+                currentPage={this.props.currentPage}
+                pageSize={this.props.pageSize}
+                numberOfPages={this.props.numberOfPages}
+                changePage={this.props.changePage}
+                movePageBack={this.props.movePageBack}
+                movePageForward={this.props.movePageForward}
+                changePageSize={this.props.changePageSize}
+                onSelectCategory={this.props.onSelectCategory}
+                category={this.props.category}
+                onSearchCategory={this.props.onSearchCategory}
+                newSayingActions={this.props.newSayingActions}
+                onClearSayingToAction={this.props.onClearSayingToAction}
+                onToggleConversationBar={this.props.onToggleConversationBar}
+                onSendMessage={this.props.onSendMessage}
+                onRequestSort={this.props.onRequestSort}
+                sortField={this.props.sortField}
+                sortDirection={this.props.sortDirection}
+                locale={this.props.locale}
+                timeSort={this.props.timeSort}
+                onLoadSessionId={this.props.onLoadSessionId}
+
+
+                trainTests={this.props.trainTests}
+                onLoadAgentTrainTest={this.props.onLoadAgentTrainTest}
+                onGoToUrl={this.props.onGoToUrl}
               />
             </Fragment>
           )

@@ -50,7 +50,7 @@ import {
   makeSelectLoadingAgentVersion,
 
 
-  makeSelectTestTrain
+  makeSelectTrainTest
 } from '../App/selectors';
 
 import {
@@ -86,7 +86,7 @@ import {
 
 
 
-  loadTestTrain,
+  loadAgentTrainTest,
   loadTestTrainLoading,
   loadTestTrainError,
   loadSayings,
@@ -660,7 +660,7 @@ const mapStateToProps = createStructuredSelector({
   dialoguePageFilterKeywordIssues: makeSelectDialoguePageFilterKeywordIssues(),
 
 
-  testTrain: makeSelectTestTrain(),
+  testTrain: makeSelectTrainTest(),
 
 });
 
@@ -797,8 +797,8 @@ function mapDispatchToProps(dispatch) {
 
 
 
-    onLoadTestTrain: () => {
-      dispatch(loadTestTrain());
+    onLoadAgentTestTrain: () => {
+      dispatch(loadAgentTrainTest());
     },
     onLoadTestTrainLoading: () => {
       dispatch(loadTestTrainLoading());

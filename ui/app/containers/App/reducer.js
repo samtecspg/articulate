@@ -64,6 +64,7 @@ import {
   CHECK_API,
   CLEAR_SAYING_TO_ACTION,
   CLOSE_NOTIFICATION,
+  CLOSE_TEST_TRAIN_NOTIFICATION,
   COPY_RESPONSE,
   COPY_SAYING_ERROR,
   COPY_SAYING_SUCCESS,
@@ -317,7 +318,8 @@ import {
   RESET_REVIEW_PAGE_FILTERS,
   RESET_REVIEW_PAGE_LOGS_FILTERS,
   TEST_AGENT_TRAIN,
-  TEST_AGENT_TRAIN_ERROR
+  TEST_AGENT_TRAIN_ERROR,
+  LOAD_AGENT_TRAIN_TEST
 } from './constants';
 
 const happyEmojies = [
@@ -519,6 +521,7 @@ const initialState = Immutable({
   showChatButton: false,
   waitingResponse: false,
   notifications: [],
+  testTrainNotification: null,
   messages: [],
   category: {
     categoryName: '',
@@ -751,6 +754,7 @@ const initialState = Immutable({
   user: null,
   userDataTouched: false,
   testTrainResults: [],
+  trainTest: null,
   testTrainLoading: false,
   testTrainError: false,
   dialoguePageFilterSearchSaying: '',
@@ -834,6 +838,9 @@ function appReducer(state = initialState, action) {
       return state.update('notifications', notifications =>
         notifications.filter((item, index) => index !== action.index),
       );
+    case CLOSE_TEST_TRAIN_NOTIFICATION:
+      return state.set('testTrainNotification', null)
+        .set('trainTest', null)
     case SEND_MESSAGE:
       return state
         .update('messages', messages => messages.concat(action.message))
@@ -1016,16 +1023,24 @@ function appReducer(state = initialState, action) {
         state.agent.status !== action.payload.agent.status;
       if (isATrainingUpdate) {
         if (action.payload.agent.status === 'Ready') {
-          state = state.update('notifications', notifications =>
-            notifications.concat({
-              template: 'agentFinishedTrainingTemplate',
-              agentName: action.payload.agent.agentName,
-              emoji:
-                happyEmojies[Math.floor(Math.random() * happyEmojies.length)],
-              type: 'success',
-              datetime: new Date(),
-            }),
-          );
+          //If we are in another agent we show the normal training notification
+          //If we are in the same agent we show the test training notification
+          if (state.agent.id === action.payload.agent.id) {
+            state = state.set('testTrainNotification', {
+              agentId: action.payload.agent.id
+            })
+          } else {
+            state = state.update('notifications', notifications =>
+              notifications.concat({
+                template: 'agentFinishedTrainingTemplate',
+                agentName: action.payload.agent.agentName,
+                emoji:
+                  happyEmojies[Math.floor(Math.random() * happyEmojies.length)],
+                type: 'success',
+                datetime: new Date(),
+              }),
+            );
+          }
         }
         if (action.payload.agent.status === 'Error') {
           state = state.update('notifications', notifications =>
@@ -1459,6 +1474,10 @@ function appReducer(state = initialState, action) {
     case LOAD_AGENT_TRAIN_TESTS_SUCCESS:
       return state
         .set('testTrainResults', action.trainTests.trainTests)
+        .set('trainTest', action.trainTests.trainTests[0])
+    case LOAD_AGENT_TRAIN_TEST:
+      return state
+        .set('trainTest', state.testTrainResults[action.index])
     case LOAD_AGENT_VERSION:
       return state
         .set('loadingAgentVersion', true)

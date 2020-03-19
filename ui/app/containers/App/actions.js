@@ -77,6 +77,7 @@ import {
   CHECK_API,
   CLEAR_SAYING_TO_ACTION,
   CLOSE_NOTIFICATION,
+  CLOSE_TEST_TRAIN_NOTIFICATION,
   COPY_RESPONSE,
   COPY_SAYING,
   COPY_SAYING_ERROR,
@@ -290,6 +291,7 @@ import {
   LOAD_AGENT_TRAIN_TESTS,
   LOAD_AGENT_TRAIN_TESTS_ERROR,
   LOAD_AGENT_TRAIN_TESTS_SUCCESS,
+  LOAD_AGENT_TRAIN_TEST,
   UNCHAIN_ACTION_FROM_RESPONSE,
   UNTAG_KEYWORD,
   UNTAG_MODIFIER_KEYWORD,
@@ -474,6 +476,12 @@ export function closeNotification(index) {
     type: CLOSE_NOTIFICATION,
     index,
   };
+}
+
+export function closeTestTrainNotification() {
+  return {
+    type: CLOSE_TEST_TRAIN_NOTIFICATION
+  }
 }
 
 export function sendMessage(message, newSession, isDemo) {
@@ -3045,5 +3053,12 @@ export function loadAgentTrainTestsSuccess(trainTests) {
   return {
     type: LOAD_AGENT_TRAIN_TESTS_SUCCESS,
     trainTests,
+  };
+}
+
+export function loadAgentTrainTest(index) {
+  return {
+    type: LOAD_AGENT_TRAIN_TEST,
+    index
   };
 }

@@ -61,14 +61,16 @@ import {
   makeSelectSessionLoaded,
   makeSelectLoading,
   makeSelectConnection,
-  makeSelectTestTrain,
   makeSelectTestTrainLoading,
   makeSelectTestTrainError,
-  makeSelectDialoguePageFilterString
+  makeSelectDialoguePageFilterString,
+  makeSelectTrainTest,
+  makeSelectTestTrainNotification
 } from '../../containers/App/selectors';
 
 import {
   closeNotification,
+  closeTestTrainNotification,
   sendMessage,
   resetSession,
   loadSettings,
@@ -78,9 +80,7 @@ import {
   showWarning,
   respondMessage,
   storeSourceData,
-  loadTestTrain,
-  loadTestTrainLoading,
-  loadTestTrainError,
+  loadAgentTrainTest,
   testAgentTrain,
   loadSayings,
   changeDialoguePageFilterKeywords,
@@ -771,25 +771,29 @@ export class ConversationBar extends React.PureComponent {
             style={{ width: this.state.newWidth + 17 }}
             className={classes.contentContainer}
           >
-            <TestTrainNotification
-              notifications={this.props.notifications}
-              onCloseNotification={this.props.onCloseNotification}
-              onOpenTestTrainModal={this.handleOpenTestTrainModal}
-              testTrain={this.props.testTrain}
-              testTrainLoading={this.props.testTrainLoading}
-              testTrainError={this.props.loadTestTrainError}
-              onTestAgentTrain={() => { this.props.onTestAgentTrain(this.props.agent.id) }}
-              onSearchSaying={this.onSearchSaying}
-              onChangeDialoguePageFilterKeywords={this.props.onChangeDialoguePageFilterKeywords}
-              onChangeDialoguePageFilterActions={this.props.onChangeDialoguePageFilterActions}
-              onChangeDialoguePageFilterString={this.props.onChangeDialoguePageFilterString}
-              onChangeDialoguePageFilterKeywordIssues={this.props.onChangeDialoguePageFilterKeywordIssues}
-              onChangeDialoguePageFilterActionIssues={this.props.onChangeDialoguePageFilterActionIssues}
-              onResetDialoguePageFilter={this.props.onResetDialoguePageFilter}
-              onChangeDialoguePageNumberOfFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
-              onGoToUrl={this.props.onGoToUrl}
-              agent={this.props.agent}
-            />
+            {/*this.props.testTrainNotification &&
+              this.props.testTrainNotification.agentId === this.props.agent.id &&*/
+              <TestTrainNotification
+                notifications={this.props.notifications}
+                onCloseNotification={this.props.onCloseNotification}
+                onCloseTestTrainNotification={this.props.onCloseTestTrainNotification}
+                onOpenTestTrainModal={this.handleOpenTestTrainModal}
+                testTrain={this.props.testTrain}
+                testTrainLoading={this.props.testTrainLoading}
+                testTrainError={this.props.loadTestTrainError}
+                onTestAgentTrain={() => { this.props.onTestAgentTrain(this.props.agent.id) }}
+                onSearchSaying={this.onSearchSaying}
+                onChangeDialoguePageFilterKeywords={this.props.onChangeDialoguePageFilterKeywords}
+                onChangeDialoguePageFilterActions={this.props.onChangeDialoguePageFilterActions}
+                onChangeDialoguePageFilterString={this.props.onChangeDialoguePageFilterString}
+                onChangeDialoguePageFilterKeywordIssues={this.props.onChangeDialoguePageFilterKeywordIssues}
+                onChangeDialoguePageFilterActionIssues={this.props.onChangeDialoguePageFilterActionIssues}
+                onResetDialoguePageFilter={this.props.onResetDialoguePageFilter}
+                onChangeDialoguePageNumberOfFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
+                onGoToUrl={this.props.onGoToUrl}
+                agent={this.props.agent}
+                onLoadAgentTrainTest={this.props.onLoadAgentTrainTest}
+              />}
             <Notifications
               notifications={this.props.notifications}
               onCloseNotification={this.props.onCloseNotification}
@@ -1194,6 +1198,7 @@ const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   agent: makeSelectAgent(),
   notifications: makeSelectNotifications(),
+  testTrainNotification: makeSelectTestTrainNotification(),
   messages: makeSelectMessages(),
   waitingResponse: makeSelectWaitingResponse(),
   CSO: makeSelectCSO(),
@@ -1201,7 +1206,7 @@ const mapStateToProps = createStructuredSelector({
   sessionId: makeSelectSessionId(),
   sessionLoaded: makeSelectSessionLoaded(),
   connection: makeSelectConnection(),
-  testTrain: makeSelectTestTrain(),
+  testTrain: makeSelectTrainTest(),
   testTrainLoading: makeSelectTestTrainLoading(),
   testTrainError: makeSelectTestTrainError(),
   dialoguePageFilterString: makeSelectDialoguePageFilterString()
@@ -1214,6 +1219,9 @@ function mapDispatchToProps(dispatch) {
     },
     onCloseNotification: index => {
       dispatch(closeNotification(index));
+    },
+    onCloseTestTrainNotification: () => {
+      dispatch(closeTestTrainNotification());
     },
     onSendMessage: ({ message, sessionId, newSession, isDemo }) => {
       dispatch(

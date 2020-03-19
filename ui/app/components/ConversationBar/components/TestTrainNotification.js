@@ -5,6 +5,7 @@ import { Grid, Typography, Button, Tabs, Tab, Table, TableBody, TableCell, Table
 import { withStyles } from '@material-ui/core/styles';
 import { injectIntl, intlShape } from 'react-intl';
 import messages from '../messages';
+import { Fragment } from 'react';
 
 const styles = {
   notificationsContainer: {
@@ -60,11 +61,10 @@ const styles = {
   },
   selected: {
     color: '#4e4e4e',
-    border: '1px solid #C5CBD8',
+    border: '1px solid',
     borderTopLeftRadius: '5px',
     borderTopRightRadius: '5px',
-    backgroundColor: '#fff',
-    borderBottom: '0px',
+    borderBottom: 'none',
   },
   keywordRow: {
     cursor: 'pointer',
@@ -75,6 +75,46 @@ const styles = {
     width: 10,
     borderRadius: '50%',
     display: 'inline-block',
+  },
+  button: {
+    display: 'inline',
+    borderRadius: '4px 4px 4px 4px',
+    width: '100%',
+    marginTop: '5px',
+    marginBottom: '5px'
+  },
+  profileMainLoader: {
+    display: 'flex',
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
+  loader: {
+    position: 'relative',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    textAlign: 'center',
+    width: '20px',
+    height: '20px',
+  },
+  circularLoader: {
+    WebkitAnimation: 'rotate 2s linear infinite',
+    animation: 'rotate 2s linear infinite',
+    height: '100%',
+    WebkitTransformOrigin: 'center center',
+    msTransformOrigin: 'center center',
+    transformOrigin: 'center center',
+    width: '100%',
+    position: 'absolute',
+    left: 0,
+    margin: 'auto',
+  },
+  loaderPath: {
+    strokeDasharray: '150,200',
+    strokeDashoffset: -10,
+    WebkitAnimation:
+      'dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite',
+    animation: 'dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite',
+    strokeLinecap: 'round',
   },
 };
 
@@ -158,39 +198,71 @@ export class TestTrainNotification extends React.Component {
     const { classes, intl } = this.props;
     return (
       <Grid className={classes.notificationsContainer} container spacing={16}>
-        {
-          <Grid
-            item
-            xs={12}
-            key={`notification_${1}`}
-            className={
-              classes.notificationContainer
-            }
+        <Grid
+          item
+          xs={12}
+          key={`notification_${1}`}
+          className={
+            classes.notificationContainer
+          }
+        >
+          <div
+            className={classes.notificationDot}
+            style={{
+              backgroundColor:
+                '#358fec',
+            }}
+          />
+          {!this.props.testTrainLoading ? (
+            <Fragment>
+              <Typography className={classes.notification}>
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: `${
+                      intl.formatMessage(messages.agentTestTrainTemplateTitle, { agentName: this.props.agent.agentName })
+                      }`,
+                  }}
+                />
+              </Typography>
+              <br />
+              <Typography className={classes.notification}>
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: `${
+                      intl.formatMessage(messages.agentTestTrainTemplateBody)
+                      }`,
+                  }}
+                />
+              </Typography>
+            </Fragment>
+          ) : null}
+          <Button
+            className={classes.button}
+            variant="contained"
+            onClick={this.props.onTestAgentTrain}
           >
-            <div
-              className={classes.notificationDot}
-              style={{
-                backgroundColor:
-                  '#358fec',
-              }}
-            />
-            <Typography className={classes.notification}>
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: `${
-                    intl.formatMessage(messages.notificationTitle)
-                    }: ${'THIS IS THE MESSAGE'}`,
-                }}
-              />
-            </Typography>
-            <Typography>
-              {'Next, would you like to test out this training to make sure nothing conflicts?'}
-            </Typography>
-            <Button
-              onClick={this.props.onTestAgentTrain}
-            >
-              Test
-            </Button>
+            {this.props.testTrainLoading ? (
+              <div className={classes.profileMainLoader}>
+                <div className={classes.loader}>
+                  <svg className={classes.circularLoader} viewBox="25 25 50 50">
+                    <circle
+                      className={classes.loaderPath}
+                      cx="50"
+                      cy="50"
+                      r="20"
+                      fill="none"
+                      stroke="#4e4e4e"
+                      strokeWidth="4"
+                    />
+                  </svg>
+                </div>
+                Testing ({this.props.agent.agentName})
+              </div>) : 'Test'}
+
+          </Button>
+
+          {this.props.testTrain &&
+            !this.props.testTrainLoading &&
             <Tabs
               value={this.state.currentTabNo}
               onChange={(evt, value) => {
@@ -200,36 +272,42 @@ export class TestTrainNotification extends React.Component {
                   currentTab: tabs[value]
                 });
               }}
-              indicatorColor="primary"
+              indicatorColor="none"
               textColor="secondary"
               centered
             >
-              <Tab label="Keywords"
+              <Tab label={<span>Keywords</span>}
                 className={classes.selected}
               />
               <Tab label="Actions" />
             </Tabs>
-            {this.state.currentTab === 'keywords' && this.renderKeywordsTable(classes, intl)}
-            {this.state.currentTab === 'actions' && this.renderActionsTable(classes, intl)}
-            <a
-              onClick={async () => {
-                await this.props.onGoToUrl(
-                  `/agent/${this.props.agent.id}/trainingTestSummary`,
-                )
-              }}
-            >
-              View full summary
+          }
+          {!this.props.testTrainLoading && this.props.testTrain && this.state.currentTab === 'keywords' && this.renderKeywordsTable(classes, intl)}
+          {!this.props.testTrainLoading && this.props.testTrain && this.state.currentTab === 'actions' && this.renderActionsTable(classes, intl)}
+          {!this.props.testTrainLoading && this.props.testTrain &&
+            (
+              <Fragment>
+                <a
+                  onClick={async () => {
+                    await this.props.onGoToUrl(
+                      `/agent/${this.props.agent.id}/trainingTestSummary`,
+                    )
+                  }}
+                >
+                  View full summary
             </a>
-            <div
-              onClick={() => {
-                this.props.onCloseNotification(index);
-              }}
-              className={classes.closeNotification}
-            >
-              <Typography>x</Typography>
-            </div>
-          </Grid>
-        }
+                <div
+                  onClick={() => {
+                    this.props.onCloseTestTrainNotification();
+                  }}
+                  className={classes.closeNotification}
+                >
+                  <Typography>x</Typography>
+                </div>
+              </Fragment>
+            )
+          }
+        </Grid>
       </Grid>
     );
   }
