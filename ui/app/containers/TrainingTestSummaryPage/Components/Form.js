@@ -159,7 +159,7 @@ class Form extends React.Component {
           >
             <TableCell>
               <span
-                style={{ backgroundColor: /*keyword.uiColor*/ '#FFC9DE' }}
+                style={{ backgroundColor: keyword.uiColor }}
                 className={classes.dot}
               />
               <span>{keyword.keywordName}</span>

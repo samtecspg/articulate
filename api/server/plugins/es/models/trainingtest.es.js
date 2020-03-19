@@ -19,6 +19,9 @@ const mappings = {
         badSayings: {
             type: 'integer'
         },
+        accuracy: {
+            type: 'integer'
+        },
         keywords: {
             type: 'nested',
             properties: {

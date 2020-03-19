@@ -16,14 +16,8 @@ const styles = {
     border: '1px solid #4e4e4e',
     margin: '10px 35px 0px 20px',
     borderRadius: '3px',
-    position: 'relative',
-  },
-  notificationContainerError: {
-    backgroundColor: '#ffebee',
-    border: '1px solid #4e4e4e',
-    margin: '10px 35px 0px 20px',
-    borderRadius: '3px',
-    position: 'relative',
+    maxWidth: '278px',
+    overflow: 'scroll',
   },
   notification: {
     paddingLeft: '5px',
@@ -36,13 +30,13 @@ const styles = {
     width: '12px',
     borderRadius: '50%',
     position: 'absolute',
-    top: -5,
-    left: -5,
+    top: 6,
+    left: 6,
   },
   closeNotification: {
     position: 'absolute',
-    top: 5,
-    right: 10,
+    top: 12,
+    right: 40,
     cursor: 'pointer',
     webkitTouchCallout: 'none',
     webkitUserSelect: 'none',
@@ -64,7 +58,7 @@ const styles = {
     border: '1px solid',
     borderTopLeftRadius: '5px',
     borderTopRightRadius: '5px',
-    borderBottom: 'none',
+    borderBottomColor: '#f6f7f8',
   },
   keywordRow: {
     cursor: 'pointer',
@@ -116,6 +110,16 @@ const styles = {
     animation: 'dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite',
     strokeLinecap: 'round',
   },
+  keywordsActionsContainer: {
+    border: '1px solid #4e4e4e',
+    width: 'calc(100% + 16px)',
+    marginLeft: '-8px',
+    borderLeft: 'none',
+    borderRight: 'none',
+    borderBottom: 'none',
+    zIndex: '-1',
+    marginTop: '-1px'
+  }
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -135,9 +139,13 @@ export class TestTrainNotification extends React.Component {
   }
 
   renderKeywordsTable = (classes, intl) => {
-    return (<Table>
+    return (<Table
+      style={{
+        border: 'none'
+      }}
+    >
       <TableBody>
-        {this.props.testTrain ? (this.props.testTrain.keywords.map((keyword, index) => (
+        {this.props.testTrain ? (this.props.testTrain.keywords.slice(0, 3).map((keyword, index) => (
           <TableRow
             className={classes.keywordRow}
             onClick={async () => {
@@ -155,7 +163,7 @@ export class TestTrainNotification extends React.Component {
           >
             <TableCell>
               <span
-                style={{ backgroundColor: /*keyword.uiColor*/ '#FFC9DE' }}
+                style={{ backgroundColor: keyword.uiColor }}
                 className={classes.dot}
               />
               <span>{keyword.keywordName}</span>
@@ -167,9 +175,13 @@ export class TestTrainNotification extends React.Component {
   }
 
   renderActionsTable = (classes, intl) => {
-    return (<Table>
+    return (<Table
+      style={{
+        border: 'none'
+      }}
+    >
       <TableBody>
-        {this.props.testTrain ? (this.props.testTrain.actions.map((action, index) => (
+        {this.props.testTrain ? (this.props.testTrain.actions.slice(0, 3).map((action, index) => (
           <TableRow
             className={classes.keywordRow}
             onClick={async () => {
@@ -277,36 +289,43 @@ export class TestTrainNotification extends React.Component {
               centered
             >
               <Tab label={<span>Keywords</span>}
-                className={classes.selected}
+                className={this.state.currentTab === 'keywords' ? classes.selected : null}
               />
-              <Tab label="Actions" />
+              <Tab label="Actions"
+                className={this.state.currentTab === 'actions' ? classes.selected : null}
+              />
             </Tabs>
           }
-          {!this.props.testTrainLoading && this.props.testTrain && this.state.currentTab === 'keywords' && this.renderKeywordsTable(classes, intl)}
-          {!this.props.testTrainLoading && this.props.testTrain && this.state.currentTab === 'actions' && this.renderActionsTable(classes, intl)}
-          {!this.props.testTrainLoading && this.props.testTrain &&
-            (
-              <Fragment>
-                <a
-                  onClick={async () => {
-                    await this.props.onGoToUrl(
-                      `/agent/${this.props.agent.id}/trainingTestSummary`,
-                    )
-                  }}
-                >
-                  View full summary
-            </a>
-                <div
-                  onClick={() => {
-                    this.props.onCloseTestTrainNotification();
-                  }}
-                  className={classes.closeNotification}
-                >
-                  <Typography>x</Typography>
-                </div>
-              </Fragment>
-            )
-          }
+          <Grid
+            container
+            className={classes.keywordsActionsContainer}
+          >
+            {!this.props.testTrainLoading && this.props.testTrain && this.state.currentTab === 'keywords' && this.renderKeywordsTable(classes, intl)}
+            {!this.props.testTrainLoading && this.props.testTrain && this.state.currentTab === 'actions' && this.renderActionsTable(classes, intl)}
+            {!this.props.testTrainLoading && this.props.testTrain &&
+              (
+                <Fragment>
+                  <a
+                    onClick={async () => {
+                      await this.props.onGoToUrl(
+                        `/agent/${this.props.agent.id}/trainingTestSummary`,
+                      )
+                    }}
+                  >
+                    View full summary
+                  </a>
+                  <div
+                    onClick={() => {
+                      this.props.onCloseTestTrainNotification();
+                    }}
+                    className={classes.closeNotification}
+                  >
+                    <Typography>x</Typography>
+                  </div>
+                </Fragment>
+              )
+            }
+          </Grid>
         </Grid>
       </Grid>
     );

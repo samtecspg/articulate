@@ -14,9 +14,13 @@ module.exports = async function ({ id, debug = false }) {
         const { agentService, globalService, trainingTestService } = await this.server.services();
 
         const AgentModel = await redis.factory(MODEL_AGENT, id);
-        const agentSayings = await agentService.findAllSayings({ id });
+        const agentSayings = await agentService.findAllSayings({ id, limit: -1 });
 
         const agentKeywords = await await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_KEYWORD, returnModel: false });
+        const agentKeywordsColors = {};
+        agentKeywords.forEach(keyword => {
+            agentKeywordsColors[keyword.keywordName] = keyword.uiColor;
+        })
         //let ParsedDocument = await agentService.parse({ AgentModel, text: agentKeywords[0].modifiers[0].sayings[0].userSays, timezone: AgentModel.property('timezone'), saveDocument: false });
 
         var sayingCounter;
@@ -74,6 +78,7 @@ module.exports = async function ({ id, debug = false }) {
         result.badSayings = errorCounter;
         result.timeStamp = Date.now();
 
+        updateResultAccuracyAndColors(result, agentKeywordsColors);
         await trainingTestService.create({ data: result });
         await updateFailedSayings(result, globalService, agentService, AgentModel);
         return result;
@@ -82,6 +87,28 @@ module.exports = async function ({ id, debug = false }) {
         throw RedisErrorHandler({ error });
     }
 };
+
+const updateResultAccuracyAndColors = function (result, agentKeywordsColors) {
+
+    result.actions = result.actions.map(action => {
+        return {
+            ...action,
+            accuracy: action.good / (action.bad + action.good)
+        }
+    })
+    result.actions = result.actions.sort((a, b) => { return a.accuracy - b.accuracy });
+
+    result.keywords = result.keywords.map(keyword => {
+        return {
+            ...keyword,
+            accuracy: keyword.good / (keyword.bad + keyword.good),
+            uiColor: agentKeywordsColors[keyword.keywordName]
+        }
+    })
+    result.keywords = result.keywords.sort((a, b) => { return a.accuracy - b.accuracy });
+
+    result.accuracy = result.goodSayings / (result.goodSayings + result.badSayings)
+}
 
 const getKeywordArraysDifference = function (recognizedKeywords, sayingKeywords) {
 
