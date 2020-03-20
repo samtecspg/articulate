@@ -465,6 +465,7 @@ class Form extends React.Component {
 
                 trainTests={this.props.trainTests}
                 onLoadAgentTrainTest={this.props.onLoadAgentTrainTest}
+                onLoadAgentTrainTests={this.props.onLoadAgentTrainTests}
                 onGoToUrl={this.props.onGoToUrl}
               />
             </Fragment>

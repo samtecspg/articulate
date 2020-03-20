@@ -107,4 +107,44 @@ export default defineMessages({
     id: 'app.components.ConversationBar.agentTestTrainTemplateBody',
     defaultMessage: '<b>Next, would you like to test out this training?</b>',
   },
+  viewFullSummary: {
+    id: 'app.components.ConversationBar.viewFullSummary',
+    defaultMessage: 'View full summary',
+  },
+  agentTestCompleteTemplateTitle: {
+    id: 'app.components.ConversationBar.agentTestCompleteTemplateTitle',
+    defaultMessage: 'Testing <b>{agentName}</b> has finished.',
+  },
+  agentTestCompleteResults: {
+    id: 'app.components.ConversationBar.agentTestCompleteResults',
+    defaultMessage: 'Results: ',
+  },
+  agentTestCompleteResultsContent: {
+    id: 'app.components.ConversationBar.agentTestCompleteResults',
+    defaultMessage: 'This agent was <b>{accuracy}% accurate</b> when testing against the training data. Click below to see a full summary. ',
+  },
+  testing: {
+    id: 'app.components.ConversationBar.testing',
+    defaultMessage: 'Testing',
+  },
+  test: {
+    id: 'app.components.ConversationBar.test',
+    defaultMessage: 'Test',
+  },
+  testingFinished: {
+    id: 'app.components.ConversationBar.testingFinished',
+    defaultMessage: 'Testing Finished!',
+  },
+  keywords: {
+    id: 'app.components.ConversationBar.keywords',
+    defaultMessage: 'Keywords',
+  },
+  actions: {
+    id: 'app.components.ConversationBar.actions',
+    defaultMessage: 'Actions',
+  },
+  goToReviewPage: {
+    id: 'app.components.ConversationBar.goToReviewPage',
+    defaultMessage: 'To review training summary again, go to <b>Review > Training </b> page ',
+  },
 });

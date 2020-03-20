@@ -229,10 +229,8 @@ const styles = {
 };
 
 const tableHeaders = [
-  { id: 'modificationDate', disablePadding: true, label: '', width: '7%' },
-  { id: 'session', disablePadding: true, label: '', width: '88%' },
-  { id: 'delete', disablePadding: true, label: 'Delete', width: '5%' },
-  { id: 'try', disablePadding: true, label: 'Try', width: '5%' },
+  { id: 'trainTest', disablePadding: true, label: '', width: '82%' },
+  { id: 'button', disablePadding: true, label: '', width: '18%' },
 ];
 
 /**
@@ -247,20 +245,6 @@ function Trainings(props) {
     <div>
       <Grid className={classes.formContainer} container item xs={12}>
         <Grid className={classes.formSubContainer} container item xs={12}>
-          {trainTests.length > 0 ? (
-            <a
-              className={classes.dateSelectContainer}
-              onClick={evt => {
-                props.onRequestSort('modificationDate');
-              }}
-            >
-              <Typography className={classes.dateSelectLabel}>
-                {timeSort === 'desc'
-                  ? intl.formatMessage(messages.newest)
-                  : intl.formatMessage(messages.oldest)}
-              </Typography>
-            </a>
-          ) : null}
           <StyledTable
             id="reviewsTable"
             noBorder

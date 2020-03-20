@@ -162,40 +162,31 @@ class TrainingsRow extends React.Component {
       <Fragment>
         <TableCell>
           <Typography
-            variant="body1"
-            style={{ fontSize: '10px', color: '#4e4e4e' }}
           >
-            {trainingTest.timeStamp}
+            {new Date(trainingTest.timeStamp).toString()}
           </Typography>
         </TableCell>
-        <TableCell>
-          <span className={classes.userSays}>
-            {trainingTest.timeStamp}
-          </span>
-        </TableCell>
-        <DeleteImageCell
-          tooltip={intl.formatMessage(messages.deleteSession)}
-          disabled={trainingTest.timeStamp === 'noData'}
-          onClick={() => {
-          }}
-        />
-        <PlayImageCell
-          tooltip={intl.formatMessage(messages.reproduceSession)}
-          disabled={trainingTest.timeStamp === 'noData'}
-          onClick={() => {
-
-          }}
-        />
-        <Button
-          onClick={
-            async () => {
-              await this.props.onLoadAgentTrainTest(this.props.trainingTestIndex);
-              await this.props.onGoToUrl(`/agent/${this.props.agent.id}/trainingTestSummary`);
-            }
-          }
+        <TableCell
+          style={{ textAlign: 'right' }}
         >
-          Test Summary
+          <Button
+            style={{
+              border: '1px solid',
+              fontSize: '12px',
+              padding: '1px 5px',
+              minHeight: '0',
+              minWidth: '0',
+            }}
+            onClick={
+              async () => {
+                await this.props.onLoadAgentTrainTest(this.props.trainingTestIndex);
+                await this.props.onGoToUrl(`/agent/${this.props.agent.id}/trainingTestSummary`);
+              }
+            }
+          >
+            Test Summary
           </Button>
+        </TableCell>
       </Fragment >
     );
   }

@@ -273,14 +273,6 @@ export class MainTab extends React.Component {
                     agentSettings={currentAgent ? currentAgent.settings : {}}
                     loadingAgentVersion={loadingAgentVersion}
                   />
-                  <Button
-                    onClick={() => {
-                      this.props.onTestAgentTrain(this.props.agent.id)
-                    }
-                    }
-                  >
-                    Click me
-                </Button>
                 </Fragment>
               )}
               {disableSave ||

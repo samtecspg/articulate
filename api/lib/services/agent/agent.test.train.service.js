@@ -154,7 +154,7 @@ const upsertResultAction = function (result, sayingAction, condition, sayingId) 
 }
 
 const upsertResultKeywords = function (result, sayingKeywords, recognizedKeywords, sayingId) {
-    let errorPresent = true;
+    let errorPresent = false;
     sayingKeywords.forEach(sayingKeyword => {
         let recognizedKeywordsIndex = recognizedKeywords.findIndex(
             recognizedKeyword => {
@@ -165,7 +165,8 @@ const upsertResultKeywords = function (result, sayingKeywords, recognizedKeyword
         let condition = 'bad';
         if (recognizedKeywordsIndex !== -1) {
             condition = 'good';
-            errorPresent = false;
+        } else {
+            errorPresent = true;
         }
 
         let resultKeywordIndex = result.keywords.findIndex(keyword => { return keyword.keywordName === sayingKeyword.keyword });

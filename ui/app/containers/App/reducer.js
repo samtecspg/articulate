@@ -754,6 +754,7 @@ const initialState = Immutable({
   user: null,
   userDataTouched: false,
   testTrainResults: [],
+  totalTrainTests: null,
   trainTest: null,
   testTrainLoading: false,
   testTrainError: false,
@@ -1473,6 +1474,7 @@ function appReducer(state = initialState, action) {
         .set('testTrainError', false)
     case LOAD_AGENT_TRAIN_TESTS_SUCCESS:
       return state
+        .set('totalTrainTests', action.trainTests.total)
         .set('testTrainResults', action.trainTests.trainTests)
         .set('trainTest', action.trainTests.trainTests[0])
     case LOAD_AGENT_TRAIN_TEST:

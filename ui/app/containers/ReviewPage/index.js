@@ -39,6 +39,7 @@ import {
   makeSelectSelectedCategory,
   makeSelectTotalDocuments,
   makeSelectTotalSessions,
+  makeSelectTotalTrainTests,
   makeSelectLocale,
   makeSelectServerStatus,
   makeSelectLoadingCurrentUser,
@@ -162,6 +163,7 @@ export class ReviewPage extends React.Component {
     });
     this.setNumberOfPages(this.props.agent.settings.reviewPageSize, 'documents');
     this.setNumberOfPages(this.props.agent.settings.sessionsPageSize, 'sessions');
+    this.setNumberOfPages(5, 'training');//FIXME
     onLoadKeywords();
     onLoadActions();
     onLoadCategories();
@@ -280,7 +282,7 @@ export class ReviewPage extends React.Component {
     if (!prevProps.agent.id && this.props.agent.id) {
       this.initForm();
     }
-    const { documents, sessions } = this.props;
+    const { documents, sessions, trainTests } = this.props;
     if (documents !== this.state.documents) {
       this.setState({ documents });
       this.setNumberOfPages(this.state.pageStatus.documents.pageSize, 'documents');
@@ -288,6 +290,10 @@ export class ReviewPage extends React.Component {
     if (sessions !== this.state.sessions) {
       this.setState({ sessions });
       this.setNumberOfPages(this.state.pageStatus.sessions.pageSize, 'sessions');
+    }
+    if (trainTests !== this.state.trainTests) {
+      this.setState({ trainTests });
+      this.setNumberOfPages(this.state.pageStatus.training.pageSize, 'training');
     }
   }
 
@@ -307,7 +313,7 @@ export class ReviewPage extends React.Component {
   }
 
   setNumberOfPages(pageSize, type) {
-    const numberOfPages = Math.ceil((type === 'documents' ? this.props.totalDocuments : this.props.totalSessions) / pageSize);
+    const numberOfPages = Math.ceil((type === 'documents' ? this.props.totalDocuments : type === 'sessions' ? this.props.totalSessions : this.props.totalTrainTests) / pageSize);
     const newPageStatus = this.state.pageStatus;
     newPageStatus[type].numberOfPages = numberOfPages;
     this.setState({
@@ -316,7 +322,7 @@ export class ReviewPage extends React.Component {
   }
 
   changePage(pageNumber) {
-    const { onLoadAgentDocuments, onLoadAgentSessions } = this.props.actions;
+    const { onLoadAgentDocuments, onLoadAgentSessions, onLoadAgentTrainTests } = this.props.actions;
     const newPageStatus = this.state.pageStatus;
     newPageStatus[this.state.selectedTab].currentPage = pageNumber;
     this.setState({
@@ -346,6 +352,14 @@ export class ReviewPage extends React.Component {
         this.state.pageStatus.sessions.sortField,
         this.state.pageStatus.sessions.sortDirection,
       );
+    }
+    if (this.state.selectedTab === 'training') {
+      onLoadAgentTrainTests({
+        page: pageNumber,
+        pageSize: this.state.pageStatus.training.pageSize,
+        field: this.state.pageStatus.training.sortField,
+        direction: this.state.pageStatus.training.sortDirection,
+      });
     }
   }
 
@@ -783,6 +797,7 @@ const mapStateToProps = createStructuredSelector({
   reviewPageFilterLogsString: makeSelectReviewPageFilterLogsString(),
   reviewPageLogsNumberOfFiltersApplied: makeSelectReviewPageLogsNumberOfFiltersApplied(),
   trainTests: makeSelectTrainTests(),
+  totalTrainTests: makeSelectTotalTrainTests()
 });
 
 function mapDispatchToProps(dispatch) {

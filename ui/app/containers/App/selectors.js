@@ -260,6 +260,12 @@ const makeSelectTrainTests = () =>
     globalState => globalState.testTrainResults,
   );
 
+const makeSelectTotalTrainTests = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.totalTrainTests,
+  );
+
 const makeSelectTrainTest = () =>
   createSelector(
     selectGlobal,
@@ -769,6 +775,7 @@ export {
   makeSelectTestTrainLoading,
   makeSelectTrainTests,
   makeSelectTrainTest,
+  makeSelectTotalTrainTests,
   makeSelectRichResponses,
   makeSelectDialoguePageFilterSearchSaying,
   makeSelectDialoguePageFilterCategory,

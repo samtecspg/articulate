@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { injectIntl, intlShape } from 'react-intl';
 import messages from '../messages';
 import { Fragment } from 'react';
+import checkIcon from '../../../images/check-save-icon.svg';
 
 const styles = {
   notificationsContainer: {
@@ -20,10 +21,10 @@ const styles = {
     overflow: 'scroll',
   },
   notification: {
-    paddingLeft: '5px',
     fontSize: '12px',
     fontWeight: 300,
     width: '95%',
+    marginBottom: '8px'
   },
   notificationDot: {
     height: '12px',
@@ -35,8 +36,8 @@ const styles = {
   },
   closeNotification: {
     position: 'absolute',
-    top: 12,
-    right: 40,
+    top: 18,
+    right: 32,
     cursor: 'pointer',
     webkitTouchCallout: 'none',
     webkitUserSelect: 'none',
@@ -73,9 +74,13 @@ const styles = {
   button: {
     display: 'inline',
     borderRadius: '4px 4px 4px 4px',
-    width: '100%',
+    width: '97%',
     marginTop: '5px',
-    marginBottom: '5px'
+    marginBottom: '5px',
+    '&:disabled': {
+      backgroundColor: '#f6f7f8 !important;',
+      border: '2px solid #E6E4E4 !important',
+    },
   },
   profileMainLoader: {
     display: 'flex',
@@ -119,6 +124,25 @@ const styles = {
     borderBottom: 'none',
     zIndex: '-1',
     marginTop: '-1px'
+  },
+  badNumber: {
+    marginLeft: '6px',
+    backgroundColor: '#C10007',
+    padding: '1px 6px',
+    borderRadius: '4px',
+    color: 'white'
+  },
+  viewFullSummary: {
+    color: '#4e4e4e',
+    fontSize: '12px',
+    textDecoration: 'underline',
+    display: 'inline-block',
+    cursor: 'pointer',
+    opacity: '60%'
+  },
+  results: {
+    color: '#A2A7B1',
+    fontSize: '12px'
   }
 };
 
@@ -127,15 +151,6 @@ export class TestTrainNotification extends React.Component {
   state = {
     currentTab: 'keywords',
     currentTabNo: 0
-  }
-  componentDidMount() {
-    //this.interval = setInterval(() => {
-    //  this.setState({ time: Date.now() });
-    //}, 5000); // update the component every 10 seconds
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
   }
 
   renderKeywordsTable = (classes, intl) => {
@@ -146,29 +161,41 @@ export class TestTrainNotification extends React.Component {
     >
       <TableBody>
         {this.props.testTrain ? (this.props.testTrain.keywords.slice(0, 3).map((keyword, index) => (
-          <TableRow
-            className={classes.keywordRow}
-            onClick={async () => {
-              await this.props.onResetDialoguePageFilter();
-              await this.props.onChangeDialoguePageFilterKeywordIssues();
-              await this.props.onChangeDialoguePageFilterKeywords([keyword.keywordName]);
-              await this.props.onChangeDialoguePageNumberOfFiltersApplied(2);
-              await this.props.onChangeDialoguePageFilterString('keywords:"' + keyword.keywordName + '" keywordIssues:"true"');
-              await this.props.onSearchSaying();
-              await this.props.onGoToUrl(
-                `/agent/${this.props.agent.id}/dialogue`,
-              );
-            }}
-            key={`${keyword}_${index}`}
-          >
-            <TableCell>
-              <span
-                style={{ backgroundColor: keyword.uiColor }}
-                className={classes.dot}
-              />
-              <span>{keyword.keywordName}</span>
-            </TableCell>
-          </TableRow>
+          keyword.bad > 0 && (
+            <TableRow
+              className={classes.keywordRow}
+              onClick={async () => {
+                await this.props.onResetDialoguePageFilter();
+                await this.props.onChangeDialoguePageFilterKeywordIssues();
+                await this.props.onChangeDialoguePageFilterKeywords([keyword.keywordName]);
+                await this.props.onChangeDialoguePageNumberOfFiltersApplied(2);
+                await this.props.onChangeDialoguePageFilterString('keywords:"' + keyword.keywordName + '" keywordIssues:"true"');
+                await this.props.onSearchSaying();
+                await this.props.onGoToUrl(
+                  `/agent/${this.props.agent.id}/dialogue`,
+                );
+              }}
+              key={`${keyword}_${index}`}
+            >
+              <TableCell>
+                <span
+                  style={{ backgroundColor: keyword.uiColor }}
+                  className={classes.dot}
+                />
+                <span>{keyword.keywordName}</span>
+                <span
+                  align="center"
+                  className={classes.badNumber}
+                >{keyword.bad}</span>
+              </TableCell>
+              <TableCell style={{
+                fontWeight: 'bold',
+                textAlign: "right"
+              }}>
+                {keyword.accuracy.toFixed(2) * 100}%
+              </TableCell>
+            </TableRow>
+          )
         ))) : null}
       </TableBody>
     </Table>)
@@ -182,7 +209,8 @@ export class TestTrainNotification extends React.Component {
     >
       <TableBody>
         {this.props.testTrain ? (this.props.testTrain.actions.slice(0, 3).map((action, index) => (
-          <TableRow
+          action.bad > 0 &&
+          (<TableRow
             className={classes.keywordRow}
             onClick={async () => {
               await this.props.onResetDialoguePageFilter();
@@ -199,11 +227,189 @@ export class TestTrainNotification extends React.Component {
           >
             <TableCell>
               <span>{action.actionName}</span>
+              <span
+                align="center"
+                className={classes.badNumber}
+              >{action.bad}</span>
             </TableCell>
-          </TableRow>
+            <TableCell style={{
+              fontWeight: 'bold',
+              textAlign: "right"
+            }}>
+              {action.accuracy.toFixed(2) * 100}%
+              </TableCell>
+          </TableRow>)
         ))) : null}
       </TableBody>
     </Table>)
+  }
+
+  renderNotificationDot = (classes, intl) => {
+    return <div
+      className={classes.notificationDot}
+      style={{
+        backgroundColor:
+          '#358fec',
+      }}
+    />
+  }
+
+  renderFinishTrainingNotification = (classes, intl, messages) => {
+    return (
+      <Fragment>
+        <Typography className={classes.notification}>
+          <span
+            dangerouslySetInnerHTML={{
+              __html: `${
+                intl.formatMessage(messages.agentTestTrainTemplateTitle, { agentName: this.props.agent.agentName })
+                }`,
+            }}
+          />
+        </Typography>
+        <Typography className={classes.notification}>
+          <span
+            dangerouslySetInnerHTML={{
+              __html: `${
+                intl.formatMessage(messages.agentTestTrainTemplateBody)
+                }`,
+            }}
+          />
+        </Typography>
+      </Fragment>
+    )
+  }
+
+  renderButton = (classes, intl, messages) => {
+    return (<Button
+      className={classes.button}
+      variant="contained"
+      onClick={this.props.onTestAgentTrain}
+      disabled={this.props.testTrain ? true : false || this.props.testTrainLoading}
+    >
+      {this.props.testTrainLoading && (
+        <div className={classes.profileMainLoader}>
+          <div className={classes.loader}>
+            <svg className={classes.circularLoader} viewBox="25 25 50 50">
+              <circle
+                className={classes.loaderPath}
+                cx="50"
+                cy="50"
+                r="20"
+                fill="none"
+                stroke="#4e4e4e"
+                strokeWidth="4"
+              />
+            </svg>
+          </div>
+          <Typography>{intl.formatMessage(messages.testing)} ({this.props.agent.agentName})</Typography>
+        </div>)}
+      {!this.props.testTrain && !this.props.testTrainLoading && <Typography>{intl.formatMessage(messages.test)}</Typography>}
+      {this.props.testTrain && !this.props.testTrainLoading && (<Typography><img style={{ height: '10px', marginRight: '10px' }} src={checkIcon} />{intl.formatMessage(messages.testingFinished)}</Typography>)}
+    </Button>)
+  }
+
+  renderTabs = (classes, intl, messages) => {
+    return (
+      <Tabs
+        style={{ marginTop: '40px' }}
+        value={this.state.currentTabNo}
+        onChange={(evt, value) => {
+          let tabs = ['keywords', 'actions'];
+          this.setState({
+            currentTabNo: value,
+            currentTab: tabs[value]
+          });
+        }}
+        indicatorColor="none"
+        textColor="secondary"
+        centered
+      >
+        <Tab label={<Typography style={{ fontSize: '10px' }}>{intl.formatMessage(messages.keywords)} <span style={{ color: '#C10007', fontSize: '12px' }}>{this.props.testTrain.keywords.length}</span></Typography>}
+          className={this.state.currentTab === 'keywords' ? classes.selected : null}
+        />
+        <Tab label={<Typography style={{ fontSize: '10px' }}>{intl.formatMessage(messages.actions)} <span style={{ color: '#C10007', fontSize: '12px' }}>{this.props.testTrain.actions.length}</span></Typography>}
+          className={this.state.currentTab === 'actions' ? classes.selected : null}
+        />
+      </Tabs>)
+  }
+
+  renderViewFullSummary(classes, intl, messages) {
+    return <div style={{
+      textAlign: 'center',
+      width: '100%'
+    }}>
+      <a
+        style={{
+          display: 'inline-block'
+        }}
+        onClick={async () => {
+          await this.props.onGoToUrl(
+            `/agent/${this.props.agent.id}/trainingTestSummary`,
+          )
+        }}
+      >
+        <Typography
+          className={classes.viewFullSummary}
+        >
+          {intl.formatMessage(messages.viewFullSummary)}
+        </Typography>
+      </a>
+    </div>
+  }
+
+  renderCloseNotification(classes, intl, messages) {
+    return (<div
+      onClick={() => {
+        this.props.onCloseTestTrainNotification();
+      }}
+      className={classes.closeNotification}
+    >
+      <Typography>x</Typography>
+    </div>)
+  }
+
+  renderFinishTestingNotification(classes, intl, messages) {
+    return (
+      <Fragment>
+        <Typography className={classes.notification}>
+          <span
+            dangerouslySetInnerHTML={{
+              __html: `${
+                intl.formatMessage(messages.agentTestCompleteTemplateTitle, { agentName: this.props.agent.agentName })
+                }`,
+            }}
+          />
+        </Typography>
+        <Typography className={classes.results}>
+          {intl.formatMessage(messages.agentTestCompleteResults)}
+        </Typography>
+        <Typography className={classes.notification}>
+          <span
+            dangerouslySetInnerHTML={{
+              __html: `${
+                intl.formatMessage(messages.agentTestCompleteResultsContent, { accuracy: this.props.testTrain.accuracy.toFixed(2) * 100 })
+                }`,
+            }}
+          />
+        </Typography>
+      </Fragment>
+    )
+  }
+
+  renderGoToReviewPage(classes, intl, messages) {
+    return (
+      <Fragment >
+        <Typography style={{ marginLeft: '8px' }} className={classes.notification}>
+          <span
+            dangerouslySetInnerHTML={{
+              __html: `${
+                intl.formatMessage(messages.goToReviewPage)
+                }`,
+            }}
+          />
+        </Typography>
+      </Fragment >
+    )
   }
 
   render() {
@@ -213,121 +419,33 @@ export class TestTrainNotification extends React.Component {
         <Grid
           item
           xs={12}
-          key={`notification_${1}`}
-          className={
-            classes.notificationContainer
-          }
+          className={classes.notificationContainer}
         >
-          <div
-            className={classes.notificationDot}
-            style={{
-              backgroundColor:
-                '#358fec',
-            }}
-          />
-          {!this.props.testTrainLoading ? (
-            <Fragment>
-              <Typography className={classes.notification}>
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: `${
-                      intl.formatMessage(messages.agentTestTrainTemplateTitle, { agentName: this.props.agent.agentName })
-                      }`,
-                  }}
-                />
-              </Typography>
-              <br />
-              <Typography className={classes.notification}>
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: `${
-                      intl.formatMessage(messages.agentTestTrainTemplateBody)
-                      }`,
-                  }}
-                />
-              </Typography>
-            </Fragment>
-          ) : null}
-          <Button
-            className={classes.button}
-            variant="contained"
-            onClick={this.props.onTestAgentTrain}
-          >
-            {this.props.testTrainLoading ? (
-              <div className={classes.profileMainLoader}>
-                <div className={classes.loader}>
-                  <svg className={classes.circularLoader} viewBox="25 25 50 50">
-                    <circle
-                      className={classes.loaderPath}
-                      cx="50"
-                      cy="50"
-                      r="20"
-                      fill="none"
-                      stroke="#4e4e4e"
-                      strokeWidth="4"
-                    />
-                  </svg>
-                </div>
-                Testing ({this.props.agent.agentName})
-              </div>) : 'Test'}
+          {this.renderNotificationDot(classes, intl)}
+          {!this.props.testTrainLoading && !this.props.testTrain && this.renderFinishTrainingNotification(classes, intl, messages)}
+          {this.renderButton(classes, intl, messages)}
+          {!this.props.testTrainLoading && this.props.testTrain && this.renderFinishTestingNotification(classes, intl, messages)}
 
-          </Button>
-
-          {this.props.testTrain &&
-            !this.props.testTrainLoading &&
-            <Tabs
-              value={this.state.currentTabNo}
-              onChange={(evt, value) => {
-                let tabs = ['keywords', 'actions'];
-                this.setState({
-                  currentTabNo: value,
-                  currentTab: tabs[value]
-                });
-              }}
-              indicatorColor="none"
-              textColor="secondary"
-              centered
+          {this.props.testTrain && !this.props.testTrainLoading && this.renderTabs(classes, intl, messages)}
+          {!this.props.testTrainLoading && this.props.testTrain && (
+            <Grid
+              container
+              className={classes.keywordsActionsContainer}
             >
-              <Tab label={<span>Keywords</span>}
-                className={this.state.currentTab === 'keywords' ? classes.selected : null}
-              />
-              <Tab label="Actions"
-                className={this.state.currentTab === 'actions' ? classes.selected : null}
-              />
-            </Tabs>
-          }
-          <Grid
-            container
-            className={classes.keywordsActionsContainer}
-          >
-            {!this.props.testTrainLoading && this.props.testTrain && this.state.currentTab === 'keywords' && this.renderKeywordsTable(classes, intl)}
-            {!this.props.testTrainLoading && this.props.testTrain && this.state.currentTab === 'actions' && this.renderActionsTable(classes, intl)}
-            {!this.props.testTrainLoading && this.props.testTrain &&
-              (
-                <Fragment>
-                  <a
-                    onClick={async () => {
-                      await this.props.onGoToUrl(
-                        `/agent/${this.props.agent.id}/trainingTestSummary`,
-                      )
-                    }}
-                  >
-                    View full summary
-                  </a>
-                  <div
-                    onClick={() => {
-                      this.props.onCloseTestTrainNotification();
-                    }}
-                    className={classes.closeNotification}
-                  >
-                    <Typography>x</Typography>
-                  </div>
-                </Fragment>
-              )
-            }
-          </Grid>
+              {!this.props.testTrainLoading && this.props.testTrain && this.state.currentTab === 'keywords' && this.renderKeywordsTable(classes, intl)}
+              {!this.props.testTrainLoading && this.props.testTrain && this.state.currentTab === 'actions' && this.renderActionsTable(classes, intl)}
+              <br />
+              <br />
+              <br />
+              {!this.props.testTrainLoading && this.props.testTrain && this.renderViewFullSummary(classes, intl, messages)}
+              <br />
+              <br />
+              {!this.props.testTrainLoading && this.props.testTrain && this.renderGoToReviewPage(classes, intl, messages)}
+            </Grid>
+          )}
         </Grid>
-      </Grid>
+        {!this.props.testTrainLoading && this.renderCloseNotification(classes, intl, messages)}
+      </Grid >
     );
   }
 }
