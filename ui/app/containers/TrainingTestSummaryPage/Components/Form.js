@@ -113,6 +113,31 @@ const styles = {
     borderRadius: '50%',
     display: 'inline-block',
   },
+  formContainer: {
+    backgroundColor: '#ffffff',
+    borderTop: '1px solid #c5cbd8',
+    borderBottomLeftRadius: '5px',
+    borderBottomRightRadius: '5px',
+  },
+  formSubContainer: {
+    paddingLeft: '25px',
+    paddingRight: '25px',
+    paddingBottom: '40px'
+  },
+  badNumber: {
+    marginLeft: '6px',
+    backgroundColor: '#C10007',
+    padding: '1px 6px',
+    borderRadius: '4px',
+    color: 'white'
+  },
+  formDescriptionContainer: {
+    margin: '15px 0px',
+  },
+  formDescription: {
+    fontSize: '14px',
+    fontWeight: 300,
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -163,7 +188,17 @@ class Form extends React.Component {
                 className={classes.dot}
               />
               <span>{keyword.keywordName}</span>
+              <span
+                align="center"
+                className={classes.badNumber}
+              >{keyword.bad}</span>
             </TableCell>
+            <TableCell style={{
+              fontWeight: 'bold',
+              textAlign: "right"
+            }}>
+              {keyword.accuracy.toFixed(2) * 100}%
+              </TableCell>
           </TableRow>
         ))) : null}
       </TableBody>
@@ -191,7 +226,17 @@ class Form extends React.Component {
           >
             <TableCell>
               <span>{action.actionName}</span>
+              <span
+                align="center"
+                className={classes.badNumber}
+              >{action.bad}</span>
             </TableCell>
+            <TableCell style={{
+              fontWeight: 'bold',
+              textAlign: "right"
+            }}>
+              {action.accuracy.toFixed(2) * 100}%
+              </TableCell>
           </TableRow>
         ))) : null}
       </TableBody>
@@ -204,7 +249,6 @@ class Form extends React.Component {
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
-          <img className={classes.agentIcon} src={agentIcon} />
           <Grid className={classes.titleTextHelpContainer} container>
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.title} />
@@ -240,6 +284,17 @@ class Form extends React.Component {
               </Grid>
             </Modal>
           </Grid>
+          <Grid className={classes.formDescriptionContainer} container>
+            <Typography className={classes.formDescription}>
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: `${
+                    intl.formatMessage(messages.trainingTestSummaryDescription, { accuracy: this.props.testTrain ? Number(this.props.testTrain.accuracy).toFixed(2) * 100 : 0 })
+                    }`,
+                }}
+              />
+            </Typography>
+          </Grid>
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} container direction={'row'}>
@@ -264,7 +319,7 @@ class Form extends React.Component {
                   value="keywords"
                   label={
                     <span className={classes.tabLabel}>
-                      <span>{intl.formatMessage(messages.keywordsFormTitle)}</span>
+                      <span>{intl.formatMessage(messages.keywordsFormTitle)}</span> <span style={{ color: '#C10007', fontSize: '12px' }}>{this.props.testTrain ? this.props.testTrain.keywords.length : 0}</span>
                     </span>
                   }
                   className={
@@ -275,7 +330,7 @@ class Form extends React.Component {
                   value="actions"
                   label={
                     <span className={classes.tabLabel}>
-                      <span>{intl.formatMessage(messages.actionsFormTitle)}</span>
+                      <span>{intl.formatMessage(messages.actionsFormTitle)}</span> <span style={{ color: '#C10007', fontSize: '12px' }}>{this.props.testTrain ? this.props.testTrain.actions.length : 0}</span>
                     </span>
                   }
                   className={
@@ -285,8 +340,63 @@ class Form extends React.Component {
               </Tabs>
             </Grid>
           </Grid>
-          {this.props.selectedTab === 'keywords' && this.renderKeywordsTable(classes, intl)}
-          {this.props.selectedTab === 'actions' && this.renderActionsTable(classes, intl)}
+          <Grid className={classes.formContainer} container item xs={12}>
+            <Grid
+              container
+              direction="row"
+            >
+              <Grid
+                item xs={6}>
+                <Typography
+                  style={{
+                    marginLeft: '25px',
+                    marginTop: '40px',
+                    display: 'inline-block',
+                    color: '#C10007',
+                    fontSize: '12px'
+                  }}
+                >
+                  {this.props.selectedTab === 'keywords' && this.props.testTrain ? this.props.testTrain.keywords.map(keyword => { return keyword.bad }).reduce(function (acc, val) { return acc + val; }, 0) : null}
+                  {this.props.selectedTab === 'actions' && this.props.testTrain ? this.props.testTrain.actions.map(action => { return action.bad }).reduce(function (acc, val) { return acc + val; }, 0) : null}
+                </Typography>
+                {' '}
+                <Typography
+                  style={{
+                    display: 'inline-block',
+                    color: '#4E4E4E',
+                    fontSize: '12px'
+                  }}
+                >
+                  {intl.formatMessage(messages.issuesTotal)}
+                </Typography>
+              </Grid>
+              <Grid xs={6}
+                style={{ textAlign: 'right' }}
+              >
+                <Typography
+                  style={{
+                    marginRight: '25px',
+                    marginTop: '40px',
+                    display: 'inline-block',
+                    color: '#A2A7B1',
+                    fontSize: '12px'
+                  }}
+                >
+                  {intl.formatMessage(messages.accuracyPrc)}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid
+              className={classes.formSubContainer}
+              id="formContainer"
+              container
+              item
+              xs={12}
+            >
+              {this.props.selectedTab === 'keywords' && this.renderKeywordsTable(classes, intl)}
+              {this.props.selectedTab === 'actions' && this.renderActionsTable(classes, intl)}
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     );

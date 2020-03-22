@@ -67,7 +67,8 @@ import {
   loadKeywordsSuccess,
   loadAgentTrainTests,
   loadAgentTrainTestsError,
-  loadAgentTrainTestsSuccess
+  loadAgentTrainTestsSuccess,
+  loadSayings
 } from './actions';
 import {
   LOAD_AGENT,
@@ -94,6 +95,8 @@ import {
   makeSelectConnection,
   makeSelectSessionId,
   makeSelectSettings,
+  makeSelectAgentSettings,
+  makeSelectDialoguePageFilterString,
 } from './selectors';
 
 export function* postConverse(payload) {
@@ -349,6 +352,9 @@ export function* testAgentTrain(payload) {
     const result = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_TEST_TRAIN]));
     yield put(testAgentTrainSuccess({ result }));
     yield put(loadKeywords());
+    var agentSettings = yield select(makeSelectAgentSettings());
+    var dialoguePageFilterString = yield select(makeSelectDialoguePageFilterString());
+    yield put(loadSayings(dialoguePageFilterString, 1, agentSettings.sayingsPageSize));
     yield put(loadAgentTrainTests({ page: 1, pageSize: 5 }));
   } catch (error) {
     yield put(testAgentTrainError(error));

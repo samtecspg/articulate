@@ -48,6 +48,7 @@ import {
   makeSelectAgentVersions,
   makeSelectCurrentUser,
   makeSelectLoadingAgentVersion,
+  makeSelectTrainTest,
 } from '../App/selectors';
 
 import {
@@ -89,7 +90,9 @@ import {
   resetDialoguePageFilters,
   changeDialoguePageFilterKeywords,
   changeDialoguePageFilterActionIssues,
-  changeDialoguePageFilterKeywordIssues
+  changeDialoguePageFilterKeywordIssues,
+  toggleConversationBar,
+  sendMessage,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -537,6 +540,9 @@ export class DialoguePage extends React.PureComponent {
                 dialoguePageFilterActionIssues={this.props.dialoguePageFilterActionIssues}
                 onChangeDialoguePageFilterKeywordIssues={this.props.onChangeDialoguePageFilterKeywordIssues}
                 dialoguePageFilterKeywordIssues={this.props.dialoguePageFilterKeywordIssues}
+                onToggleConversationBar={this.props.onToggleConversationBar}
+                onSendMessage={this.props.onSendMessage}
+                trainTest={this.props.trainTest}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -608,6 +614,9 @@ DialoguePage.propTypes = {
   dialoguePageFilterKeywordIssues: PropTypes.bool,
   onChangeDialoguePageFilterActionIssues: PropTypes.func,
   dialoguePageFilterActionIssues: PropTypes.bool,
+  onToggleConversationBar: PropTypes.func,
+  onSendMessage: PropTypes.func,
+  trainTest: PropTypes.object
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -636,7 +645,8 @@ const mapStateToProps = createStructuredSelector({
   dialoguePageFilterString: makeSelectDialoguePageFilterString(),
   dialoguePageFilterKeywords: makeSelectDialoguePageFilterKeywords(),
   dialoguePageFilterActionIssues: makeSelectDialoguePageFilterActionIssues(),
-  dialoguePageFilterKeywordIssues: makeSelectDialoguePageFilterKeywordIssues()
+  dialoguePageFilterKeywordIssues: makeSelectDialoguePageFilterKeywordIssues(),
+  trainTest: makeSelectTrainTest(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -766,6 +776,12 @@ function mapDispatchToProps(dispatch) {
     },
     onChangeDialoguePageFilterActionIssues: () => {
       dispatch(changeDialoguePageFilterActionIssues())
+    },
+    onToggleConversationBar: (value) => {
+      dispatch(toggleConversationBar(value));
+    },
+    onSendMessage: (payload) => {
+      dispatch(sendMessage(payload))
     }
   };
 }

@@ -2,13 +2,14 @@ import { Grid, InputAdornment, MenuItem, Table, TableBody, TableCell, TableRow, 
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import Immutable from 'seamless-immutable';
 import { useShallowEqual } from 'shouldcomponentupdate-children';
 import FilterSelect from '../../../components/FilterSelect';
 import addActionIcon from '../../../images/add-action-icon.svg';
 import trashIcon from '../../../images/trash-icon.svg';
+import tryErrorIcon from '../../../images/icon-error-try.svg';
 import messages from '../messages';
 import SayingRow from './SayingRow';
 
@@ -25,11 +26,17 @@ const styles = {
   deleteCell: {
     width: '20px',
   },
+  tryErrorCell: {
+    width: '20px',
+  },
   deleteIcon: {
     '&:hover': {
       filter: 'invert(0)',
     },
     filter: 'invert(1)',
+    cursor: 'pointer',
+  },
+  tryErrorIcon: {
     cursor: 'pointer',
   },
   highlightLabel: {
@@ -466,20 +473,40 @@ class SayingsDataForm extends React.Component {
                           />
                         </TableCell>
                         {!isReadOnly && (
-                          <TableCell className={classes.deleteCell}>
-                            <img
-                              onClick={() => {
-                                if (!this.state.currentlyDeletingSaying) {
-                                  this.setState({
-                                    currentlyDeletingSaying: true,
-                                  });
-                                  this.props.onDeleteSaying(saying.id, saying.category);
-                                }
-                              }}
-                              className={classes.deleteIcon}
-                              src={trashIcon}
-                            />
-                          </TableCell>
+                          <Fragment>
+                            <TableCell className={classes.tryErrorCell}>
+                              {this.props.trainTest && this.props.trainTest.timeStamp === Number(saying.lastFailedTestingTimestamp) && (
+
+                                <img
+                                  onClick={() => {
+                                    this.props.onToggleConversationBar(true);
+                                    this.props.onSendMessage({
+                                      author: 'User',
+                                      message: saying.userSays,
+                                    });
+                                  }}
+                                  className={classes.tryErrorIcon}
+                                  src={tryErrorIcon}
+                                />
+
+                              )
+                              }
+                            </TableCell>
+                            <TableCell className={classes.deleteCell}>
+                              <img
+                                onClick={() => {
+                                  if (!this.state.currentlyDeletingSaying) {
+                                    this.setState({
+                                      currentlyDeletingSaying: true,
+                                    });
+                                    this.props.onDeleteSaying(saying.id, saying.category);
+                                  }
+                                }}
+                                className={classes.deleteIcon}
+                                src={trashIcon}
+                              />
+                            </TableCell>
+                          </Fragment>
                         )}
                       </TableRow>
                     ))}
@@ -609,6 +636,9 @@ SayingsDataForm.propTypes = {
   onChangeSayingCategory: PropTypes.func,
   onUpdateSayingData: PropTypes.func,
   isReadOnly: PropTypes.bool,
+  onToggleConversationBar: PropTypes.func,
+  onSendMessage: PropTypes.func,
+  trainTest: PropTypes.object
 };
 
 SayingsDataForm.defaultProps = {

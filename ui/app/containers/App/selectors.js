@@ -269,8 +269,18 @@ const makeSelectTotalTrainTests = () =>
 const makeSelectTrainTest = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.trainTest,
+    globalState => makeSelectTrainTestOnlyFails(globalState.trainTest),
   );
+
+const makeSelectTrainTestOnlyFails = (trainTest) => {
+  var tempTest = null;
+  if (trainTest) {
+    tempTest = Immutable.asMutable(trainTest);
+    tempTest.keywords = tempTest.keywords.filter(keyword => { return keyword.bad > 0 })
+    tempTest.actions = tempTest.actions.filter(action => { return action.bad > 0 })
+  }
+  return tempTest;
+};
 
 const makeSelectTestTrainLoading = () =>
   createSelector(

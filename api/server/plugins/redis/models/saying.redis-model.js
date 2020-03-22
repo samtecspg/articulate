@@ -23,12 +23,21 @@ const schema = {
     lastFailedTestingTimestamp: {
         type: 'timestamp'
     },
-    lastFailedTestingByAction: {
-        type: 'boolean'
+    lastFailedTestingKeywords: {
+        type: 'json',
+        defaultValue: []
     },
-    lastFailedTestingByKeyword: {
-        type: 'boolean'
-    }
+    lastFailedTestingKeywordsTimeStamp: {
+        type: 'timestamp'
+    },
+    lastFailedTestingActions: {
+        type: 'json',
+        defaultValue: []
+    },
+    lastFailedTestingActionsTimeStamp: {
+        type: 'timestamp'
+    },
+
 };
 
 class SayingRedisModel extends BaseModel {

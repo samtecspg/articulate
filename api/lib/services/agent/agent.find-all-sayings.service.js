@@ -9,7 +9,7 @@ import RedisErrorHandler from '../../errors/redis.error-handler';
 
 module.exports = async function ({ id, loadCategoryId, skip, limit, direction, field, filter = {} }) {
 
-    const { globalService } = await this.server.services();
+    const { globalService, trainingTestService } = await this.server.services();
     const { redis } = this.server.app;
 
     try {
@@ -63,19 +63,25 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
         }
 
         if (actionIssues.length > 0 || keywordIssues.length > 0) {
-            let failedTestingTimestamps = allSayings.map((saying) => {
-                return Number(saying.lastFailedTestingTimestamp);
-            })
-            let maxFailedTestingTimestamps = Math.max.apply(Math, failedTestingTimestamps)
-            if (maxFailedTestingTimestamps > 0) {
+            //let failedTestingTimestamps = allSayings.map((saying) => {
+            //    return Number(saying.lastFailedTestingTimestamp);
+            //})
+            //let maxFailedTestingTimestamps = Math.max.apply(Math, failedTestingTimestamps)
+            let maxFailedTestingTimestamp = await trainingTestService.findByAgentId({ agentId: id, limit: 1 });
+            if (maxFailedTestingTimestamp.data && maxFailedTestingTimestamp.data.length > 0) {
+                maxFailedTestingTimestamp = maxFailedTestingTimestamp.data[0]._source.timeStamp
                 filteredSayings = filteredSayings.filter((saying) => {
-                    return (Number(saying.lastFailedTestingTimestamp) === maxFailedTestingTimestamps
+                    return (Number(saying.lastFailedTestingTimestamp) === maxFailedTestingTimestamp
                         && (
                             (actionIssues.length > 0 &&
-                                saying.lastFailedTestingByAction)
+                                Number(saying.lastFailedTestingActionsTimeStamp) === maxFailedTestingTimestamp &&
+                                (actionFilter.length > 0 ? actionFilter.some(fil => saying.lastFailedTestingActions.indexOf(fil) !== -1) : true)
+                            )
                             ||
                             (keywordIssues.length > 0 &&
-                                saying.lastFailedTestingByKeyword)
+                                Number(saying.lastFailedTestingKeywordsTimeStamp) === maxFailedTestingTimestamp &&
+                                (keywordFilter.length > 0 ? keywordFilter.some(fil => saying.lastFailedTestingKeywords.indexOf(fil) !== -1) : true)
+                            )
                         )) ? saying : undefined
                 })
             }

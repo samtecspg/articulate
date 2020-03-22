@@ -21,66 +21,49 @@ module.exports = async function ({ id, debug = false }) {
         agentKeywords.forEach(keyword => {
             agentKeywordsColors[keyword.keywordName] = keyword.uiColor;
         })
-        //let ParsedDocument = await agentService.parse({ AgentModel, text: agentKeywords[0].modifiers[0].sayings[0].userSays, timezone: AgentModel.property('timezone'), saveDocument: false });
 
         var sayingCounter;
         let result = {};
+        result.timeStamp = Date.now();
+        result.agentId = id;
+
         result.keywords = [];
         result.actions = [];
         let errorCounter = 0;
         for (sayingCounter = 0; sayingCounter < agentSayings.data.length; sayingCounter++) {
 
             let errorPresent = false;
+            let badKeywords = [];
+            let badActions = [];
 
             let ParsedDocument = await agentService.parse({ AgentModel, text: agentSayings.data[sayingCounter].userSays, timezone: AgentModel.property('timezone'), saveDocument: false });
 
             let recognizedAction = ParsedDocument.recognized_action;
             let sayingAction = agentSayings.data[sayingCounter].actions.join('+__+');
             if (recognizedAction !== sayingAction) {
-                upsertResultAction(result, sayingAction, 'bad', agentSayings.data[sayingCounter].id);
-                //result.data[errorCounter] = {};
-                //result.data[errorCounter].saying = agentSayings.data[sayingCounter];
-                //result.data[errorCounter].saying.recognizedAction = recognizedAction;
-                //result.data[errorCounter].saying.sayingAction = sayingAction
-                //result.data[errorCounter].saying.actionError = true;
+                upsertResultAction(result, sayingAction, 'bad', agentSayings.data[sayingCounter].id, badActions);
                 errorPresent = true;
             } else {
-                upsertResultAction(result, sayingAction, 'good', agentSayings.data[sayingCounter].id);
+                upsertResultAction(result, sayingAction, 'good', agentSayings.data[sayingCounter].id, badActions);
             }
 
             let recognizedKeywords = ParsedDocument.rasa_results[0].keywords.map((keyword) => { return { start: keyword.start, end: keyword.end, keyword: keyword.keyword, value: keyword.value.value } });
             let sayingKeywords = agentSayings.data[sayingCounter].keywords;
-            //let { recognizedKeywordsMissing, sayingKeywordsMissing } = getKeywordArraysDifference(recognizedKeywords, sayingKeywords);
-
-            //if (recognizedKeywordsMissing.length > 0 || sayingKeywordsMissing.length > 0) {
-            //if (!result.data[errorCounter]) {
-            //    result.data[errorCounter] = {};
-            //    result.data[errorCounter].saying = agentSayings.data[sayingCounter];
-            //}
-
-            //result.data[errorCounter].saying.recognizedKeywordsMissing = recognizedKeywordsMissing;
-            //result.data[errorCounter].saying.sayingKeywordsMissing = sayingKeywordsMissing;
-            //result.data[errorCounter].saying.recognizedKeywordsMissingError = recognizedKeywordsMissing.length > 0;
-            //result.data[errorCounter].saying.sayingKeywordsMissingError = sayingKeywordsMissing.length > 0;
-            //errorPresent = true;
-            //}
-
-            errorPresent = errorPresent || upsertResultKeywords(result, sayingKeywords, recognizedKeywords, agentSayings.data[sayingCounter].id);
+            errorPresent = errorPresent || upsertResultKeywords(result, sayingKeywords, recognizedKeywords, agentSayings.data[sayingCounter].id, badKeywords);
 
             if (errorPresent) {
                 errorCounter++;
+                await updateFailedSaying(agentSayings.data[sayingCounter].id, result, globalService, agentService, AgentModel, badKeywords, badActions)
             }
         }
 
-        result.agentId = id;
         result.totalSayings = agentSayings.data.length;
         result.goodSayings = agentSayings.data.length - errorCounter;
         result.badSayings = errorCounter;
-        result.timeStamp = Date.now();
 
         updateResultAccuracyAndColors(result, agentKeywordsColors);
         await trainingTestService.create({ data: result });
-        await updateFailedSayings(result, globalService, agentService, AgentModel);
+        //await updateFailedSayings(result, globalService, agentService, AgentModel);
         return result;
     }
     catch (error) {
@@ -110,31 +93,7 @@ const updateResultAccuracyAndColors = function (result, agentKeywordsColors) {
     result.accuracy = result.goodSayings / (result.goodSayings + result.badSayings)
 }
 
-const getKeywordArraysDifference = function (recognizedKeywords, sayingKeywords) {
-
-    let recognizedKeywordsMissing = [];
-    let sayingKeywordsMissing = [];
-
-    recognizedKeywordsMissing = recognizedKeywords.filter(function (obj) {
-        return !sayingKeywords.some(function (obj2) {
-            return obj.end == obj2.end &&
-                obj.start == obj2.start &&
-                obj.keyword == obj2.keyword
-        });
-    });
-
-    sayingKeywordsMissing = sayingKeywords.filter(function (obj) {
-        return !recognizedKeywords.some(function (obj2) {
-            return obj.end == obj2.end &&
-                obj.start == obj2.start &&
-                obj.keyword == obj2.keyword
-        });
-    });
-
-    return { recognizedKeywordsMissing, sayingKeywordsMissing };
-}
-
-const upsertResultAction = function (result, sayingAction, condition, sayingId) {
+const upsertResultAction = function (result, sayingAction, condition, sayingId, badActions) {
     let actionIndex = result.actions.findIndex(action => { return action.actionName === sayingAction })
     if (actionIndex === -1) {
         result.actions.push({
@@ -143,17 +102,21 @@ const upsertResultAction = function (result, sayingAction, condition, sayingId) 
             bad: condition === 'bad' ? 1 : 0,
             badSayings: condition === 'bad' ? [sayingId] : []
         })
+        if (condition === 'bad') {
+            badActions.push(sayingAction);
+        }
     } else {
         if (condition === 'good') {
             result.actions[actionIndex].good++;
         } else {
             result.actions[actionIndex].bad++;
             result.actions[actionIndex].badSayings.push(sayingId);
+            badActions.push(sayingAction);
         }
     }
 }
 
-const upsertResultKeywords = function (result, sayingKeywords, recognizedKeywords, sayingId) {
+const upsertResultKeywords = function (result, sayingKeywords, recognizedKeywords, sayingId, badKeywords) {
     let errorPresent = false;
     sayingKeywords.forEach(sayingKeyword => {
         let recognizedKeywordsIndex = recognizedKeywords.findIndex(
@@ -167,6 +130,7 @@ const upsertResultKeywords = function (result, sayingKeywords, recognizedKeyword
             condition = 'good';
         } else {
             errorPresent = true;
+            badKeywords.push(sayingKeyword.keyword);
         }
 
         let resultKeywordIndex = result.keywords.findIndex(keyword => { return keyword.keywordName === sayingKeyword.keyword });
@@ -187,6 +151,30 @@ const upsertResultKeywords = function (result, sayingKeywords, recognizedKeyword
         }
     });
     return errorPresent;
+}
+
+const updateFailedSaying = async function (sayingId, result, globalService, agentService, AgentModel, badKeywords, badActions) {
+
+    let sayingModel = await globalService.findById({ id: sayingId, model: MODEL_SAYING, returnModel: true });
+    let category = await globalService.loadAllLinked({ parentModel: sayingModel, model: MODEL_CATEGORY, returnModel: true });
+    let sayingData = sayingModel.allProperties();
+    sayingData.lastFailedTestingTimestamp = result.timeStamp;
+    if (badKeywords.length > 0) {
+        sayingData.lastFailedTestingKeywords = badKeywords;
+        sayingData.lastFailedTestingKeywordsTimeStamp = result.timeStamp;
+    }
+    if (badActions.length > 0) {
+        sayingData.lastFailedTestingActions = badActions;
+        sayingData.lastFailedTestingActionsTimeStamp = result.timeStamp;
+    }
+    delete sayingData.id;
+    await agentService.upsertSayingInCategory({
+        id: Number(AgentModel.id),
+        categoryId: Number(category[0].id),
+        sayingId: Number(sayingModel.id),
+        sayingData,
+        updateStatus: false
+    });
 }
 
 const updateFailedSayings = async function (result, globalService, agentService, AgentModel) {

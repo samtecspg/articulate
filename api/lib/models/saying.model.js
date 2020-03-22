@@ -17,8 +17,10 @@ class SayingModel {
                 .string(),
             starred: Joi.boolean(),
             lastFailedTestingTimestamp: Joi.string(),
-            lastFailedTestingByAction: Joi.bool(),
-            lastFailedTestingByKeyword: Joi.bool()
+            lastFailedTestingKeywords: Joi.array(),
+            lastFailedTestingKeywordsTimeStamp: Joi.string(),
+            lastFailedTestingActions: Joi.array(),
+            lastFailedTestingActionsTimeStamp: Joi.string(),
         };
     };
 }

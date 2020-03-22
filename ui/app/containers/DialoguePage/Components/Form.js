@@ -355,6 +355,9 @@ class Form extends React.Component {
               onSearchActions={this.props.onSearchActions}
               newSayingActions={this.props.newSayingActions}
               onClearSayingToAction={this.props.onClearSayingToAction}
+              onToggleConversationBar={this.props.onToggleConversationBar}
+              onSendMessage={this.props.onSendMessage}
+              trainTest={this.props.trainTest}
             />
           )}
           {this.props.selectedTab === 'keywords' && (
@@ -470,6 +473,9 @@ Form.propTypes = {
   dialoguePageFilterKeywordIssues: PropTypes.bool,
   onChangeDialoguePageFilterActionIssues: PropTypes.func,
   dialoguePageFilterActionIssues: PropTypes.bool,
+  onToggleConversationBar: PropTypes.func,
+  onSendMessage: PropTypes.func,
+  trainTest: PropTypes.object
 };
 
 Form.defaultProps = {

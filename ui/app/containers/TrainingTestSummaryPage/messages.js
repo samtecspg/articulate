@@ -8,8 +8,8 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   title: {
-    id: 'app.containers.DialoguePage.title',
-    defaultMessage: 'Dialogue',
+    id: 'app.containers.TrainingTestSummaryPage.title',
+    defaultMessage: 'Test summary',
   },
   sayingsFormTitle: {
     id: 'app.containers.DialoguePage.sayingsFormTitle',
@@ -160,6 +160,62 @@ export default defineMessages({
   pickCategoryLabel: {
     id: 'app.containers.ReviewPage.component.PopoverFilter.pickCategoryLabel',
     defaultMessage: 'Filter Category: ',
-  }
+  },
 
+
+
+
+
+
+
+
+
+
+
+
+  trainingTestSummaryDescription: {
+    id: 'app.containers.ActionPage.component.ActionForm.trainingTestSummaryDescription',
+    defaultMessage:
+      'Overall <b> accuracy is {accuracy}% </b>, the issues are detailed below, click on them to see the corresponding sayings',
+  },
+  agent: {
+    id: 'app.components.MainTab.agent',
+    defaultMessage: 'Agent: ',
+  },
+  dialogue: {
+    id: 'app.components.MainTab.dialogue',
+    defaultMessage: 'Dialogue',
+  },
+  keywords: {
+    id: 'app.components.MainTab.keywords',
+    defaultMessage: 'Keywords',
+  },
+  createSubtitle: {
+    id: 'app.components.MainTab.createSubtitle',
+    defaultMessage: 'Create',
+  },
+  finishButton: {
+    id: 'app.components.MainTab.finishButton',
+    defaultMessage: 'Save',
+  },
+  review: {
+    id: 'app.components.MainTab.review',
+    defaultMessage: 'Review',
+  },
+  analytics: {
+    id: 'app.components.MainTab.analytics',
+    defaultMessage: 'Analytics',
+  },
+  instanceName: {
+    id: 'app.components.MainTab.instanceName',
+    defaultMessage: 'agent',
+  },
+  issuesTotal: {
+    id: 'app.components.MainTab.issuesTotal',
+    defaultMessage: 'issues total',
+  },
+  accuracyPrc: {
+    id: 'app.components.MainTab.accuracyPrc',
+    defaultMessage: 'Accuracy %',
+  }
 });

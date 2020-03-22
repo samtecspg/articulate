@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="19px" viewBox="0 0 18 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group 8</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="auto-training-v.1.6" transform="translate(-952.000000, -475.000000)">
+            <g id="Group-8" transform="translate(952.000000, 475.000000)">
+                <g id="icon/try/active" transform="translate(4.000000, 3.000000)" stroke="#4E4E4E" stroke-linecap="round" stroke-linejoin="round">
+                    <g transform="translate(0.322344, 0.700407)" id="Path">
+                        <path d="M0.46,1.85 L0.46,13.15 C0.462312329,13.530576 0.664764159,13.8818423 0.992907093,14.0746262 C1.32105003,14.2674102 1.72643948,14.2732507 2.06,14.09 L12.22,8.45 C12.5631986,8.25693612 12.7755844,7.89377526 12.7755844,7.5 C12.7755844,7.10622474 12.5631986,6.74306388 12.22,6.55 L2.06,0.91 C1.72643948,0.726749292 1.32105003,0.732589802 0.992907093,0.925373776 C0.664764159,1.11815775 0.462312329,1.46942399 0.46,1.85 Z" stroke-width="1.5"></path>
+                    </g>
+                </g>
+                <path d="M4.5,0 C6.98528137,0 9,2.01471863 9,4.5 C9,6.98528137 6.98528137,9 4.5,9 C2.01471863,9 0,6.98528137 0,4.5 C0,2.01471863 2.01471863,0 4.5,0 Z" id="Rectangle" fill="#C10007"></path>
+            </g>
+        </g>
+    </g>
+</svg>

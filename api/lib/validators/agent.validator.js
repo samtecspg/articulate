@@ -727,8 +727,10 @@ class AgentValidate {
                     modificationDate: SayingSchema.modificationDate,
                     starred: SayingSchema.starred.default(false),
                     lastFailedTestingTimestamp: SayingSchema.lastFailedTestingTimestamp.default(null),
-                    lastFailedTestingByAction: SayingSchema.lastFailedTestingByAction.default(false),
-                    lastFailedTestingByKeyword: SayingSchema.lastFailedTestingByKeyword.default(false)
+                    lastFailedTestingKeywords: SayingSchema.lastFailedTestingKeywords.default([]),
+                    lastFailedTestingKeywordsTimeStamp: SayingSchema.lastFailedTestingKeywordsTimeStamp.default(null),
+                    lastFailedTestingActions: SayingSchema.lastFailedTestingActions.default([]),
+                    lastFailedTestingActionsTimeStamp: SayingSchema.lastFailedTestingActionsTimeStamp.default(null),
                 };
             })()
         };
@@ -1024,8 +1026,10 @@ class AgentValidate {
                             modificationDate: KeywordSchema.modificationDate,
                             starred: SayingSchema.starred,
                             lastFailedTestingTimestamp: SayingSchema.lastFailedTestingTimestamp,
-                            lastFailedTestingByAction: SayingSchema.lastFailedTestingByAction,
-                            lastFailedTestingByKeyword: SayingSchema.lastFailedTestingByKeyword
+                            lastFailedTestingKeywords: SayingSchema.lastFailedTestingKeywords,
+                            lastFailedTestingKeywordsTimeStamp: SayingSchema.lastFailedTestingKeywordsTimeStamp,
+                            lastFailedTestingActions: SayingSchema.lastFailedTestingActions,
+                            lastFailedTestingActionsTimeStamp: SayingSchema.lastFailedTestingActionsTimeStamp,
                         }),
                         creationDate: KeywordSchema.creationDate,
                         modificationDate: KeywordSchema.modificationDate
