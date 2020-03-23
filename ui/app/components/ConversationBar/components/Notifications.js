@@ -123,8 +123,7 @@ Notifications.propTypes = {
   intl: intlShape,
   classes: PropTypes.object.isRequired,
   onCloseNotification: PropTypes.func,
-  notifications: PropTypes.array,
-  onOpenTestTrainModal: PropTypes.func
+  notifications: PropTypes.array
 };
 
 export default injectIntl(withStyles(styles)(Notifications));

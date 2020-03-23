@@ -480,7 +480,6 @@ TestTrainNotification.propTypes = {
   classes: PropTypes.object.isRequired,
   onCloseNotification: PropTypes.func,
   notifications: PropTypes.array,
-  onOpenTestTrainModal: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(TestTrainNotification));

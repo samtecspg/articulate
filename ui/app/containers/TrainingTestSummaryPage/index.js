@@ -86,8 +86,6 @@ import {
 
 
   loadAgentTrainTest,
-  loadTestTrainLoading,
-  loadTestTrainError,
   loadSayings,
   changeDialoguePageFilterKeywords,
   changeDialoguePageFilterActions,
@@ -708,12 +706,6 @@ function mapDispatchToProps(dispatch) {
 
     onLoadAgentTestTrain: () => {
       dispatch(loadAgentTrainTest());
-    },
-    onLoadTestTrainLoading: () => {
-      dispatch(loadTestTrainLoading());
-    },
-    onLoadTestTrainError: () => {
-      dispatch(loadTestTrainError());
     },
     onLoadSayings: (filter, page, pageSize, ignoreKeywords) => {
       dispatch(loadSayings(filter, page, pageSize, ignoreKeywords));

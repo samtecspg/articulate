@@ -93,7 +93,6 @@ import {
 } from '../../containers/App/actions';
 
 import LoadingWave from '../LoadingWave';
-import TestTrainModal from '../TestTrainModal'
 import CodeModal from '../CodeModal';
 import Notifications from './components/Notifications';
 import TestTrainNotification from './components/TestTrainNotification'
@@ -339,7 +338,6 @@ export class ConversationBar extends React.PureComponent {
     client: null,
     socketClientConnected: false,
     newSessionCreatedForStart: false,
-    openTestTrainModal: false,
     cardsCarouselActiveCard: 0,
     collapsibleActiveItem: -1,
   };
@@ -526,10 +524,6 @@ export class ConversationBar extends React.PureComponent {
         socketClientConnected: false,
       });
     }
-  }
-
-  handleOpenTestTrainModal = () => {
-    this.setState({ openTestTrainModal: true });
   }
 
   onSearchSaying() {
@@ -778,7 +772,6 @@ export class ConversationBar extends React.PureComponent {
                 notifications={this.props.notifications}
                 onCloseNotification={this.props.onCloseNotification}
                 onCloseTestTrainNotification={this.props.onCloseTestTrainNotification}
-                onOpenTestTrainModal={this.handleOpenTestTrainModal}
                 testTrain={this.props.testTrain}
                 testTrainLoading={this.props.testTrainLoading}
                 testTrainError={this.props.loadTestTrainError}
