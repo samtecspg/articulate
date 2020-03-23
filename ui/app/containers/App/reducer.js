@@ -319,7 +319,8 @@ import {
   RESET_REVIEW_PAGE_LOGS_FILTERS,
   TEST_AGENT_TRAIN,
   TEST_AGENT_TRAIN_ERROR,
-  LOAD_AGENT_TRAIN_TEST
+  LOAD_AGENT_TRAIN_TEST,
+  LOAD_AGENT_LATEST_TRAIN_TEST_SUCCESS
 } from './constants';
 
 const happyEmojies = [
@@ -841,7 +842,6 @@ function appReducer(state = initialState, action) {
       );
     case CLOSE_TEST_TRAIN_NOTIFICATION:
       return state.set('testTrainNotification', null)
-        .set('trainTest', null)
     case SEND_MESSAGE:
       return state
         .update('messages', messages => messages.concat(action.message))
@@ -1288,7 +1288,9 @@ function appReducer(state = initialState, action) {
         .set('agentTouched', false)
         .set('successAgent', true);
     case TRAIN_AGENT:
-      return state.set('error', false);
+      return state.set('error', false)
+        .set('testTrainNotification', null)
+        .set('trainTest', null)
     case TRAIN_AGENT_ERROR:
       state = state.update('notifications', notifications =>
         notifications.concat({
@@ -1463,23 +1465,18 @@ function appReducer(state = initialState, action) {
         .set('testTrainError', action.error);
     case TEST_AGENT_TRAIN_SUCCESS:
       return state
-        //.update('notifications', notifications =>
-        //  notifications.concat({
-        //    template: 'agentTestTrainTemplate',
-        //    type: 'error',
-        //    subtype: 'testTrainError'
-        //  }),
-        //)
         .set('testTrainLoading', false)
         .set('testTrainError', false)
     case LOAD_AGENT_TRAIN_TESTS_SUCCESS:
       return state
         .set('totalTrainTests', action.trainTests.total)
         .set('testTrainResults', action.trainTests.trainTests)
-        .set('trainTest', action.trainTests.trainTests[0])
     case LOAD_AGENT_TRAIN_TEST:
       return state
         .set('trainTest', state.testTrainResults[action.index])
+    case LOAD_AGENT_LATEST_TRAIN_TEST_SUCCESS:
+      return state
+        .set('trainTest', action.trainTest.trainTest)
     case LOAD_AGENT_VERSION:
       return state
         .set('loadingAgentVersion', true)

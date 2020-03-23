@@ -179,8 +179,15 @@ class TrainingsRow extends React.Component {
             }}
             onClick={
               async () => {
+                await this.props.onCloseTestTrainNotification();
                 await this.props.onLoadAgentTrainTest(this.props.trainingTestIndex);
-                await this.props.onGoToUrl(`/agent/${this.props.agent.id}/trainingTestSummary`);
+                if (new Date(this.props.agent.lastTraining) > new Date(trainingTest.timeStamp)
+                  || this.props.agent.status !== 'Ready'
+                ) {
+                  this.props.onTrainingTestSummaryModalChange(true);
+                } else {
+                  await this.props.onGoToUrl(`/agent/${this.props.agent.id}/trainingTestSummary`);
+                }
               }
             }
           >
@@ -203,6 +210,7 @@ TrainingsRow.propTypes = {
   locale: PropTypes.string,
   onLoadSessionId: PropTypes.func,
 
+  onCloseTestTrainNotification: PropTypes.func,
   trainingTest: PropTypes.object
 };
 

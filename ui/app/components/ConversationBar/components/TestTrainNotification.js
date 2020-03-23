@@ -343,6 +343,7 @@ export class TestTrainNotification extends React.Component {
           display: 'inline-block'
         }}
         onClick={async () => {
+          await this.props.onCloseTestTrainNotification();
           await this.props.onGoToUrl(
             `/agent/${this.props.agent.id}/trainingTestSummary`,
           )

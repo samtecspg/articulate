@@ -163,9 +163,18 @@ class Form extends React.Component {
     });
   };
 
-  renderKeywordsTable = (classes, intl) => {
+  renderKeywordsTable = (classes, intl, messages) => {
     return (<Table>
       <TableBody>
+        {(!this.props.testTrain || this.props.testTrain.keywords.length === 0) && (
+          <TableRow
+            className={classes.keywordRow}
+          >
+            <TableCell>
+              <span>{intl.formatMessage(messages.noData)}</span>
+            </TableCell>
+          </TableRow>
+        )}
         {this.props.testTrain ? (this.props.testTrain.keywords.map((keyword, index) => (
           <TableRow
             className={classes.keywordRow}
@@ -205,9 +214,18 @@ class Form extends React.Component {
     </Table>)
   }
 
-  renderActionsTable = (classes, intl) => {
+  renderActionsTable = (classes, intl, messages) => {
     return (<Table>
       <TableBody>
+        {(!this.props.testTrain || this.props.testTrain.actions.length === 0) && (
+          <TableRow
+            className={classes.keywordRow}
+          >
+            <TableCell>
+              <span>{intl.formatMessage(messages.noData)}</span>
+            </TableCell>
+          </TableRow>
+        )}
         {this.props.testTrain ? (this.props.testTrain.actions.map((action, index) => (
           <TableRow
             className={classes.keywordRow}
@@ -393,8 +411,8 @@ class Form extends React.Component {
               item
               xs={12}
             >
-              {this.props.selectedTab === 'keywords' && this.renderKeywordsTable(classes, intl)}
-              {this.props.selectedTab === 'actions' && this.renderActionsTable(classes, intl)}
+              {this.props.selectedTab === 'keywords' && this.renderKeywordsTable(classes, intl, messages)}
+              {this.props.selectedTab === 'actions' && this.renderActionsTable(classes, intl, messages)}
             </Grid>
           </Grid>
         </Grid>

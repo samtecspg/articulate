@@ -292,6 +292,9 @@ import {
   LOAD_AGENT_TRAIN_TESTS_ERROR,
   LOAD_AGENT_TRAIN_TESTS_SUCCESS,
   LOAD_AGENT_TRAIN_TEST,
+  LOAD_AGENT_LATEST_TRAIN_TEST,
+  LOAD_AGENT_LATEST_TRAIN_TEST_SUCCESS,
+  LOAD_AGENT_LATEST_TRAIN_TEST_ERROR,
   UNCHAIN_ACTION_FROM_RESPONSE,
   UNTAG_KEYWORD,
   UNTAG_MODIFIER_KEYWORD,
@@ -3060,5 +3063,25 @@ export function loadAgentTrainTest(index) {
   return {
     type: LOAD_AGENT_TRAIN_TEST,
     index
+  };
+}
+
+export function loadAgentLatestTrainTest() {
+  return {
+    type: LOAD_AGENT_LATEST_TRAIN_TEST,
+    apiCall: true,
+  };
+}
+
+export function loadAgentLatestTrainTestSuccess(trainTest) {
+  return {
+    type: LOAD_AGENT_LATEST_TRAIN_TEST_SUCCESS,
+    trainTest
+  };
+}
+
+export function loadAgentLatestTrainTestError() {
+  return {
+    type: LOAD_AGENT_LATEST_TRAIN_TEST_ERROR,
   };
 }

@@ -68,7 +68,11 @@ import {
   loadAgentTrainTests,
   loadAgentTrainTestsError,
   loadAgentTrainTestsSuccess,
-  loadSayings
+  loadSayings,
+  loadAgentLatestTrainTest,
+  loadAgentLatestTrainTestSuccess,
+  loadAgentLatestTrainTestError,
+  closeTestTrainNotification
 } from './actions';
 import {
   LOAD_AGENT,
@@ -88,7 +92,8 @@ import {
   UPDATE_AGENT_VERSION,
   DELETE_AGENT_VERSION,
   LOAD_KEYWORDS,
-  LOAD_AGENT_TRAIN_TESTS
+  LOAD_AGENT_TRAIN_TESTS,
+  LOAD_AGENT_LATEST_TRAIN_TEST
 } from './constants';
 import {
   makeSelectAgent,
@@ -189,6 +194,8 @@ export function* getAgent(payload) {
     }
     yield put(loadAgentSuccess({ agent, webhook, postFormat }));
     yield put(loadAgentVersions(agent.originalAgentVersionId == -1 ? agent.id : agent.originalAgentVersionId));
+    yield put(closeTestTrainNotification());
+    yield put(loadAgentLatestTrainTest());
   } catch (err) {
     yield put(loadAgentError(err));
   }
@@ -355,7 +362,8 @@ export function* testAgentTrain(payload) {
     var agentSettings = yield select(makeSelectAgentSettings());
     var dialoguePageFilterString = yield select(makeSelectDialoguePageFilterString());
     yield put(loadSayings(dialoguePageFilterString, 1, agentSettings.sayingsPageSize));
-    yield put(loadAgentTrainTests({ page: 1, pageSize: 5 }));
+    yield put(loadAgentLatestTrainTest());
+    yield put(loadAgentTrainTests({ page: 1, pageSize: 5 }))//FIXME page size
   } catch (error) {
     yield put(testAgentTrainError(error));
   }
@@ -442,6 +450,33 @@ export function* getAgentTrainTests(payload) {
   }
 }
 
+export function* getAgentLatestTrainTest(payload) {
+  const { api } = payload;
+  const agent = yield select(makeSelectAgent());
+  try {
+    const params = {
+      filter: null,
+      skip: 0,
+      limit: 1,
+    };
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_TRAIN_TEST]),
+      { params },
+    );
+    yield put(
+      loadAgentLatestTrainTestSuccess({
+        trainTest: response.data.length > 0 ?
+          response.data[0]._source :
+          null
+      }),
+    );
+  } catch (err) {
+    yield put(loadAgentLatestTrainTestError(err));
+  }
+}
+
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
   yield takeLatest(LOAD_AGENT_VERSIONS, getagentVersions);
@@ -463,4 +498,5 @@ export default function* rootSaga() {
   yield takeLatest(TEST_AGENT_TRAIN, testAgentTrain);
   yield takeLatest(LOAD_KEYWORDS, getKeywords);
   yield takeLatest(LOAD_AGENT_TRAIN_TESTS, getAgentTrainTests);
+  yield takeLatest(LOAD_AGENT_LATEST_TRAIN_TEST, getAgentLatestTrainTest);
 }

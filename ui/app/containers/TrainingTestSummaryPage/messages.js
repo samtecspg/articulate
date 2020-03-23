@@ -217,5 +217,13 @@ export default defineMessages({
   accuracyPrc: {
     id: 'app.components.MainTab.accuracyPrc',
     defaultMessage: 'Accuracy %',
+  },
+  noData: {
+    id: 'app.components.MainTab.noData',
+    defaultMessage: 'No Data',
+  },
+  backButton: {
+    id: 'app.components.MainTab.backButton',
+    defaultMessage: 'Exit',
   }
 });

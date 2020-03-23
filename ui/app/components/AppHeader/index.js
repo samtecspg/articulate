@@ -142,15 +142,15 @@ export class AppHeader extends React.Component {
                 <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
               </a>
             ) : (
-              <Link
-                onClick={() => {
-                  this.props.onToggleConversationBar(false);
-                }}
-                to={'/'}
-              >
-                <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-              </Link>
-            )}
+                <Link
+                  onClick={() => {
+                    this.props.onToggleConversationBar(false);
+                  }}
+                  to={'/'}
+                >
+                  <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                </Link>
+              )}
           </Grid>
           <Grid item xl={2} lg={2} md={2} />
           <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
@@ -184,103 +184,37 @@ export class AppHeader extends React.Component {
               demoMode={demoMode}
             />
           ) : (
-            <Fragment>
-              <Grid className={classes.languageSelectContainer}>
-                <LanguageSelect
-                  key="selectLanguage"
+              <Fragment>
+                <Grid className={classes.languageSelectContainer}>
+                  <LanguageSelect
+                    key="selectLanguage"
+                    uiLanguage={this.props.uiLanguage}
+                    uiLanguages={this.props.uiLanguages}
+                    onChangeLanguage={this.props.onChangeLanguage}
+                  />
+                </Grid>
+                <ConversationBar
                   uiLanguage={this.props.uiLanguage}
                   uiLanguages={this.props.uiLanguages}
                   onChangeLanguage={this.props.onChangeLanguage}
+                  onToggleConversationBar={this.props.onToggleConversationBar}
                 />
-              </Grid>
-              <ConversationBar
-                uiLanguage={this.props.uiLanguage}
-                uiLanguages={this.props.uiLanguages}
-                onChangeLanguage={this.props.onChangeLanguage}
-                onToggleConversationBar={this.props.onToggleConversationBar}
-              />
-              <Grid item sm={6} xs={6}>
-                <Link
-                  onClick={() => {
-                    this.props.onToggleConversationBar(false);
-                  }}
-                  to="/"
-                  className={classes.link}
-                >
-                  <Button variant="contained">
-                    <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-                    <FormattedMessage {...messages.agentsButton} />
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item sm={6} xs={6}>
-                <Button
-                  onClick={() => {
-                    this.props.onToggleConversationBar(true);
-                  }}
-                  color="primary"
-                  variant="contained"
-                  className={classes.openChat}
-                >
-                  <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-                  <FormattedMessage {...messages.openChatButton} />
-                </Button>
-              </Grid>
-            </Fragment>
-          )}
-        </Hidden>
-      </Grid>
-    ) : (
-      <Grid container className={classes.header} item xs={12}>
-        <Hidden only={['xs', 'sm']}>
-          <Grid item xl={2} lg={2} md={2}>
-            {demoMode ? (
-              <a href="https://spg.ai/projects/articulate/" target="_blank">
-                <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-              </a>
-            ) : (
-              <Link
-                onClick={() => {
-                  this.props.onToggleConversationBar(false);
-                }}
-                to="/"
-              >
-                <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-              </Link>
-            )}
-          </Grid>
-          <Grid item xl={3} lg={3} md={3} />
-          <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
-            {isAgentNameHidden ? (
-              <Typography className={classes.agentName} style={{ color: agent.uiColor }}>
-                {gravatars[agent.gravatar - 1]({
-                  color: agent.uiColor,
-                  className: classes.agentIcon,
-                })}
-                <span>{agent.agentName}</span>
-                <Tooltip title={intl.formatMessage(messages.shareAgent)} placement="bottom">
-                  <img
-                    src={shareIcon}
-                    className={classes.shareIcon}
+                <Grid item sm={6} xs={6}>
+                  <Link
                     onClick={() => {
-                      this.props.onShareAgent(agent.id);
+                      this.props.onToggleConversationBar(false);
                     }}
-                  />
-                </Tooltip>
-              </Typography>
-            ) : null}
-          </Grid>
-          <Grid item xl={3} lg={3} md={3} />
-          <Grid item xl={2} lg={2} md={2}>
-            {pathname !== '/' ? (
-              [
-                validNotifications.length > 0 && chatButtonOpen ? (
-                  <div key="conversationNotificationDot" className={classes.notificationDot} style={{ backgroundColor: notificationDotColor }} />
-                ) : null,
-
-                chatButtonOpen && isConverseEnabled && (
+                    to="/"
+                    className={classes.link}
+                  >
+                    <Button variant="contained">
+                      <img className={classes.icon} src={agentsIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                      <FormattedMessage {...messages.agentsButton} />
+                    </Button>
+                  </Link>
+                </Grid>
+                <Grid item sm={6} xs={6}>
                   <Button
-                    key="conversat_button"
                     onClick={() => {
                       this.props.onToggleConversationBar(true);
                     }}
@@ -291,40 +225,39 @@ export class AppHeader extends React.Component {
                     <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
                     <FormattedMessage {...messages.openChatButton} />
                   </Button>
-                ),
-                <LanguageSelect
-                  key="selectLanguage"
-                  uiLanguage={this.props.uiLanguage}
-                  uiLanguages={this.props.uiLanguages}
-                  onChangeLanguage={this.props.onChangeLanguage}
-                />,
-              ]
-            ) : (
-              <LanguageSelect
-                key="selectLanguage"
-                uiLanguage={this.props.uiLanguage}
-                uiLanguages={this.props.uiLanguages}
-                onChangeLanguage={this.props.onChangeLanguage}
-              />
+                </Grid>
+              </Fragment>
             )}
-          </Grid>
         </Hidden>
-        <Hidden only={['md', 'lg', 'xl']}>
-          {demoMode ? (
-            <Grid item xs={4}>
-              <a href="https://spg.ai/projects/articulate/" target="_blank">
-                <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-              </a>
+      </Grid>
+    ) : (
+        <Grid container className={classes.header} item xs={12}>
+          <Hidden only={['xs', 'sm']}>
+            <Grid item xl={2} lg={2} md={2}>
+              {demoMode ? (
+                <a href="https://spg.ai/projects/articulate/" target="_blank">
+                  <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                </a>
+              ) : (
+                  <Link
+                    onClick={() => {
+                      this.props.onToggleConversationBar(false);
+                    }}
+                    to="/"
+                  >
+                    <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                  </Link>
+                )}
             </Grid>
-          ) : (
-            <Grid item sm={6} xs={6}>
+            <Grid item xl={3} lg={3} md={3} />
+            <Grid className={classes.agentsButtonContainer} item xl={2} lg={2} md={2}>
               {isAgentNameHidden ? (
                 <Typography className={classes.agentName} style={{ color: agent.uiColor }}>
                   {gravatars[agent.gravatar - 1]({
                     color: agent.uiColor,
                     className: classes.agentIcon,
                   })}
-                  <span className={classes.agentName}>{agent.agentName}</span>
+                  <span>{agent.agentName}</span>
                   <Tooltip title={intl.formatMessage(messages.shareAgent)} placement="bottom">
                     <img
                       src={shareIcon}
@@ -337,47 +270,118 @@ export class AppHeader extends React.Component {
                 </Typography>
               ) : null}
             </Grid>
-          )}
-          <Grid item xs={8}>
-            {pathname !== '/' ? (
-              [
-                validNotifications.length > 0 && chatButtonOpen ? (
-                  <div key="conversationNotificationDot" className={classes.notificationDot} style={{ backgroundColor: notificationDotColor }} />
-                ) : null,
-                chatButtonOpen && isConverseEnabled && (
-                  <Button
-                    key="conversat_button"
-                    onClick={() => {
-                      this.props.onToggleConversationBar(true);
-                    }}
-                    color="primary"
-                    variant="contained"
-                    className={classes.openChat}
-                    style={{ marginLeft: '15px' }}
-                  >
-                    <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
-                    <FormattedMessage {...messages.openChatButtonSmall} />
-                  </Button>
-                ),
-                <LanguageSelect
-                  key="selectLanguage"
-                  uiLanguage={this.props.uiLanguage}
-                  uiLanguages={this.props.uiLanguages}
-                  onChangeLanguage={this.props.onChangeLanguage}
-                />,
-              ]
+            <Grid item xl={3} lg={3} md={3} />
+            <Grid item xl={2} lg={2} md={2}>
+              {pathname !== '/' ? (
+                [
+                  validNotifications.length > 0 && chatButtonOpen ? (
+                    <div key="conversationNotificationDot" className={classes.notificationDot} style={{ backgroundColor: notificationDotColor }} />
+                  ) : this.props.testTrainNotification ? (
+                    <div key="conversationNotificationDot" className={classes.notificationDot} style={{ backgroundColor: '#358fec' }} />
+                  ) : null,
+
+                  chatButtonOpen && isConverseEnabled && (
+                    <Button
+                      key="conversat_button"
+                      onClick={() => {
+                        this.props.onToggleConversationBar(true);
+                      }}
+                      color="primary"
+                      variant="contained"
+                      className={classes.openChat}
+                    >
+                      <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                      <FormattedMessage {...messages.openChatButton} />
+                    </Button>
+                  ),
+                  <LanguageSelect
+                    key="selectLanguage"
+                    uiLanguage={this.props.uiLanguage}
+                    uiLanguages={this.props.uiLanguages}
+                    onChangeLanguage={this.props.onChangeLanguage}
+                  />,
+                ]
+              ) : (
+                  <LanguageSelect
+                    key="selectLanguage"
+                    uiLanguage={this.props.uiLanguage}
+                    uiLanguages={this.props.uiLanguages}
+                    onChangeLanguage={this.props.onChangeLanguage}
+                  />
+                )}
+            </Grid>
+          </Hidden>
+          <Hidden only={['md', 'lg', 'xl']}>
+            {demoMode ? (
+              <Grid item xs={4}>
+                <a href="https://spg.ai/projects/articulate/" target="_blank">
+                  <img className={classes.logo} src={logo} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                </a>
+              </Grid>
             ) : (
-              <LanguageSelect
-                key="selectLanguage"
-                uiLanguage={this.props.uiLanguage}
-                uiLanguages={this.props.uiLanguages}
-                onChangeLanguage={this.props.onChangeLanguage}
-              />
-            )}
-          </Grid>
-        </Hidden>
-      </Grid>
-    );
+                <Grid item sm={6} xs={6}>
+                  {isAgentNameHidden ? (
+                    <Typography className={classes.agentName} style={{ color: agent.uiColor }}>
+                      {gravatars[agent.gravatar - 1]({
+                        color: agent.uiColor,
+                        className: classes.agentIcon,
+                      })}
+                      <span className={classes.agentName}>{agent.agentName}</span>
+                      <Tooltip title={intl.formatMessage(messages.shareAgent)} placement="bottom">
+                        <img
+                          src={shareIcon}
+                          className={classes.shareIcon}
+                          onClick={() => {
+                            this.props.onShareAgent(agent.id);
+                          }}
+                        />
+                      </Tooltip>
+                    </Typography>
+                  ) : null}
+                </Grid>
+              )}
+            <Grid item xs={8}>
+              {pathname !== '/' ? (
+                [
+                  validNotifications.length > 0 && chatButtonOpen ? (
+                    <div key="conversationNotificationDot" className={classes.notificationDot} style={{ backgroundColor: notificationDotColor }} />
+                  ) : this.props.testTrainNotification ? (
+                    <div key="conversationNotificationDot" className={classes.notificationDot} style={{ backgroundColor: '#358fec' }} />
+                  ) : null,
+                  chatButtonOpen && isConverseEnabled && (
+                    <Button
+                      key="conversat_button"
+                      onClick={() => {
+                        this.props.onToggleConversationBar(true);
+                      }}
+                      color="primary"
+                      variant="contained"
+                      className={classes.openChat}
+                      style={{ marginLeft: '15px' }}
+                    >
+                      <img className={classes.icon} src={chatIcon} alt={intl.formatMessage(messages.articulateLogoAlt)} />
+                      <FormattedMessage {...messages.openChatButtonSmall} />
+                    </Button>
+                  ),
+                  <LanguageSelect
+                    key="selectLanguage"
+                    uiLanguage={this.props.uiLanguage}
+                    uiLanguages={this.props.uiLanguages}
+                    onChangeLanguage={this.props.onChangeLanguage}
+                  />,
+                ]
+              ) : (
+                  <LanguageSelect
+                    key="selectLanguage"
+                    uiLanguage={this.props.uiLanguage}
+                    uiLanguages={this.props.uiLanguages}
+                    onChangeLanguage={this.props.onChangeLanguage}
+                  />
+                )}
+            </Grid>
+          </Hidden>
+        </Grid>
+      );
   }
 }
 

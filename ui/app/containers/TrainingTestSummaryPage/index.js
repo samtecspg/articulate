@@ -56,7 +56,6 @@ import {
 import {
   addActionNewSaying,
   addActionSaying,
-  addSaying,
   changeActionsPageSize,
   changeKeywordsPageSize,
   changeSayingCategory,
@@ -97,6 +96,7 @@ import {
   changeDialoguePageNumberOfFiltersApplied,
   changeDialoguePageFilterActionIssues,
   resetDialoguePageFilters,
+  loadAgentLatestTrainTest,
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -110,7 +110,6 @@ export class TrainingTestSummaryPage extends React.PureComponent {
     this.onSearchSaying = this.onSearchSaying.bind(this);
     this.onSearchCategory = this.onSearchCategory.bind(this);
     this.onSearchActions = this.onSearchActions.bind(this);
-    this.addSaying = this.addSaying.bind(this);
     this.deleteSaying = this.deleteSaying.bind(this);
     this.initForm = this.initForm.bind(this);
     this.changeKeywordsPage = this.changeKeywordsPage.bind(this);
@@ -204,7 +203,7 @@ export class TrainingTestSummaryPage extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    this.throttledOnLoadSayings = null;
+    this.props.onLoadAgentLatestTrainTest();
   }
 
   componentDidUpdate(prevProps) {
@@ -286,13 +285,6 @@ export class TrainingTestSummaryPage extends React.PureComponent {
       actionFilter,
     });
     this.props.onLoadFilteredActions(actionFilter);
-  }
-
-  addSaying(saying) {
-    this.setState({
-      currentSayingsPage: 1,
-    });
-    this.props.onAddSaying(this.state.filter, 1, this.state.sayingsPageSize, saying);
   }
 
   deleteSaying(sayingId, categoryId) {
@@ -460,6 +452,9 @@ export class TrainingTestSummaryPage extends React.PureComponent {
           selectedTab="dialogue"
           agentForm={Link}
           agentURL={`/agent/${this.props.agent.id}?ref=mainTab`}
+
+          onGoToUrl={this.props.onGoToUrl}
+          agent={this.props.agent}
           dialogueForm={
             <Form
               handleTabChange={this.handleTabChange}
@@ -619,9 +614,6 @@ function mapDispatchToProps(dispatch) {
     onLoadActions: () => {
       dispatch(loadActions());
     },
-    onAddSaying: (filter, page, pageSize, value) => {
-      dispatch(addSaying(filter, page, pageSize, value));
-    },
     onDeleteSaying: (filter, page, pageSize, sayingId, categoryId) => {
       dispatch(deleteSaying(filter, page, pageSize, sayingId, categoryId));
     },
@@ -643,9 +635,9 @@ function mapDispatchToProps(dispatch) {
     onDeleteNewSayingAction: actionName => {
       dispatch(deleteActionNewSaying(actionName));
     },
-    onGoToUrl: (filter, page, pageSize, tab, url) => {
-      dispatch(push(`${url}${url.indexOf('?') > -1 ? '&' : '?'}filter=${filter}&page=${page}&pageSize=${pageSize}&tab=${tab}`));
-    },
+    //onGoToUrl: (filter, page, pageSize, tab, url) => {
+    //  dispatch(push(`${url}${url.indexOf('?') > -1 ? '&' : '?'}filter=${filter}&page=${page}&pageSize=${pageSize}&tab=${tab}`));
+    //},
     onSendSayingToAction: saying => {
       dispatch(sendSayingToAction(saying));
     },
@@ -753,7 +745,9 @@ function mapDispatchToProps(dispatch) {
     onGoToUrl: url => {
       dispatch(push(url));
     },
-
+    onLoadAgentLatestTrainTest: () => {
+      dispatch(loadAgentLatestTrainTest());
+    }
 
 
   };

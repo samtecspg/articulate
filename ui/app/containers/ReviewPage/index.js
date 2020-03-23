@@ -80,6 +80,7 @@ export class ReviewPage extends React.Component {
     this.handleTabChange = this.handleTabChange.bind(this);
     this.handleDeleteDocModalChange = this.handleDeleteDocModalChange.bind(this);
     this.onSearchLog = this.onSearchLog.bind(this);
+    this.handleTrainingTestSummaryModalChange = this.handleTrainingTestSummaryModalChange.bind(this);
   }
 
   state = {
@@ -143,6 +144,7 @@ export class ReviewPage extends React.Component {
     deleteDocSessionId: '',
     deleteSessionModalOpen: false,
     deleteSessionId: '',
+    trainingTestSummaryModalOpen: false,
   };
 
   async initForm() {
@@ -538,6 +540,12 @@ export class ReviewPage extends React.Component {
     })
   }
 
+  handleTrainingTestSummaryModalChange = (trainingTestSummaryModalOpen) => {
+    this.setState({
+      trainingTestSummaryModalOpen
+    })
+  }
+
   deleteSession() {
     this.props.actions.onDeleteSession({
       sessionId: this.state.deleteSessionId,
@@ -570,7 +578,9 @@ export class ReviewPage extends React.Component {
       onResetReviewPageFilters,
       onResetReviewPageLogsFilters,
       onChangeReviewPageFilterString,
-      onLoadAgentTrainTest
+      onLoadAgentTrainTest,
+      onLoadAgentLatestTrainTest,
+      onCloseTestTrainNotification
     } = this.props.actions;
 
     const {
@@ -680,6 +690,10 @@ export class ReviewPage extends React.Component {
               trainTests={this.props.trainTests}
               onLoadAgentTrainTest={onLoadAgentTrainTest}
               onGoToUrl={this.props.onGoToUrl}
+              onLoadAgentLatestTrainTest={onLoadAgentLatestTrainTest}
+              onCloseTestTrainNotification={onCloseTestTrainNotification}
+              onTrainingTestSummaryModalChange={this.handleTrainingTestSummaryModalChange}
+              trainingTestSummaryModalOpen={this.state.trainingTestSummaryModalOpen}
             />
           }
           dialogueForm={Link}
@@ -739,7 +753,9 @@ ReviewPage.propTypes = {
     onResetReviewPageFilters: PropTypes.func.isRequired,
     onResetReviewPageLogsFilters: PropTypes.func.isRequired,
     onLoadAgentTrainTests: PropTypes.func.isRequired,
-    onLoadAgentTrainTest: PropTypes.func.isRequired
+    onLoadAgentTrainTest: PropTypes.func.isRequired,
+    onLoadAgentLatestTrainTest: PropTypes.func.isRequired,
+    onCloseTestTrainNotification: PropTypes.func.isRequired
   }),
   agent: PropTypes.object.isRequired,
   serverStatus: PropTypes.string,
@@ -840,6 +856,8 @@ function mapDispatchToProps(dispatch) {
         onResetReviewPageLogsFilters: Actions.resetReviewPageLogsFilters,
         onLoadAgentTrainTests: Actions.loadAgentTrainTests,
         onLoadAgentTrainTest: Actions.loadAgentTrainTest,
+        onLoadAgentLatestTrainTest: Actions.loadAgentLatestTrainTest,
+        onCloseTestTrainNotification: Actions.closeTestTrainNotification,
         onGoToUrl: Actions.onGoToUrl
       },
       dispatch,

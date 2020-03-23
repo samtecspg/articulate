@@ -230,6 +230,23 @@ class Form extends React.Component {
               customMessageSaveAndExitButton={intl.formatMessage(messages.deleteSessionAlertYes)}
               customMessageExitButton={intl.formatMessage(messages.deleteSessionAlertNo)}
             />
+            <ExitModal
+              open={this.props.trainingTestSummaryModalOpen}
+              onExit={() => {
+                this.props.onTrainingTestSummaryModalChange(false);
+              }}
+              onSaveAndExit={() => {
+                this.props.onGoToUrl(`/agent/${this.props.agent.id}/trainingTestSummary`);
+                this.props.onTrainingTestSummaryModalChange(false);
+              }}
+              onClose={() => {
+                this.props.onTrainingTestSummaryModalChange(false);
+              }}
+              customMessage1={intl.formatMessage(messages.deleteSessionAlert1)}
+              customMessage2={intl.formatMessage(messages.deleteSessionAlert2)}
+              customMessageSaveAndExitButton={intl.formatMessage(messages.deleteSessionAlertYes)}
+              customMessageExitButton={intl.formatMessage(messages.deleteSessionAlertNo)}
+            />
           </Grid>
         </Grid>
         <Grid item xs={12}>
@@ -467,6 +484,10 @@ class Form extends React.Component {
                 onLoadAgentTrainTest={this.props.onLoadAgentTrainTest}
                 onLoadAgentTrainTests={this.props.onLoadAgentTrainTests}
                 onGoToUrl={this.props.onGoToUrl}
+                onLoadAgentLatestTrainTest={this.props.onLoadAgentLatestTrainTest}
+                onCloseTestTrainNotification={this.props.onCloseTestTrainNotification}
+                trainingTestSummaryModalOpen={this.props.trainingTestSummaryModalOpen}
+                onTrainingTestSummaryModalChange={this.props.onTrainingTestSummaryModalChange}
               />
             </Fragment>
           )
@@ -538,7 +559,8 @@ Form.propTypes = {
   onChangeReviewPageLogsNumberOfFiltersApplied: PropTypes.func,
   reviewPageLogsNumberOfFiltersApplied: PropTypes.number,
   onResetReviewPageFilters: PropTypes.func,
-  onResetReviewPageLogsFilters: PropTypes.func
+  onResetReviewPageLogsFilters: PropTypes.func,
+  onLoadAgentLatestTrainTest: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(Form));

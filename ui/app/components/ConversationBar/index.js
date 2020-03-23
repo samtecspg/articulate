@@ -771,8 +771,9 @@ export class ConversationBar extends React.PureComponent {
             style={{ width: this.state.newWidth + 17 }}
             className={classes.contentContainer}
           >
-            {/*this.props.testTrainNotification &&
-              this.props.testTrainNotification.agentId === this.props.agent.id &&*/
+            {this.props.testTrainNotification &&
+              this.props.testTrainNotification.agentId === this.props.agent.id &&
+              this.props.agent.status === 'Ready' &&
               <TestTrainNotification
                 notifications={this.props.notifications}
                 onCloseNotification={this.props.onCloseNotification}

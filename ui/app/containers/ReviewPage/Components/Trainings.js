@@ -270,6 +270,10 @@ function Trainings(props) {
                       onLoadAgentTrainTest={props.onLoadAgentTrainTest}
                       trainingTestIndex={trainingTestIndex}
                       onGoToUrl={props.onGoToUrl}
+                      onLoadAgentLatestTrainTest={props.onLoadAgentLatestTrainTest}
+                      onCloseTestTrainNotification={props.onCloseTestTrainNotification}
+                      trainingTestSummaryModalOpen={props.trainingTestSummaryModalOpen}
+                      onTrainingTestSummaryModalChange={props.onTrainingTestSummaryModalChange}
                     />
                   </StyledRow>
                 ))
@@ -410,6 +414,7 @@ Trainings.propTypes = {
   locale: PropTypes.string,
   timeSort: PropTypes.string,
   onLoadSessionId: PropTypes.func,
+  onLoadAgentLatestTrainTest: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(Trainings));

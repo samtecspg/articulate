@@ -56,6 +56,8 @@ const styles = {
   buttonContainer: {
     position: 'relative',
     bottom: '5px',
+    width: '100%',
+    textAlign: 'right'
   },
   icon: {
     padding: '0px 10px',
@@ -68,6 +70,32 @@ const styles = {
   },
   button: {
     display: 'inline',
+  },
+  backButtonContainer: {
+    display: 'inline',
+    widht: '100%',
+    bottom: '10px',
+  },
+  backArrow: {
+    cursor: 'pointer',
+    left: -15,
+    fontSize: '14px',
+    fontFamily: 'Montserrat',
+    fontWeight: 400,
+    position: 'relative',
+  },
+  backButton: {
+    cursor: 'pointer',
+    left: -15,
+    fontSize: '14px',
+    fontFamily: 'Montserrat',
+    fontWeight: 400,
+    position: 'relative',
+    textDecoration: 'underline',
+  },
+  container: {
+    display: 'inline',
+    float: 'right',
   },
 };
 
@@ -91,22 +119,52 @@ export class MainTab extends React.Component {
       intl,
     } = this.props;
     return (
-      <Grid container className={classes.mainTabContainer}>
-        <Hidden only={['sm', 'xs', 'md']}>
-          {!this.props.dialogueURL
-            ? this.state.selectedTab === 'dialogue'
-              ? this.props.dialogueForm
-              : null
-            : null}
-        </Hidden>
-        <Hidden only={['xl', 'lg']}>
-          {!this.props.dialogueURL
-            ? this.state.selectedTab === 'dialogue'
-              ? this.props.dialogueForm
-              : null
-            : null}
-        </Hidden>
-      </Grid>
+      <Fragment>
+        <Grid className={classes.container}>
+          <Grid container className={classes.mainTabContainer}>
+            <Grid className={classes.buttonContainer}>
+              <Grid className={classes.backButtonContainer}>
+                <span
+                  className={classes.backArrow}
+                  onClick={async () => {
+                    await this.props.onGoToUrl(
+                      `/agent/${this.props.agent.id}/dialogue`,
+                    );
+                  }}
+                  key="backArrow"
+                >
+                  {'< '}
+                </span>
+                <a
+                  key="backLink"
+                  className={classes.backButton}
+                  onClick={async () => {
+                    await this.props.onGoToUrl(
+                      `/agent/${this.props.agent.id}/dialogue`,
+                    );
+                  }}
+                >
+                  <FormattedMessage {...messages.backButton} />
+                </a>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Hidden only={['sm', 'xs', 'md']}>
+            {!this.props.dialogueURL
+              ? this.state.selectedTab === 'dialogue'
+                ? this.props.dialogueForm
+                : null
+              : null}
+          </Hidden>
+          <Hidden only={['xl', 'lg']}>
+            {!this.props.dialogueURL
+              ? this.state.selectedTab === 'dialogue'
+                ? this.props.dialogueForm
+                : null
+              : null}
+          </Hidden>
+        </Grid>
+      </Fragment>
     );
   }
 }
@@ -140,7 +198,9 @@ MainTab.propTypes = {
   locale: PropTypes.string,
   serverStatus: PropTypes.string,
   isReadOnly: PropTypes.bool,
-  agentVersions: PropTypes.array
+  agentVersions: PropTypes.array,
+
+  onGoToUrl: PropTypes.func
 };
 
 MainTab.defaultProps = {

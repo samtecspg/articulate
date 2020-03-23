@@ -79,6 +79,7 @@ import {
   makeSelectNotifications,
   makeSelectSettings,
   makeSelectShowChatButton,
+  makeSelectTestTrainNotification,
 } from './selectors';
 
 class App extends React.Component {
@@ -233,6 +234,7 @@ class App extends React.Component {
             demoMode={demoMode}
             onShareAgent={this.props.onShareAgent}
             isConverseEnabled={isConverseEnabled}
+            testTrainNotification={this.props.testTrainNotification}
           />
           <AppContent demoMode={demoMode} conversationBarOpen={conversationBarOpen} onLogoutUser={this.props.onLogoutUser}>
             <Switch>
@@ -361,6 +363,7 @@ const mapStateToProps = createStructuredSelector({
   settings: makeSelectSettings(),
   loadingCurrentUser: makeSelectLoadingCurrentUser(),
   currentUser: makeSelectCurrentUser(),
+  testTrainNotification: makeSelectTestTrainNotification(),
 });
 
 const withConnect = connect(

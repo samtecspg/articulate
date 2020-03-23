@@ -289,11 +289,11 @@ export class DialoguePage extends React.PureComponent {
     this.setState({
       currentSayingsPage: 1,
     });
-    this.props.onAddSaying(this.state.filter, 1, this.state.sayingsPageSize, saying);
+    this.props.onAddSaying(this.props.dialoguePageFilterString, 1, this.state.sayingsPageSize, saying);
   }
 
   deleteSaying(sayingId, categoryId) {
-    this.props.onDeleteSaying(this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize, sayingId, categoryId);
+    this.props.onDeleteSaying(this.props.dialoguePageFilterString, this.state.currentSayingsPage, this.state.sayingsPageSize, sayingId, categoryId);
   }
 
   needSwitchToPreviousPage(currentPage, totalElements, previousStateTotalElements, pageSize) {

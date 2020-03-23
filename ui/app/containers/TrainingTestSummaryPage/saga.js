@@ -490,7 +490,7 @@ export function* putSayingData(payload) {
 
 export default function* rootSaga() {
   yield takeLatest(LOAD_SAYINGS, getSayings);
-  yield takeLatest(ADD_SAYING, postSaying);
+  //yield takeLatest(ADD_SAYING, postSaying);
   yield takeLatest(DELETE_SAYING, deleteSaying);
   yield takeLatest(TAG_KEYWORD, tagKeyword);
   yield takeLatest(UNTAG_KEYWORD, untagKeyword);
