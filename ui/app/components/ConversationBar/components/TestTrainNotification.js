@@ -143,6 +143,11 @@ const styles = {
   results: {
     color: '#A2A7B1',
     fontSize: '12px'
+  },
+  indicator: {
+    //backgroundColor: '#f6f7f8',
+    backgroundColor: '#ffffff',
+    width: '0px !important',
   }
 };
 
@@ -201,6 +206,10 @@ export class TestTrainNotification extends React.Component {
     </Table>)
   }
 
+  getMultiactionArray = (multiAction) => {
+    return multiAction.split('+__+');
+  }
+
   renderActionsTable = (classes, intl) => {
     return (<Table
       style={{
@@ -213,11 +222,23 @@ export class TestTrainNotification extends React.Component {
           (<TableRow
             className={classes.keywordRow}
             onClick={async () => {
+              let actionArray = [];
+              let actionFilter = "";
+              if (action.actionName.includes('+__+')) {
+                actionArray = this.getMultiactionArray(action.actionName);
+                actionFilter = actionFilter + ' actions:"'
+                actionFilter = actionFilter + actionArray.join('" actions:"')
+                actionFilter = actionFilter + '" actionIssues:"true"';
+              } else {
+                actionFilter = 'actions:"' + action.actionName + '" actionIssues:"true"'
+                actionArray.push(action.actionName)
+              }
+
               await this.props.onResetDialoguePageFilter();
               await this.props.onChangeDialoguePageFilterActionIssues();
-              await this.props.onChangeDialoguePageFilterActions([action.actionName]);
-              await this.props.onChangeDialoguePageNumberOfFiltersApplied(2);
-              await this.props.onChangeDialoguePageFilterString('actions:"' + action.actionName + '" actionIssues:"true"');
+              await this.props.onChangeDialoguePageFilterActions(actionArray);
+              await this.props.onChangeDialoguePageNumberOfFiltersApplied(1 + actionArray.length);
+              await this.props.onChangeDialoguePageFilterString(actionFilter);
               await this.props.onSearchSaying();
               await this.props.onGoToUrl(
                 `/agent/${this.props.agent.id}/dialogue`,
@@ -312,6 +333,9 @@ export class TestTrainNotification extends React.Component {
     return (
       <Tabs
         style={{ marginTop: '40px' }}
+        classes={{
+          indicator: classes.indicator
+        }}
         value={this.state.currentTabNo}
         onChange={(evt, value) => {
           let tabs = ['keywords', 'actions'];
@@ -320,7 +344,7 @@ export class TestTrainNotification extends React.Component {
             currentTab: tabs[value]
           });
         }}
-        indicatorColor="none"
+        indicatorColor="primary"
         textColor="secondary"
         centered
       >

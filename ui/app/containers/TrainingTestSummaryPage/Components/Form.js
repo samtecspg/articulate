@@ -214,6 +214,10 @@ class Form extends React.Component {
     </Table>)
   }
 
+  getMultiactionArray = (multiAction) => {
+    return multiAction.split('+__+');
+  }
+
   renderActionsTable = (classes, intl, messages) => {
     return (<Table>
       <TableBody>
@@ -230,11 +234,23 @@ class Form extends React.Component {
           <TableRow
             className={classes.keywordRow}
             onClick={async () => {
+              let actionArray = [];
+              let actionFilter = "";
+              if (action.actionName.includes('+__+')) {
+                actionArray = this.getMultiactionArray(action.actionName);
+                actionFilter = actionFilter + ' actions:"'
+                actionFilter = actionFilter + actionArray.join('" actions:"')
+                actionFilter = actionFilter + '" actionIssues:"true"';
+              } else {
+                actionFilter = 'actions:"' + action.actionName + '" actionIssues:"true"'
+                actionArray.push(action.actionName)
+              }
+
               await this.props.onResetDialoguePageFilter();
               await this.props.onChangeDialoguePageFilterActionIssues();
-              await this.props.onChangeDialoguePageFilterActions([action.actionName]);
-              await this.props.onChangeDialoguePageNumberOfFiltersApplied(2);
-              await this.props.onChangeDialoguePageFilterString('actions:"' + action.actionName + '" actionIssues:"true"');
+              await this.props.onChangeDialoguePageFilterActions(actionArray);
+              await this.props.onChangeDialoguePageNumberOfFiltersApplied(1 + actionArray.length);
+              await this.props.onChangeDialoguePageFilterString(actionFilter);
               await this.props.onSearchSaying();
               await this.props.onGoToUrl(
                 `/agent/${this.props.agent.id}/dialogue`,
@@ -388,7 +404,7 @@ class Form extends React.Component {
                   {intl.formatMessage(messages.issuesTotal)}
                 </Typography>
               </Grid>
-              <Grid xs={6}
+              <Grid item xs={6}
                 style={{ textAlign: 'right' }}
               >
                 <Typography

@@ -63,19 +63,17 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
         }
 
         if (actionIssues.length > 0 || keywordIssues.length > 0) {
-            //let failedTestingTimestamps = allSayings.map((saying) => {
-            //    return Number(saying.lastFailedTestingTimestamp);
-            //})
-            //let maxFailedTestingTimestamps = Math.max.apply(Math, failedTestingTimestamps)
             let maxFailedTestingTimestamp = await trainingTestService.findByAgentId({ agentId: id, limit: 1 });
             if (maxFailedTestingTimestamp.data && maxFailedTestingTimestamp.data.length > 0) {
                 maxFailedTestingTimestamp = maxFailedTestingTimestamp.data[0]._source.timeStamp
                 filteredSayings = filteredSayings.filter((saying) => {
+                    //For multi actions
+                    let flatLastFailedTestingActions = saying.lastFailedTestingActions.map(failAction => { if (failAction.includes('+__+')) { return failAction.split('+__+') } else { return failAction } }).flat();
                     return (Number(saying.lastFailedTestingTimestamp) === maxFailedTestingTimestamp
                         && (
                             (actionIssues.length > 0 &&
                                 Number(saying.lastFailedTestingActionsTimeStamp) === maxFailedTestingTimestamp &&
-                                (actionFilter.length > 0 ? actionFilter.some(fil => saying.lastFailedTestingActions.indexOf(fil) !== -1) : true)
+                                (actionFilter.length > 0 ? actionFilter.some(fil => flatLastFailedTestingActions.indexOf(fil) !== -1) : true)
                             )
                             ||
                             (keywordIssues.length > 0 &&

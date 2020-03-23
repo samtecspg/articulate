@@ -18,6 +18,19 @@ const styles = {
     position: 'relative',
     borderRadius: '5px',
   },
+
+  issuesChipBackgroundContainer: {
+    cursor: 'pointer',
+    margin: '5px 0px 5px 10px',
+    fontSize: '12px',
+    padding: '4px 8px 4px 10px',
+    display: 'inline-block',
+    position: 'relative',
+    borderRadius: '5px',
+    color: '#C10007',
+    border: '1px solid'
+  },
+
   chipBackgroundContainerSelected: {
     cursor: 'pointer',
     margin: '5px 5px 5px 5px',
@@ -41,6 +54,14 @@ const styles = {
   chipLabelSelected: {
     textDecoration: 'none',
     color: '#ffffff',
+    fontFamily: 'Montserrat',
+    fontSize: '12px',
+    marginBottom: '2px',
+    display: 'inline-block'
+  },
+  issuesChipLabel: {
+    textDecoration: 'none',
+    color: '#C10007',
     fontFamily: 'Montserrat',
     fontSize: '12px',
     marginBottom: '2px',
@@ -129,14 +150,14 @@ export class ChipGroup extends React.Component {
     return <Fragment>
       <div
         key={"Issues"}
-        className={this.props.issuesChipValuePicked ? classes.chipBackgroundContainerSelected : classes.chipBackgroundContainer}
+        className={this.props.issuesChipValuePicked ? classes.chipBackgroundContainerSelected : classes.issuesChipBackgroundContainer}
         onClick={async () => {
           await this.handleIssuesChipClick();
           await this.props.handleFiltersChange();
         }}
       >
         <span
-          className={this.props.issuesChipValuePicked ? classes.chipLabelSelected : classes.chipLabel}
+          className={this.props.issuesChipValuePicked ? classes.chipLabelSelected : classes.issuesChipLabel}
         >
           {'Issues'}
         </span>

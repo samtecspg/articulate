@@ -242,10 +242,10 @@ class Form extends React.Component {
               onClose={() => {
                 this.props.onTrainingTestSummaryModalChange(false);
               }}
-              customMessage1={intl.formatMessage(messages.deleteSessionAlert1)}
-              customMessage2={intl.formatMessage(messages.deleteSessionAlert2)}
-              customMessageSaveAndExitButton={intl.formatMessage(messages.deleteSessionAlertYes)}
-              customMessageExitButton={intl.formatMessage(messages.deleteSessionAlertNo)}
+              customMessage1={intl.formatMessage(messages.trainTestFullSummaryAlert1)}
+              customMessage2={intl.formatMessage(messages.trainTestFullSummaryAlert2)}
+              customMessageSaveAndExitButton={intl.formatMessage(messages.trainTestFullSummaryYes)}
+              customMessageExitButton={intl.formatMessage(messages.trainTestFullSummaryNo)}
             />
           </Grid>
         </Grid>
