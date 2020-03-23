@@ -31,14 +31,11 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
         };
 
         let query = { "bool": { "must": [] } };
-
         query.bool.must.push(matchAgentId);
-
         body.query = query
-
         const bodyParam = body;
-        const results = await TrainingTestModel.search({ bodyParam });
 
+        const results = await TrainingTestModel.search({ bodyParam });
         const data = results.hits.hits;
 
         if (results.hits.total.value === 0) {

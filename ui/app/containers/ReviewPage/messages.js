@@ -220,4 +220,8 @@ export default defineMessages({
     id: 'app.containers.ReviewPage.component.Form.trainTestFullSummaryNo',
     defaultMessage: 'No'
   },
+  testSummary: {
+    id: 'app.containers.ReviewPage.component.Form.testSummary',
+    defaultMessage: 'Test Summary'
+  },
 });

@@ -6,9 +6,6 @@ import { Grid, Typography, Button, Modal, Tabs, Tab, Table, TableBody, TableCell
 import { withStyles } from '@material-ui/core/styles';
 
 import messages from '../messages';
-import { map } from 'lodash';
-
-import agentIcon from '../../../images/agents-icon.svg';
 import playHelpIcon from '../../../images/play-help-icon.svg';
 
 const styles = {
@@ -20,11 +17,6 @@ const styles = {
   },
   titleContainer: {
     padding: '25px',
-  },
-  agentIcon: {
-    display: 'inline',
-    paddingRight: '10px',
-    height: '30px',
   },
   titleTextHelpContainer: {
     display: 'inline',
@@ -72,27 +64,6 @@ const styles = {
     boxShadow:
       '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
-  settingsIcon: {
-    height: '18px',
-    paddingRight: '5px',
-    position: 'absolute',
-  },
-  notificationDot: {
-    backgroundColor: '#Cb2121',
-    height: '12px',
-    width: '12px',
-    borderRadius: '50%',
-    position: 'absolute',
-    top: '10px',
-    left: '5px',
-  },
-  numOfErrorsLabel: {
-    fontSize: '10px',
-    color: 'white',
-    position: 'relative',
-    bottom: '4.5px',
-    left: '0.5px',
-  },
   tabLabel: {
     padding: '0px 10px',
     position: 'relative',
@@ -101,8 +72,6 @@ const styles = {
   settingsTabLabel: {
     padding: '0px 20px',
   },
-
-
   keywordRow: {
     cursor: 'pointer',
   },
@@ -440,72 +409,20 @@ class Form extends React.Component {
 Form.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
-  sayings: PropTypes.array,
-  agentId: PropTypes.string,
-  sayingsPageSize: PropTypes.number,
-  agentKeywords: PropTypes.array,
-  agentActions: PropTypes.array,
-  agentCategories: PropTypes.array,
-  agentFilteredCategories: PropTypes.array,
-  agentFilteredActions: PropTypes.array,
-  onAddSaying: PropTypes.func,
-  onDeleteSaying: PropTypes.func,
-  onDeleteAction: PropTypes.func,
-  onTagKeyword: PropTypes.func,
-  onUntagKeyword: PropTypes.func,
   onSearchSaying: PropTypes.func,
-  onSearchCategory: PropTypes.func,
-  onSearchActions: PropTypes.func,
-  onAddAction: PropTypes.func,
   onGoToUrl: PropTypes.func,
-  onSendSayingToAction: PropTypes.func,
-  currentSayingsPage: PropTypes.number,
-  sayingsNumberOfPages: PropTypes.number,
-  changeSayingsPage: PropTypes.func,
-  moveSayingsPageBack: PropTypes.func,
-  moveSayingsPageForward: PropTypes.func,
-  changeSayingsPageSize: PropTypes.func,
-  onSelectCategory: PropTypes.func,
-  category: PropTypes.string,
-  userSays: PropTypes.string,
-  newSayingActions: PropTypes.array,
-  onAddNewSayingAction: PropTypes.func,
-  onDeleteNewSayingAction: PropTypes.func,
-  onClearSayingToAction: PropTypes.func,
-  filter: PropTypes.string,
-  onSearchKeyword: PropTypes.func,
-  onCreateKeyword: PropTypes.func,
-  keywords: PropTypes.array,
-  currentKeywordsPage: PropTypes.number,
-  keywordsPageSize: PropTypes.number,
-  numberKeywordsOfPages: PropTypes.number,
-  changeKeywordsPage: PropTypes.func,
-  changeKeywordsPageSize: PropTypes.func,
-  moveKeywordsPageBack: PropTypes.func,
-  moveKeywordsPageForward: PropTypes.func,
-  selectedTab: PropTypes.string,
-  handleTabChange: PropTypes.func,
-  onChangeSayingCategory: PropTypes.func,
   isReadOnly: PropTypes.bool,
+  testTrain: PropTypes.object,
   onChangeDialoguePageFilterSearchSaying: PropTypes.func,
-  dialoguePageFilterSearchSaying: PropTypes.string,
   onChangeDialoguePageFilterCategory: PropTypes.func,
-  dialoguePageFilterCategory: PropTypes.string,
   onChangeDialoguePageFilterSearchSaying: PropTypes.func,
-  dialoguePageFilterSearchSaying: PropTypes.string,
   onChangeDialoguePageFilterCategory: PropTypes.func,
-  dialoguePageFilterCategory: PropTypes.string,
   onChangeDialoguePageFilterActions: PropTypes.func,
-  dialoguePageFilterActions: PropTypes.array,
   onChangeDialoguePageNumberOfFiltersApplied: PropTypes.func,
-  dialoguePageNumberOfFiltersApplied: PropTypes.number,
   onResetDialoguePageFilters: PropTypes.func,
   onChangeDialoguePageFilterKeywords: PropTypes.func,
-  dialoguePageFilterKeywords: PropTypes.array,
   onChangeDialoguePageFilterKeywordIssues: PropTypes.func,
-  dialoguePageFilterKeywordIssues: PropTypes.bool,
   onChangeDialoguePageFilterActionIssues: PropTypes.func,
-  dialoguePageFilterActionIssues: PropTypes.bool,
 };
 
 Form.defaultProps = {

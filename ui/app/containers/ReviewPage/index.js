@@ -439,7 +439,7 @@ export class ReviewPage extends React.Component {
   }
 
   copySayingFromDocument(userSays, saying) {
-    const { agentCategories, agentKeywords, onGoToUrl, agent } = this.props;
+    const { agentCategories, agentKeywords } = this.props;
     const { onCopySaying } = this.props.actions;
     const category = _.find(agentCategories, {
       categoryName: saying.category,
@@ -858,7 +858,6 @@ function mapDispatchToProps(dispatch) {
         onLoadAgentTrainTest: Actions.loadAgentTrainTest,
         onLoadAgentLatestTrainTest: Actions.loadAgentLatestTrainTest,
         onCloseTestTrainNotification: Actions.closeTestTrainNotification,
-        onGoToUrl: Actions.onGoToUrl
       },
       dispatch,
     ),

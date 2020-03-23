@@ -20,7 +20,7 @@ const mappings = {
             type: 'integer'
         },
         accuracy: {
-            type: 'integer'
+            type: 'float'
         },
         keywords: {
             type: 'nested',
@@ -36,7 +36,10 @@ const mappings = {
                 },
                 badSayings: {
                     type: 'integer'
-                }
+                },
+                accuracy: {
+                    type: 'float'
+                },
             }
         },
         actions: {
@@ -53,7 +56,10 @@ const mappings = {
                 },
                 badSayings: {
                     type: 'integer'
-                }
+                },
+                accuracy: {
+                    type: 'float'
+                },
             }
         }
     }

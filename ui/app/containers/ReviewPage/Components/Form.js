@@ -454,10 +454,6 @@ class Form extends React.Component {
               <Trainings
                 agent={this.props.agent}
                 agentId={this.props.agentId}
-                sessions={this.props.sessions}
-                onCopySaying={this.props.onCopySaying}
-                onDeleteSessionModalChange={this.props.onDeleteSessionModalChange}
-                onSendSayingToAction={this.props.onSendSayingToAction}
                 currentPage={this.props.currentPage}
                 pageSize={this.props.pageSize}
                 numberOfPages={this.props.numberOfPages}
@@ -465,21 +461,7 @@ class Form extends React.Component {
                 movePageBack={this.props.movePageBack}
                 movePageForward={this.props.movePageForward}
                 changePageSize={this.props.changePageSize}
-                onSelectCategory={this.props.onSelectCategory}
-                category={this.props.category}
-                onSearchCategory={this.props.onSearchCategory}
-                newSayingActions={this.props.newSayingActions}
-                onClearSayingToAction={this.props.onClearSayingToAction}
-                onToggleConversationBar={this.props.onToggleConversationBar}
-                onSendMessage={this.props.onSendMessage}
-                onRequestSort={this.props.onRequestSort}
-                sortField={this.props.sortField}
-                sortDirection={this.props.sortDirection}
                 locale={this.props.locale}
-                timeSort={this.props.timeSort}
-                onLoadSessionId={this.props.onLoadSessionId}
-
-
                 trainTests={this.props.trainTests}
                 onLoadAgentTrainTest={this.props.onLoadAgentTrainTest}
                 onLoadAgentTrainTests={this.props.onLoadAgentTrainTests}

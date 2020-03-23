@@ -12,12 +12,11 @@ module.exports = async function ({ id, debug = false }) {
     try {
         const { redis } = this.server.app;
         const { agentService, globalService, trainingTestService } = await this.server.services();
-
         const AgentModel = await redis.factory(MODEL_AGENT, id);
         const agentSayings = await agentService.findAllSayings({ id, limit: -1 });
-
         const agentKeywords = await await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_KEYWORD, returnModel: false });
         const agentKeywordsColors = {};
+
         agentKeywords.forEach(keyword => {
             agentKeywordsColors[keyword.keywordName] = keyword.uiColor;
         })
@@ -30,6 +29,7 @@ module.exports = async function ({ id, debug = false }) {
         result.keywords = [];
         result.actions = [];
         let errorCounter = 0;
+
         for (sayingCounter = 0; sayingCounter < agentSayings.data.length; sayingCounter++) {
 
             let errorPresent = false;
@@ -39,13 +39,10 @@ module.exports = async function ({ id, debug = false }) {
             let ParsedDocument = await agentService.parse({ AgentModel, text: agentSayings.data[sayingCounter].userSays, timezone: AgentModel.property('timezone'), saveDocument: false });
 
             let recognizedAction = ParsedDocument.recognized_action;
+            //For multi actions
             let sayingAction = agentSayings.data[sayingCounter].actions.join('+__+');
-            if (recognizedAction !== sayingAction) {
-                upsertResultAction(result, sayingAction, 'bad', agentSayings.data[sayingCounter].id, badActions);
-                errorPresent = true;
-            } else {
-                upsertResultAction(result, sayingAction, 'good', agentSayings.data[sayingCounter].id, badActions);
-            }
+
+            errorPresent = upsertResultAction(result, sayingAction, recognizedAction, agentSayings.data[sayingCounter].id, badActions);
 
             let recognizedKeywords = ParsedDocument.rasa_results[0].keywords.map((keyword) => { return { start: keyword.start, end: keyword.end, keyword: keyword.keyword, value: keyword.value.value } });
             let sayingKeywords = agentSayings.data[sayingCounter].keywords;
@@ -63,7 +60,6 @@ module.exports = async function ({ id, debug = false }) {
 
         updateResultAccuracyAndColors(result, agentKeywordsColors);
         await trainingTestService.create({ data: result });
-        //await updateFailedSayings(result, globalService, agentService, AgentModel);
         return result;
     }
     catch (error) {
@@ -71,29 +67,15 @@ module.exports = async function ({ id, debug = false }) {
     }
 };
 
-const updateResultAccuracyAndColors = function (result, agentKeywordsColors) {
+const upsertResultAction = function (result, sayingAction, recognizedAction, sayingId, badActions) {
+    let errorPresent = false;
+    let condition = 'bad';
+    if (recognizedAction !== sayingAction) {
+        errorPresent = true;
+    } else {
+        condition = 'good';
+    }
 
-    result.actions = result.actions.map(action => {
-        return {
-            ...action,
-            accuracy: action.good / (action.bad + action.good)
-        }
-    })
-    result.actions = result.actions.sort((a, b) => { return a.accuracy - b.accuracy });
-
-    result.keywords = result.keywords.map(keyword => {
-        return {
-            ...keyword,
-            accuracy: keyword.good / (keyword.bad + keyword.good),
-            uiColor: agentKeywordsColors[keyword.keywordName]
-        }
-    })
-    result.keywords = result.keywords.sort((a, b) => { return a.accuracy - b.accuracy });
-
-    result.accuracy = result.goodSayings / (result.goodSayings + result.badSayings)
-}
-
-const upsertResultAction = function (result, sayingAction, condition, sayingId, badActions) {
     let actionIndex = result.actions.findIndex(action => { return action.actionName === sayingAction })
     if (actionIndex === -1) {
         result.actions.push({
@@ -114,6 +96,7 @@ const upsertResultAction = function (result, sayingAction, condition, sayingId, 
             badActions.push(sayingAction);
         }
     }
+    return errorPresent;
 }
 
 const upsertResultKeywords = function (result, sayingKeywords, recognizedKeywords, sayingId, badKeywords) {
@@ -154,7 +137,6 @@ const upsertResultKeywords = function (result, sayingKeywords, recognizedKeyword
 }
 
 const updateFailedSaying = async function (sayingId, result, globalService, agentService, AgentModel, badKeywords, badActions) {
-
     let sayingModel = await globalService.findById({ id: sayingId, model: MODEL_SAYING, returnModel: true });
     let category = await globalService.loadAllLinked({ parentModel: sayingModel, model: MODEL_CATEGORY, returnModel: true });
     let sayingData = sayingModel.allProperties();
@@ -177,37 +159,23 @@ const updateFailedSaying = async function (sayingId, result, globalService, agen
     });
 }
 
-const updateFailedSayings = async function (result, globalService, agentService, AgentModel) {
+const updateResultAccuracyAndColors = function (result, agentKeywordsColors) {
 
-    if (result.badSayings > 0) {
-        let actionSayingsIds = result.actions.map(action => {
-            return action.badSayings;
-        }).flat();
+    result.actions = result.actions.map(action => {
+        return {
+            ...action,
+            accuracy: action.good / (action.bad + action.good)
+        }
+    })
+    result.actions = result.actions.sort((a, b) => { return a.accuracy - b.accuracy });
 
-        let keywordSayingsIds = result.keywords.map(keyword => {
-            return keyword.badSayings;
-        }).flat();
-
-        let allBadSayingsIds = actionSayingsIds
-            .concat(keywordSayingsIds)
-            .filter((item, i, ar) => ar.indexOf(item) === i);
-
-        let badSayingsModel = await globalService.loadAllByIds({ ids: allBadSayingsIds, model: MODEL_SAYING, returnModel: true });
-
-        await Promise.all(badSayingsModel.map(async (sayingModel) => {
-            let category = await globalService.loadAllLinked({ parentModel: sayingModel, model: MODEL_CATEGORY, returnModel: true });
-            let sayingData = sayingModel.allProperties();
-            sayingData.lastFailedTestingTimestamp = result.timeStamp;
-            sayingData.lastFailedTestingByAction = actionSayingsIds.length > 0;
-            sayingData.lastFailedTestingByKeyword = keywordSayingsIds.length > 0;
-            delete sayingData.id;
-            await agentService.upsertSayingInCategory({
-                id: Number(AgentModel.id),
-                categoryId: Number(category[0].id),
-                sayingId: Number(sayingModel.id),
-                sayingData,
-                updateStatus: false
-            });
-        }));
-    }
+    result.keywords = result.keywords.map(keyword => {
+        return {
+            ...keyword,
+            accuracy: keyword.good / (keyword.bad + keyword.good),
+            uiColor: agentKeywordsColors[keyword.keywordName]
+        }
+    })
+    result.keywords = result.keywords.sort((a, b) => { return a.accuracy - b.accuracy });
+    result.accuracy = result.goodSayings / (result.goodSayings + result.badSayings)
 }

@@ -1,4 +1,4 @@
-import { Grid, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Grid, MenuItem, TextField, Typography, TableCell } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -253,7 +253,13 @@ function Trainings(props) {
               trainTests.length === 0
                 ? [
                   <StyledRow key="trainTests_0">
-
+                    <TableCell>
+                      <Typography>
+                        No Data
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                    </TableCell>
                   </StyledRow>,
                 ]
                 : trainTests.map((trainingTest, trainingTestIndex) => (
@@ -261,18 +267,12 @@ function Trainings(props) {
                     <TrainingsRow
                       locale={locale}
                       agent={agent}
-                      onToggleConversationBar={props.onToggleConversationBar}
-                      onSendMessage={props.onSendMessage}
-                      onLoadSessionId={onLoadSessionId}
-                      onDeleteSessionModalChange={props.onDeleteSessionModalChange}
-
                       trainingTest={trainingTest}
                       onLoadAgentTrainTest={props.onLoadAgentTrainTest}
                       trainingTestIndex={trainingTestIndex}
                       onGoToUrl={props.onGoToUrl}
                       onLoadAgentLatestTrainTest={props.onLoadAgentLatestTrainTest}
                       onCloseTestTrainNotification={props.onCloseTestTrainNotification}
-                      trainingTestSummaryModalOpen={props.trainingTestSummaryModalOpen}
                       onTrainingTestSummaryModalChange={props.onTrainingTestSummaryModalChange}
                     />
                   </StyledRow>
@@ -384,37 +384,14 @@ function Trainings(props) {
 Trainings.propTypes = {
   classes: PropTypes.object.isRequired,
   intl: intlShape.isRequired,
-  sessions: PropTypes.array,
-  agentId: PropTypes.string,
-  agentKeywords: PropTypes.array,
-  agentActions: PropTypes.array,
-  agentCategories: PropTypes.array,
-  agentFilteredCategories: PropTypes.array,
-  onCopySaying: PropTypes.func.isRequired,
-  onDeleteSessionModalChange: PropTypes.func.isRequired,
-  onSendSayingToAction: PropTypes.func,
-  currentPage: PropTypes.number,
-  pageSize: PropTypes.number,
-  numberOfPages: PropTypes.number,
-  changePage: PropTypes.func,
-  movePageBack: PropTypes.func,
-  movePageForward: PropTypes.func,
-  changePageSize: PropTypes.func,
-  category: PropTypes.string,
-  onSearchCategory: PropTypes.func,
-  newSayingActions: PropTypes.array,
-  onAddNewSayingAction: PropTypes.func,
-  onDeleteNewSayingAction: PropTypes.func,
-  onClearSayingToAction: PropTypes.func,
   onToggleConversationBar: PropTypes.func,
-  onSendMessage: PropTypes.func.isRequired,
-  onRequestSort: PropTypes.func,
-  sortField: PropTypes.string,
-  sortDirection: PropTypes.string,
   locale: PropTypes.string,
-  timeSort: PropTypes.string,
-  onLoadSessionId: PropTypes.func,
-  onLoadAgentLatestTrainTest: PropTypes.func
+  onLoadAgentLatestTrainTest: PropTypes.func,
+  trainingTest: PropTypes.object,
+  onLoadAgentTrainTest: PropTypes.func,
+  trainingTestIndex: PropTypes.number,
+  onGoToUrl: PropTypes.func,
+  onCloseTestTrainNotification: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(Trainings));

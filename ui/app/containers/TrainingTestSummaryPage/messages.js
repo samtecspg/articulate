@@ -11,10 +11,6 @@ export default defineMessages({
     id: 'app.containers.TrainingTestSummaryPage.title',
     defaultMessage: 'Test summary',
   },
-  sayingsFormTitle: {
-    id: 'app.containers.DialoguePage.sayingsFormTitle',
-    defaultMessage: 'Sayings',
-  },
   help: {
     id: 'app.containers.DialoguePage.help',
     defaultMessage: 'Help?',
