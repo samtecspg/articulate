@@ -304,6 +304,7 @@ class ResponseForm extends React.Component {
                                 onAddRichResponse={this.props.onAddRichResponse}
                                 onDeleteRichResponse={this.props.onDeleteRichResponse}
                                 onEditRichResponse={this.props.onEditRichResponse}
+                                agentSettings={agentSettings}
                               />
                             </TableCell>
                           </TableRow>

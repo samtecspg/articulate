@@ -1,24 +1,33 @@
-module.exports = async function({ CSO }) {
-  var availableKeywordsSlots = await getAvailableKeywordsSlots(CSO);
+module.exports = async function ({ CSO, response }) {
 
-  const { agentService } = await this.server.services();
-  var availableSayings = await getAvailableSayings(CSO, agentService);
+  if (!response.richResponses.some(richResponse => { return richResponse.type === 'quickResponses' })) {
+    var availableKeywordsSlots = await getAvailableKeywordsSlots(CSO);
 
-  var generatedQuickResponses = await generateQuickResponses(
-    CSO,
-    availableKeywordsSlots,
-    availableSayings
-  );
-  return generatedQuickResponses;
+    const { agentService } = await this.server.services();
+    var availableSayings = await getAvailableSayings(CSO, agentService);
+
+    var generatedQuickResponses = await generateQuickResponses(
+      CSO,
+      availableKeywordsSlots,
+      availableSayings
+    );
+    response.richResponses.push({
+      type: 'quickResponses',
+      data: {
+        quickResponses: generatedQuickResponses
+      }
+    })
+  }
+  return response;
 };
 
 const getAvailableKeywordsSlots = async CSO => {
-  var availableKeywordsSlots = CSO.context.actionQueue.reduce(function(
+  var availableKeywordsSlots = CSO.context.actionQueue.reduce(function (
     result,
     action
   ) {
     if (action.slots && action.fulfilled) {
-      Object.keys(action.slots).forEach(function(key) {
+      Object.keys(action.slots).forEach(function (key) {
         if (
           action.slots[key].value != '' &&
           !Array.isArray(action.slots[key].value)
@@ -36,7 +45,7 @@ const getAvailableKeywordsSlots = async CSO => {
     }
     return result;
   },
-  []);
+    []);
 
   availableKeywordsSlots = await getUniqueAvailableKeywordsSlots(
     availableKeywordsSlots

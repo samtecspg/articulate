@@ -128,6 +128,10 @@ const styles = {
     marginTop: '20px',
     fontSize: '12px'
   },
+  hintText2: {
+    color: '#a2a7b1',
+    fontSize: '12px'
+  },
   hintBorder: {
     border: '1px solid #c5cbd8',
     borderRadius: '5px',
@@ -436,6 +440,8 @@ class ResponseRow extends React.Component {
                 <Button
                   className={classes.addButton}
                   onClick={() => {
+                    debugger;
+                    var props = this.props;
                     this.state.editingRichResponse ?
                       onEditRichResponse(responseIndex, {
                         type: this.state.richResponseType,
@@ -460,6 +466,12 @@ class ResponseRow extends React.Component {
                   <span className={classes.hintBorder}>{'{{}}'}</span>
                   <span>&nbsp;{intl.formatMessage(messages.hint2)}</span>
                 </div>
+                {this.props.agentSettings.generateActionsQuickResponses &&
+                  this.state.richResponseType === 'quickResponses' && (
+                    <div className={classes.hintText2}>
+                      <span>{intl.formatMessage(messages.automaticQuickResponsesActivatedShort)}</span>
+                    </div>
+                  )}
               </Grid>
             </DialogTitle>
             <DialogContent className={classes.dialogContentContainer}>

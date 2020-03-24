@@ -274,5 +274,9 @@ export default defineMessages({
   disableTextResponse: {
     id: 'app.containers.ActionPage.component.ResponseRow.disableTextResponse',
     defaultMessage: 'Disable text response',
+  },
+  automaticQuickResponsesActivatedShort: {
+    id: 'app.containers.ActionPage.component.ResponseRow.automaticQuickResponsesActivatedShort',
+    defaultMessage: '* Automatic suggestions are enabled but they will be overriden by these'
   }
 });
