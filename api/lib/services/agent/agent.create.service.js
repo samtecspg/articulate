@@ -43,9 +43,11 @@ module.exports = async function ({ data, isImport = false, returnModel = false, 
     const agentLimit = this.options.agentLimit;
     const defaults = AgentModel.defaults;
     const ownerAccessPolicy = _.mapValues(defaults.accessPolicies, () => true);
-    data.accessPolicies = {
-        [userCredentials.id]: ownerAccessPolicy
-    };
+    if (userCredentials) {
+        data.accessPolicies = {
+            [userCredentials.id]: ownerAccessPolicy
+        };
+    }
     if (agentLimit !== -1 && agentCount >= agentLimit) {
         return Promise.reject(OverLimitErrorHandler({ level: agentCount, limit: agentLimit, type: 'Agents' }));
     }
@@ -71,7 +73,6 @@ module.exports = async function ({ data, isImport = false, returnModel = false, 
         });
 
         _.each(CONFIG_SETTINGS_DEFAULT_AGENT, (value) => {
-
             data.settings[value] = allSettings[value];
         });
 

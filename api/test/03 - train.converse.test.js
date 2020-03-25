@@ -113,7 +113,6 @@ describe('Agent', () => {
         expect(response.result.responses[0].disableTextResponse).to.be.equal(false);
 
     });
-
     it('post /agent/agentId/converse - Checks action response with keyword inside saying', async ({ context }) => {
 
         const { importedAgentId } = context;
@@ -481,7 +480,7 @@ describe('Agent', () => {
 
         var payload = {
             sessionId,
-            text: "value1",
+            text: "value3",
             timezone: "UTC"
         };
         var response = await server.inject({
@@ -554,7 +553,9 @@ describe('Agent', () => {
         expect(response.result.responses).to.be.an.array();
         expect(response.result.responses.length).to.be.greaterThan(0);
         expect(response.result.responses[0].fulfilled).to.be.equal(true);
-        expect(response.result.responses[0].quickResponses[0].length).to.be.greaterThan(0);
+        expect(response.result.responses[0].richResponses[0].type).to.be.equal("quickResponses");
+        expect(response.result.responses[0].richResponses[0].data.quickResponses).to.be.an.array();
+        expect(response.result.responses[0].richResponses[0].data.quickResponses.length).to.be.greaterThan(0);
     });
 
     after(async ({ context }) => {
