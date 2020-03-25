@@ -48,97 +48,103 @@ module.exports = async function ({ payload }) {
             });
         }
 
-        await Promise.all(keywords.map(async (keyword) => {
+        if (keywords) {
+            await Promise.all(keywords.map(async (keyword) => {
 
-            const newKeyword = await agentService.createKeyword({
-                AgentModel,
-                keywordData: keyword
-            });
-            keywordsDir[newKeyword.keywordName] = parseInt(newKeyword.id);
-        }));
+                const newKeyword = await agentService.createKeyword({
+                    AgentModel,
+                    keywordData: keyword
+                });
+                keywordsDir[newKeyword.keywordName] = parseInt(newKeyword.id);
+            }));
 
-        const updatedKeywords = {}
-        await Promise.all(keywords.map(async (keyword) => {
+            const updatedKeywords = {}
+            await Promise.all(keywords.map(async (keyword) => {
 
-            updatedKeywords[keyword.keywordName] = false;
-            keyword.modifiers = keyword.modifiers.map((modifier) => {
+                updatedKeywords[keyword.keywordName] = false;
+                keyword.modifiers = keyword.modifiers.map((modifier) => {
 
-                modifier.sayings = modifier.sayings.map((saying) => {
+                    modifier.sayings = modifier.sayings.map((saying) => {
 
-                    saying.keywords = saying.keywords.map((sayingkeyword) => {
+                        saying.keywords = saying.keywords.map((sayingkeyword) => {
 
-                        updatedKeywords[keyword.keywordName] = true;
-                        sayingkeyword.keywordId = keywordsDir[sayingkeyword.keyword]
-                        return sayingkeyword;
+                            updatedKeywords[keyword.keywordName] = true;
+                            sayingkeyword.keywordId = keywordsDir[sayingkeyword.keyword]
+                            return sayingkeyword;
+                        });
+
+                        return saying;
                     });
 
-                    return saying;
+                    return modifier;
                 });
 
-                return modifier;
-            });
-
-            if (updatedKeywords[keyword.keywordName]){
-                await agentService.updateKeyword({
-                    id: AgentModel.id,
-                    keywordId: keywordsDir[keyword.keywordName],
-                    keywordData: {
-                        modifiers: keyword.modifiers
-                    }
-                });
-            }
-        }));
-        
-        await Promise.all(actions.map(async (action) => {
-
-            const { postFormat, webhook, ...actionData } = action;
-            const ActionModel = await agentService.createAction({
-                AgentModel,
-                actionData
-            });
-
-            if (action.usePostFormat) {
-                await agentService.upsertPostFormatInAction({
-                    id: AgentModel.id,
-                    actionId: ActionModel.id,
-                    postFormatData: postFormat
-                });
-            }
-
-            if (action.useWebhook) {
-                await agentService.upsertWebhookInAction({
-                    id: AgentModel.id,
-                    actionId: ActionModel.id,
-                    data: webhook
-                });
-            }
-        }));
-
-        await Promise.all(categories.map(async (category) => {
-
-            const { sayings, ...categoryData } = category;
-            if (categoryData.model){
-                delete categoryData.model;
-            }
-            const CategoryModel = await agentService.createCategory({
-                AgentModel,
-                categoryData,
-                returnModel: true
-            });
-            return await Promise.all(sayings.map(async (saying) => {
-
-                saying.keywords.forEach((tempKeyword) => {
-
-                    tempKeyword.keywordId = keywordsDir[tempKeyword.keyword];
-                });
-                return await agentService.upsertSayingInCategory({
-                    id: AgentModel.id,
-                    categoryId: CategoryModel.id,
-                    sayingData: saying,
-                    isImport: true
-                });
+                if (updatedKeywords[keyword.keywordName]) {
+                    await agentService.updateKeyword({
+                        id: AgentModel.id,
+                        keywordId: keywordsDir[keyword.keywordName],
+                        keywordData: {
+                            modifiers: keyword.modifiers
+                        }
+                    });
+                }
             }));
-        }));
+
+        }
+
+        if (actions) {
+            await Promise.all(actions.map(async (action) => {
+
+                const { postFormat, webhook, ...actionData } = action;
+                const ActionModel = await agentService.createAction({
+                    AgentModel,
+                    actionData
+                });
+
+                if (action.usePostFormat) {
+                    await agentService.upsertPostFormatInAction({
+                        id: AgentModel.id,
+                        actionId: ActionModel.id,
+                        postFormatData: postFormat
+                    });
+                }
+
+                if (action.useWebhook) {
+                    await agentService.upsertWebhookInAction({
+                        id: AgentModel.id,
+                        actionId: ActionModel.id,
+                        data: webhook
+                    });
+                }
+            }));
+        }
+        if (categories) {
+            await Promise.all(categories.map(async (category) => {
+
+                const { sayings, ...categoryData } = category;
+                if (categoryData.model) {
+                    delete categoryData.model;
+                }
+                const CategoryModel = await agentService.createCategory({
+                    AgentModel,
+                    categoryData,
+                    returnModel: true
+                });
+                return await Promise.all(sayings.map(async (saying) => {
+
+                    saying.keywords.forEach((tempKeyword) => {
+
+                        tempKeyword.keywordId = keywordsDir[tempKeyword.keyword];
+                    });
+                    return await agentService.upsertSayingInCategory({
+                        id: AgentModel.id,
+                        categoryId: CategoryModel.id,
+                        sayingData: saying,
+                        isImport: true
+                    });
+                }));
+            }));
+        }
         return await agentService.export({ id: AgentModel.id });
     }
     catch (error) {
