@@ -33,14 +33,16 @@ import {
 } from '../App/selectors';
 
 function* postAgentWebhook(payload) {
-  const agent = yield select(makeSelectAgent());
+  const agentId = payload.id
   const agentWebhook = yield select(makeSelectAgentWebhook());
+  const mutableAgentWebhook = Immutable.asMutable(agentWebhook);
+  delete mutableAgentWebhook.agent;
   const { api } = payload;
   try {
     yield call(
       api.post,
-      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_WEBHOOK]),
-      agentWebhook,
+      toAPIPath([ROUTE_AGENT, agentId, ROUTE_WEBHOOK]),
+      mutableAgentWebhook,
     );
   } catch (err) {
     yield put(addAgentError(err));
@@ -48,14 +50,16 @@ function* postAgentWebhook(payload) {
 }
 
 function* postAgentPostFormat(payload) {
-  const agent = yield select(makeSelectAgent());
+  const agentId = payload.id
   const agentPostFormat = yield select(makeSelectAgentPostFormat());
+  const mutablePostFormat = Immutable.asMutable(agentPostFormat);
+  delete mutablePostFormat.agent;
   const { api } = payload;
   try {
     yield call(
       api.post,
-      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_POST_FORMAT]),
-      agentPostFormat,
+      toAPIPath([ROUTE_AGENT, agentId, ROUTE_POST_FORMAT]),
+      mutablePostFormat,
     );
   } catch (err) {
     yield put(addAgentError(err));
@@ -63,7 +67,7 @@ function* postAgentPostFormat(payload) {
 }
 
 function* putAgentWebhook(payload) {
-  const agent = yield select(makeSelectAgent());
+  const agentId = payload.id
   const agentWebhook = yield select(makeSelectAgentWebhook());
   const mutableAgentWebhook = Immutable.asMutable(agentWebhook);
   const { api } = payload;
@@ -74,7 +78,7 @@ function* putAgentWebhook(payload) {
   try {
     yield call(
       api.put,
-      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_WEBHOOK]),
+      toAPIPath([ROUTE_AGENT, agentId, ROUTE_WEBHOOK]),
       mutableAgentWebhook,
     );
   } catch (err) {
@@ -83,7 +87,7 @@ function* putAgentWebhook(payload) {
 }
 
 function* putAgentPostFormat(payload) {
-  const agent = yield select(makeSelectAgent());
+  const agentId = payload.id
   const agentPostFormat = yield select(makeSelectAgentPostFormat());
   const mutablePostFormat = Immutable.asMutable(agentPostFormat);
   const { api } = payload;
@@ -94,7 +98,7 @@ function* putAgentPostFormat(payload) {
   try {
     yield call(
       api.put,
-      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_POST_FORMAT]),
+      toAPIPath([ROUTE_AGENT, agentId, ROUTE_POST_FORMAT]),
       mutablePostFormat,
     );
   } catch (err) {

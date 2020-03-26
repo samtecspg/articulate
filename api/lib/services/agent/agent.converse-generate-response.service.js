@@ -83,7 +83,7 @@ module.exports = async function ({ actionData, CSO }) {
                     model: MODEL_WEBHOOK
                 }
             ];
-            webhook = await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field });
+            webhook = await globalService.findInModelPath({ modelPath, isFindById: false, isSingleResult: true });
         }
         const webhookResponse = await agentService.converseCallWebhook({
             url: webhook.webhookUrl,
