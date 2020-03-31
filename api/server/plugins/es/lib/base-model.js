@@ -12,6 +12,7 @@ module.exports = class BaseModel {
     }
 
     async count({ query = null } = {}) {
+        var hrstart = process.hrtime()
 
         const { index } = this;
         const body = query ? { query } : undefined;
@@ -19,10 +20,16 @@ module.exports = class BaseModel {
             index,
             body
         });
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f ES count execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
         return count;
     }
 
-    async createInstance({ data, refresh = true }) {
+    async createInstance({ data, refresh = false }) {
+
+        var hrstart = process.hrtime()
 
         const { index } = this;
         const { body } = await this.client.index({
@@ -31,10 +38,17 @@ module.exports = class BaseModel {
             body: data,
             refresh
         });
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f ES create instance execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+
         return body;
     }
 
-    async updateInstance({ id, data, refresh = true }) {
+    async updateInstance({ id, data, refresh = false }) {
+
+        var hrstart = process.hrtime()
 
         const { index } = this;
         const { body } = await this.client.index({
@@ -45,10 +59,16 @@ module.exports = class BaseModel {
             refresh
         });
 
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f ES update instance execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+
         return body;
     }
 
-    async removeInstance({ id, refresh = true }) {
+    async removeInstance({ id, refresh = false }) {
+
+        var hrstart = process.hrtime()
 
         const { index } = this;
         await this.client.delete({
@@ -57,9 +77,15 @@ module.exports = class BaseModel {
             id,
             refresh
         });
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f ES remove instance execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
     }
 
-    async findById({ id, refresh = true, source = true }) {
+    async findById({ id, refresh = false, source = true }) {
+
+        var hrstart = process.hrtime()
 
         const { index } = this;
         const { body } = await this.client.get({
@@ -69,10 +95,17 @@ module.exports = class BaseModel {
             refresh,
             _source: source
         });
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f ES find by id execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+
         return body;
     }
 
     async search({ bodyParam, trackTotalHits = true }) {
+
+        var hrstart = process.hrtime()
 
         const { index } = this;
         const { body } = await this.client.search({
@@ -80,16 +113,30 @@ module.exports = class BaseModel {
             body: bodyParam,
             trackTotalHits
         });
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f ES search execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+
         return body;
     }
 
-    async deleteByQuery({ body, refresh = true }) {
+    async deleteByQuery({ bodyParam, refresh = false }) {
+
+        var hrstart = process.hrtime()
 
         const { index } = this;
-        return await this.client.deleteByQuery({
+        const { body } = await this.client.deleteByQuery({
             index,
-            body,
+            bodyParam,
             refresh
         });
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f ES delete by query execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+
+        return body;
+
     }
 };

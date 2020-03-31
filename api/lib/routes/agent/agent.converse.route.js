@@ -20,6 +20,8 @@ module.exports = {
         validate: AgentValidator.converse,
         handler: async (request) => {
 
+            var hrstart = process.hrtime()
+
             const { agentService } = await request.services();
             const {
                 [PARAM_AGENT_ID]: agentId
@@ -37,7 +39,12 @@ module.exports = {
             } = request.query;
 
             try {
-                return await agentService.converse({ id: agentId, text, timezone, sessionId, debug, additionalKeys: rest });
+                const resp = await agentService.converse({ id: agentId, text, timezone, sessionId, debug, additionalKeys: rest });
+                var hrend = process.hrtime(hrstart)
+
+                console.info('%f converse execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+
+                return resp;
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });

@@ -96,6 +96,7 @@ module.exports = class BaseModel extends NohmModel {
 
     //using create() or update() conflicts with functions from NohmModel
     async createInstance({ data, parentModels, modified }) {
+        var hrstart = process.hrtime()
 
         if (!modified) {
             data.creationDate = Moment().utc().format();
@@ -104,10 +105,16 @@ module.exports = class BaseModel extends NohmModel {
         await this.property(data);
         await this.save();
         await this.linkParents({ parentModels });
-        return this.allProperties();
+        const resp = this.allProperties();
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f Redis create instance execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+        return resp;
     }
 
     async updateInstance({ id = null, data, parentModels, removedParents }) {
+        var hrstart = process.hrtime()
 
         if (id) {
             // loads the model, if there is no id assumes that was already loaded
@@ -117,20 +124,37 @@ module.exports = class BaseModel extends NohmModel {
         await this.createInstance({ data, modified: true });
         await this.linkParents({ parentModels });
         await this.unlinkParents({ parentModels: removedParents });
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f Redis update instance execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
     }
 
     async saveInstance() {
-
+        var hrstart = process.hrtime()
+        
         this.property('modificationDate', Moment().utc().format());
         await this.save();
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f Redis save instance execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
     }
 
     async findById({ id }) {
+        var hrstart = process.hrtime()
 
-        return await this.load(id);
+        const resp = await this.load(id);
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f Redis find by id execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+
+        return resp;
     }
 
     async findAll({ skip = defaults.SKIP, limit = defaults.LIMIT, direction = defaults.DIRECTION, field, filter = null }) {
+        var hrstart = process.hrtime()
 
         const ids = await this.find();
         field = field ? field : this.defaultSortField();
@@ -139,16 +163,28 @@ module.exports = class BaseModel extends NohmModel {
             const filteredResults = filterResults({ results, filter });
             return manualPaging({ results: filteredResults, skip, limit, direction, field });
         }
-        return await this.findAllByIds({ ids, skip, limit, direction, field });
+        const resp =  await this.findAllByIds({ ids, skip, limit, direction, field });
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f Redis find all execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+
+        return resp;
     }
 
     async count() {
+        var hrstart = process.hrtime()
 
         const ids = await this.find();
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f Redis count execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
         return ids.length;
     }
 
     async findAllByIds({ ids, skip = defaults.SKIP, limit = defaults.LIMIT, direction = defaults.DIRECTION, field, filter, include }) {
+        var hrstart = process.hrtime()
 
         if (!_.isArray(ids) || ids.leading === 0) {
             return [];
@@ -161,7 +197,12 @@ module.exports = class BaseModel extends NohmModel {
                  await this.include({ include, results });
              }*/
             const filteredResults = await filterResults({ results, filter });
-            return await manualPaging({ results: filteredResults, skip, limit, direction, field });
+            const resp =  await manualPaging({ results: filteredResults, skip, limit, direction, field });
+
+            var hrend = process.hrtime(hrstart)
+
+            console.info('%f Redis find all by ids execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+            return resp
         }
 
         if (field) {
@@ -190,14 +231,28 @@ module.exports = class BaseModel extends NohmModel {
             }
         }
         if (ids.length === 0) {
+
+            var hrend = process.hrtime(hrstart)
+
+            console.info('%f Redis find all by ids execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
             return [];
         }
-        return await this.loadAllByIds({ ids });
+        const resp =  await this.loadAllByIds({ ids });
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f Redis find all by ids execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+
+        return resp;
     }
 
     async loadAllByIds({ ids }) {
+        var hrstart = process.hrtime()
 
         if (!Array.isArray(ids) || ids.length === 0) {
+            var hrend = process.hrtime(hrstart)
+
+            console.info('%f Redis load all by ids execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
             return [];
         }
         const loadPromises = ids.map(async (id) => {
@@ -212,19 +267,31 @@ module.exports = class BaseModel extends NohmModel {
             }
         });
         const loadedModels = await Promise.all(loadPromises);
-        return loadedModels.filter((model) => typeof model !== 'undefined');
+        const resp =  loadedModels.filter((model) => typeof model !== 'undefined');
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f Redis load all by ids execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+
+        return resp;
     }
 
     async removeInstance({ id = null, silent = false } = {}) {
+        var hrstart = process.hrtime()
 
         if (id) {
             await this.findById({ id });
         }
         await this.remove(silent);
+
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f Redis remove instance execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
         return true;
     }
 
     async searchByField({ field, value }) {
+        var hrstart = process.hrtime()
 
         const schemaField = this.schema[field];
         if (!schemaField) {
@@ -236,14 +303,28 @@ module.exports = class BaseModel extends NohmModel {
 
         if (ids.length > 0) {
             if (schemaField.unique) {
-                return await this.findById({ id: ids[0] });
+                const resp =  await this.findById({ id: ids[0] });
+
+                var hrend = process.hrtime(hrstart)
+
+                console.info('%f Redis search by field execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+                return resp;
             }
-            return await this.findAllByIds({ ids });
+            const resp = await this.findAllByIds({ ids });
+
+            var hrend = process.hrtime(hrstart)
+
+            console.info('%f Redis search by field execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
+            return resp
         }
+        var hrend = process.hrtime(hrstart)
+
+        console.info('%f Redis search by field execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
         return [];
     }
 
     async linkParents({ parentModels = [], linkName = null }) {
+        var hrstart = process.hrtime()
 
         if (parentModels.length > 0) {
             const linkPromises = parentModels.map(async (parentModel) => {
@@ -252,11 +333,16 @@ module.exports = class BaseModel extends NohmModel {
                 await parentModel.save();
             });
             await Promise.all(linkPromises);
+
+            var hrend = process.hrtime(hrstart)
+
+            console.info('%f Redis link parents execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
         }
 
     }
 
     async unlinkParents({ parentModels = [], linkName = null }) {
+        var hrstart = process.hrtime()
 
         if (parentModels.length > 0) {
             const linkPromises = parentModels.map(async (parentModel) => {
@@ -269,6 +355,10 @@ module.exports = class BaseModel extends NohmModel {
                 await parentModel.save();
             });
             await Promise.all(linkPromises);
+
+            var hrend = process.hrtime(hrstart)
+
+            console.info('%f Redis unlink parents execution time (hr): %ds %dms', Date.now(), hrend[0], hrend[1] / 1000000)
         }
     }
 
