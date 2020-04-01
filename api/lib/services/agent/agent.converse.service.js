@@ -11,6 +11,7 @@ import {
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 import { Semaphore } from 'await-semaphore';
+const { PerformanceObserver, performance } = require('perf_hooks');
 
 var mainSemaphore = new Semaphore(1);
 var semaphores = {};
@@ -125,7 +126,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
 
     try {
         const { redis } = this.server.app;
-        const { agentService, contextService, globalService } = await this.server.services();
+        const { agentService, contextService, globalService, documentService } = await this.server.services();
 
         let CSO = {
             debug,
@@ -154,8 +155,14 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             CSO[CSO_CATEGORIES][agentCategory.categoryName] = agentCategory;
         });
 
+        performance.mark('A');
         const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true, sessionId });
+        let documentUpdateData = {};
+        performance.mark('B');
+        performance.measure('agentService.parse', 'A', 'B');
+
         CSO.docId = ParsedDocument.id;
+        CSO.indexId = ParsedDocument.index;
         CSO.parse = ParsedDocument[PARAM_DOCUMENT_RASA_RESULTS];
 
         CSO.context = await contextService.findOrCreateSession({ sessionId });
@@ -175,11 +182,10 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
         //If the welcome action is needed (it's the first message of the user) then that message is also processed
         if (forceUseWelcomeAction(CSO) || welcomeActionNeeded(CSO)) {
             CSO.response = await agentService.converseGenerateResponseWelcome({ CSO });
-            await agentService.converseSendResponseToUbiquity({ CSO });
+            await agentService.converseSendResponseToUbiquity({ CSO, ParsedDocument, documentUpdateData });
         }
 
         if (!forceUseWelcomeAction(CSO)) {
-
             //We extract the keywords from the best rasa result
             CSO.recognizedKeywords = await agentService.converseGetKeywordsFromRasaResults({ rasaResults: [CSO.rasaResult] })
 
@@ -237,13 +243,13 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                                 else {
                                     //Return fallback because this means user send a modifier for an action that doesn't exists in the queue
                                     CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
-                                    await agentService.converseSendResponseToUbiquity({ CSO });
+                                    await agentService.converseSendResponseToUbiquity({ CSO, ParsedDocument, documentUpdateData });
                                 }
                             }
                             else {
                                 //Return fallback because this means user started the conversation with a modifier
                                 CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
-                                await agentService.converseSendResponseToUbiquity({ CSO });
+                                await agentService.converseSendResponseToUbiquity({ CSO, ParsedDocument, documentUpdateData });
                             }
                         }
                     }
@@ -270,13 +276,13 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                             if (noActionToModify) {
                                 //Return fallback because this means a keyword was recognized for an action that doesn't exists in the queue
                                 CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
-                                await agentService.converseSendResponseToUbiquity({ CSO });
+                                await agentService.converseSendResponseToUbiquity({ CSO, ParsedDocument, documentUpdateData });
                             }
                         }
                         else {
                             //Return fallback because this means user started the conversation with the keyword flow
                             CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
-                            await agentService.converseSendResponseToUbiquity({ CSO });
+                            await agentService.converseSendResponseToUbiquity({ CSO, ParsedDocument, documentUpdateData });
                         }
                     }
 
@@ -312,7 +318,6 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                         */
                         var mostRecentActionData;
                         mostRecentActionData = getActionData({ actionName: CSO.context.actionQueue[newActionIndex].name, CSO });
-
                         var mostRecentActionShouldBeIgnored = await agentService.converseMostRecentActionShoulBeIgnored({
                             actionData: mostRecentActionData,
                             CSO,
@@ -394,7 +399,10 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                                 * This would either send a response, a text promt or a fallback
                                 * CSO.ubiquity could be filled by using the additionalKeys param
                                 */
-                                await agentService.converseSendResponseToUbiquity({ actionData, CSO });
+                                performance.mark('A');
+                                await agentService.converseSendResponseToUbiquity({ actionData, CSO, ParsedDocument, documentUpdateData });
+                                performance.mark('B');
+                                performance.measure('agentService.converseSendResponseToUbiquity', 'A', 'B');
                             }
                         } else {
                             await contextService.update({
@@ -413,7 +421,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             }
             else {
                 CSO.response = await agentService.converseGenerateResponseFallback({ CSO });
-                await agentService.converseSendResponseToUbiquity({ CSO });
+                await agentService.converseSendResponseToUbiquity({ CSO, ParsedDocument, documentUpdateData });
             }
 
             CSO.textResponse = CSO.processedResponses.map((processedResponse) => {
@@ -424,19 +432,29 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             const converseResult = {
                 textResponse: CSO.textResponse,
                 docId: CSO.docId,
+                indexId: CSO.indexId,
                 responses: CSO.processedResponses
             };
 
             if (debug) {
-                const { context, parse, currentAction, docId, webhooks } = CSO;
+                const { context, parse, currentAction, docId, indexId, webhooks } = CSO;
                 converseResult.CSO = {
                     docId,
+                    indexId,
                     parse,
                     currentAction,
                     context,
                     webhooks
                 };
             }
+            documentService.update({
+                id: CSO.docId,
+                indexId: CSO.indexId,
+                data: {
+                    converseResult: documentUpdateData.fullConverseResult
+                }
+            }).then(() => { })
+                .catch(err => { throw err; });
             release();
             return converseResult;
         }

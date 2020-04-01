@@ -7,13 +7,14 @@ function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-module.exports = async function ({ actionData, CSO }) {
+module.exports = async function ({ actionData, CSO, documentUpdateData }) {
 
     const { channelService, documentService, contextService, agentService } = await this.server.services();
 
     //We extract the values of the response given that we want to return just a part of them
     CSO.cleanResponse = {
         docId: CSO.docId,
+        indexId: CSO.indexId,
         textResponse: CSO.response.textResponse,
         fulfilled: CSO.response.fulfilled,
         actions: CSO.response.actions ? CSO.response.actions : [],
@@ -34,8 +35,8 @@ module.exports = async function ({ actionData, CSO }) {
 
     CSO.processedResponses.push(CSO.finalResponse);
 
-    if (CSO.context.docIds.indexOf(CSO.docId) === -1) {
-        CSO.context.docIds.push(CSO.docId);
+    if (CSO.context.docIds.indexOf(CSO.docId + '_+_' + CSO.indexId) === -1) {
+        CSO.context.docIds.push(CSO.docId + '_+_' + CSO.indexId);
     }
 
     const converseResult = {
@@ -45,6 +46,7 @@ module.exports = async function ({ actionData, CSO }) {
 
     const prunnedCSO = {
         docId: CSO.docId,
+        indexId: CSO.indexId,
         context: CSO.context,
         currentAction: CSO.currentAction,
         parse: CSO.parse,
@@ -56,12 +58,8 @@ module.exports = async function ({ actionData, CSO }) {
         CSO: prunnedCSO
     };
 
-    await documentService.update({
-        id: CSO.docId,
-        data: {
-            converseResult: fullConverseResult
-        }
-    });
+    documentUpdateData.fullConverseResult = fullConverseResult;
+
 
     await contextService.update({
         sessionId: CSO.context.sessionId,
@@ -72,30 +70,6 @@ module.exports = async function ({ actionData, CSO }) {
             listenFreeText: CSO.context.listenFreeText ? true : false
         }
     });
-
-    //Once we store the webhook response in the document we need to convert it back to an object
-    Object.keys(prunnedCSO.webhooks).forEach((webhookKey) => {
-
-        if (prunnedCSO.webhooks[webhookKey].response) {
-            prunnedCSO.webhooks[webhookKey].response = JSON.parse(prunnedCSO.webhooks[webhookKey].response);
-        } else if (prunnedCSO.webhooks[webhookKey].error) {
-            prunnedCSO.webhooks[webhookKey].error = JSON.parse(prunnedCSO.webhooks[webhookKey].error);
-        }
-    });
-
-    //Also we need to convert richResponses back to object
-    if (CSO.finalResponse.richResponses) {
-        CSO.finalResponse.richResponses = JSON.parse(CSO.finalResponse.richResponses);
-    }
-    if (fullConverseResult.richResponses) {
-        fullConverseResult.richResponses = JSON.parse(fullConverseResult.richResponses);
-    }
-    if (CSO.finalResponse.responses && CSO.finalResponse.responses.length > 0) {
-        CSO.finalResponse.responses.forEach((response) => {
-
-            response.richResponses = JSON.parse(response.richResponses);
-        });
-    }
 
     const responseForUbiquity = CSO.debug ? fullConverseResult : converseResult;
 

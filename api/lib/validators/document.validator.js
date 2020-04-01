@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { PARAM_DOCUMENT_ID } from '../../util/constants';
+import { PARAM_DOCUMENT_ID, PARAM_INDEX_ID } from '../../util/constants';
 
 const Model = require('../models/document.model').schema;
 
@@ -10,7 +10,8 @@ class DocumentValidate {
             params: (() => {
 
                 return {
-                    [PARAM_DOCUMENT_ID]: Model.id.required()
+                    [PARAM_DOCUMENT_ID]: Model.id.required(),
+                    [PARAM_INDEX_ID]: Model.indexId.required()
                 };
             })()
         };
@@ -36,7 +37,8 @@ class DocumentValidate {
             params: (() => {
 
                 return {
-                    [PARAM_DOCUMENT_ID]: Model.id.required()
+                    [PARAM_DOCUMENT_ID]: Model.id.required(),
+                    [PARAM_INDEX_ID]: Model.indexId.required()
                 };
             })()
         };
@@ -45,7 +47,8 @@ class DocumentValidate {
             params: (() => {
 
                 return {
-                    [PARAM_DOCUMENT_ID]: Model.id.required()
+                    [PARAM_DOCUMENT_ID]: Model.id.required(),
+                    [PARAM_INDEX_ID]: Model.indexId.required()
                 };
             })(),
             payload: (() => {

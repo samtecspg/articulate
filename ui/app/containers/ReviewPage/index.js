@@ -129,6 +129,7 @@ export class ReviewPage extends React.Component {
     deleteDocModalOpen: false,
     deleteDocId: '',
     deleteDocSessionId: '',
+    deleteDocIndexId: '',
     deleteSessionModalOpen: false,
     deleteSessionId: '',
   };
@@ -477,10 +478,12 @@ export class ReviewPage extends React.Component {
 
   handleDeleteDocModalChange = (deleteDocModalOpen,
     deleteDocId = this.state.deleteDocId,
+    deleteDocIndexId = this.state.deleteDocIndexId,
     deleteDocSessionId = this.state.deleteDocSessionId) => {
     this.setState({
       deleteDocModalOpen,
       deleteDocId,
+      deleteDocIndexId,
       deleteDocSessionId
     })
   }
@@ -488,6 +491,7 @@ export class ReviewPage extends React.Component {
   deleteDocument() {
     this.props.actions.onDeleteDocument({
       documentId: this.state.deleteDocId,
+      indexId: this.state.deleteDocIndexId,
       sessionId: this.state.deleteDocSessionId,
       page: this.state.pageStatus.documents.currentPage,
       pageSize: this.state.pageStatus.documents.pageSize,

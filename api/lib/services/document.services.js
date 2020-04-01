@@ -6,6 +6,7 @@ import Remove from './document/document.remove.service';
 import Search from './document/document.search.service';
 import Update from './document/document.update.service';
 import DeleteByQuery from './document/document.delete-by-query.service';
+import FindAllSessions from './document/document.find-all-sessions'
 
 module.exports = class DocumentService extends Schmervice.Service {
 
@@ -42,6 +43,11 @@ module.exports = class DocumentService extends Schmervice.Service {
     async deleteByQuery() {
 
         return await DeleteByQuery.apply(this, arguments);
+    }
+
+    async findAllSessions() {
+
+        return await FindAllSessions.apply(this, arguments);
     }
 };
 

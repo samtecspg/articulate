@@ -9,21 +9,37 @@ module.exports = async ({ client, path }) => {
     await _.each(Mods, async (model) => {
 
         const instance = new model({ client });
-        const { name, mappings, settings, index, registerConfiguration } = instance;
+        const { name, mappings, settings, index, registerConfiguration, isMappingTemplate } = instance;
 
         logger.debug(name);
 
         if (registerConfiguration) {
+            if (isMappingTemplate) {
+                await client.indices.putTemplate(
+                    {
+                        name: index + '_template',
+                        order: 1,
+                        create: false,
+                        body: {
+                            index_patterns: [index + '*'],
+                            settings,
+                            mappings
+                        }
+                    }
+                )
+            }
+
             const exists = await client.indices.exists({ index });
             if (!exists.body) {
                 await client.indices.create({ index });
             }
 
-            await client.indices.putMapping({
-                index,
-                //type: index,
-                body: { ...mappings }
-            });
+            if (!isMappingTemplate) {
+                await client.indices.putMapping({
+                    index,
+                    body: { ...mappings }
+                });
+            }
 
             await client.indices.putSettings({
                 index,

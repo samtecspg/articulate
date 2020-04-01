@@ -116,7 +116,7 @@ module.exports = async function ({ agentId, direction = SORT_DESC, skip = 0, lim
                     }
                 }
             }
-            return { id: result._id, ...tempDocData }
+            return { id: result._id, indexId: result._index, ...tempDocData }
         });
 
         return { data, totalCount: results.hits.total.value };

@@ -15,7 +15,7 @@ import {
 import importAgentConverse from './data/importAgentConverse.json';
 
 // Test shortcuts
-const { describe, it, before, after } = exports.lab = Lab.script();
+const { describe, it, before, after, beforeEach, afterEach } = exports.lab = Lab.script();
 const { expect } = Code;
 const sessionId = uuidv1();
 
@@ -47,6 +47,28 @@ describe('Agent', () => {
         });
         const response = await server.inject(`/${ROUTE_AGENT}/search/agentName/${importAgentConverse.agentName}`);
         context.importedAgentId = response.result.id;
+    });
+
+    beforeEach(() => {
+
+        return new Promise((resolve) => {
+
+            // Wait 3 second
+            setTimeout(() => {
+                resolve();
+            }, 4000);
+        });
+    });
+
+    afterEach(() => {
+
+        return new Promise((resolve) => {
+
+            // Wait 3 second
+            setTimeout(() => {
+                resolve();
+            }, 4000);
+        });
     });
 
     it('post /agent/agentId/train', { timeout: 300000 }, async ({ context }) => {

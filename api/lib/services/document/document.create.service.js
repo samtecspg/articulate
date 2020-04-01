@@ -8,11 +8,15 @@ module.exports = async function ({ data }) {
 
     const DocumentModel = es.models[MODEL_DOCUMENT];
     try {
-
         const result = await DocumentModel.createInstance({ data });
         data.id = result._id;
-        const agentDocuments = await documentService.findByAgentId({ agentId: data.agent_id });
-        this.server.publish(`/${ROUTE_AGENT}/${data.agent_id}/${ROUTE_DOCUMENT}`, agentDocuments);
+        data.index = result._index;
+        // We set a two second delay to wait for ES to have the Index refreshed
+        setTimeout(() => {
+            documentService.findByAgentId({ agentId: data.agent_id }).then((agentDocuments) => {
+                this.server.publish(`/${ROUTE_AGENT}/${data.agent_id}/${ROUTE_DOCUMENT}`, agentDocuments);
+            })
+        }, 2000)
         return data;
     }
     catch (error) {

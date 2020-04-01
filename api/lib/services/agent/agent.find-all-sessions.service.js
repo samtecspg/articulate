@@ -8,14 +8,13 @@ module.exports = async function ({ id, direction, skip, limit, field }) {
 
     try {
         await globalService.findById({ id, model: MODEL_AGENT, returnModel: true });
-        const agentDocuments = await documentService.findByAgentId({ agentId: id });
-        const sessionIds = _.uniq(_.map(agentDocuments.data, 'session'));
-        let sessions = await Promise.all(sessionIds.map(async (sessionId) => {
+        const sessionIds = await documentService.findAllSessions({ agentId: id });
+        let sessions = await Promise.all(sessionIds.data.map(async (sessionId) => {
 
             try {
                 return await contextService.findBySession({ sessionId });
             }
-            catch(e){
+            catch (e) {
                 //There could be cases where the session doesn't exists anymore
                 return null;
             }

@@ -8,6 +8,10 @@ class DocumentModel {
                 .string()
                 .description('Id')
                 .trim(),
+            indexId: Joi
+                .string()
+                .description('Index Id')
+                .trim(),
             document: Joi
                 .string()
                 .description('Document')
