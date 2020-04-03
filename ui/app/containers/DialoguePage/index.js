@@ -154,7 +154,7 @@ export class DialoguePage extends React.PureComponent {
         this.props.onLoadSayings(filter, currentSayingsPage, pageSize);
       },
       2000,
-      { trailing: true },
+      { leading: true },
     );
 
     const locationSearchParams = qs.parse(this.props.location.search);

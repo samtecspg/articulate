@@ -39,6 +39,10 @@ import saga from './saga';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AnalyticsPage extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.throttleStats = this.throttleStats.bind(this);
+  }
 
   state = {
     client: null,
@@ -66,7 +70,7 @@ export class AnalyticsPage extends React.PureComponent {
         });
 
         const handler = () => {
-          onLoadStats(this.getAgentStatsFilters(this.state.dateRange));
+          this.throttleStats();
         };
 
         client.subscribe(
@@ -89,6 +93,13 @@ export class AnalyticsPage extends React.PureComponent {
       this.state.client.unsubscribe(`/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}/${ROUTE_SEARCH}`);
     }
   }
+
+  throttleStats = _.throttle(
+    function () { this.props.onLoadStats(this.getAgentStatsFilters(this.state.dateRange)) }
+    ,
+    5000,
+    { trailing: true });
+
 
   render() {
     const { agent, onTrain } = this.props;

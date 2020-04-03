@@ -38,7 +38,11 @@ module.exports = async function ({ id, indexId, data }) {
         }
 
         await DocumentModel.updateInstance({ id, indexId, data: merged });
-        this.server.publish(`/${ROUTE_AGENT}/${original.agent_id}/${ROUTE_DOCUMENT}/${PARAM_SEARCH}`, {});
+
+        // We set a two second delay to wait for ES to have the Index refreshed
+        setTimeout(() => {
+            this.server.publish(`/${ROUTE_AGENT}/${original.agent_id}/${ROUTE_DOCUMENT}/${PARAM_SEARCH}`, {});
+        }, 2000)
         return { ...merged, ...{ id } };
     }
     catch (error) {

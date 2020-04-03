@@ -12,6 +12,7 @@ import {
   respondMessage,
   deleteSessionError,
   deleteSessionSuccess,
+  resetSessionSuccess,
 } from '../../containers/App/actions';
 import { toAPIPath } from '../../utils/locationResolver';
 import { makeSelectAgent } from '../../containers/App/selectors';
@@ -77,6 +78,7 @@ export function* deleteSession(payload) {
     yield put(deleteSessionSuccess());
     if (clearSessionId) {
       yield put(loadSessionSuccess(''));
+      yield put(resetSessionSuccess());
     }
   } catch (err) {
     yield put(deleteSessionError(err));

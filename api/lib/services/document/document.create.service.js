@@ -13,9 +13,7 @@ module.exports = async function ({ data }) {
         data.index = result._index;
         // We set a two second delay to wait for ES to have the Index refreshed
         setTimeout(() => {
-            documentService.findByAgentId({ agentId: data.agent_id }).then((agentDocuments) => {
-                this.server.publish(`/${ROUTE_AGENT}/${data.agent_id}/${ROUTE_DOCUMENT}`, agentDocuments);
-            })
+            this.server.publish(`/${ROUTE_AGENT}/${data.agent_id}/${ROUTE_DOCUMENT}`, {});
         }, 2000)
         return data;
     }

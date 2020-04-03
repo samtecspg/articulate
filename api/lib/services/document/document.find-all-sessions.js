@@ -21,7 +21,17 @@ module.exports = async function ({ agentId }) {
                 sessions_count: {
                     terms: {
                         field: "session",
-                        "size": 10000
+                        size: 1000,
+                        order: {
+                            "first_event_occur": "desc"
+                        }
+                    },
+                    aggs: {
+                        first_event_occur: {
+                            min: {
+                                field: "time_stamp"
+                            }
+                        }
                     }
                 }
             }
@@ -33,7 +43,7 @@ module.exports = async function ({ agentId }) {
         if (results.aggregations.sessions_count.buckets.length === 0) {
             return { data: [], totalCount: 0 };
         } else {
-            return { data: results.aggregations.sessions_count.buckets.map(bucket => { return bucket.key }), totalCount: results.aggregations.sessions_count.buckets.length }
+            return { data: results.aggregations.sessions_count.buckets.map(bucket => { return { sessionId: bucket.key, creationDate: bucket.first_event_occur.value } }), totalCount: results.aggregations.sessions_count.buckets.length }
         }
 
     }

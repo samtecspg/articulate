@@ -128,16 +128,14 @@ const settings = {
 
 const getNameForCreate = (name) => {
     var date = new Date();
-    //var seconds = date.getSeconds();
-    //var minutes = date.getMinutes();
-    var hour = date.getHours();
-
+    var hour = ("0" + date.getHours()).slice(-2);
     var year = date.getFullYear();
-    var month = date.getMonth();
-    var day = date.getDate();
+    var month = ("0" + date.getMonth()).slice(-2);
+    var day = ("0" + date.getDay()).slice(-2);
 
     return name + '_' + year + month + day + hour;
 }
+
 const getNameForSearch = (name) => {
     return '*' + name + '*';
 }

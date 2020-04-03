@@ -76,6 +76,10 @@ export class ReviewPage extends React.Component {
     this.handleTabChange = this.handleTabChange.bind(this);
     this.handleDeleteDocModalChange = this.handleDeleteDocModalChange.bind(this);
     this.onSearchLog = this.onSearchLog.bind(this);
+    this.throttleDocuments = this.throttleDocuments.bind(this);
+    this.throttleDocumentsFunction = this.throttleDocumentsFunction.bind(this);
+    this.throttleSessions = this.throttleSessions.bind(this);
+    this.throttleSessionsFunction = this.throttleSessionsFunction.bind(this);
   }
 
   state = {
@@ -189,17 +193,9 @@ export class ReviewPage extends React.Component {
           pageStatus: newPageStatus,
         });
 
-        const handler = documents => {
-          if (documents) {
-            const paginatedDocuments = _.orderBy(_.take(documents.data, this.state.pageStatus.documents.pageSize), this.state.pageStatus.documents.sortField, this.state.pageStatus.documents.sortDirection.toLowerCase());
-
-            const payload = {
-              documents: paginatedDocuments,
-              total: documents.totalCount,
-            };
-            onRefreshDocuments(payload);
-          }
-        };
+        const handler = (documents) => {
+          this.throttleDocuments(documents);
+        }
 
         client.subscribe(
           `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_DOCUMENT}`,
@@ -226,14 +222,7 @@ export class ReviewPage extends React.Component {
         });
 
         const handler = (sessions) => {
-          if (sessions) {
-            onLoadAgentSessions(
-              this.state.pageStatus.sessions.currentPage,
-              this.state.pageStatus.sessions.pageSize,
-              this.state.pageStatus.sessions.sortField,
-              this.state.pageStatus.sessions.sortDirection,
-            );
-          }
+          this.throttleSessions(sessions);
         };
 
         client.subscribe(
@@ -284,6 +273,41 @@ export class ReviewPage extends React.Component {
     }
     if (this.props.actions.onResetReviewPageLogsFilters) {
       this.props.actions.onResetReviewPageLogsFilters();
+    }
+  }
+
+  throttleDocuments = _.throttle(
+    function (documents) { this.throttleDocumentsFunction(documents) },
+    5000,
+    { leading: true });
+
+
+  throttleDocumentsFunction = (documents) => {
+    if (documents) {
+      this.props.actions.onLoadAgentDocuments({
+        page: this.state.pageStatus.documents.currentPage,
+        pageSize: this.state.pageStatus.documents.pageSize,
+        field: this.state.pageStatus.documents.sortField,
+        direction: this.state.pageStatus.documents.sortDirection,
+        filter: this.props.reviewPageFilterString
+      });
+    }
+  }
+
+  throttleSessions = _.throttle(
+    function (sessions) { this.throttleSessionsFunction(sessions) },
+    5000,
+    { leading: true });
+
+
+  throttleSessionsFunction = (sessions) => {
+    if (sessions) {
+      this.props.actions.onLoadAgentSessions(
+        this.state.pageStatus.sessions.currentPage,
+        this.state.pageStatus.sessions.pageSize,
+        this.state.pageStatus.sessions.sortField,
+        this.state.pageStatus.sessions.sortDirection,
+      );
     }
   }
 

@@ -282,7 +282,7 @@ function SessionsDataForm(props) {
                   </StyledRow>,
                 ]
                 : sessions.map(session => (
-                  <StyledRow key={`session_${session.id}`}>
+                  <StyledRow key={`session_${session.sessionId}`}>
                     <SessionRow
                       session={session}
                       locale={locale}

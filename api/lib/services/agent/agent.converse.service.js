@@ -11,7 +11,6 @@ import {
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 import { Semaphore } from 'await-semaphore';
-const { PerformanceObserver, performance } = require('perf_hooks');
 
 var mainSemaphore = new Semaphore(1);
 var semaphores = {};
@@ -155,11 +154,8 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
             CSO[CSO_CATEGORIES][agentCategory.categoryName] = agentCategory;
         });
 
-        performance.mark('A');
         const ParsedDocument = await agentService.parse({ AgentModel, text, timezone, returnModel: true, sessionId });
         let documentUpdateData = {};
-        performance.mark('B');
-        performance.measure('agentService.parse', 'A', 'B');
 
         CSO.docId = ParsedDocument.id;
         CSO.indexId = ParsedDocument.index;
@@ -399,10 +395,7 @@ module.exports = async function ({ id, sessionId, text, timezone, debug = false,
                                 * This would either send a response, a text promt or a fallback
                                 * CSO.ubiquity could be filled by using the additionalKeys param
                                 */
-                                performance.mark('A');
                                 await agentService.converseSendResponseToUbiquity({ actionData, CSO, ParsedDocument, documentUpdateData });
-                                performance.mark('B');
-                                performance.measure('agentService.converseSendResponseToUbiquity', 'A', 'B');
                             }
                         } else {
                             await contextService.update({
