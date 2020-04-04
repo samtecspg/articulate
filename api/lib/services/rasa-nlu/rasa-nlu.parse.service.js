@@ -3,6 +3,9 @@ import {
     RASA_INTENT_RANKING
 } from '../../../util/constants';
 
+import { Semaphore } from 'await-semaphore';
+var mainSemaphore = new Semaphore(2);
+
 module.exports = async function (
     {
         text,
@@ -13,12 +16,15 @@ module.exports = async function (
 
     const { [`rasa-nlu`]: rasaNLU } = this.server.app;
 
+    var release = await mainSemaphore.acquire();
     const result = await rasaNLU.Parse({
         q: text,
         project,
         model: trainedCategory.model,
         baseURL
     });
+    release();
+
     delete result.text;
     const temporalParse = {
         category: trainedCategory.name
