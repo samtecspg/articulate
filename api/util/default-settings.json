@@ -74,6 +74,7 @@
     }
   ],
   "rasaURL": "http://rasa:5000",
+  "rasaConcurrentRequests": 2,
   "ducklingURL": "http://duckling:8000",
   "ducklingDimension": [
     "amount-of-money",

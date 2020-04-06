@@ -61,6 +61,7 @@ export class SettingsPage extends React.PureComponent {
     formError: false,
     errorState: {
       rasaURL: false,
+      rasaConcurrentRequests: false,
       ducklingURL: false,
       defaultUISessionId: false,
       ducklingDimension: false,
@@ -81,6 +82,7 @@ export class SettingsPage extends React.PureComponent {
     let errors = false;
     const newErrorState = {
       rasaURL: false,
+      rasaConcurrentRequests: false,
       ducklingURL: false,
       defaultUISessionId: false,
       ducklingDimension: false,
@@ -112,6 +114,13 @@ export class SettingsPage extends React.PureComponent {
       newErrorState.rasaURL = true;
     } else {
       newErrorState.rasaURL = false;
+    }
+
+    if (!this.props.settings.rasaConcurrentRequests || this.props.settings.rasaConcurrentRequests === '') {
+      errors = true;
+      newErrorState.rasaConcurrentRequests = true;
+    } else {
+      newErrorState.rasaConcurrentRequests = false;
     }
 
     if (

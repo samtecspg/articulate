@@ -4,25 +4,39 @@ import {
 } from '../../../util/constants';
 
 import { Semaphore } from 'await-semaphore';
-var mainSemaphore = new Semaphore(process.env.RASA_MAX_CONCURRENT_REQUESTS || 2);
+var mainSemaphore = new Semaphore(1);
+var semaphores = {};
 
 module.exports = async function (
     {
         text,
         project,
         trainedCategory,
-        baseURL = null
+        baseURL = null,
+        rasaConcurrentRequests = null,
     }) {
 
     const { [`rasa-nlu`]: rasaNLU } = this.server.app;
 
     var release = await mainSemaphore.acquire();
-    const result = await rasaNLU.Parse({
-        q: text,
-        project,
-        model: trainedCategory.model,
-        baseURL
-    });
+    if (!semaphores[project + '-' + rasaConcurrentRequests]) {
+        semaphores[project + '-' + rasaConcurrentRequests] = new Semaphore(rasaConcurrentRequests);
+    }
+    release();
+
+    release = await semaphores[project + '-' + rasaConcurrentRequests].acquire();
+    var result;
+    try {
+        result = await rasaNLU.Parse({
+            q: text,
+            project,
+            model: trainedCategory.model,
+            baseURL
+        });
+    } catch (err) {
+        release();
+        throw (err);
+    }
     release();
 
     delete result.text;

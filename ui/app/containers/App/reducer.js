@@ -533,6 +533,7 @@ const initialState = Immutable({
   },
   settings: {
     rasaURL: '',
+    rasaConcurrentRequests: '',
     uiLanguage: '',
     ducklingURL: '',
     defaultTimezone: '',

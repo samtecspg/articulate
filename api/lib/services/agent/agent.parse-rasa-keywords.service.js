@@ -10,7 +10,8 @@ module.exports = async function (
         AgentModel,
         text,
         trainedCategories,
-        rasaURL = null
+        rasaURL = null,
+        rasaConcurrentRequests = null,
     }) {
 
     const { rasaNLUService } = await this.server.services();
@@ -29,7 +30,8 @@ module.exports = async function (
             text,
             project: agent.agentName,
             trainedCategory: categoryRecognizerTrainedCategory,
-            baseURL: rasaURL
+            baseURL: rasaURL,
+            rasaConcurrentRequests
         });
     }
 
@@ -42,7 +44,8 @@ module.exports = async function (
                 text,
                 project: agent.agentName,
                 trainedCategory,
-                baseURL: rasaURL
+                baseURL: rasaURL,
+                rasaConcurrentRequests
             });
             const endTime = new Moment();
             const duration = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
