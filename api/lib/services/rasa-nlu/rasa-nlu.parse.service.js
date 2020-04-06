@@ -4,7 +4,7 @@ import {
 } from '../../../util/constants';
 
 import { Semaphore } from 'await-semaphore';
-var mainSemaphore = new Semaphore(2);
+var mainSemaphore = new Semaphore(process.env.RASA_MAX_CONCURRENT_REQUESTS || 2);
 
 module.exports = async function (
     {
