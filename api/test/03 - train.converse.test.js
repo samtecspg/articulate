@@ -15,7 +15,7 @@ import {
 import importAgentConverse from './data/importAgentConverse.json';
 
 // Test shortcuts
-const { describe, it, before, after } = exports.lab = Lab.script();
+const { describe, it, before, after, beforeEach, afterEach } = exports.lab = Lab.script();
 const { expect } = Code;
 const sessionId = uuidv1();
 
@@ -47,6 +47,28 @@ describe('Agent', () => {
         });
         const response = await server.inject(`/${ROUTE_AGENT}/search/agentName/${importAgentConverse.agentName}`);
         context.importedAgentId = response.result.id;
+    });
+
+    beforeEach(() => {
+
+        return new Promise((resolve) => {
+
+            // Wait 3 second
+            setTimeout(() => {
+                resolve();
+            }, 4000);
+        });
+    });
+
+    afterEach(() => {
+
+        return new Promise((resolve) => {
+
+            // Wait 3 second
+            setTimeout(() => {
+                resolve();
+            }, 4000);
+        });
     });
 
     it('post /agent/agentId/train', { timeout: 300000 }, async ({ context }) => {
@@ -556,6 +578,29 @@ describe('Agent', () => {
         expect(response.result.responses[0].richResponses[0].type).to.be.equal("quickResponses");
         expect(response.result.responses[0].richResponses[0].data.quickResponses).to.be.an.array();
         expect(response.result.responses[0].richResponses[0].data.quickResponses.length).to.be.greaterThan(0);
+    });
+
+    it('post /agent/agentId/converse - Ask for a global webhook response from pokeapi', async ({ context }) => {
+
+        const { importedAgentId } = context;
+        const server = await Server.deployment();
+        var payload = {
+            sessionId,
+            text: "I want a global webhook",
+            timezone: "UTC"
+        };
+        var response = await server.inject({
+            url: `/${ROUTE_AGENT}/${importedAgentId}/${ROUTE_CONVERSE}`,
+            payload,
+            method: 'POST'
+        });
+
+        expect(response.statusCode).to.equal(200);
+        expect(response.result.textResponse).to.be.equal("Here is the response bulbasaur");
+        expect(response.result.responses).to.be.an.array();
+        expect(response.result.responses.length).to.be.greaterThan(0);
+        expect(response.result.responses[0].fulfilled).to.be.equal(true);
+
     });
 
     after(async ({ context }) => {

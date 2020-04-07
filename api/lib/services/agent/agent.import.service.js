@@ -141,6 +141,7 @@ module.exports = async function ({ payload }) {
                     });
                 }
             }));
+
         }
 
         if (actions) {
@@ -170,7 +171,6 @@ module.exports = async function ({ payload }) {
             }));
         }
         if (categories) {
-
             await Promise.all(categories.map(async (category) => {
 
                 const { sayings, ...categoryData } = category;

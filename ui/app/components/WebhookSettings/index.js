@@ -66,7 +66,7 @@ export class WebhookSettings extends React.Component {
   };
 
   render() {
-    const { classes, intl, webhook,isReadOnly } = this.props;
+    const { classes, intl, webhook, isReadOnly } = this.props;
     return (
       <Grid container spacing={16}>
         <Grid className={classes.toggleContainer} container item xs={12}>
@@ -344,41 +344,41 @@ export class WebhookSettings extends React.Component {
         <Grid key="grid-editor" item xs={12}>
           {webhook.webhookPayloadType !== 'None'
             ? [
-                <Grid className={classes.bodyTitleContainer} item xs={12}>
-                  <Typography variant="h2">
-                    <FormattedMessage {...messages.bodyTitle} />
-                  </Typography>
-                </Grid>,
-                <AceEditor
-                  key="webhookPayload"
-                  width="100%"
-                  height="300px"
-                  mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
-                  theme="terminal"
-                  name="webhookPayload"
-                  readOnly={isReadOnly}
-                  onLoad={this.onLoad}
-                  onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayload')}
-                  fontSize={14}
-                  showPrintMargin
-                  showGutter
-                  highlightActiveLine
-                  value={webhook.webhookPayload}
-                  editorProps={{
-                    $blockScrolling: Infinity,
-                  }}
-                  setOptions={{
-                    useWorker: false,
-                    showLineNumbers: true,
-                    tabSize: 2,
-                  }}
-                />,
-                this.props.errorState.webhookPayload ? (
-                  <Typography key="webhookPayloadError" variant="caption" className={classes.errorLabel}>
-                    <FormattedMessage {...messages.payloadError} />
-                  </Typography>
-                ) : null,
-              ]
+              <Grid className={classes.bodyTitleContainer} item xs={12}>
+                <Typography variant="h2">
+                  <FormattedMessage {...messages.bodyTitle} />
+                </Typography>
+              </Grid>,
+              <AceEditor
+                key="webhookPayload"
+                width="100%"
+                height="300px"
+                mode={webhook.webhookPayloadType === 'JSON' ? 'json' : 'xml'}
+                theme="terminal"
+                name="webhookPayload"
+                readOnly={isReadOnly}
+                onLoad={this.onLoad}
+                onChange={this.props.onChangeWebhookData.bind(null, 'webhookPayload')}
+                fontSize={14}
+                showPrintMargin
+                showGutter
+                highlightActiveLine
+                value={webhook.webhookPayload}
+                editorProps={{
+                  $blockScrolling: Infinity,
+                }}
+                setOptions={{
+                  useWorker: false,
+                  showLineNumbers: true,
+                  tabSize: 2,
+                }}
+              />,
+              this.props.errorState.webhookPayload ? (
+                <Typography key="webhookPayloadError" variant="caption" className={classes.errorLabel}>
+                  <FormattedMessage {...messages.payloadError} />
+                </Typography>
+              ) : null,
+            ]
             : null}
         </Grid>
         <Grid key="grid-editor-postscript" item xs={12}>

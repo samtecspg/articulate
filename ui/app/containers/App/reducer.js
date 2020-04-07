@@ -704,6 +704,7 @@ const initialState = Immutable({
   },
   settings: {
     rasaURL: '',
+    rasaConcurrentRequests: '',
     uiLanguage: '',
     ducklingURL: '',
     defaultTimezone: '',
@@ -1088,8 +1089,8 @@ function appReducer(state = initialState, action) {
         .set('agent', action.payload.agent)
         .set('currentAgent', action.payload.agent)
         .set('agentSettings', action.payload.agent.settings)
-        .set('agentWebhook', agentWebhook)
-        .set('agentPostFormat', agentPostFormat)
+        .set('agentWebhook', action.payload.socket ? state.agentWebhook : agentWebhook)
+        .set('agentPostFormat', action.payload.socket ? state.agentPostFormat : agentPostFormat)
         .set('loading', false)
         .set('error', false)
         .set('agentTouched', false)

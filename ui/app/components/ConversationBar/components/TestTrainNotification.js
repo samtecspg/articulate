@@ -17,7 +17,6 @@ const styles = {
     border: '1px solid #4e4e4e',
     margin: '10px 35px 0px 20px',
     borderRadius: '3px',
-    maxWidth: '278px',
     overflow: 'scroll',
   },
   notification: {

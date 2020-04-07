@@ -267,6 +267,7 @@ class SayingRow extends React.Component {
             this.props.onDeleteDocumentModalChange(
               true,
               document.id,
+              document.indexId,
               document.session
             );
           }}

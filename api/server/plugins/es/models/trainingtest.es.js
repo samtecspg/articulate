@@ -68,6 +68,14 @@ const mappings = {
 const settings = {
     'index.mapping.total_fields.limit': 5000
 };
+
+const getNameForCreate = (name) => {
+    return name;
+}
+const getNameForSearch = (name) => {
+    return name;
+}
+
 module.exports = class DocumentEsModel extends BaseModel {
     constructor({ client }) {
 
@@ -76,7 +84,10 @@ module.exports = class DocumentEsModel extends BaseModel {
             mappings,
             settings,
             client,
-            registerConfiguration: true
+            registerConfiguration: true,
+            isMappingTemplate: false,
+            getNameForCreate,
+            getNameForSearch
         });
     }
 };

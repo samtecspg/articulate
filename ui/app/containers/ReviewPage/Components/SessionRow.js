@@ -164,15 +164,15 @@ class SessionRow extends React.Component {
             variant="body1"
             style={{ fontSize: '10px', color: '#4e4e4e' }}
           >
-            {this.getDocTime(session.modificationDate)}
+            {this.getDocTime(session.creationDate)}
           </Typography>
         </TableCell>
         <TableCell>
           <span className={classes.userSays}>
             {session.sessionId}
           </span>
-          {session.id !== 'noData' ?
-            [<span key='seeSourceLabel'
+          {session.sessionId !== 'noData' ?
+            (<span key='seeSourceLabel'
               onClick={() => {
                 this.setState({ openCodeModal: true });
               }}
@@ -181,17 +181,17 @@ class SessionRow extends React.Component {
               {'</> '}
               <span>{intl.formatMessage(messages.seeSource)}</span>
             </span>,
-            <CodeModal key='codeModal'
-              handleClose={() => {
-                this.setState({ openCodeModal: false });
-              }}
-              CSO={
-                session.converseResult
-                  ? session.converseResult.CSO
-                  : null
-              }
-              open={this.state.openCodeModal}
-            />]
+              <CodeModal key='codeModal'
+                handleClose={() => {
+                  this.setState({ openCodeModal: false });
+                }}
+                CSO={
+                  session.converseResult
+                    ? session.converseResult.CSO
+                    : null
+                }
+                open={this.state.openCodeModal}
+              />)
             : null
           }
         </TableCell>

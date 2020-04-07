@@ -223,6 +223,24 @@ export class RasaSettings extends React.Component {
               error={this.props.errorState.rasaURL}
             />
           </Grid>
+          <Grid item lg={12} md={8} sm={12} xs={12}>
+            <TextField
+              id="rasaConcurrentRequests"
+              type="number"
+              label={intl.formatMessage(messages.rasaConcurrentRequests)}
+              value={settings.rasaConcurrentRequests}
+              placeholder={intl.formatMessage(messages.rasaConcurrentRequestsPlaceholder)}
+              onChange={evt => {
+                this.props.onChangeSettingsData('rasaConcurrentRequests', evt.target.value);
+              }}
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              helperText={intl.formatMessage(messages.requiredField)}
+              error={this.props.errorState.rasaConcurrentRequests}
+            />
+          </Grid>
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} className={classes.labelContainer}>

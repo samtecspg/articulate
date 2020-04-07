@@ -13,6 +13,7 @@ export const ROUTE_CHANNEL = 'channel';
 export const ROUTE_SESSION = 'session';
 export const ROUTE_CONTEXT = 'context';
 export const ROUTE_DOCUMENT = 'doc';
+export const ROUTE_INDEX = 'index';
 export const ROUTE_LOG = 'log';
 export const ROUTE_CATEGORY = 'category';
 export const ROUTE_POST_FORMAT = 'postFormat';

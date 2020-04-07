@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 module.exports = class BaseModel {
-    constructor({ name, mappings, settings, client, registerConfiguration }) {
+    constructor({ name, mappings, settings, client, registerConfiguration, isMappingTemplate, getNameForCreate, getNameForSearch }) {
 
         this.name = name;
         this.index = _.toLower(name);
@@ -9,37 +9,40 @@ module.exports = class BaseModel {
         this.settings = settings;
         this.client = client;
         this.registerConfiguration = registerConfiguration;
+        this.isMappingTemplate = isMappingTemplate;
+        this.getNameForCreate = getNameForCreate;
+        this.getNameForSearch = getNameForSearch;
     }
 
     async count({ query = null } = {}) {
 
-        const { index } = this;
+        const { index, getNameForSearch } = this;
         const body = query ? { query } : undefined;
         const { count } = await this.client.count({
-            index,
+            index: getNameForSearch(index),
+            analyze_wildcard: true,
+            allow_no_indices: true,
             body
         });
         return count;
     }
 
-    async createInstance({ data, refresh = true }) {
+    async createInstance({ data, refresh = false }) {
 
-        const { index } = this;
+        const { index, getNameForCreate } = this;
         const { body } = await this.client.index({
-            index,
-            //type: index,
+            index: getNameForCreate(index),
             body: data,
             refresh
         });
         return body;
     }
 
-    async updateInstance({ id, data, refresh = true }) {
+    async updateInstance({ id, indexId, data, refresh = false }) {
 
         const { index } = this;
         const { body } = await this.client.index({
-            index,
-            //type: index,
+            index: indexId ? indexId : index,
             id,
             body: data,
             refresh
@@ -48,35 +51,37 @@ module.exports = class BaseModel {
         return body;
     }
 
-    async removeInstance({ id, refresh = true }) {
+    async removeInstance({ id, indexId, refresh = true }) {
 
         const { index } = this;
         await this.client.delete({
-            index,
-            //type: index,
+            index: indexId ? indexId : index,
             id,
             refresh
         });
     }
 
-    async findById({ id, refresh = true, source = true }) {
+    async findById({ id, indexId, refresh = false, source = true }) {
 
         const { index } = this;
-        const { body } = await this.client.get({
-            index,
-            //type: index,
-            id,
-            refresh,
-            _source: source
-        });
-        return body;
+        try {
+            const { body } = await this.client.get({
+                index: indexId ? indexId : index,
+                id,
+                refresh,
+                _source: source
+            });
+            return body;
+        } catch (err) {
+            return null
+        }
     }
 
     async search({ bodyParam, trackTotalHits = true }) {
 
-        const { index } = this;
+        const { index, getNameForSearch } = this;
         const { body } = await this.client.search({
-            index,
+            index: getNameForSearch(index),
             body: bodyParam,
             trackTotalHits
         });
@@ -85,9 +90,9 @@ module.exports = class BaseModel {
 
     async deleteByQuery({ body, refresh = true }) {
 
-        const { index } = this;
+        const { index, getNameForSearch } = this;
         return await this.client.deleteByQuery({
-            index,
+            index: getNameForSearch(index),
             body,
             refresh
         });

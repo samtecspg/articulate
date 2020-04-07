@@ -68,6 +68,7 @@ export class SettingsPage extends React.PureComponent {
     newAccessPolicyGroupName: '',
     errorState: {
       rasaURL: false,
+      rasaConcurrentRequests: false,
       ducklingURL: false,
       defaultUISessionId: false,
       ducklingDimension: false,
@@ -88,6 +89,7 @@ export class SettingsPage extends React.PureComponent {
     let errors = false;
     const newErrorState = {
       rasaURL: false,
+      rasaConcurrentRequests: false,
       ducklingURL: false,
       defaultUISessionId: false,
       ducklingDimension: false,
@@ -118,7 +120,17 @@ export class SettingsPage extends React.PureComponent {
       newErrorState.rasaURL = false;
     }
 
-    if (!this.props.settings.ducklingURL || this.props.settings.ducklingURL === '') {
+    if (!this.props.settings.rasaConcurrentRequests || this.props.settings.rasaConcurrentRequests === '') {
+      errors = true;
+      newErrorState.rasaConcurrentRequests = true;
+    } else {
+      newErrorState.rasaConcurrentRequests = false;
+    }
+
+    if (
+      !this.props.settings.ducklingURL ||
+      this.props.settings.ducklingURL === ''
+    ) {
       errors = true;
       newErrorState.ducklingURL = true;
     } else {
@@ -312,7 +324,7 @@ export class SettingsPage extends React.PureComponent {
         />
       </Grid>
     ) : (
-      <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
+        <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
       );
   }
 }

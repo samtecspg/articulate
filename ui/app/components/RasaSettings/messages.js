@@ -19,6 +19,14 @@ export default defineMessages({
     id: 'app.components.RasaSettings.rasaURLPlaceholder',
     defaultMessage: 'Enter the URL of your rasa server',
   },
+  rasaConcurrentRequests: {
+    id: 'app.components.RasaSettings.rasaConcurrentRequests',
+    defaultMessage: 'Rasa Max Concurrent Requests',
+  },
+  rasaConcurrentRequestsPlaceholder: {
+    id: 'app.components.RasaSettings.rasaConcurrentRequestsPlaceholder',
+    defaultMessage: 'Enter the maximum concurrent requests for RASA',
+  },
   categoryClassifierPipeline: {
     id: 'app.components.RasaSettings.categoryClassifierPipeline',
     defaultMessage: 'Category Classifier Pipeline:',
@@ -60,5 +68,5 @@ export default defineMessages({
   spacy: {
     id: 'app.components.RasaSettings.spacy',
     defaultMessage: 'Spacy',
-  },
+  }
 });

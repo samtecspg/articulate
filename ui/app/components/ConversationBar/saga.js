@@ -12,6 +12,7 @@ import {
   respondMessage,
   deleteSessionError,
   deleteSessionSuccess,
+  resetSessionSuccess,
 } from '../../containers/App/actions';
 import { toAPIPath } from '../../utils/locationResolver';
 import { makeSelectAgent } from '../../containers/App/selectors';
@@ -19,7 +20,7 @@ import { makeSelectAgent } from '../../containers/App/selectors';
 function* agentMessageIterator(message, response) {
   const agent = yield select(makeSelectAgent());
   yield put(
-  respondMessage({
+    respondMessage({
       author: agent.agentName,
       docId: message.id,
       message: response.textResponse,
@@ -43,7 +44,7 @@ function* messageIterator(message) {
   );
 
   yield all(message.converseResult.responses.map((response) => {
-    
+
     return call(agentMessageIterator, message, response);
   }));
 }
@@ -58,9 +59,9 @@ export function* getSession(payload) {
       api.get,
       toAPIPath([ROUTE_CONTEXT, sessionId, ROUTE_DOCUMENT]),
     );
-    
-    yield all(conversationLog.map((message) => { 
-      
+
+    yield all(conversationLog.map((message) => {
+
       return call(messageIterator, message);
     }));
 
@@ -77,6 +78,7 @@ export function* deleteSession(payload) {
     yield put(deleteSessionSuccess());
     if (clearSessionId) {
       yield put(loadSessionSuccess(''));
+      yield put(resetSessionSuccess());
     }
   } catch (err) {
     yield put(deleteSessionError(err));

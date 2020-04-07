@@ -1077,11 +1077,12 @@ export function loadLogsSuccess(logs) {
   };
 }
 
-export function deleteDocument({ documentId, sessionId, page, pageSize, field, direction }) {
+export function deleteDocument({ documentId, indexId, sessionId, page, pageSize, field, direction }) {
   return {
     type: DELETE_DOCUMENT,
     apiCall: true,
     documentId,
+    indexId,
     sessionId,
     page,
     pageSize,

@@ -16,11 +16,14 @@ module.exports = async function ({ sessionId }) {
 
             const docs = await Promise.all(Model.property('docIds').map(async (docId) => {
 
-                const doc = await documentService.findById({ id: docId });
+                let splitArray = docId.split('_+_');
+                let id = splitArray[0];
+                let indexId = splitArray.length > 0 ? splitArray[1] : null;
+                const doc = await documentService.findById({ id, indexId });
                 return doc;
             }));
 
-            return docs;
+            return docs.filter((doc) => { return doc });
         }
 
         return Promise.reject(NotFoundErrorHandler({ model: MODEL_CONTEXT, id: sessionId }));

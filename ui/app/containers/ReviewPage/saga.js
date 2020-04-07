@@ -4,6 +4,7 @@ import {
   ROUTE_AGENT,
   ROUTE_CATEGORY,
   ROUTE_DOCUMENT,
+  ROUTE_INDEX,
   ROUTE_LOG,
   ROUTE_SAYING,
   ROUTE_SETTINGS,
@@ -380,7 +381,7 @@ export function* getLogs(payload) {
 }
 
 export function* deleteDocument(payload) {
-  const { api, documentId, sessionId, page, pageSize, field, direction } = payload;
+  const { api, documentId, indexId, sessionId, page, pageSize, field, direction } = payload;
   try {
     let session;
     try {
@@ -411,7 +412,7 @@ export function* deleteDocument(payload) {
 
     yield call(
       api.delete,
-      toAPIPath([ROUTE_DOCUMENT, documentId])
+      toAPIPath([ROUTE_DOCUMENT, documentId, ROUTE_INDEX, indexId])
     );
     yield put(loadAgentDocuments({
       page, pageSize, field, direction

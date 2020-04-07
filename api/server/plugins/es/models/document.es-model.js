@@ -125,6 +125,21 @@ const mappings = {
 const settings = {
     'index.mapping.total_fields.limit': 5000
 };
+
+const getNameForCreate = (name) => {
+    var date = new Date();
+    var hour = ("0" + date.getHours()).slice(-2);
+    var year = date.getFullYear();
+    var month = ("0" + date.getMonth()).slice(-2);
+    var day = ("0" + date.getDay()).slice(-2);
+
+    return name + '_' + year + month + day + hour;
+}
+
+const getNameForSearch = (name) => {
+    return '*' + name + '*';
+}
+
 module.exports = class DocumentEsModel extends BaseModel {
     constructor({ client }) {
 
@@ -133,7 +148,10 @@ module.exports = class DocumentEsModel extends BaseModel {
             mappings,
             settings,
             client,
-            registerConfiguration: true
+            registerConfiguration: true,
+            isMappingTemplate: true,
+            getNameForCreate,
+            getNameForSearch
         });
     }
 };
