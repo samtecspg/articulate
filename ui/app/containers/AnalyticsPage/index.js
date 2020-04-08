@@ -15,6 +15,7 @@ import MainTab from '../../components/MainTab';
 import injectSaga from '../../utils/injectSaga';
 import Nes from 'nes';
 import { getWS } from '../../utils/locationResolver';
+import _ from 'lodash';
 
 import {
   trainAgent, loadKeywords, loadActions, loadAgentDocuments, loadAgentDocumentsSuccess,
