@@ -21,6 +21,7 @@ TimeAgo.addLocale(pl);
 const styles = {
   button: {
     display: 'inline',
+    maxWidth: '64px'
   },
   trainContainer: {
     display: 'inline',
@@ -124,8 +125,9 @@ export class TrainButton extends React.Component {
               {agentStatus !== 'Training' ? (
                 <FormattedMessage {...messages.trainButton} />
               ) : (
-                <img src={training} className={classes.trainingAnimation} />
-              )}
+                  //<img src={training} className={classes.trainingAnimation} />
+                  <object data={training} type="image/svg+xml" className={classes.trainingAnimation} />
+                )}
             </Button>
           </div>
         </Tooltip>
