@@ -5,3 +5,4 @@ npm-debug.log
 .vscode
 *.iml
 .env
+performance-timing.csv

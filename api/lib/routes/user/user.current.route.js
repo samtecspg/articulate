@@ -20,7 +20,6 @@ module.exports = {
 
             const { userService } = await request.services();
             try {
-                let a = _.get(request, 'auth.credentials.id');
                 return await userService.findById({ id: _.get(request, 'auth.credentials.id', null), filterSensitiveData: true });
             }
             catch ({ message, statusCode }) {

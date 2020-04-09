@@ -9,3 +9,5 @@ export const AUTH_FORCE_DEFAULT_USER = (() => {
     return process.env.AUTH_FORCE_DEFAULT_USER === 'true';
 
 })();
+
+export const PERF = process.env.PERF === 'true';
