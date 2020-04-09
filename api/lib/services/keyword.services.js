@@ -20,27 +20,27 @@ module.exports = class KeywordService extends Schmervice.Service {
     }
 
     splitAddedOldRemovedIds() {
-        return TimingWrapper({ cls: this, fn: SplitAddedOldRemovedIds, name: 'SplitAddedOldRemovedIds' }).apply(this, arguments);
+        return SplitAddedOldRemovedIds.apply(this, arguments);
     }
 
     combinationsFromSayings() {
-        return TimingWrapper({ cls: this, fn: CombinationsFromSayings, name: 'CombinationsFromSayings' }).apply(this, arguments);
+        return CombinationsFromSayings.apply(this, arguments);
     }
 
     parseSystemKeywords() {
-        return TimingWrapper({ cls: this, fn: ParseSystemKeywords, name: 'ParseSystemKeywords' }).apply(this, arguments);
+        return ParseSystemKeywords.apply(this, arguments);
     }
 
     parseSystemKeywordsDuckling() {
-        return TimingWrapper({ cls: this, fn: ParseSystemKeywordsDuckling, name: 'ParseSystemKeywordsDuckling' }).apply(this, arguments);
+        return ParseSystemKeywordsDuckling.apply(this, arguments);
     }
 
     parseSystemKeywordsRegex() {
-        return TimingWrapper({ cls: this, fn: ParseSystemKeywordsRegex, name: 'ParseSystemKeywordsRegex' }).apply(this, arguments);
+        return ParseSystemKeywordsRegex.apply(this, arguments);
     }
 
     parseSysValue() {
-        return TimingWrapper({ cls: this, fn: ParseSysValue, name: 'ParseSysValue' }).apply(this, arguments);
+        return ParseSysValue.apply(this, arguments);
     }
 
 };

@@ -15,7 +15,7 @@ module.exports = class ActionService extends Schmervice.Service {
     }
 
     splitAddedOldRemovedIds() {
-        return TimingWrapper({ cls: this, fn: SplitAddedOldRemovedIds, name: 'SplitAddedOldRemovedIds' }).apply(this, arguments);
+        return SplitAddedOldRemovedIds.apply(this, arguments);
     }
 };
 
