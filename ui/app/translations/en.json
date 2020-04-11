@@ -43,7 +43,7 @@
   "app.components.RasaSettings.keywordClassifierPipeline": "Entity Classifier Pipeline:",
   "app.components.RasaSettings.keywords": "Keywords",
   "app.components.RasaSettings.pipelineError": "This value is not valid for a rasa pipeline. Please specify an array of objects, you can select a default pipeline in the top right.",
-  "app.components.RasaSettings.rasaSettingDescription": "You can configure the address of your rasa instance and the desired pipelines you would like for your models. This values are overwritable at agent level.",
+  "app.components.RasaSettings.rasaSettingDescription": "You can configure the address of your rasa instance and the desired pipelines you would like for your models. These values are overwritable at agent level.",
   "app.components.RasaSettings.rasaURL": "Rasa URL",
   "app.components.RasaSettings.rasaURLPlaceholder": "Enter the URL of your rasa server",
   "app.components.RasaSettings.requiredField": "*Required",
