@@ -9,6 +9,11 @@ A few warnings before we get started:
 - **Memory Requirement** - Loading and Training these language models dictates a certain amount of RAM. For experimenting with smaller agents 3Gb may be sufficient, but for larger agents much more RAM may be required. If training takes more than a few minutes for small agents or more than half an hour for large agents, it is a good indicator that you are running low on memory.
 - **Windows Shared Drives** - On Windows, make sure you have shared the drive with Docker so that it can mount directories inside of the container.
 - **Docker Toolbox** - The below instructions work best on Linux or when using *Docker for Windows* or *Docker for Mac*.
+- **Elasticsearch user** -  if your user isn't 1000 you'll need to execute the below code to set the Elasticsearch folder to the correct ownership.
+
+```
+sudo chown -R 1000:1000 local-storage/elasticsearch
+```
 
 </Note>
 
