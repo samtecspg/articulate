@@ -60,7 +60,8 @@ const styles = {
     position: 'relative',
     minWidth: '18px',
     width: '18px',
-    marginLeft: '4px'
+    marginLeft: '4px',
+    maxWidth: '64px'
   },
   trainContainer: {
     display: 'inline-block',
@@ -187,10 +188,28 @@ export class TrainButton extends React.Component {
             </span>
           ) : null}
         </Typography>
-        <Tooltip title={serverStatus === 'Training' && agentStatus !== 'Training' ? intl.formatMessage(messages.anotherAgentTraining) : ''} placement="top">
-          <div style={{ display: 'inline', overflow: 'hidden' }}>
-            <Button disabled={serverStatus === 'Training' || isReadOnly} className={classes.button} onClick={onTrain} key="btnFinish" variant="contained">
-              {agentStatus !== 'Training' ? <FormattedMessage {...messages.trainButton} /> : <img src={training} className={classes.trainingAnimation} />}
+        <Tooltip
+          title={
+            serverStatus === 'Training' && agentStatus !== 'Training'
+              ? intl.formatMessage(messages.anotherAgentTraining)
+              : ''
+          }
+          placement="top"
+        >
+          <div style={{ display: 'inline' }}>
+            <Button
+              disabled={serverStatus === 'Training'}
+              className={classes.button}
+              onClick={onTrain}
+              key="btnFinish"
+              variant="contained"
+            >
+              {agentStatus !== 'Training' ? (
+                <FormattedMessage {...messages.trainButton} />
+              ) : (
+                  //<img src={training} className={classes.trainingAnimation} />
+                  <object data={training} type="image/svg+xml" className={classes.trainingAnimation} />
+                )}
             </Button>
             <Fragment>
               <Button disabled={(serverStatus === 'Training' || isReadOnly) || (agentSettings && !agentSettings.enableAgentVersions)} className={classes.versionButton} onClick={this.handleVersionsModalOpen} key="btnVersion" variant="contained">

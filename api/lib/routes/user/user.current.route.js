@@ -24,11 +24,9 @@ module.exports = {
                 if (AUTH_ENABLED) {
                     return await userService.findById({ id: _.get(request, 'auth.credentials.id', null), filterSensitiveData: true, includeAccessPolicies: true });
                 }
-                console.log(`user.current.route::handler::noAuthUser`); // TODO: REMOVE!!!!
+                //console.log(`user.current.route::handler::noAuthUser`); // TODO: REMOVE!!!!
                 let newVar = await userService.noAuthUser();
                 return newVar;
-
-
             }
             catch ({ message, statusCode }) {
                 return new Boom(message, { statusCode });
