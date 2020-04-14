@@ -6,3 +6,5 @@ npm-debug.log
 *.iml
 .env
 performance-timing.csv
+*.swp
+*.swo
