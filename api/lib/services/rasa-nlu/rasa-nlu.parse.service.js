@@ -6,21 +6,30 @@ import {
 import { Semaphore } from 'await-semaphore';
 var mainSemaphore = new Semaphore(1);
 var semaphores = {};
+const loadbalance = require('loadbalance')
+var loadBalancers = {};
+const Crypto = require('crypto');
 
 module.exports = async function (
     {
         text,
         project,
         trainedCategory,
-        baseURL = null,
+        baseURLs = null,
         rasaConcurrentRequests = null,
     }) {
 
     const { [`rasa-nlu`]: rasaNLU } = this.server.app;
 
+    var urls = baseURLs;
+    var urlsHash = Crypto.createHash('md5').update(urls.join()).digest("hex");
+    var loadBalancerName = project + urlsHash;
     var release = await mainSemaphore.acquire();
     if (!semaphores[project + '-' + rasaConcurrentRequests]) {
         semaphores[project + '-' + rasaConcurrentRequests] = new Semaphore(rasaConcurrentRequests);
+    }
+    if (urls.length > 1 && !loadBalancers[loadBalancerName]) {
+        loadBalancers[loadBalancerName] = loadbalance.roundRobin(urls);
     }
     release();
 
@@ -31,7 +40,7 @@ module.exports = async function (
             q: text,
             project,
             model: trainedCategory.model,
-            baseURL
+            baseURL: urls.length === 1 ? urls[0] : loadBalancers[loadBalancerName].pick()
         });
     } catch (err) {
         release();

@@ -104,7 +104,7 @@ export class AgentPage extends React.PureComponent {
       welcomeAction: false,
       webhookKey: false,
       webhookUrl: false,
-      rasaURL: false,
+      rasaURLs: false,
       ducklingURL: false,
       ducklingDimension: false,
       categoryClassifierPipeline: false,
@@ -193,7 +193,7 @@ export class AgentPage extends React.PureComponent {
       fallbackAction: false,
       webhookUrl: false,
       webhookKey: false,
-      rasaURL: false,
+      rasaURLs: false,
       ducklingURL: false,
       ducklingDimension: false,
       categoryClassifierPipeline: false,
@@ -238,12 +238,18 @@ export class AgentPage extends React.PureComponent {
     } else {
       newErrorState.webhookUrl = false;
     }
-    if (!this.props.agentSettings.rasaURL || this.props.agentSettings.rasaURL === '') {
+    if (!this.props.agentSettings.rasaURLs
+      || this.props.agentSettings.rasaURLs.length === 0
+      || this.props.agentSettings.rasaURLs.indexOf('') !== -1
+      || this.props.agentSettings.rasaURLs.some((item) => {
+        return this.props.agentSettings.rasaURLs.indexOf(item)
+          !== this.props.agentSettings.rasaURLs.lastIndexOf(item);
+      })) {
       errors = true;
-      newErrorState.rasaURL = true;
-      newErrorState.tabs.push(1);
+      newErrorState.rasaURLs = true;
+      newErrorState.tabs.push(2);
     } else {
-      newErrorState.rasaURL = false;
+      newErrorState.rasaURLs = false;
     }
     if (!this.props.agentSettings.ducklingURL || this.props.agentSettings.ducklingURL === '') {
       errors = true;

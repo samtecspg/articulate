@@ -594,6 +594,7 @@ const initialState = Immutable({
   },
   agentSettings: {
     rasaURL: '',
+    rasaURLs: '[]',
     ducklingURL: '',
     ducklingDimension: '[]',
     spacyPretrainedEntities: '[]',
@@ -704,6 +705,7 @@ const initialState = Immutable({
   },
   settings: {
     rasaURL: '',
+    rasaURLs: [],
     rasaConcurrentRequests: '',
     uiLanguage: '',
     ducklingURL: '',
@@ -1110,6 +1112,7 @@ function appReducer(state = initialState, action) {
           state.settings.defaultWelcomeActionName,
         )
         .setIn(['agentSettings', 'rasaURL'], state.settings.rasaURL)
+        .setIn(['agentSettings', 'rasaURLs'], state.settings.rasaURLs)
         .setIn(
           ['agentSettings', 'categoryClassifierPipeline'],
           state.settings.categoryClassifierPipeline,

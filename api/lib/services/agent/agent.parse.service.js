@@ -191,13 +191,13 @@ module.exports = async function ({ id, AgentModel, text, timezone, sessionId = n
         else {
             const {
                 ducklingURL,
-                rasaURL,
+                rasaURLs,
                 spacyPretrainedEntities,
                 ducklingDimension,
                 rasaConcurrentRequests,
             } = agent.settings;
 
-            const rasaKeywords = _.compact(await agentService.parseRasaKeywords({ AgentModel, text, trainedCategories, rasaURL, rasaConcurrentRequests }));
+            const rasaKeywords = _.compact(await agentService.parseRasaKeywords({ AgentModel, text, trainedCategories, rasaURLs, rasaConcurrentRequests }));
             const ducklingKeywords = _.compact(await agentService.parseDucklingKeywords({ AgentModel, text, timezone, ducklingURL }));
             const regexKeywords = await agentService.parseRegexKeywords({ AgentModel, text });
 

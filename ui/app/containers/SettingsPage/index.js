@@ -67,7 +67,7 @@ export class SettingsPage extends React.PureComponent {
     formError: false,
     newAccessPolicyGroupName: '',
     errorState: {
-      rasaURL: false,
+      rasaURLs: false,
       rasaConcurrentRequests: false,
       ducklingURL: false,
       defaultUISessionId: false,
@@ -88,7 +88,7 @@ export class SettingsPage extends React.PureComponent {
   submit(exit) {
     let errors = false;
     const newErrorState = {
-      rasaURL: false,
+      rasaURLs: false,
       rasaConcurrentRequests: false,
       ducklingURL: false,
       defaultUISessionId: false,
@@ -113,11 +113,17 @@ export class SettingsPage extends React.PureComponent {
       newErrorState.defaultUISessionId = false;
     }
 
-    if (!this.props.settings.rasaURL || this.props.settings.rasaURL === '') {
+    if (!this.props.settings.rasaURLs
+      || this.props.settings.rasaURLs.length === 0
+      || this.props.settings.rasaURLs.indexOf('') !== -1
+      || this.props.settings.rasaURLs.some((item) => {
+        return this.props.settings.rasaURLs.indexOf(item)
+          !== this.props.settings.rasaURLs.lastIndexOf(item);
+      })) {
       errors = true;
-      newErrorState.rasaURL = true;
+      newErrorState.rasaURLs = true;
     } else {
-      newErrorState.rasaURL = false;
+      newErrorState.rasaURLs = false;
     }
 
     if (!this.props.settings.rasaConcurrentRequests || this.props.settings.rasaConcurrentRequests === '') {

@@ -95,7 +95,7 @@ module.exports = async function ({ id, returnModel = false }) {
             return agentSaying.actions.length === 0;
         });
 
-        if (sayingsWithoutActions.length > 0){
+        if (sayingsWithoutActions.length > 0) {
             return Promise.reject(InvalidAgentTrain({ message: `The following user sayings doesn't have actions asigned: "${_.map(sayingsWithoutActions, 'userSays').join('", "')}"` }));
         }
 
@@ -150,7 +150,7 @@ module.exports = async function ({ id, returnModel = false }) {
                 for (let CategoryModel of CategoryModels) {
                     const status = CategoryModel.property('status');
                     if (status === STATUS_ERROR || status === STATUS_OUT_OF_DATE) {
-                        if (!markedAsTraining){
+                        if (!markedAsTraining) {
                             AgentModel.property('status', STATUS_TRAINING);
                             await AgentModel.saveInstance();
                             ServerModel.property('status', STATUS_TRAINING);
@@ -172,24 +172,28 @@ module.exports = async function ({ id, returnModel = false }) {
             const pipeline = trainingData.numberOfSayings === 1 ? agent.settings[CONFIG_SETTINGS_KEYWORD_PIPELINE] : agent.settings[CONFIG_SETTINGS_SAYING_PIPELINE];
             model = (trainingData.numberOfSayings === 1 ? RASA_MODEL_JUST_ER : '') + model;
             model = `${RASA_MODEL_DEFAULT}${model}`;
-            if (!markedAsTraining){
+            if (!markedAsTraining) {
                 AgentModel.property('status', STATUS_TRAINING);
                 await AgentModel.saveInstance();
                 ServerModel.property('status', STATUS_TRAINING);
                 await ServerModel.saveInstance();
                 markedAsTraining = true;
             }
-            await rasaNLUService.train({
-                project: agent.agentName,
-                model,
-                oldModel: agent.model || null,
-                trainingSet: {
-                    [RASA_NLU_DATA]: trainingData[RASA_NLU_DATA]
-                },
-                pipeline,
-                language: agent.language,
-                baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
-            });
+
+            var urls = agent.settings.rasaURLs;
+            await Promise.all(_.map(urls, async (url) => {
+                return await rasaNLUService.train({
+                    project: agent.agentName,
+                    model,
+                    oldModel: agent.model || null,
+                    trainingSet: {
+                        [RASA_NLU_DATA]: trainingData[RASA_NLU_DATA]
+                    },
+                    pipeline,
+                    language: agent.language,
+                    baseURL: url/*agent.settings[CONFIG_SETTINGS_RASA_URL]*/
+                });
+            }));
         }
 
         //train modifiers model
@@ -208,7 +212,7 @@ module.exports = async function ({ id, returnModel = false }) {
         if (modifiersTrainingData.numberOfSayings > 0) {
             const pipeline = modifiersTrainingData.numberOfSayings === 1 ? agent.settings[CONFIG_SETTINGS_KEYWORD_PIPELINE] : agent.settings[CONFIG_SETTINGS_SAYING_PIPELINE];
             const modifiersRecognizerModel = `${agent.agentName}_${modifiersTrainingData.numberOfSayings === 1 ? `${RASA_MODEL_JUST_ER}` : ''}${RASA_MODEL_MODIFIERS}`;
-            if (!markedAsTraining){
+            if (!markedAsTraining) {
                 AgentModel.property('status', STATUS_TRAINING);
                 await AgentModel.saveInstance();
                 ServerModel.property('status', STATUS_TRAINING);
@@ -240,10 +244,10 @@ module.exports = async function ({ id, returnModel = false }) {
             an agent as ready when actually it could be out of date because user edited while it was being trained
         */
 
-        if (markedAsTraining){
+        if (markedAsTraining) {
             const CurrentAgentModel = await redis.factory(MODEL_AGENT, id);
             const currentAgent = CurrentAgentModel.allProperties();
-            if (currentAgent.status === STATUS_TRAINING){
+            if (currentAgent.status === STATUS_TRAINING) {
                 AgentModel.property('lastTraining', Moment().utc().format());
                 AgentModel.property('status', STATUS_READY);
                 ServerModel.property('status', STATUS_READY);

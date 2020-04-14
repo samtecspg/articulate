@@ -19,6 +19,9 @@
   "parameters": {},
   "settings": {
     "rasaURL": "http://localhost:5000",
+    "rasaURLs": [
+      "http://localhost:5000"
+    ],
     "ducklingURL": "http://localhost:8000",
     "ducklingDimension": [
       "amount-of-money",

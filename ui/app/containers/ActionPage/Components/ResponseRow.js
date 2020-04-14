@@ -440,7 +440,6 @@ class ResponseRow extends React.Component {
                 <Button
                   className={classes.addButton}
                   onClick={() => {
-                    debugger;
                     var props = this.props;
                     this.state.editingRichResponse ?
                       onEditRichResponse(responseIndex, {
