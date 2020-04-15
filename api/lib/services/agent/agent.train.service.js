@@ -117,17 +117,20 @@ module.exports = async function ({ id, returnModel = false }) {
                 ServerModel.property('status', STATUS_TRAINING);
                 await ServerModel.saveInstance();
                 markedAsTraining = true;
-                await rasaNLUService.train({
-                    project: agent.agentName,
-                    model: categoryRecognizerModel,
-                    oldModel: categoryRecognizerModel,
-                    trainingSet: {
-                        [RASA_NLU_DATA]: categoriesTrainingData.rasaNLUData
-                    },
-                    pipeline,
-                    language: agent.language,
-                    baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
-                });
+                var urls = agent.settings.rasaURLs;
+                await Promise.all(_.map(urls, async (url) => {
+                    await rasaNLUService.train({
+                        project: agent.agentName,
+                        model: categoryRecognizerModel,
+                        oldModel: categoryRecognizerModel,
+                        trainingSet: {
+                            [RASA_NLU_DATA]: categoriesTrainingData.rasaNLUData
+                        },
+                        pipeline,
+                        language: agent.language,
+                        baseURL: url/*agent.settings[CONFIG_SETTINGS_RASA_URL]*/
+                    });
+                }));
                 AgentModel.property('categoryRecognizer', true);
             }
             else {
@@ -191,7 +194,7 @@ module.exports = async function ({ id, returnModel = false }) {
                     },
                     pipeline,
                     language: agent.language,
-                    baseURL: url/*agent.settings[CONFIG_SETTINGS_RASA_URL]*/
+                    baseURL: url //agent.settings[CONFIG_SETTINGS_RASA_URL]
                 });
             }));
         }
@@ -219,17 +222,20 @@ module.exports = async function ({ id, returnModel = false }) {
                 await ServerModel.saveInstance();
                 markedAsTraining = true;
             }
-            await rasaNLUService.train({
-                project: agent.agentName,
-                model: modifiersRecognizerModel,
-                oldModel: `${agent.agentName}_${agent.modifiersRecognizerJustER ? `${RASA_MODEL_JUST_ER}` : ''}${RASA_MODEL_MODIFIERS}`,
-                trainingSet: {
-                    [RASA_NLU_DATA]: rasaNLUData
-                },
-                pipeline,
-                language: agent.language,
-                baseURL: agent.settings[CONFIG_SETTINGS_RASA_URL]
-            });
+            var urls = agent.settings.rasaURLs;
+            await Promise.all(_.map(urls, async (url) => {
+                await rasaNLUService.train({
+                    project: agent.agentName,
+                    model: modifiersRecognizerModel,
+                    oldModel: `${agent.agentName}_${agent.modifiersRecognizerJustER ? `${RASA_MODEL_JUST_ER}` : ''}${RASA_MODEL_MODIFIERS}`,
+                    trainingSet: {
+                        [RASA_NLU_DATA]: rasaNLUData
+                    },
+                    pipeline,
+                    language: agent.language,
+                    baseURL: url/*agent.settings[CONFIG_SETTINGS_RASA_URL]*/
+                });
+            }));
             AgentModel.property('modifiersRecognizer', true);
         }
         else {

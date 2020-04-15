@@ -261,7 +261,7 @@ export class RasaSettings extends React.Component {
                           const mutableRasaURLs = Immutable.asMutable(settings.rasaURLs, {
                             deep: true,
                           });
-                          mutableRasaURLs.splice(index);
+                          mutableRasaURLs.splice(index, 1);
                           this.props.onChangeSettingsData('rasaURLs', mutableRasaURLs);
                         }}
                         className={classes.deleteIcon}
