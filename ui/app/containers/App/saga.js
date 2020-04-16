@@ -186,7 +186,6 @@ export function* putConversationBarWidth(payload) {
         300,
       );
       yield put(updateSettingSuccess(response));
-      yield put(push('/users'));
     }
   } catch (err) {
     yield put(updateSettingsError(err));
