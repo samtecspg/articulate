@@ -146,6 +146,21 @@ export class AnalyticsPage extends React.PureComponent {
       );
   }
 
+  getTimeGranularity(dateRange) {
+    switch (dateRange) {
+      case 'now-1H':
+        return '1m';
+      case 'now-1d':
+        return '1h'
+      case 'now-7d':
+        return '1d';
+      case 'now-1M':
+        return '1w';
+      default:
+        return '1M';
+    }
+  }
+
   getAgentStatsFilters = function (dateRange) {
 
     let filterDocumentsAnalyticsRequestCount = {
@@ -306,7 +321,8 @@ export class AnalyticsPage extends React.PureComponent {
         "start_time": {
           "date_histogram": {
             "field": "time_stamp",
-            "interval": "1m",
+            "interval": this.getTimeGranularity(dateRange),
+            "time_zone": Intl.DateTimeFormat().resolvedOptions().timeZone,
             "min_doc_count": 1
           }
         }

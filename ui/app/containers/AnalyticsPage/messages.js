@@ -42,11 +42,11 @@ export default defineMessages({
   noActionsInvokedSoFar: {
     id: 'app.containers.AnalyticsPage.noActionsInvokedSoFar',
     defaultMessage: 'No actions invoked so far',
-  }, 
+  },
   webhookTimes: {
     id: 'app.containers.AnalyticsPage.webhookTimes',
     defaultMessage: 'Webhook Times',
-  },  
+  },
   noWebhooksCallsSoFar: {
     id: 'app.containers.AnalyticsPage.noWebhooksCallsSoFar',
     defaultMessage: 'No webhook calls so far',
@@ -78,5 +78,26 @@ export default defineMessages({
   allTime: {
     id: 'app.containers.AnalyticsPage.allTime',
     defaultMessage: 'All time',
-  }
+  },
+  perMinute: {
+    id: 'app.containers.AnalyticsPage.perMinute',
+    defaultMessage: '(Per minute)'
+  },
+  perHour: {
+    id: 'app.containers.AnalyticsPage.perHour',
+    defaultMessage: '(Per hour)'
+  },
+  perDay: {
+    id: 'app.containers.AnalyticsPage.perDay',
+    defaultMessage: '(Per day)'
+  },
+  perWeek: {
+    id: 'app.containers.AnalyticsPage.perWeek',
+    defaultMessage: '(Per week)'
+  },
+  perMonth: {
+    id: 'app.containers.AnalyticsPage.perMonth',
+    defaultMessage: '(Per month)'
+  },
+
 });

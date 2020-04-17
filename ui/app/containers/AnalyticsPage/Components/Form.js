@@ -152,17 +152,60 @@ class Form extends React.Component {
     return data
   };
 
+  getTimeGranularityWord() {
+    switch (this.props.dateRange) {
+      case 'now-1H':
+        return 'minutes';
+      case 'now-1d':
+        return 'hours';
+      case 'now-7d':
+        return 'days';
+      case 'now-1M':
+        return 'weeks';
+      default:
+        return 'months';
+    }
+  }
 
+  getTimeGranularityFormat() {
+    switch (this.props.dateRange) {
+      case 'now-1H':
+        return 'MM-DD-YYYY HH:mm';
+      case 'now-1d':
+        return 'MM-DD-YYYY HH:00';
+      case 'now-7d':
+        return 'MM-DD-YYYY';
+      case 'now-1M':
+        return 'MM-DD-YYYY';
+      default:
+        return 'MM-YYYY';
+    }
+  }
+
+  getTimeFrequencyLabel(intl, messages) {
+    switch (this.props.dateRange) {
+      case 'now-1H':
+        return intl.formatMessage(messages.perMinute)
+      case 'now-1d':
+        return intl.formatMessage(messages.perHour)
+      case 'now-7d':
+        return intl.formatMessage(messages.perDay)
+      case 'now-1M':
+        return intl.formatMessage(messages.perWeek)
+      default:
+        return intl.formatMessage(messages.perMonth)
+    }
+  }
 
   getRequestsOverTime = (stats) => {
 
     let data = {}
     if (stats.documentsAnalyticsRequestsOverTime.length > 0) {
       const timestamps = _.sortBy(_.map(stats.documentsAnalyticsRequestsOverTime, (document) => { return new Moment(document.key_as_string) }));
-      const range = moment.range(timestamps[0].clone().subtract(1, 'minutes'), timestamps[timestamps.length - 1].clone().add(1, 'minutes'));
-      const minutes = Array.from(range.by('minutes'));
-      const labels = minutes.map(m => m.format('MM-DD-YYYY hh:mm'));
-      const tempResult = stats.documentsAnalyticsRequestsOverTime.map(d => ({ name: new Moment(d.key_as_string).format('MM-DD-YYYY hh:mm'), count: d.doc_count }));
+      const range = moment.range(timestamps[0].clone().subtract(1, this.getTimeGranularityWord()), Moment().add(1, this.getTimeGranularityWord()));
+      const minutes = Array.from(range.by(this.getTimeGranularityWord()));
+      const labels = minutes.map(m => m.format(this.getTimeGranularityFormat()));
+      const tempResult = stats.documentsAnalyticsRequestsOverTime.map(d => ({ name: new Moment(d.key_as_string).format(this.getTimeGranularityFormat()), count: d.doc_count }));
       const result = _.times(labels.length, _.constant(0));
 
       tempResult.forEach((minuteOfRequest) => {
@@ -186,6 +229,13 @@ class Form extends React.Component {
     }
     return data
   };
+
+  getMaxRequestsOverTime(requestsOverTime) {
+    if (requestsOverTime && requestsOverTime.length > 0) {
+      return Math.max(...requestsOverTime.map(request => { return request.doc_count }));
+    }
+    return 1;
+  }
 
   getAverageWebhookResponseTime = (documents) => {
 
@@ -394,7 +444,7 @@ class Form extends React.Component {
                     style={{ height: 330 }}
                   >
                     <CardHeader
-                      title={intl.formatMessage(messages.requestsOverTime)}
+                      title={intl.formatMessage(messages.requestsOverTime) + ' ' + this.getTimeFrequencyLabel(intl, messages)}
                       titleTypographyProps={{
                         className: classes.cardTitle
                       }}
@@ -409,7 +459,7 @@ class Form extends React.Component {
                               yAxes: [{
                                 ticks: {
                                   beginAtZero: true,
-                                  stepSize: 1
+                                  stepSize: Math.pow(10, this.getMaxRequestsOverTime(this.props.stats.documentsAnalyticsRequestsOverTime).toString().length - 1)
                                 }
                               }]
                             }
