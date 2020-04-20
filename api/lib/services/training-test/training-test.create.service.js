@@ -8,7 +8,7 @@ module.exports = async function ({ data }) {
 
     const TrainingTestModel = es.models[MODEL_TRAINING_TEST];
     try {
-        const result = await TrainingTestModel.createInstance({ data });
+        const result = await TrainingTestModel.createInstance({ data, refresh: true });
         return data;
     }
     catch (error) {

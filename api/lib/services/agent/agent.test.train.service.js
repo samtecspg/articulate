@@ -6,6 +6,9 @@ import {
     MODEL_CATEGORY,
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
+import { Semaphore } from 'await-semaphore';
+
+var mainSemaphore = new Semaphore(1);
 
 module.exports = async function ({ id, debug = false }) {
 
@@ -30,29 +33,31 @@ module.exports = async function ({ id, debug = false }) {
         result.actions = [];
         let errorCounter = 0;
 
-        for (sayingCounter = 0; sayingCounter < agentSayings.data.length; sayingCounter++) {
+        await Promise.all(_.map(agentSayings.data, async (value) => {
 
             let errorPresent = false;
             let badKeywords = [];
             let badActions = [];
 
-            let ParsedDocument = await agentService.parse({ AgentModel, text: agentSayings.data[sayingCounter].userSays, timezone: AgentModel.property('timezone'), saveDocument: false });
+            let ParsedDocument = await agentService.parse({ AgentModel, text: value.userSays, timezone: AgentModel.property('timezone'), saveDocument: false });
 
+            let release = await mainSemaphore.acquire();
             let recognizedAction = ParsedDocument.recognized_action;
             //For multi actions
-            let sayingAction = agentSayings.data[sayingCounter].actions.join('+__+');
+            let sayingAction = value.actions.join('+__+');
 
-            errorPresent = upsertResultAction(result, sayingAction, recognizedAction, agentSayings.data[sayingCounter].id, badActions);
+            errorPresent = upsertResultAction(result, sayingAction, recognizedAction, value.id, badActions);
 
             let recognizedKeywords = ParsedDocument.rasa_results[0].keywords.map((keyword) => { return { start: keyword.start, end: keyword.end, keyword: keyword.keyword, value: keyword.value.value } });
-            let sayingKeywords = agentSayings.data[sayingCounter].keywords;
-            errorPresent = errorPresent || upsertResultKeywords(result, sayingKeywords, recognizedKeywords, agentSayings.data[sayingCounter].id, badKeywords);
+            let sayingKeywords = value.keywords;
+            errorPresent = errorPresent || upsertResultKeywords(result, sayingKeywords, recognizedKeywords, value.id, badKeywords);
 
             if (errorPresent) {
                 errorCounter++;
-                await updateFailedSaying(agentSayings.data[sayingCounter].id, result, globalService, agentService, AgentModel, badKeywords, badActions)
+                await updateFailedSaying(value.id, result, globalService, agentService, AgentModel, badKeywords, badActions)
             }
-        }
+            release();
+        }));
 
         result.totalSayings = agentSayings.data.length;
         result.goodSayings = agentSayings.data.length - errorCounter;
@@ -63,6 +68,9 @@ module.exports = async function ({ id, debug = false }) {
         return result;
     }
     catch (error) {
+        if (release) {
+            release();
+        }
         throw RedisErrorHandler({ error });
     }
 };
