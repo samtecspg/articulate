@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { SwatchesPicker } from 'react-color';
+import { Grid } from '@material-ui/core';
 
 import { withStyles } from '@material-ui/core/styles';
-import { Grid } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { SwatchesPicker } from 'react-color';
 
 const styles = {
   swatchContainer: {
@@ -57,59 +57,33 @@ const styles = {
     marginRight: 5,
   },
 };
+const colorsList = [
+  ['#FFB5E8', '#FF9CEE', '#FFCCF9', '#FCC2FF', '#F6A6FF'],
+  ['#B28DFF', '#C5A3FF', '#D5AAFF', '#ECD4FF', '#FBE4FF'],
+  ['#DCD3FF', '#A79AFF', '#B5B9FF', '#97A2FF', '#AFCBFF'],
+  ['#AFF8DB', '#C4FAF8', '#85E3FF', '#ACE7FF', '#6EB5FF'],
+  ['#BFFCC6', '#DBFFD6', '#F3FFE3', '#E7FFAC', '#FFFFD1'],
+  ['#FFC9DE', '#FFABAB', '#FFBEBC', '#FFCBC1', '#FFF5BA'],
+];
 
 function ColorPicker(props) {
   // eslint-disable-line react/prefer-stateless-function
+  const { classes, dotDisplay, isKeyword ,disabled } = props;
+  const containerClass = dotDisplay ? classes.swatchContainerDot : classes.swatchContainer;
+  const containerStyle = dotDisplay ? { background: props.color } : undefined;
+  const swatchClass = dotDisplay ? classes.swatchDot : classes.swatch;
 
-  const { classes, dotDisplay, isKeyword } = props;
-  return dotDisplay ? (
-    <Grid
-      style={{ background: props.color }}
-      className={classes.swatchContainerDot}
-    >
-      <Grid className={classes.swatchDot} onClick={props.handleOpen}>
+  return (
+    <Grid style={containerStyle} className={containerClass}>
+      <Grid className={swatchClass} onClick={props.handleOpen}>
         <div style={{ background: props.color }} className={classes.color} />
       </Grid>
-      {props.displayColorPicker ? (
+      {!disabled && props.displayColorPicker && (
         <Grid className={classes.popover}>
           <Grid className={classes.cover} onClick={props.handleClose} />
-          <SwatchesPicker
-            colors={isKeyword ? [['#FFB5E8','#FF9CEE','#FFCCF9','#FCC2FF','#F6A6FF'],
-              ['#B28DFF','#C5A3FF','#D5AAFF','#ECD4FF','#FBE4FF'],
-              ['#DCD3FF','#A79AFF','#B5B9FF','#97A2FF','#AFCBFF'],
-              ['#AFF8DB','#C4FAF8','#85E3FF','#ACE7FF','#6EB5FF'],
-              ['#BFFCC6','#DBFFD6','#F3FFE3','#E7FFAC','#FFFFD1'],
-              ['#FFC9DE','#FFABAB','#FFBEBC','#FFCBC1','#FFF5BA']] : undefined
-            }
-            color={props.color}
-            onChange={props.handleColorChange}
-            height={155}
-          />
+          <SwatchesPicker colors={isKeyword ? colorsList : undefined} color={props.color} onChange={props.handleColorChange} height={155} />
         </Grid>
-      ) : null}
-    </Grid>
-  ) : (
-    <Grid className={classes.swatchContainer}>
-      <Grid className={classes.swatch} onClick={props.handleOpen}>
-        <div style={{ background: props.color }} className={classes.color} />
-      </Grid>
-      {props.displayColorPicker ? (
-        <Grid className={classes.popover}>
-          <Grid className={classes.cover} onClick={props.handleClose} />
-          <SwatchesPicker
-            colors={isKeyword ? [['#FFB5E8','#FF9CEE','#FFCCF9','#FCC2FF','#F6A6FF'],
-              ['#B28DFF','#C5A3FF','#D5AAFF','#ECD4FF','#FBE4FF'],
-              ['#DCD3FF','#A79AFF','#B5B9FF','#97A2FF','#AFCBFF'],
-              ['#AFF8DB','#C4FAF8','#85E3FF','#ACE7FF','#6EB5FF'],
-              ['#BFFCC6','#DBFFD6','#F3FFE3','#E7FFAC','#FFFFD1'],
-              ['#FFC9DE','#FFABAB','#FFBEBC','#FFCBC1','#FFF5BA']] : undefined
-            }
-            color={props.color}
-            onChange={props.handleColorChange}
-            height={155}
-          />
-        </Grid>
-      ) : null}
+      )}
     </Grid>
   );
 }
@@ -123,6 +97,11 @@ ColorPicker.propTypes = {
   displayColorPicker: PropTypes.bool,
   dotDisplay: PropTypes.bool,
   isKeyword: PropTypes.bool,
+  disabled: PropTypes.bool,
+};
+
+ColorPicker.defaultProps = {
+  disabled: false,
 };
 
 export default withStyles(styles)(ColorPicker);

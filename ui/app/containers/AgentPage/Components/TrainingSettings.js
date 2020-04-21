@@ -11,6 +11,7 @@ import {
   Icon,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { MainTab } from '../../../components/MainTab';
 
 import messages from '../messages';
 
@@ -46,7 +47,7 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 export class TrainingSettings extends React.Component {
   render() {
-    const { classes, intl, agent } = this.props;
+    const { classes, intl, agent, isReadOnly } = this.props;
     return (
       <Grid container spacing={16}>
         <Grid container item xs={12}>
@@ -58,6 +59,7 @@ export class TrainingSettings extends React.Component {
           <FormControlLabel
             control={
               <Switch
+                disabled={isReadOnly}
                 checked={agent.extraTrainingData}
                 onChange={() => {
                   this.props.onChangeAgentData(
@@ -86,6 +88,7 @@ export class TrainingSettings extends React.Component {
           <FormControlLabel
             control={
               <Switch
+                disabled={isReadOnly}
                 checked={!agent.multiCategory} // if the agent is not multicategory it's multiaction
                 onChange={(evt, value) => {
                   if (value) {
@@ -107,6 +110,7 @@ export class TrainingSettings extends React.Component {
           <FormControlLabel
             control={
               <Switch
+                disabled={isReadOnly}
                 checked={agent.enableModelsPerCategory}
                 onChange={(evt, value) => {
                   if (value) {
@@ -142,6 +146,10 @@ TrainingSettings.propTypes = {
   agent: PropTypes.object,
   onChangeAgentData: PropTypes.func,
   errorState: PropTypes.object,
+  isReadOnly: PropTypes.bool,
 };
 
+TrainingSettings.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(TrainingSettings));

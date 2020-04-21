@@ -1,57 +1,107 @@
-import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
-import Immutable from 'seamless-immutable';
+import {
+  call,
+  put,
+  select,
+  takeLatest,
+} from 'redux-saga/effects';
 import {
   ROUTE_AGENT,
+  ROUTE_CONNECTION,
   ROUTE_CONTEXT,
   ROUTE_CONVERSE,
   ROUTE_CURRENT,
   ROUTE_POST_FORMAT,
+  ROUTE_SETTINGS,
   ROUTE_TRAIN,
   ROUTE_USER,
   ROUTE_WEBHOOK,
-  ROUTE_SETTINGS,
-  ROUTE_CONNECTION,
+  ROUTE_TEST_TRAIN,
+  ROUTE_EXPORT,
+  ROUTE_IMPORT,
+  ROUTE_KEYWORD,
+  ROUTE_TRAIN_TEST
+
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
+import Immutable from 'seamless-immutable';
 import {
-  LOAD_AGENT,
-  LOAD_CURRENT_USER,
-  LOAD_SETTINGS,
-  LOAD_SERVER_INFO,
-  RESET_SESSION,
-  SEND_MESSAGE,
-  TRAIN_AGENT,
-  UPDATE_SETTING,
-  TOGGLE_CONVERSATION_BAR,
-  LOGOUT_USER,
-} from './constants';
-import { getSettings, putSetting } from '../SettingsPage/saga';
+  getSettings,
+  putSetting,
+} from '../SettingsPage/saga';
+import ExtractTokensFromString from '../../utils/extractTokensFromString';
 import {
+  loadAgent,
   loadAgentError,
   loadAgentSuccess,
+  loadAgentVersions,
+  loadAgentVersionsError,
+  loadAgentVersionsSuccess,
+  addAgentVersionError,
+  addAgentVersionSuccess,
+  loadAgentVersion,
+  loadAgentVersionError,
+  loadAgentVersionSuccess,
+  updateAgentVersionError,
+  updateAgentVersionSuccess,
+  deleteAgentVersionError,
+  deleteAgentVersionSuccess,
   loadCurrentUserError,
   loadCurrentUserSuccess,
-  resetSessionSuccess,
-  respondMessage,
-  storeSourceData,
-  trainAgentError,
-  showWarning,
-  loadServerInfoSuccess,
   loadServerInfoError,
+  loadServerInfoSuccess,
+  loadSessionSuccess,
+  logoutUserError,
+  logoutUserSuccess,
+  resetSessionSuccess,
+  showWarning,
+  toggleChatButton,
+  toggleConversationBar,
+  trainAgentError,
   updateSettingsError,
   updateSettingSuccess,
-  loadSessionSuccess,
-  logoutUserSuccess,
-  logoutUserError,
-  toggleConversationBar,
-  toggleChatButton,
+  testAgentTrainError,
+  testAgentTrainSuccess,
+  loadKeywords,
+  loadKeywordsError,
+  loadKeywordsSuccess,
+  loadAgentTrainTests,
+  loadAgentTrainTestsError,
+  loadAgentTrainTestsSuccess,
+  loadSayings,
+  loadAgentLatestTrainTest,
+  loadAgentLatestTrainTestSuccess,
+  loadAgentLatestTrainTestError,
+  closeTestTrainNotification
 } from './actions';
 import {
+  LOAD_AGENT,
+  LOAD_AGENT_VERSIONS,
+  ADD_AGENT_VERSION,
+  LOAD_AGENT_VERSION,
+  LOAD_CURRENT_USER,
+  LOAD_SERVER_INFO,
+  LOAD_SETTINGS,
+  LOGOUT_USER,
+  RESET_SESSION,
+  SEND_MESSAGE,
+  TOGGLE_CONVERSATION_BAR,
+  TRAIN_AGENT,
+  UPDATE_SETTING,
+  TEST_AGENT_TRAIN,
+  UPDATE_AGENT_VERSION,
+  DELETE_AGENT_VERSION,
+  LOAD_KEYWORDS,
+  LOAD_AGENT_TRAIN_TESTS,
+  LOAD_AGENT_LATEST_TRAIN_TEST
+} from './constants';
+import {
   makeSelectAgent,
+  makeSelectConnection,
   makeSelectSessionId,
   makeSelectSettings,
-  makeSelectConnection,
+  makeSelectAgentSettings,
+  makeSelectDialoguePageFilterString,
 } from './selectors';
 
 export function* postConverse(payload) {
@@ -71,15 +121,10 @@ export function* postConverse(payload) {
           data: {
             sessionId,
             text: message.message,
-            articulateUI: true
+            articulateUI: true,
           },
         };
-        yield call(
-          api.post,
-          toAPIPath(isDemo ? [ROUTE_CONNECTION, connection.id, 'external'] : [ROUTE_AGENT, agent.id, ROUTE_CONVERSE]),
-          null,
-          postPayload,
-        );
+        yield call(api.post, toAPIPath(isDemo ? [ROUTE_CONNECTION, connection.id, 'external'] : [ROUTE_AGENT, agent.id, ROUTE_CONVERSE]), null, postPayload);
 
         if (newSession) {
           yield put(loadSessionSuccess(sessionId));
@@ -104,13 +149,9 @@ export function* deleteSession(payload) {
         actionQueue: [],
         savedSlots: {},
         docIds: [],
-        listenFreeText: false
+        listenFreeText: false,
       };
-      yield call(
-        api.patch,
-        toAPIPath([ROUTE_CONTEXT, sessionId]),
-        patchPayload,
-      );
+      yield call(api.patch, toAPIPath([ROUTE_CONTEXT, sessionId]), patchPayload);
       yield put(resetSessionSuccess());
     } catch ({ response }) {
       if (response.status && response.status === 404) {
@@ -144,22 +185,120 @@ export function* getAgent(payload) {
     let webhook;
     let postFormat;
     if (agent.useWebhook) {
-      response = yield call(
-        api.get,
-        toAPIPath([ROUTE_AGENT, agentId, ROUTE_WEBHOOK]),
-      );
+      response = yield call(api.get, toAPIPath([ROUTE_AGENT, agentId, ROUTE_WEBHOOK]));
       webhook = response;
     }
     if (agent.usePostFormat) {
-      response = yield call(
-        api.get,
-        toAPIPath([ROUTE_AGENT, agentId, ROUTE_POST_FORMAT]),
-      );
+      response = yield call(api.get, toAPIPath([ROUTE_AGENT, agentId, ROUTE_POST_FORMAT]));
       postFormat = response;
     }
     yield put(loadAgentSuccess({ agent, webhook, postFormat }));
+    yield put(loadAgentVersions(agent.originalAgentVersionId == -1 ? agent.id : agent.originalAgentVersionId));
+    yield put(closeTestTrainNotification());
+    yield put(loadAgentLatestTrainTest());
   } catch (err) {
     yield put(loadAgentError(err));
+  }
+}
+
+export function* postagentVersion(payload) {
+  const { api, id } = payload;
+  try {
+    var agent = yield select(makeSelectAgent());
+    const mutableAgent = Immutable.asMutable(agent, { deep: true });
+    mutableAgent.categoryClassifierThreshold =
+      agent.categoryClassifierThreshold / 100;
+    mutableAgent.currentAgentVersionCounter = mutableAgent.currentAgentVersionCounter + 1;
+    delete mutableAgent.id;
+    delete mutableAgent.settings;
+    delete mutableAgent.status;
+    delete mutableAgent.lastTraining;
+    const response = yield call(
+      api.put,
+      toAPIPath([ROUTE_AGENT, id]),
+      mutableAgent,
+    );
+    agent = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
+    agent.originalAgentVersionName = agent.agentName;
+    agent.agentName = agent.agentName + '_v' + agent.currentAgentVersionCounter;
+    agent.loadedAgentVersionName = agent.agentName;
+    agent.isOriginalAgentVersion = false;
+    agent.originalAgentVersionId = Number(id);
+    agent.agentVersionNotes = '';
+    var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), agent);
+    yield put(addAgentVersionSuccess(importResponse));
+    yield put(loadAgentVersions(id));
+  } catch (err) {
+    yield put(addAgentVersionError(err));
+  }
+}
+
+export function* getagentVersions(payload) {
+  const { api, originalAgentVersionId } = payload;
+  try {
+    var filter = JSON.stringify({
+      originalAgentVersionId: Number(originalAgentVersionId)
+    });
+    const params = {
+      filter
+    };
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT]), { params });
+    yield put(loadAgentVersionsSuccess(response.data));
+  } catch (err) {
+    yield put(loadAgentVersionsError(_.get(err, 'response.data', true)));
+  }
+}
+
+export function* getAgentVersion(payload) {
+  const { api, versionId, currentAgentId } = payload;
+  try {
+    var versionAgent = yield call(api.get, toAPIPath([ROUTE_AGENT, Number(versionId), ROUTE_EXPORT]));
+    versionAgent.isVersionImport = true;
+    versionAgent.isOriginalAgentVersion = true;
+    versionAgent.lastTraining = "2020-01-01T00:00:00Z";
+    versionAgent.categories.forEach(function (category, index, categories) {
+      if (categories[index].lastTraining === 'Invalid date') {
+        categories[index].lastTraining = "2020-01-01T00:00:00Z";
+      }
+    });
+    var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), versionAgent);
+    window.location.reload();
+    yield put(loadAgentVersionSuccess());
+  } catch (err) {
+    yield put(loadAgentVersionError(err));
+  }
+}
+
+export function* putAgentVersion(payload) {
+  const { api, version } = payload;
+  try {
+    var id = version.id;
+    var currentAgentId = version.originalAgentVersionId
+    delete version.id;
+    delete version.settings;
+    delete version.status;
+    delete version.lastTraining;
+
+    const response = yield call(
+      api.put,
+      toAPIPath([ROUTE_AGENT, id]),
+      version,
+    );
+    yield put(updateAgentVersionSuccess(response));
+    yield put(loadAgentVersions(currentAgentId));
+  } catch (err) {
+    yield put(updateAgentVersionError(err));
+  }
+}
+
+export function* deleteAgentVersion(payload) {
+  const { api, versionId, currentAgentId } = payload;
+  try {
+    yield call(api.delete, toAPIPath([ROUTE_AGENT, versionId]));
+    yield put(deleteAgentVersionSuccess());
+    yield put(loadAgentVersions(currentAgentId));
+  } catch (err) {
+    yield put(deleteAgentVersionError(err));
   }
 }
 
@@ -176,15 +315,10 @@ export function* getServerInfo(payload) {
 export function* putConversationBarWidth(payload) {
   const { api } = payload;
   const settings = yield select(makeSelectSettings());
-  const mutableSettings = Immutable.asMutable(settings, { deep: true });
   const width = settings.conversationPanelWidth;
   try {
     if (width > 300) {
-      const response = yield call(
-        api.put,
-        toAPIPath([ROUTE_SETTINGS, 'conversationPanelWidth']),
-        300,
-      );
+      const response = yield call(api.put, toAPIPath([ROUTE_SETTINGS, 'conversationPanelWidth']), 300);
       yield put(updateSettingSuccess(response));
     }
   } catch (err) {
@@ -218,8 +352,137 @@ export function* getCurrentUser(payload) {
   }
 }
 
+export function* testAgentTrain(payload) {
+  const { api, id } = payload;
+  try {
+    const result = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_TEST_TRAIN]));
+    yield put(testAgentTrainSuccess({ result }));
+    yield put(loadKeywords());
+    var agentSettings = yield select(makeSelectAgentSettings());
+    var dialoguePageFilterString = yield select(makeSelectDialoguePageFilterString());
+    yield put(loadSayings(dialoguePageFilterString, 1, agentSettings.sayingsPageSize));
+    yield put(loadAgentLatestTrainTest());
+    yield put(loadAgentTrainTests({ page: 1, pageSize: 5 }))//FIXME page size
+  } catch (error) {
+    yield put(testAgentTrainError(error));
+  }
+}
+
+export function* getKeywords(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, filter, page, pageSize } = payload;
+  let skip = 0;
+  let limit = -1;
+  if (page) {
+    skip = (page - 1) * pageSize;
+    limit = pageSize;
+  }
+  try {
+    const params = {
+      filter: filter === '' ? undefined : filter,
+      skip,
+      limit,
+    };
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_KEYWORD]),
+      { params },
+    );
+    // TODO: Fix in the api the return of total sayings
+    yield put(
+      loadKeywordsSuccess({
+        keywords: response.data,
+        total: response.totalCount,
+      }),
+    );
+  } catch (err) {
+    yield put(loadKeywordsError(err));
+  }
+}
+
+export function* getAgentTrainTests(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, page, pageSize, field, direction, filter } = payload;
+  let tempFilter = null;
+  if (filter) {
+    const { remainingText, found } = ExtractTokensFromString({
+      text: filter,
+      tokens: ['keywords', 'actions'],
+    });
+    tempFilter =
+      filter === ''
+        ? undefined
+        : JSON.stringify({
+          keywords: found.keywords,
+          actions: found.actions,
+        });
+  }
+  let skip = 0;
+  let limit = -1;
+  if (page) {
+    skip = (page - 1) * pageSize;
+    limit = pageSize;
+  }
+  try {
+    const params = {
+      filter: tempFilter ? tempFilter : null,
+      skip,
+      limit,
+      field,
+      direction
+    };
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_TRAIN_TEST]),
+      { params },
+    );
+    yield put(
+      loadAgentTrainTestsSuccess({
+        trainTests: response.data.map(result => {
+          return result._source;
+        }),
+        total: response.totalCount,
+      }),
+    );
+  } catch (err) {
+    yield put(loadAgentTrainTestsError(err));
+  }
+}
+
+export function* getAgentLatestTrainTest(payload) {
+  const { api } = payload;
+  const agent = yield select(makeSelectAgent());
+  try {
+    const params = {
+      filter: null,
+      skip: 0,
+      limit: 1,
+    };
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_TRAIN_TEST]),
+      { params },
+    );
+    yield put(
+      loadAgentLatestTrainTestSuccess({
+        trainTest: response.data.length > 0 ?
+          response.data[0]._source :
+          null
+      }),
+    );
+  } catch (err) {
+    yield put(loadAgentLatestTrainTestError(err));
+  }
+}
+
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
+  yield takeLatest(LOAD_AGENT_VERSIONS, getagentVersions);
+  yield takeLatest(LOAD_AGENT_VERSION, getAgentVersion);
+  yield takeLatest(UPDATE_AGENT_VERSION, putAgentVersion);
+  yield takeLatest(DELETE_AGENT_VERSION, deleteAgentVersion);
+  yield takeLatest(ADD_AGENT_VERSION, postagentVersion);
   yield takeLatest(LOAD_SETTINGS, getSettings);
   yield takeLatest(LOAD_SERVER_INFO, getServerInfo);
   yield takeLatest(SEND_MESSAGE, postConverse);
@@ -229,4 +492,10 @@ export default function* rootSaga() {
   yield takeLatest(TOGGLE_CONVERSATION_BAR, putConversationBarWidth);
   yield takeLatest(LOGOUT_USER, logoutUser);
   yield takeLatest(LOAD_CURRENT_USER, getCurrentUser);
+  yield takeLatest(LOGOUT_USER, logoutUser);
+  yield takeLatest(LOAD_CURRENT_USER, getCurrentUser);
+  yield takeLatest(TEST_AGENT_TRAIN, testAgentTrain);
+  yield takeLatest(LOAD_KEYWORDS, getKeywords);
+  yield takeLatest(LOAD_AGENT_TRAIN_TESTS, getAgentTrainTests);
+  yield takeLatest(LOAD_AGENT_LATEST_TRAIN_TEST, getAgentLatestTrainTest);
 }

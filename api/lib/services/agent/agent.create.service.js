@@ -10,9 +10,10 @@ import {
     CONFIG_SETTINGS_WELCOME_RESPONSES_AGENT_DEFAULT
 
 } from '../../../util/constants';
+import OverLimitErrorHandler from '../../errors/global.over-limit';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ data, isImport = false, returnModel = false }) {
+module.exports = async function ({ data, isImport = false, returnModel = false, userCredentials = null }) {
 
     const defaultFallbackAction = {
         useWebhook: false,
@@ -38,6 +39,18 @@ module.exports = async function ({ data, isImport = false, returnModel = false }
     }
 
     const AgentModel = await redis.factory(MODEL_AGENT);
+    const agentCount = await AgentModel.count();
+    const agentLimit = this.options.agentLimit;
+    const defaults = AgentModel.defaults;
+    const ownerAccessPolicy = _.mapValues(defaults.accessPolicies, () => true);
+    if (userCredentials) {
+        data.accessPolicies = {
+            [userCredentials.id]: ownerAccessPolicy
+        };
+    }
+    if (agentLimit !== -1 && agentCount >= agentLimit) {
+        return Promise.reject(OverLimitErrorHandler({ level: agentCount, limit: agentLimit, type: 'Agents' }));
+    }
     try {
         const allSettings = await settingsService.findAll();
 
@@ -60,7 +73,6 @@ module.exports = async function ({ data, isImport = false, returnModel = false }
         });
 
         _.each(CONFIG_SETTINGS_DEFAULT_AGENT, (value) => {
-
             data.settings[value] = allSettings[value];
         });
 

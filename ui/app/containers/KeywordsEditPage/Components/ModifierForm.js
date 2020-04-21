@@ -1,14 +1,4 @@
-import {
-  Grid,
-  MenuItem,
-  TextField,
-  InputAdornment,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from '@material-ui/core';
+import { Grid, InputAdornment, MenuItem, Table, TableBody, TableCell, TableRow, TextField, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import PropTypes from 'prop-types';
@@ -119,35 +109,21 @@ const styles = {
 class ModifierForm extends React.Component {
   constructor(props) {
     super(props);
-    this.handleNewSayingTextFieldChange = this.handleNewSayingTextFieldChange.bind(
-      this,
-    );
-    this.addModifierSaying = this.addModifierSaying.bind(
-      this,
-    );
+    this.handleNewSayingTextFieldChange = this.handleNewSayingTextFieldChange.bind(this);
+    this.addModifierSaying = this.addModifierSaying.bind(this);
   }
 
   state = {
     currentPage: 1,
     pageSize: this.props.modifierSayingsPageSize,
-    numOfPages: Math.ceil(
-      this.props.modifier.sayings.length / this.props.modifierSayingsPageSize,
-    ),
+    numOfPages: Math.ceil(this.props.modifier.sayings.length / this.props.modifierSayingsPageSize),
     currentNewSaying: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.numOfPages !==
-      Math.ceil(
-        this.props.modifier.sayings.length / this.props.modifierSayingsPageSize,
-      )
-    ) {
+    if (prevState.numOfPages !== Math.ceil(this.props.modifier.sayings.length / this.props.modifierSayingsPageSize)) {
       this.setState({
-        numOfPages: Math.ceil(
-          this.props.modifier.sayings.length /
-          this.props.modifierSayingsPageSize,
-        ),
+        numOfPages: Math.ceil(this.props.modifier.sayings.length / this.props.modifierSayingsPageSize),
       });
     }
     if (this.state.currentPage > this.state.numOfPages && this.state.numOfPages > 0) {
@@ -160,29 +136,16 @@ class ModifierForm extends React.Component {
     let newStart = 0;
     saying.keywords.forEach((keyword, index) => {
       if (newStart !== keyword.start) {
-        newUserSays.push(
-          <span key={`preModifierText_${index}`}>
-            {saying.userSays.substring(newStart, keyword.start)}
-          </span>,
-        );
+        newUserSays.push(<span key={`preModifierText_${index}`}>{saying.userSays.substring(newStart, keyword.start)}</span>);
       }
       newUserSays.push(
-        <span
-          className={this.props.classes.userSayingModifier}
-          key={`modifierKeyword_${index}`}
-        >
-          {`{{modifiers.${
-            keyword.keyword.indexOf(' ') !== -1
-              ? `[${keyword.keyword}]`
-              : keyword.keyword
-            }.value}}`}
+        <span className={this.props.classes.userSayingModifier} key={`modifierKeyword_${index}`}>
+          {`{{modifiers.${keyword.keyword.indexOf(' ') !== -1 ? `[${keyword.keyword}]` : keyword.keyword}.value}}`}
         </span>,
       );
       newStart = keyword.end;
     });
-    newUserSays.push(
-      <span key="finaText">{saying.userSays.substring(newStart)}</span>,
-    );
+    newUserSays.push(<span key="finaText">{saying.userSays.substring(newStart)}</span>);
     return newUserSays;
   }
 
@@ -193,10 +156,7 @@ class ModifierForm extends React.Component {
   }
 
   addModifierSaying(keyword) {
-    this.props.onAddModifierSaying(
-      this.state.currentNewSaying,
-      keyword.keywordName,
-    );
+    this.props.onAddModifierSaying(this.state.currentNewSaying, keyword.keywordName);
     this.setState({
       currentNewSaying: '',
     });
@@ -204,25 +164,18 @@ class ModifierForm extends React.Component {
   }
 
   render() {
-    const { classes, intl, modifier, settings, keyword } = this.props;
+    const { classes, intl, modifier, settings, keyword, isReadOnly } = this.props;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
-        <Grid
-          className={classes.formSubContainer}
-          id="formContainer"
-          container
-          item
-          xs={12}
-        >
+        <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={12} md={12} sm={12} xs={12}>
               <TextField
+                disabled={isReadOnly}
                 id="modifierName"
                 label={intl.formatMessage(messages.modifierNameTextField)}
                 value={modifier.modifierName}
-                placeholder={intl.formatMessage(
-                  messages.modifierNameTextFieldPlaceholder,
-                )}
+                placeholder={intl.formatMessage(messages.modifierNameTextFieldPlaceholder)}
                 onChange={evt => {
                   this.props.onChangeModifierName(evt.target.value);
                 }}
@@ -232,17 +185,14 @@ class ModifierForm extends React.Component {
                   shrink: true,
                 }}
                 helperText={intl.formatMessage(messages.requiredField)}
-                error={
-                  this.props.errorState
-                    ? this.props.errorState.modifierName
-                    : false
-                }
+                error={this.props.errorState ? this.props.errorState.modifierName : false}
               />
             </Grid>
           </Grid>
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={4} md={4} sm={12} xs={12}>
               <TextField
+                disabled={isReadOnly}
                 select
                 id="action"
                 value={modifier.action}
@@ -256,9 +206,7 @@ class ModifierForm extends React.Component {
                   shrink: true,
                 }}
                 helperText={intl.formatMessage(messages.requiredField)}
-                error={
-                  this.props.errorState ? this.props.errorState.action : false
-                }
+                error={this.props.errorState ? this.props.errorState.action : false}
               >
                 {settings.modifierActions.map(action => (
                   <MenuItem key={action.value} value={action.value}>
@@ -269,15 +217,13 @@ class ModifierForm extends React.Component {
             </Grid>
             <Grid item lg={4} md={4} sm={12} xs={12}>
               <TextField
+                disabled={isReadOnly}
                 select
                 id="valueSource"
                 value={modifier.valueSource}
                 label={intl.formatMessage(messages.valueSourceSelect)}
                 onChange={evt => {
-                  this.props.onChangeModifierData(
-                    'valueSource',
-                    evt.target.value,
-                  );
+                  this.props.onChangeModifierData('valueSource', evt.target.value);
                   if (evt.target.value === 'keyword') {
                     this.props.onChangeModifierData('staticValue', '');
                   }
@@ -288,11 +234,7 @@ class ModifierForm extends React.Component {
                   shrink: true,
                 }}
                 helperText={intl.formatMessage(messages.requiredField)}
-                error={
-                  this.props.errorState
-                    ? this.props.errorState.valueSource
-                    : false
-                }
+                error={this.props.errorState ? this.props.errorState.valueSource : false}
               >
                 {settings.modifierValueSources.map(valueSource => (
                   <MenuItem key={valueSource.value} value={valueSource.value}>
@@ -304,17 +246,13 @@ class ModifierForm extends React.Component {
             {modifier.valueSource === 'static' ? (
               <Grid item lg={4} md={4} sm={12} xs={12}>
                 <TextField
+                  disabled={isReadOnly}
                   id="staticValue"
                   label={intl.formatMessage(messages.staticValueTextField)}
                   value={modifier.staticValue}
-                  placeholder={intl.formatMessage(
-                    messages.staticValueTextFieldPlaceholder,
-                  )}
+                  placeholder={intl.formatMessage(messages.staticValueTextFieldPlaceholder)}
                   onChange={evt => {
-                    this.props.onChangeModifierData(
-                      'staticValue',
-                      evt.target.value,
-                    );
+                    this.props.onChangeModifierData('staticValue', evt.target.value);
                   }}
                   margin="normal"
                   fullWidth
@@ -322,11 +260,7 @@ class ModifierForm extends React.Component {
                     shrink: true,
                   }}
                   helperText={intl.formatMessage(messages.requiredField)}
-                  error={
-                    this.props.errorState
-                      ? this.props.errorState.staticValue
-                      : false
-                  }
+                  error={this.props.errorState ? this.props.errorState.staticValue : false}
                 />
               </Grid>
             ) : null}
@@ -334,18 +268,14 @@ class ModifierForm extends React.Component {
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={12} md={12} sm={8} xs={8}>
               <TextField
+                disabled={isReadOnly}
                 id="newSaying"
                 onChange={this.handleNewSayingTextFieldChange}
                 value={this.state.currentNewSaying}
                 label={intl.formatMessage(messages.sayingTextField)}
-                placeholder={intl.formatMessage(
-                  messages.sayingTextFieldPlaceholder,
-                )}
+                placeholder={intl.formatMessage(messages.sayingTextFieldPlaceholder)}
                 onKeyPress={ev => {
-                  if (
-                    ev.key === 'Enter' &&
-                    this.state.currentNewSaying.trim() !== ''
-                  ) {
+                  if (ev.key === 'Enter' && this.state.currentNewSaying.trim() !== '') {
                     ev.preventDefault();
                     this.addModifierSaying(keyword);
                   }
@@ -391,43 +321,31 @@ class ModifierForm extends React.Component {
                   <Table>
                     <TableBody>
                       {modifier.sayings
-                        .slice(
-                          (this.state.currentPage - 1) * this.state.pageSize,
-                          this.state.currentPage * this.state.pageSize,
-                        )
+                        .slice((this.state.currentPage - 1) * this.state.pageSize, this.state.currentPage * this.state.pageSize)
                         .map((saying, index) => (
                           <TableRow key={`${saying}_${index}`}>
                             <TableCell>
                               <ModifierSayingRow
                                 saying={saying}
                                 agentKeywords={this.props.agentKeywords}
-                                onTagModifierKeyword={this.props.onTagModifierKeyword.bind(
-                                  null,
-                                  (this.state.currentPage - 1) *
-                                  this.state.pageSize +
-                                  index,
-                                )}
+                                onTagModifierKeyword={this.props.onTagModifierKeyword.bind(null, (this.state.currentPage - 1) * this.state.pageSize + index)}
                                 onUntagModifierKeyword={this.props.onUntagModifierKeyword.bind(
                                   null,
-                                  (this.state.currentPage - 1) *
-                                  this.state.pageSize +
-                                  index,
+                                  (this.state.currentPage - 1) * this.state.pageSize + index,
                                 )}
                               />
                             </TableCell>
-                            <TableCell className={classes.deleteCell}>
-                              <img
-                                onClick={() => {
-                                  this.props.onDeleteModifierSaying(
-                                    (this.state.currentPage - 1) *
-                                    this.state.pageSize +
-                                    index,
-                                  );
-                                }}
-                                className={classes.deleteIcon}
-                                src={trashIcon}
-                              />
-                            </TableCell>
+                            {!isReadOnly && (
+                              <TableCell className={classes.deleteCell}>
+                                <img
+                                  onClick={() => {
+                                    this.props.onDeleteModifierSaying((this.state.currentPage - 1) * this.state.pageSize + index);
+                                  }}
+                                  className={classes.deleteIcon}
+                                  src={trashIcon}
+                                />
+                              </TableCell>
+                            )}
                           </TableRow>
                         ))}
                     </TableBody>
@@ -438,6 +356,7 @@ class ModifierForm extends React.Component {
                         <FormattedMessage {...messages.show} />
                       </Typography>
                       <TextField
+                        disabled={isReadOnly}
                         select
                         className={classes.pageTextfield}
                         id="pageSize"
@@ -446,9 +365,7 @@ class ModifierForm extends React.Component {
                           this.setState({
                             pageSize: evt.target.value,
                           });
-                          this.props.onChangeModifiersSayingsPageSize(
-                            evt.target.value,
-                          );
+                          this.props.onChangeModifiersSayingsPageSize(evt.target.value);
                           this.setState({ currentPage: 1 });
                         }}
                         margin="normal"
@@ -478,19 +395,16 @@ class ModifierForm extends React.Component {
                         onClick={() => {
                           this.state.currentPage > 1
                             ? this.setState({
-                              currentPage: this.state.currentPage - 1,
-                            })
+                                currentPage: this.state.currentPage - 1,
+                              })
                             : null;
                         }}
-                        className={
-                          this.state.currentPage > 1
-                            ? classes.pageCursors
-                            : classes.pageCursorsDisabled
-                        }
+                        className={this.state.currentPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}
                       >
                         <FormattedMessage {...messages.backPage} />
                       </Typography>
                       <TextField
+                        disabled={isReadOnly}
                         id="page"
                         margin="normal"
                         value={this.state.currentPage}
@@ -498,10 +412,9 @@ class ModifierForm extends React.Component {
                           evt.target.value = evt.target.value.replace(/^0+/, '');
                           evt.target.value === ''
                             ? this.setState({ currentPage: 1 })
-                            : evt.target.value <= this.state.numOfPages &&
-                              evt.target.value >= 1
-                              ? this.setState({ currentPage: Number(evt.target.value) })
-                              : false;
+                            : evt.target.value <= this.state.numOfPages && evt.target.value >= 1
+                            ? this.setState({ currentPage: Number(evt.target.value) })
+                            : false;
                         }}
                         fullWidth
                         InputLabelProps={{
@@ -518,22 +431,16 @@ class ModifierForm extends React.Component {
                         className={classes.pageTextfield}
                         type="number"
                       />
-                      <Typography className={classes.pagesLabel}>
-                        / {this.state.numOfPages}
-                      </Typography>
+                      <Typography className={classes.pagesLabel}>/ {this.state.numOfPages}</Typography>
                       <Typography
                         onClick={() => {
                           this.state.currentPage < this.state.numOfPages
                             ? this.setState({
-                              currentPage: this.state.currentPage + 1,
-                            })
+                                currentPage: this.state.currentPage + 1,
+                              })
                             : null;
                         }}
-                        className={
-                          this.state.currentPage < this.state.numOfPages
-                            ? classes.pageCursors
-                            : classes.pageCursorsDisabled
-                        }
+                        className={this.state.currentPage < this.state.numOfPages ? classes.pageCursors : classes.pageCursorsDisabled}
                       >
                         <FormattedMessage {...messages.nextPage} />
                       </Typography>
@@ -566,6 +473,10 @@ ModifierForm.propTypes = {
   onTagModifierKeyword: PropTypes.func,
   modifierSayingsPageSize: PropTypes.number,
   onChangeModifiersSayingsPageSize: PropTypes.func,
+  isReadOnly: PropTypes.bool,
 };
 
+ModifierForm.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(ModifierForm));

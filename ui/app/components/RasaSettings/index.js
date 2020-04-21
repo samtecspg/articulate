@@ -1,21 +1,22 @@
-import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import { Grid, TextField, Typography, Menu, MenuItem } from '@material-ui/core';
+import { Grid, Menu, MenuItem, TextField, Typography, InputAdornment } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
-import brace from 'brace';
-import AceEditor from 'react-ace';
+import 'brace/mode/json';
 
 import 'brace/mode/xml';
-import 'brace/mode/json';
 import 'brace/theme/terminal';
 
-import addPipelineIcon from '../../images/add-pipeline-icon.svg';
+import PropTypes from 'prop-types';
+import React from 'react';
+import AceEditor from 'react-ace';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { ACTION_INTENT_SPLIT_SYMBOL } from '../../../common/constants';
+import Immutable from 'seamless-immutable';
+
+import addPipelineIcon from '../../images/add-pipeline-icon.svg';
 
 import messages from './messages';
+
+import trashIcon from '../../images/trash-icon.svg';
 
 const styles = {
   panelContent: {
@@ -45,6 +46,19 @@ const styles = {
     height: '17px',
     display: 'inline',
     float: 'right',
+  },
+  Input: {
+    marginTop: '-40px !important'
+  },
+  InputLabel: {
+    marginTop: '-40px !important'
+  },
+  deleteIcon: {
+    '&:hover': {
+      filter: 'invert(0)',
+    },
+    filter: 'invert(1)',
+    cursor: 'pointer',
   },
 };
 
@@ -142,7 +156,7 @@ export class RasaSettings extends React.Component {
   }
 
   render() {
-    const { classes, intl, settings } = this.props;
+    const { classes, intl, settings, isReadOnly } = this.props;
     const { anchorEl } = this.state;
     return (
       <Grid container spacing={16}>
@@ -205,24 +219,98 @@ export class RasaSettings extends React.Component {
             <FormattedMessage {...messages.rasaSettingDescription} />
           </Typography>
         </Grid>
-        <Grid container spacing={16} item xs={12}>
+        <Grid container spacing={16} item xs={12} style={{ marginTop: '10px' }}>
           <Grid item lg={12} md={8} sm={12} xs={12}>
-            <TextField
-              id="rasaURL"
-              label={intl.formatMessage(messages.rasaURL)}
-              value={settings.rasaURL}
-              placeholder={intl.formatMessage(messages.rasaURLPlaceholder)}
-              onChange={evt => {
-                this.props.onChangeSettingsData('rasaURL', evt.target.value);
-              }}
-              margin="normal"
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-              helperText={intl.formatMessage(messages.requiredField)}
-              error={this.props.errorState.rasaURL}
-            />
+            {settings.rasaURLs ? settings.rasaURLs.map((rasaURL, index) => {
+              return (<TextField
+                disabled={isReadOnly}
+                id={"rasaURL_" + index}
+                key={"rasaURL_" + index}
+                label={index === 0 ? intl.formatMessage(messages.rasaURL) : null}
+                value={rasaURL}
+                placeholder={intl.formatMessage(messages.rasaURLPlaceholder)}
+                onChange={evt => {
+                  const mutableRasaURLs = Immutable.asMutable(settings.rasaURLs, {
+                    deep: true,
+                  });
+                  mutableRasaURLs[index] = evt.target.value;
+                  this.props.onChangeSettingsData('rasaURLs', mutableRasaURLs);
+                }}
+                margin="normal"
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                  className: classes.InputLabel
+                }}
+                inputProps={{
+                  className: classes.Input,
+                }}
+                InputProps={index > 0 ? {
+                  endAdornment: (
+                    <InputAdornment
+                      style={{
+                        display: 'inline',
+                        position: 'absolute',
+                        left: '96%',
+                        marginTop: '-28px'
+                      }}
+                      position="end"
+                    >
+                      <img
+                        onClick={() => {
+                          const mutableRasaURLs = Immutable.asMutable(settings.rasaURLs, {
+                            deep: true,
+                          });
+                          mutableRasaURLs.splice(index, 1);
+                          this.props.onChangeSettingsData('rasaURLs', mutableRasaURLs);
+                        }}
+                        className={classes.deleteIcon}
+                        src={trashIcon}
+                      />
+
+                    </InputAdornment>
+                  )
+                } : null}
+                helperText={index === settings.rasaURLs.length - 1 ? intl.formatMessage(messages.requiredUniqueField) : null}
+                error={this.props.errorState.rasaURLs}
+              />)
+            }) : null}
+
+            <div
+              style={{ position: 'relative' }}
+            >
+              <Typography
+                style={{
+                  display: 'inline-block',
+                  fontSize: '30px',
+                  fontWeight: 'lighter',
+                  cursor: 'pointer',
+                }}
+              >
+                +
+              </Typography>
+              <Typography
+                style={{
+                  display: 'inline-block',
+                  textDecoration: 'underline',
+                  marginLeft: '5px',
+                  marginBottom: '30px',
+                  cursor: 'pointer',
+                  position: 'absolute',
+                  marginTop: '14px'
+                }}
+                onClick={() => {
+                  const mutableRasaURLs = settings.rasaURLs ? Immutable.asMutable(settings.rasaURLs, {
+                    deep: true,
+                  }) : Immutable.asMutable([]);
+                  mutableRasaURLs.push('');
+                  this.props.onChangeSettingsData('rasaURLs', mutableRasaURLs)
+                }}
+              >
+                <FormattedMessage {...messages.addAnotherRasaUrl} />
+              </Typography>
+            </div>
+
           </Grid>
           <Grid item lg={12} md={8} sm={12} xs={12}>
             <TextField
@@ -245,23 +333,22 @@ export class RasaSettings extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} className={classes.labelContainer}>
-            <Typography
-              className={classes.settingEditorLabel}
-              id="categoryClassifierPipeline"
-            >
+            <Typography className={classes.settingEditorLabel} id="categoryClassifierPipeline">
               <FormattedMessage {...messages.categoryClassifierPipeline} />
             </Typography>
-            <img
-              onClick={evt => {
-                this.setState({
-                  openPipelineMenu: true,
-                  anchorEl: evt.currentTarget,
-                  pipeline: 'categoryClassifierPipeline',
-                });
-              }}
-              src={addPipelineIcon}
-              className={classes.addPipelineIcon}
-            />
+            {!isReadOnly && (
+              <img
+                onClick={evt => {
+                  this.setState({
+                    openPipelineMenu: true,
+                    anchorEl: evt.currentTarget,
+                    pipeline: 'categoryClassifierPipeline',
+                  });
+                }}
+                src={addPipelineIcon}
+                className={classes.addPipelineIcon}
+              />
+            )}
           </Grid>
           <AceEditor
             width="100%"
@@ -269,10 +356,8 @@ export class RasaSettings extends React.Component {
             mode="json"
             theme="terminal"
             name="categoryClassifierPipeline"
-            readOnly={false}
-            onChange={value =>
-              this.onChangeEditorValue('categoryClassifierPipeline', value)
-            }
+            readOnly={isReadOnly}
+            onChange={value => this.onChangeEditorValue('categoryClassifierPipeline', value)}
             fontSize={14}
             showPrintMargin
             showGutter
@@ -295,23 +380,22 @@ export class RasaSettings extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} className={classes.labelContainer}>
-            <Typography
-              className={classes.settingEditorLabel}
-              id="sayingClassifierPipeline"
-            >
+            <Typography className={classes.settingEditorLabel} id="sayingClassifierPipeline">
               <FormattedMessage {...messages.sayingClassifierPipeline} />
             </Typography>
-            <img
-              onClick={evt => {
-                this.setState({
-                  openPipelineMenu: true,
-                  anchorEl: evt.currentTarget,
-                  pipeline: 'sayingClassifierPipeline',
-                });
-              }}
-              src={addPipelineIcon}
-              className={classes.addPipelineIcon}
-            />
+            {!isReadOnly && (
+              <img
+                onClick={evt => {
+                  this.setState({
+                    openPipelineMenu: true,
+                    anchorEl: evt.currentTarget,
+                    pipeline: 'sayingClassifierPipeline',
+                  });
+                }}
+                src={addPipelineIcon}
+                className={classes.addPipelineIcon}
+              />
+            )}
           </Grid>
           <AceEditor
             width="100%"
@@ -319,10 +403,8 @@ export class RasaSettings extends React.Component {
             mode="json"
             theme="terminal"
             name="sayingClassifierPipeline"
-            readOnly={false}
-            onChange={value =>
-              this.onChangeEditorValue('sayingClassifierPipeline', value)
-            }
+            readOnly={isReadOnly}
+            onChange={value => this.onChangeEditorValue('sayingClassifierPipeline', value)}
             fontSize={14}
             showPrintMargin
             showGutter
@@ -345,23 +427,22 @@ export class RasaSettings extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} className={classes.labelContainer}>
-            <Typography
-              className={classes.settingEditorLabel}
-              id="keywordClassifierPipeline"
-            >
+            <Typography className={classes.settingEditorLabel} id="keywordClassifierPipeline">
               <FormattedMessage {...messages.keywordClassifierPipeline} />
             </Typography>
-            <img
-              onClick={evt => {
-                this.setState({
-                  openPipelineMenu: true,
-                  anchorEl: evt.currentTarget,
-                  pipeline: 'keywordClassifierPipeline',
-                });
-              }}
-              src={addPipelineIcon}
-              className={classes.addPipelineIcon}
-            />
+            {!isReadOnly && (
+              <img
+                onClick={evt => {
+                  this.setState({
+                    openPipelineMenu: true,
+                    anchorEl: evt.currentTarget,
+                    pipeline: 'keywordClassifierPipeline',
+                  });
+                }}
+                src={addPipelineIcon}
+                className={classes.addPipelineIcon}
+              />
+            )}
           </Grid>
           <AceEditor
             width="100%"
@@ -369,10 +450,8 @@ export class RasaSettings extends React.Component {
             mode="json"
             theme="terminal"
             name="keywordClassifierPipeline"
-            readOnly={false}
-            onChange={value =>
-              this.onChangeEditorValue('keywordClassifierPipeline', value)
-            }
+            readOnly={isReadOnly}
+            onChange={value => this.onChangeEditorValue('keywordClassifierPipeline', value)}
             fontSize={14}
             showPrintMargin
             showGutter
@@ -395,10 +474,7 @@ export class RasaSettings extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid item xs={12} className={classes.labelContainer}>
-            <Typography
-              className={classes.settingEditorLabel}
-              id="spacyPretrainedEntities"
-            >
+            <Typography className={classes.settingEditorLabel} id="spacyPretrainedEntities">
               <FormattedMessage {...messages.spacyPretrainedEntities} />
             </Typography>
           </Grid>
@@ -408,10 +484,8 @@ export class RasaSettings extends React.Component {
             mode="json"
             theme="terminal"
             name="spacyPretrainedEntities"
-            readOnly={false}
-            onChange={value =>
-              this.onChangeEditorValue('spacyPretrainedEntities', value)
-            }
+            readOnly={isReadOnly}
+            onChange={value => this.onChangeEditorValue('spacyPretrainedEntities', value)}
             fontSize={14}
             showPrintMargin
             showGutter
@@ -432,7 +506,7 @@ export class RasaSettings extends React.Component {
             </Typography>
           ) : null}
         </Grid>
-      </Grid>
+      </Grid >
     );
   }
 }
@@ -443,6 +517,10 @@ RasaSettings.propTypes = {
   settings: PropTypes.object,
   onChangeSettingsData: PropTypes.func,
   errorState: PropTypes.object,
+  isReadOnly: PropTypes.bool,
 };
 
+RasaSettings.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(RasaSettings));

@@ -13,6 +13,7 @@ import SessionsDataForm from './SessionsDataForm';
 import Logs from './Logs';
 import ExitModal from '../../../components/ExitModal';
 import PopoverFilter from './../../../components/PopoverFilter';
+import Trainings from './Trainings'
 
 const styles = {
   headerContainer: {
@@ -229,6 +230,23 @@ class Form extends React.Component {
               customMessageSaveAndExitButton={intl.formatMessage(messages.deleteSessionAlertYes)}
               customMessageExitButton={intl.formatMessage(messages.deleteSessionAlertNo)}
             />
+            <ExitModal
+              open={this.props.trainingTestSummaryModalOpen}
+              onExit={() => {
+                this.props.onTrainingTestSummaryModalChange(false);
+              }}
+              onSaveAndExit={() => {
+                this.props.onGoToUrl(`/agent/${this.props.agent.id}/trainingTestSummary`);
+                this.props.onTrainingTestSummaryModalChange(false);
+              }}
+              onClose={() => {
+                this.props.onTrainingTestSummaryModalChange(false);
+              }}
+              customMessage1={intl.formatMessage(messages.trainTestFullSummaryAlert1)}
+              customMessage2={intl.formatMessage(messages.trainTestFullSummaryAlert2)}
+              customMessageSaveAndExitButton={intl.formatMessage(messages.trainTestFullSummaryYes)}
+              customMessageExitButton={intl.formatMessage(messages.trainTestFullSummaryNo)}
+            />
           </Grid>
         </Grid>
         <Grid item xs={12}>
@@ -281,6 +299,17 @@ class Form extends React.Component {
                   }
                   className={
                     this.props.selectedTab === 'logs' ? classes.selected : null
+                  }
+                />
+                <Tab
+                  value="training"
+                  label={
+                    <span className={classes.tabLabel}>
+                      <span>Training</span>
+                    </span>
+                  }
+                  className={
+                    this.props.selectedTab === 'trainTests' ? classes.selected : null
                   }
                 />
               </Tabs>
@@ -420,6 +449,31 @@ class Form extends React.Component {
             </Fragment>
           )
           }
+          {this.props.selectedTab === 'training' && (
+            <Fragment>
+              <Trainings
+                agent={this.props.agent}
+                agentId={this.props.agentId}
+                currentPage={this.props.currentPage}
+                pageSize={this.props.pageSize}
+                numberOfPages={this.props.numberOfPages}
+                changePage={this.props.changePage}
+                movePageBack={this.props.movePageBack}
+                movePageForward={this.props.movePageForward}
+                changePageSize={this.props.changePageSize}
+                locale={this.props.locale}
+                trainTests={this.props.trainTests}
+                onLoadAgentTrainTest={this.props.onLoadAgentTrainTest}
+                onLoadAgentTrainTests={this.props.onLoadAgentTrainTests}
+                onGoToUrl={this.props.onGoToUrl}
+                onLoadAgentLatestTrainTest={this.props.onLoadAgentLatestTrainTest}
+                onCloseTestTrainNotification={this.props.onCloseTestTrainNotification}
+                trainingTestSummaryModalOpen={this.props.trainingTestSummaryModalOpen}
+                onTrainingTestSummaryModalChange={this.props.onTrainingTestSummaryModalChange}
+              />
+            </Fragment>
+          )
+          }
         </Grid>
       </Grid >
     );
@@ -487,7 +541,8 @@ Form.propTypes = {
   onChangeReviewPageLogsNumberOfFiltersApplied: PropTypes.func,
   reviewPageLogsNumberOfFiltersApplied: PropTypes.number,
   onResetReviewPageFilters: PropTypes.func,
-  onResetReviewPageLogsFilters: PropTypes.func
+  onResetReviewPageLogsFilters: PropTypes.func,
+  onLoadAgentLatestTrainTest: PropTypes.func
 };
 
 export default injectIntl(withStyles(styles)(Form));

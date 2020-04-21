@@ -1,37 +1,40 @@
 {
-    "name": "Messenger",
-    "description": "A connection for Facebook Messenger Bots.",
-    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/facebook/README.MD",
-    "details": {
-        "pageAccessToken": {
-            "displayName": "Page Access Token",
-            "description": "Token provided by FB when you connected your FB app to a page",
-            "type": "string"
-        },
-        "appSecret": {
-            "displayName": "App Secret",
-            "description": "App secret value of your FB app",
-            "type": "string"
-        },
-        "outgoingMessages": {
-            "displayName": "Sent responses as soon as they arrive (Multiple responses):",
-            "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
-            "type": "boolean"
-        },
-        "waitTimeBetweenMessages": {
-            "displayName": "Time in MS between response messages:",
-            "description": "How much the channel should wait between agent responses?",
-            "type": "number"
-        },
-        "useAgentWelcomeAction": {
-            "displayName": "Use the agent's welcome action after first message",
-            "description": "After the first message, the agent's welcome action will be executed",
-            "type": "boolean"
-        },
-        "messageBeforeButtonResponse": {
-            "displayName": "Message before button groups:",
-            "description": "Everytime a group of buttons is displayed, this message is needed",
-            "type": "string"
-        }
+  "name": "Messenger",
+  "description": "A connection for Facebook Messenger Bots.",
+  "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/facebook/README.MD",
+  "userField": "sender.id",
+  "receivedTextField": "message.text",
+  "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/fb-messenger.png",
+  "details": {
+    "pageAccessToken": {
+      "displayName": "Page Access Token",
+      "description": "Token provided by FB when you connected your FB app to a page",
+      "type": "string"
+    },
+    "appSecret": {
+      "displayName": "App Secret",
+      "description": "App secret value of your FB app",
+      "type": "string"
+    },
+    "outgoingMessages": {
+      "displayName": "Sent responses as soon as they arrive (Multiple responses):",
+      "description": "In case you are using multi action recognition you can enable this setting to send the messages as soon as they arrive instead of waiting for the response to be compiled.",
+      "type": "boolean"
+    },
+    "waitTimeBetweenMessages": {
+      "displayName": "Time in MS between response messages:",
+      "description": "How much the channel should wait between agent responses?",
+      "type": "number"
+    },
+    "useAgentWelcomeAction": {
+      "displayName": "Use the agent's welcome action after first message",
+      "description": "After the first message, the agent's welcome action will be executed",
+      "type": "boolean"
+    },
+    "messageBeforeButtonResponse": {
+      "displayName": "Message before button groups:",
+      "description": "Everytime a group of buttons is displayed, this message is needed",
+      "type": "string"
     }
+  }
 }

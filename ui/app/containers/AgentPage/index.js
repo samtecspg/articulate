@@ -4,69 +4,81 @@
  *
  */
 
-import { Grid, CircularProgress } from '@material-ui/core';
+import { CircularProgress, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import qs from 'query-string';
 import React from 'react';
-import { intlShape, injectIntl } from 'react-intl';
+import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import qs from 'query-string';
+import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
+import ExitModal from '../../components/ExitModal';
 import MainTab from '../../components/MainTab';
+import AC from '../../utils/accessControl';
 import injectSaga from '../../utils/injectSaga';
-import messages from './messages';
 import {
   addAgent,
   addAgentFallbackResponse,
+  addNewAgentParameter,
+  addNewHeaderAgentWebhook,
   changeAgentData,
   changeAgentName,
+  changeAgentParameterName,
+  changeAgentParameterValue,
   changeAgentSettingsData,
   changeCategoryClassifierThreshold,
+  changeHeaderNameAgentWebhook,
+  changeHeaderValueAgentWebhook,
   changePostFormatData,
   changeWebhookData,
   changeWebhookPayloadType,
+  clearSayingToAction,
+  deleteAgent,
   deleteAgentFallbackResponse,
+  deleteAgentParameter,
+  deleteHeaderAgentWebhook,
+  loadActions,
   loadAgent,
+  loadSettings,
+  loadUsers,
   resetAgentData,
   resetStatusFlag,
+  resetSuccessAgent,
+  setAgentDefaults,
+  toggleChatButton,
+  toggleConversationBar,
   trainAgent,
   updateAgent,
-  addNewHeaderAgentWebhook,
-  deleteHeaderAgentWebhook,
-  changeHeaderNameAgentWebhook,
-  changeHeaderValueAgentWebhook,
-  deleteAgent,
-  loadActions,
-  clearSayingToAction,
-  addNewAgentParameter,
-  deleteAgentParameter,
-  changeAgentParameterName,
-  changeAgentParameterValue,
-  loadSettings,
-  setAgentDefaults,
-  toggleConversationBar,
-  toggleChatButton,
-  resetSuccessAgent
+  testAgentTrain,
+  addAgentVersion,
+  loadAgentVersion,
+  updateAgentVersion,
+  deleteAgentVersion,
 } from '../App/actions';
 import {
+  makeSelectActions,
   makeSelectAgent,
   makeSelectAgentPostFormat,
   makeSelectAgentSettings,
-  makeSelectAgentWebhook,
-  makeSelectSettings,
   makeSelectAgentTouched,
-  makeSelectActions,
+  makeSelectAgentWebhook,
+  makeSelectCurrentUser,
   makeSelectLoading,
-  makeSelectSuccessAgent,
+  makeSelectLoadingAgentVersion,
   makeSelectLocale,
   makeSelectServerStatus,
+  makeSelectSettings,
+  makeSelectSuccessAgent,
+  makeSelectUsers,
+  makeSelectAgentVersions,
 } from '../App/selectors';
 
 import Form from './Components/Form';
+import messages from './messages';
 import saga from './saga';
-import ExitModal from '../../components/ExitModal';
 
 /* eslint-disable react/prefer-stateless-function */
 export class AgentPage extends React.PureComponent {
@@ -75,6 +87,7 @@ export class AgentPage extends React.PureComponent {
     this.submit = this.submit.bind(this);
     this.initForm = this.initForm.bind(this);
     this.navigateToNextLocation = this.navigateToNextLocation.bind(this);
+    this.onAccessControlUserChange = this.onAccessControlUserChange.bind(this);
   }
 
   state = {
@@ -91,7 +104,7 @@ export class AgentPage extends React.PureComponent {
       welcomeAction: false,
       webhookKey: false,
       webhookUrl: false,
-      rasaURL: false,
+      rasaURLs: false,
       ducklingURL: false,
       ducklingDimension: false,
       categoryClassifierPipeline: false,
@@ -103,6 +116,7 @@ export class AgentPage extends React.PureComponent {
       training: false,
       tabs: [],
     },
+    selectedAccessControlUser: null,
   };
 
   initForm() {
@@ -138,20 +152,17 @@ export class AgentPage extends React.PureComponent {
       return true;
     });
     this.props.onShowChatButton(true);
+    this.props.onLoadUsers();
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      !prevProps.settings.defaultAgentLanguage &&
-      this.props.settings.defaultAgentLanguage
-    ) {
+    if (!prevProps.settings.defaultAgentLanguage && this.props.settings.defaultAgentLanguage) {
       this.initForm();
     }
     if (this.props.success) {
       if (this.state.exitAfterSubmit) {
         this.navigateToNextLocation();
-      }
-      else {
+      } else {
         this.props.onResetSuccessAgent();
       }
       if (this.state.isNewAgent) {
@@ -170,6 +181,10 @@ export class AgentPage extends React.PureComponent {
     this.props.history.push(this.state.nextLocation.pathname);
   }
 
+  onAccessControlUserChange({ user }) {
+    this.setState({ selectedAccessControlUser: user });
+  }
+
   submit(exit) {
     let errors = false;
     const newErrorState = {
@@ -178,7 +193,7 @@ export class AgentPage extends React.PureComponent {
       fallbackAction: false,
       webhookUrl: false,
       webhookKey: false,
-      rasaURL: false,
+      rasaURLs: false,
       ducklingURL: false,
       ducklingDimension: false,
       categoryClassifierPipeline: false,
@@ -209,50 +224,41 @@ export class AgentPage extends React.PureComponent {
     } else {
       newErrorState.fallbackAction = false;
     }
-    if (
-      this.props.agent.useWebhook &&
-      (!this.props.webhook.webhookKey || this.props.webhook.webhookKey === '')
-    ) {
+    if (this.props.agent.useWebhook && (!this.props.webhook.webhookKey || this.props.webhook.webhookKey === '')) {
       errors = true;
       newErrorState.webhookKey = true;
       newErrorState.tabs.push(1);
     } else {
       newErrorState.webhookKey = false;
     }
-    if (
-      this.props.agent.useWebhook &&
-      (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')
-    ) {
+    if (this.props.agent.useWebhook && (!this.props.webhook.webhookUrl || this.props.webhook.webhookUrl === '')) {
       errors = true;
       newErrorState.webhookUrl = true;
       newErrorState.tabs.push(1);
     } else {
       newErrorState.webhookUrl = false;
     }
-    if (
-      !this.props.agentSettings.rasaURL ||
-      this.props.agentSettings.rasaURL === ''
-    ) {
+    if (!this.props.agentSettings.rasaURLs
+      || this.props.agentSettings.rasaURLs.length === 0
+      || this.props.agentSettings.rasaURLs.indexOf('') !== -1
+      || this.props.agentSettings.rasaURLs.some((item) => {
+        return this.props.agentSettings.rasaURLs.indexOf(item)
+          !== this.props.agentSettings.rasaURLs.lastIndexOf(item);
+      })) {
       errors = true;
-      newErrorState.rasaURL = true;
-      newErrorState.tabs.push(1);
+      newErrorState.rasaURLs = true;
+      newErrorState.tabs.push(2);
     } else {
-      newErrorState.rasaURL = false;
+      newErrorState.rasaURLs = false;
     }
-    if (
-      !this.props.agentSettings.ducklingURL ||
-      this.props.agentSettings.ducklingURL === ''
-    ) {
+    if (!this.props.agentSettings.ducklingURL || this.props.agentSettings.ducklingURL === '') {
       errors = true;
       newErrorState.ducklingURL = true;
       newErrorState.tabs.push(1);
     } else {
       newErrorState.ducklingURL = false;
     }
-    if (
-      !this.props.agent.enableModelsPerCategory &&
-      this.props.agent.multiCategory
-    ) {
+    if (!this.props.agent.enableModelsPerCategory && this.props.agent.multiCategory) {
       errors = true;
       newErrorState.training = true;
       newErrorState.tabs.push(2);
@@ -316,10 +322,7 @@ export class AgentPage extends React.PureComponent {
     }
 
     try {
-      if (
-        this.props.agent.usePostFormat &&
-        this.props.postFormat.postFormatPayload === ''
-      ) {
+      if (this.props.agent.usePostFormat && this.props.postFormat.postFormatPayload === '') {
         throw 'Response payload is not an object';
       }
       newErrorState.postFormatPayload = false;
@@ -330,11 +333,7 @@ export class AgentPage extends React.PureComponent {
     }
 
     try {
-      if (
-        this.props.agent.useWebhook &&
-        this.props.webhook.webhookPayloadType !== 'None' &&
-        this.props.webhook.webhookPayload === ''
-      ) {
+      if (this.props.agent.useWebhook && this.props.webhook.webhookPayloadType !== 'None' && this.props.webhook.webhookPayload === '') {
         throw 'Webhook payload is not an object';
       }
       newErrorState.webhookPayload = false;
@@ -364,7 +363,8 @@ export class AgentPage extends React.PureComponent {
   }
 
   render() {
-    const { intl } = this.props;
+    const { intl, currentUser } = this.props;
+    const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
     return this.props.settings.defaultAgentLanguage ? (
       <Grid container>
         <ExitModal
@@ -381,17 +381,19 @@ export class AgentPage extends React.PureComponent {
           type={intl.formatMessage(messages.instanceName)}
         />
         <MainTab
+          isReadOnly={isReadOnly}
+          disableSave={isReadOnly}
           locale={this.props.locale}
           touched={this.props.touched}
           loading={this.props.loading}
+          loadingAgentVersion={this.props.loadingAgentVersion}
           success={this.props.success}
           onSaveAndExit={() => {
             this.submit(true);
           }}
           agentName={this.props.agent.agentName}
-          agentGravatar={
-            this.props.agent.gravatar ? this.props.agent.gravatar : 1
-          }
+          currentAgent={this.props.agent}
+          agentGravatar={this.props.agent.gravatar ? this.props.agent.gravatar : 1}
           agentUIColor={this.props.agent.uiColor}
           newAgent={this.state.isNewAgent}
           formError={this.state.formError}
@@ -423,9 +425,7 @@ export class AgentPage extends React.PureComponent {
               onChangeHeaderValue={this.props.onChangeHeaderValue}
               onChangePostFormatData={this.props.onChangePostFormatData}
               onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
-              onChangeCategoryClassifierThreshold={
-                this.props.onChangeCategoryClassifierThreshold
-              }
+              onChangeCategoryClassifierThreshold={this.props.onChangeCategoryClassifierThreshold}
               onAddFallbackResponse={this.props.onAddFallbackResponse}
               onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
               onDelete={this.props.onDelete.bind(null, this.props.agent.id)}
@@ -442,6 +442,10 @@ export class AgentPage extends React.PureComponent {
               onDeleteParameter={this.props.onDeleteParameter}
               onChangeParameterName={this.props.onChangeParameterName}
               onChangeParameterValue={this.props.onChangeParameterValue}
+              users={this.props.users}
+              selectedAccessControlUser={this.state.selectedAccessControlUser}
+              onAccessControlUserChange={this.onAccessControlUserChange}
+              isReadOnly={isReadOnly}
             />
           }
           dialogueForm={Link}
@@ -450,6 +454,13 @@ export class AgentPage extends React.PureComponent {
           reviewURL={`/agent/${this.props.agent.id}/review`}
           analyticsForm={Link}
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
+          onTestAgentTrain={this.props.onTestAgentTrain}
+          agent={this.props.agent}
+          onAddAgentVersion={this.props.onAddAgentVersion}
+          onLoadAgentVersion={this.props.onLoadAgentVersion}
+          onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+          onDeleteAgentVersion={this.props.onDeleteAgentVersion}
+          agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
         />
       </Grid>
     ) : (
@@ -487,15 +498,21 @@ AgentPage.propTypes = {
   onEditAgent: PropTypes.func,
   onSuccess: PropTypes.func,
   onTrain: PropTypes.func,
+  onGoToUrl: PropTypes.func,
   onDelete: PropTypes.func,
   agentActions: PropTypes.array,
-  onGoToUrl: PropTypes.func,
   onAddNewParameter: PropTypes.func,
   onDeleteParameter: PropTypes.func,
   onChangeParameterName: PropTypes.func,
   onChangeParameterValue: PropTypes.func,
   onToggleChat: PropTypes.func,
-  onShowChatButton: PropTypes.func
+  onShowChatButton: PropTypes.func,
+  onResetSuccessAgent: PropTypes.func,
+  onSetAgentDefaults: PropTypes.func,
+  onResetData: PropTypes.func,
+  onLoadUsers: PropTypes.func,
+  users: PropTypes.array,
+  currentUser: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -507,9 +524,13 @@ const mapStateToProps = createStructuredSelector({
   settings: makeSelectSettings(),
   agentActions: makeSelectActions(),
   loading: makeSelectLoading(),
+  loadingAgentVersion: makeSelectLoadingAgentVersion(),
   success: makeSelectSuccessAgent(),
   touched: makeSelectAgentTouched(),
   locale: makeSelectLocale(),
+  users: makeSelectUsers(),
+  currentUser: makeSelectCurrentUser(),
+  agentVersions: makeSelectAgentVersions()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -608,7 +629,25 @@ function mapDispatchToProps(dispatch) {
     },
     onResetSuccessAgent: () => {
       dispatch(resetSuccessAgent());
-    }
+    },
+    onLoadUsers: () => {
+      dispatch(loadUsers());
+    },
+    onTestAgentTrain: (id) => {
+      dispatch(testAgentTrain(id));
+    },
+    onLoadAgentVersion: (versionId, currentAgentId) => {
+      dispatch(loadAgentVersion(versionId, currentAgentId));
+    },
+    onUpdateAgentVersion: (version) => {
+      dispatch(updateAgentVersion(version));
+    },
+    onDeleteAgentVersion: (versionId, currentAgentId) => {
+      dispatch(deleteAgentVersion(versionId, currentAgentId));
+    },
+    onAddAgentVersion: id => {
+      dispatch(addAgentVersion(id));
+    },
   };
 }
 

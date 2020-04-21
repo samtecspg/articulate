@@ -1,15 +1,12 @@
+import { Button, Grid, Modal, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Modal } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-
-import messages from '../messages';
-
-import settingsIcon from '../../../images/settings-icon.svg';
 import playHelpIcon from '../../../images/play-help-icon.svg';
-
+import settingsIcon from '../../../images/settings-icon.svg';
+import messages from '../messages';
 import SettingsDataForm from './SettingsDataForm';
 
 const styles = {
@@ -59,22 +56,15 @@ const styles = {
     width: '80%',
     height: '80%',
     backgroundColor: '#fff',
-    boxShadow:
-      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
+    boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 class Form extends React.Component {
   state = {
-    selectedTab: 0,
     openModal: false,
-  };
-
-  handleChange = (event, value) => {
-    this.setState({
-      selectedTab: value,
-    });
+    selectedAccessPolicyGroup: null,
   };
 
   handleOpen = () => {
@@ -89,26 +79,38 @@ class Form extends React.Component {
     });
   };
 
+  handleOnchangeAccessPolicyGroup = ({ accessPolicyGroup }) => {
+    this.setState({ selectedAccessPolicyGroup: accessPolicyGroup.id });
+  };
+
+  componentDidUpdate(prevProps) {
+    if (this.state.selectedAccessPolicyGroup === null && this.props.accessPolicyGroups !== prevProps.accessPolicyGroups) {
+      this.setState({ selectedAccessPolicyGroup: _.get(this.props.accessPolicyGroups, '[0].id', null) });
+    }
+  }
+
   render() {
-    const { classes, intl } = this.props;
+    const {
+      classes,
+      intl,
+      accessPolicyGroups,
+      onUpdateAccessPolicyGroup,
+      onAddAccessPolicyGroup,
+      newAccessPolicyGroupName,
+      onUpdateNewAccessPolicyGroupName,
+      isReadOnly,
+      onRemoveAccessPolicyGroup
+    } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
-          <img className={classes.settingsIcon} src={settingsIcon} />
+          <img alt="" className={classes.settingsIcon} src={settingsIcon} />
           <Grid className={classes.titleTextHelpContainer} container>
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.title} />
             </Typography>
-            <Button
-              className={classes.helpButton}
-              variant="outlined"
-              onClick={this.handleOpen}
-            >
-              <img
-                className={classes.playIcon}
-                src={playHelpIcon}
-                alt={intl.formatMessage(messages.playHelpAlt)}
-              />
+            <Button className={classes.helpButton} variant="outlined" onClick={this.handleOpen}>
+              <img className={classes.playIcon} src={playHelpIcon} alt={intl.formatMessage(messages.playHelpAlt)} />
               <span className={classes.helpText}>
                 <FormattedMessage {...messages.help} />
               </span>
@@ -116,6 +118,7 @@ class Form extends React.Component {
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe
+                  title="https://www.youtube.com/embed/o807YDeK6Vg"
                   width="100%"
                   height="100%"
                   src="https://www.youtube.com/embed/o807YDeK6Vg"
@@ -129,11 +132,20 @@ class Form extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <SettingsDataForm
+            isReadOnly={isReadOnly}
             settings={this.props.settings}
             onChangeSettingsData={this.props.onChangeSettingsData}
             onAddFallbackResponse={this.props.onAddFallbackResponse}
             onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
             errorState={this.props.errorState}
+            accessPolicyGroups={accessPolicyGroups}
+            handleOnchangeAccessPolicyGroup={this.handleOnchangeAccessPolicyGroup}
+            selectedAccessPolicyGroup={this.state.selectedAccessPolicyGroup}
+            onUpdateAccessPolicyGroup={onUpdateAccessPolicyGroup}
+            onAddAccessPolicyGroup={onAddAccessPolicyGroup}
+            newAccessPolicyGroupName={newAccessPolicyGroupName}
+            onUpdateNewAccessPolicyGroupName={onUpdateNewAccessPolicyGroupName}
+            onRemoveAccessPolicyGroup={onRemoveAccessPolicyGroup}
           />
         </Grid>
       </Grid>
@@ -148,7 +160,14 @@ Form.propTypes = {
   onChangeSettingsData: PropTypes.func,
   onAddFallbackResponse: PropTypes.func.isRequired,
   onDeleteFallbackResponse: PropTypes.func.isRequired,
+  onUpdateAccessPolicyGroup: PropTypes.func.isRequired,
   errorState: PropTypes.object,
+  accessPolicyGroups: PropTypes.array.isRequired,
+  onAddAccessPolicyGroup: PropTypes.func.isRequired,
+  newAccessPolicyGroupName: PropTypes.string.isRequired,
+  onUpdateNewAccessPolicyGroupName: PropTypes.func.isRequired,
+  isReadOnly: PropTypes.bool.isRequired,
+  onRemoveAccessPolicyGroup: PropTypes.func.isRequired,
 };
 
 export default injectIntl(withStyles(styles)(Form));

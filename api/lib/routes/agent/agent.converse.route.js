@@ -1,12 +1,18 @@
 import Boom from 'boom';
 import {
+    ACL_ACTION_CONVERSE,
+    ACL_ACTION_WRITE,
+    MODEL_AGENT,
+    P_HAPI_ABAC,
+    P_HAPI_GBAC,
     PARAM_AGENT_ID,
+    PARAM_DEBUG,
     PARAM_SESSION,
     PARAM_TEXT,
     PARAM_TIMEZONE,
     ROUTE_AGENT,
     ROUTE_CONVERSE,
-    PARAM_DEBUG
+    ROUTE_TO_MODEL
 } from '../../../util/constants';
 import AgentValidator from '../../validators/agent.validator';
 
@@ -16,6 +22,14 @@ module.exports = {
     method: 'post',
     path: `/${ROUTE_AGENT}/{${PARAM_AGENT_ID}}/${ROUTE_CONVERSE}`,
     options: {
+        plugins: {
+            [P_HAPI_GBAC]: [
+                `${ROUTE_TO_MODEL[ROUTE_AGENT]}:${ACL_ACTION_WRITE}`
+            ],
+            [P_HAPI_ABAC]: [
+                `${MODEL_AGENT}:${ACL_ACTION_CONVERSE}`
+            ]
+        },
         tags: ['api'],
         validate: AgentValidator.converse,
         handler: async (request) => {

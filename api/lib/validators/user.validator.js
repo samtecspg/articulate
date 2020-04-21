@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import {
     PARAM_EMAIL,
+    PARAM_GROUPS,
     PARAM_IDENTITY,
     PARAM_LAST_NAME,
     PARAM_NAME,
@@ -30,7 +31,7 @@ const userAccountParams = {
     [PARAM_PASSWORD]: UserAccountModel.password,
     [PARAM_SALT]: UserAccountModel.salt,
     [PARAM_PROVIDER]: Joi.string().trim().description('Provider').required(),
-    [PARAM_IDENTITY]: Joi.object().optional().keys(userIdentityParams)
+    [PARAM_IDENTITY]: Joi.object().optional().keys(userIdentityParams),
 };
 
 class UserValidate {
@@ -73,6 +74,24 @@ class UserValidate {
 
                 return {
                     [PARAM_USER_ACCOUNT_ID]: UserIdentityModel.id.required()
+                };
+            })()
+        };
+        this.updateBbyId = {
+            params: (() => {
+
+                return {
+                    [PARAM_USER_ACCOUNT_ID]: UserIdentityModel.id.required()
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    [PARAM_NAME]: UserAccountModel.name.required(),
+                    [PARAM_LAST_NAME]: UserAccountModel.lastName.required(),
+                    [PARAM_EMAIL]: UserAccountModel.email.required(),
+                    [PARAM_PASSWORD]: UserAccountModel.password,
+                    [PARAM_GROUPS]: UserAccountModel.groups,
                 };
             })()
         };

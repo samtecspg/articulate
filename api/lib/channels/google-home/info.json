@@ -1,17 +1,20 @@
 {
-    "name": "Google Home",
-    "description": "A connection for Google Home using the Google Actions SDK.",
-    "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/google-home/README.MD",
-    "details": {
-        "queryPatterns": {
-            "displayName": "Query Patterns for Main Action",
-            "description" : "Phrases that users will use to start your action",
-            "type": "array"
-        },
-        "useAgentWelcomeAction": {
-            "displayName": "Use the agent's welcome action after first message",
-            "description": "After the first message, the agent's welcome action will be executed",
-            "type": "boolean"
-        }
+  "name": "Google Home",
+  "description": "A connection for Google Home using the Google Actions SDK.",
+  "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/google-home/README.MD",
+  "userField": "conversation.conversationId",
+  "receivedTextField": "inputs[0].arguments[0].textValue",
+  "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/google-assistant.png",
+  "details": {
+    "queryPatterns": {
+      "displayName": "Query Patterns for Main Action",
+      "description": "Phrases that users will use to start your action",
+      "type": "array"
+    },
+    "useAgentWelcomeAction": {
+      "displayName": "Use the agent's welcome action after first message",
+      "description": "After the first message, the agent's welcome action will be executed",
+      "type": "boolean"
     }
+  }
 }

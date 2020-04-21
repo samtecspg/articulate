@@ -154,7 +154,7 @@ const generateRasaFormat = ({ text, action, confidence, structuredKeywords, agen
     return result;
 };
 
-module.exports = async function ({ id, AgentModel, text, timezone, sessionId = null }) {
+module.exports = async function ({ id, AgentModel, text, timezone, sessionId = null, saveDocument = true }) {
 
     const startTime = new Moment();
     const { redis } = this.server.app;
@@ -191,13 +191,13 @@ module.exports = async function ({ id, AgentModel, text, timezone, sessionId = n
         else {
             const {
                 ducklingURL,
-                rasaURL,
+                rasaURLs,
                 spacyPretrainedEntities,
                 ducklingDimension,
                 rasaConcurrentRequests,
             } = agent.settings;
 
-            const rasaKeywords = _.compact(await agentService.parseRasaKeywords({ AgentModel, text, trainedCategories, rasaURL, rasaConcurrentRequests }));
+            const rasaKeywords = _.compact(await agentService.parseRasaKeywords({ AgentModel, text, trainedCategories, rasaURLs, rasaConcurrentRequests }));
             const ducklingKeywords = _.compact(await agentService.parseDucklingKeywords({ AgentModel, text, timezone, ducklingURL }));
             const regexKeywords = await agentService.parseRegexKeywords({ AgentModel, text });
 
@@ -214,20 +214,26 @@ module.exports = async function ({ id, AgentModel, text, timezone, sessionId = n
             const duration = Moment.duration(endTime.diff(startTime), 'ms').asMilliseconds();
             const maximumActionScore = _(parsedSystemKeywords).map('action').map('confidence').compact().max();
             const maximumCategoryScore = _(parsedSystemKeywords).map('categoryScore').compact().max();
-            return await documentService.create({
-                data: {
-                    document: text,
-                    [PARAM_DOCUMENT_TIME_STAMP]: new Date().toISOString(),
-                    [PARAM_DOCUMENT_RASA_RESULTS]: _.orderBy(parsedSystemKeywords, 'categoryScore', 'desc'),
-                    [PARAM_DOCUMENT_RECOGNIZED_ACTION]: _.orderBy(parsedSystemKeywords, 'categoryScore', 'desc')[0].action.name,
-                    [PARAM_DOCUMENT_MAXIMUM_ACTION_SCORE]: maximumActionScore,
-                    [PARAM_DOCUMENT_TOTAL_ELAPSED_TIME]: duration,
-                    [PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE]: maximumCategoryScore || null,
-                    [PARAM_DOCUMENT_AGENT_ID]: agent.id,
-                    [PARAM_DOCUMENT_AGENT_MODEL]: agent.model,
-                    [PARAM_DOCUMENT_SESSION]: sessionId
-                }
-            });
+
+            const data = {
+                document: text,
+                [PARAM_DOCUMENT_TIME_STAMP]: new Date().toISOString(),
+                [PARAM_DOCUMENT_RASA_RESULTS]: _.orderBy(parsedSystemKeywords, 'categoryScore', 'desc'),
+                [PARAM_DOCUMENT_RECOGNIZED_ACTION]: _.orderBy(parsedSystemKeywords, 'categoryScore', 'desc')[0].action.name,
+                [PARAM_DOCUMENT_MAXIMUM_ACTION_SCORE]: maximumActionScore,
+                [PARAM_DOCUMENT_TOTAL_ELAPSED_TIME]: duration,
+                [PARAM_DOCUMENT_MAXIMUM_CATEGORY_SCORE]: maximumCategoryScore || null,
+                [PARAM_DOCUMENT_AGENT_ID]: agent.id,
+                [PARAM_DOCUMENT_AGENT_MODEL]: agent.model,
+                [PARAM_DOCUMENT_SESSION]: sessionId
+            }
+            if (saveDocument) {
+                return await documentService.create({
+                    data
+                });
+            } else {
+                return data;
+            }
         }
     }
     catch (error) {

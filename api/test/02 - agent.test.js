@@ -82,7 +82,6 @@ describe('Agent', () => {
         expect(response.result.agentName).to.be.equal(postAgent.agentName);
         expect(response.result.status).to.be.equal(STATUS_READY);
     });
-
     it('get /agent', async ({ context }) => {
 
         const response = await server.inject(`/${ROUTE_AGENT}`);

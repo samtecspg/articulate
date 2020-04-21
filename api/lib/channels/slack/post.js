@@ -77,4 +77,3 @@ module.exports = async function ({ connection, request, h }) {
     return h.response().code(200);
   }
 };
-

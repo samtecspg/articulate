@@ -75,44 +75,44 @@ export class Notifications extends React.Component {
           );
           return notification.type === 'error' ||
             (new Date() - notification.datetime) / 1000 < 10 ? (
-            <Grid
-              item
-              xs={12}
-              key={`notification_${index}`}
-              className={
-                notification.type === 'error'
-                  ? classes.notificationContainerError
-                  : classes.notificationContainer
-              }
-            >
-              <div
-                className={classes.notificationDot}
-                style={{
-                  backgroundColor:
-                    notification.type === 'error' ? '#cb2121' : '#358fec',
-                }}
-              />
-              <Typography className={classes.notification}>
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: `${
-                      notification.type === 'error'
-                        ? intl.formatMessage(messages.errorTitle)
-                        : intl.formatMessage(messages.notificationTitle)
-                    }: ${messageText}`,
+              <Grid
+                item
+                xs={12}
+                key={`notification_${index}`}
+                className={
+                  notification.type === 'error'
+                    ? classes.notificationContainerError
+                    : classes.notificationContainer
+                }
+              >
+                <div
+                  className={classes.notificationDot}
+                  style={{
+                    backgroundColor:
+                      notification.type === 'error' ? '#cb2121' : '#358fec',
                   }}
                 />
-              </Typography>
-              <div
-                onClick={() => {
-                  this.props.onCloseNotification(index);
-                }}
-                className={classes.closeNotification}
-              >
-                <Typography>x</Typography>
-              </div>
-            </Grid>
-          ) : null;
+                <Typography className={classes.notification}>
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: `${
+                        notification.type === 'error'
+                          ? intl.formatMessage(messages.errorTitle)
+                          : intl.formatMessage(messages.notificationTitle)
+                        }: ${messageText}`,
+                    }}
+                  />
+                </Typography>
+                <div
+                  onClick={() => {
+                    this.props.onCloseNotification(index);
+                  }}
+                  className={classes.closeNotification}
+                >
+                  <Typography>x</Typography>
+                </div>
+              </Grid>
+            ) : null;
         })}
       </Grid>
     );
@@ -123,7 +123,7 @@ Notifications.propTypes = {
   intl: intlShape,
   classes: PropTypes.object.isRequired,
   onCloseNotification: PropTypes.func,
-  notifications: PropTypes.array,
+  notifications: PropTypes.array
 };
 
 export default injectIntl(withStyles(styles)(Notifications));

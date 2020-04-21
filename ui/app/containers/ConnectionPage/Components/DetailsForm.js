@@ -4,19 +4,7 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import _ from 'lodash';
 
 import PropTypes from 'prop-types';
-import {
-  Grid,
-  Typography,
-  Button,
-  Modal,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormControlLabel,
-  Switch,
-} from '@material-ui/core';
+import { Grid, Typography, Button, Modal, TextField, FormControl, InputLabel, Select, MenuItem, FormControlLabel, Switch } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import ChipInput from 'components/ChipInput';
 
@@ -74,8 +62,7 @@ const styles = {
     width: '80%',
     height: '80%',
     backgroundColor: '#fff',
-    boxShadow:
-      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
+    boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   formContainer: {
     backgroundColor: '#ffffff',
@@ -149,27 +136,19 @@ class DetailsForm extends React.Component {
             if (connection.details[detail] === undefined) {
               this.props.onChangeDetailValue(
                 detail,
-                channels[connection.channel].details[detail].default
-                  ? channels[connection.channel].details[detail].default
-                  : false,
+                channels[connection.channel].details[detail].default ? channels[connection.channel].details[detail].default : false,
               );
             }
           }
           if (channels[connection.channel].details[detail].type === 'select') {
             if (connection.details[detail] === undefined) {
-              this.props.onChangeDetailValue(
-                detail,
-                channels[connection.channel].details[detail].default,
-              );
+              this.props.onChangeDetailValue(detail, channels[connection.channel].details[detail].default);
             }
           }
         });
       }
       this.setState({
-        openActions: _.times(
-          Object.keys(channels[connection.channel].details).length,
-          _.constant(false),
-        ),
+        openActions: _.times(Object.keys(channels[connection.channel].details).length, _.constant(false)),
       });
     }
   }
@@ -193,7 +172,7 @@ class DetailsForm extends React.Component {
   };
 
   render() {
-    const { classes, intl, connection, channels } = this.props;
+    const { classes, intl, connection, channels, isReadOnly } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -201,16 +180,8 @@ class DetailsForm extends React.Component {
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.detailsFormTitle} />
             </Typography>
-            <Button
-              className={classes.helpButton}
-              variant="outlined"
-              onClick={this.handleOpen}
-            >
-              <img
-                className={classes.playIcon}
-                src={playHelpIcon}
-                alt={intl.formatMessage(messages.playHelpAlt)}
-              />
+            <Button className={classes.helpButton} variant="outlined" onClick={this.handleOpen}>
+              <img className={classes.playIcon} src={playHelpIcon} alt={intl.formatMessage(messages.playHelpAlt)} />
               <span className={classes.helpText}>
                 <FormattedMessage {...messages.help} />
               </span>
@@ -236,281 +207,162 @@ class DetailsForm extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid className={classes.formContainer} container item xs={12}>
-            <Grid
-              className={classes.formSubContainer}
-              id="formContainer"
-              container
-              item
-              xs={12}
-            >
+            <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
               {connection.channel ? (
                 Object.keys(channels[connection.channel].details).length > 0 ? (
-                  Object.keys(channels[connection.channel].details).map(
-                    (detail, detailIndex) => {
-                      if (
-                        channels[connection.channel].details[detail].type ===
-                        'array'
-                      ) {
-                        return (
-                          <ChipInput
-                            key={`value_${detailIndex}`}
-                            value={connection.details[detail]}
-                            label={
-                              channels[connection.channel].details[detail]
-                                .displayName
-                            }
-                            placeholder={
-                              channels[connection.channel].details[detail]
-                                .description
-                            }
-                            onAdd={newSynonym => {
-                              const oldArray = Immutable.asMutable(
-                                connection.details[detail],
-                                { deep: true },
-                              );
-                              this.props.onChangeDetailValue(
-                                detail,
-                                oldArray.concat(newSynonym),
-                              );
-                            }}
-                            onDelete={(synonymToDelete, indexToDelete) => {
-                              const oldArray = Immutable.asMutable(
-                                connection.details[detail],
-                                { deep: true },
-                              );
-                              oldArray.splice(indexToDelete, 1);
-                              this.props.onChangeDetailValue(detail, oldArray);
-                            }}
-                            fullWidth
-                            disableUnderline
-                            classes={{
-                              root: classes.chipInputRootFirst,
-                              chipContainer: classes.chipContainer,
-                              inputRoot: classes.inputRoot,
-                              chip: classes.chip,
-                              input: classes.chipInput,
-                            }}
-                            onDeleteAll={() => {
-                              this.props.onChangeDetailValue(detail, []);
-                            }}
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
-                            InputProps={{
-                              style: {
-                                minWidth: '450px',
-                              },
-                            }}
-                          />
-                        );
-                      }
-                      if (
-                        channels[connection.channel].details[detail].type ===
-                        'select'
-                      ) {
-                        return (
-                          <Grid
-                            key={`value_${detailIndex}`}
-                            item
-                            lg={12}
-                            md={12}
-                            sm={12}
-                            xs={12}
-                          >
-                            <FormControl margin="normal" fullWidth>
-                              <InputLabel
-                                focused={this.state.openActions[detailIndex]}
-                              >
-                                {
-                                  channels[connection.channel].details[detail]
-                                    .displayName
-                                }
-                              </InputLabel>
-                              <Select
-                                id={detail}
-                                value={
-                                  connection.details[detail] ||
-                                  channels[connection.channel].details[detail]
-                                    .default
-                                }
-                                label={
-                                  channels[connection.channel].details[detail]
-                                    .displayName
-                                }
-                                onChange={evt => {
-                                  this.props.onChangeDetailValue(
-                                    detail,
-                                    evt.target.value,
-                                  );
-                                }}
-                                open={this.state.openActions[detailIndex]}
-                                onOpen={() => {
-                                  this.changeOpenModalIndex(true, detailIndex);
-                                }}
-                                onClose={() => {
-                                  this.changeOpenModalIndex(false, detailIndex);
-                                }}
-                              >
-                                {Object.keys(
-                                  channels[connection.channel].details[detail]
-                                    .values,
-                                ).map(valueKey => (
-                                  <MenuItem key={valueKey} value={valueKey}>
-                                    <Grid container justify="space-between">
-                                      <div
-                                        className={
-                                          classes.categoryDataContainer
-                                        }
-                                      >
-                                        <span>
-                                          {
-                                            channels[connection.channel]
-                                              .details[detail].values[valueKey]
-                                          }
-                                        </span>
-                                      </div>
-                                    </Grid>
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
-                          </Grid>
-                        );
-                      }
-                      if (
-                        channels[connection.channel].details[detail].type ===
-                        'boolean'
-                      ) {
-                        return (
-                          <Grid key={`value_${detailIndex}`} item xs={12}>
-                            <FormControlLabel
-                              control={
-                                <Switch
-                                  checked={
-                                    connection.details[detail] === undefined
-                                      ? false
-                                      : connection.details[detail]
-                                  }
-                                  onChange={(evt, value) => {
-                                    this.props.onChangeDetailValue(
-                                      detail,
-                                      value,
-                                    );
-                                  }}
-                                  value={detail}
-                                  color="primary"
-                                />
-                              }
-                              label={
-                                channels[connection.channel].details[detail]
-                                  .displayName
-                              }
-                            />
-                          </Grid>
-                        );
-                      }
-                      if (
-                        channels[connection.channel].details[detail].type ===
-                        'textarea'
-                      ) {
-                        return (
-                          <Grid
-                            key={`value_${detailIndex}`}
-                            container
-                            item
-                            xs={12}
-                          >
-                            <Grid item xs={12}>
-                              <TextField
-                                autoComplete="off"
-                                id={detail}
-                                value={
-                                  connection.details[detail]
-                                    ? connection.details[detail]
-                                    : ''
-                                }
-                                label={
-                                  channels[connection.channel].details[detail]
-                                    .displayName
-                                }
-                                placeholder={
-                                  channels[connection.channel].details[detail]
-                                    .description
-                                }
-                                onChange={evt => {
-                                  this.props.onChangeDetailValue(
-                                    detail,
-                                    evt.target.value,
-                                  );
-                                }}
-                                margin="normal"
-                                fullWidth
-                                InputLabelProps={{
-                                  shrink: true,
-                                }}
-                                type={
-                                  channels[connection.channel].details[detail]
-                                    .type === 'password'
-                                    ? 'password'
-                                    : 'text'
-                                }
-                                multiline
-                                rows={4}
-                              />
-                            </Grid>
-                          </Grid>
-                        );
-                      }
+                  Object.keys(channels[connection.channel].details).map((detail, detailIndex) => {
+                    if (channels[connection.channel].details[detail].type === 'array') {
                       return (
-                        <Grid
+                        <ChipInput
+                          disabled={isReadOnly}
                           key={`value_${detailIndex}`}
-                          container
-                          item
-                          xs={12}
-                        >
+                          value={connection.details[detail]}
+                          label={channels[connection.channel].details[detail].displayName}
+                          placeholder={channels[connection.channel].details[detail].description}
+                          onAdd={newSynonym => {
+                            const oldArray = Immutable.asMutable(connection.details[detail], { deep: true });
+                            this.props.onChangeDetailValue(detail, oldArray.concat(newSynonym));
+                          }}
+                          onDelete={(synonymToDelete, indexToDelete) => {
+                            const oldArray = Immutable.asMutable(connection.details[detail], { deep: true });
+                            oldArray.splice(indexToDelete, 1);
+                            this.props.onChangeDetailValue(detail, oldArray);
+                          }}
+                          fullWidth
+                          disableUnderline
+                          classes={{
+                            root: classes.chipInputRootFirst,
+                            chipContainer: classes.chipContainer,
+                            inputRoot: classes.inputRoot,
+                            chip: classes.chip,
+                            input: classes.chipInput,
+                          }}
+                          onDeleteAll={() => {
+                            this.props.onChangeDetailValue(detail, []);
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          InputProps={{
+                            style: {
+                              minWidth: '450px',
+                            },
+                          }}
+                        />
+                      );
+                    }
+                    if (channels[connection.channel].details[detail].type === 'select') {
+                      return (
+                        <Grid key={`value_${detailIndex}`} item lg={12} md={12} sm={12} xs={12}>
+                          <FormControl margin="normal" fullWidth>
+                            <InputLabel focused={this.state.openActions[detailIndex]}>{channels[connection.channel].details[detail].displayName}</InputLabel>
+                            <Select
+                              disabled={isReadOnly}
+                              id={detail}
+                              value={connection.details[detail] || channels[connection.channel].details[detail].default}
+                              label={channels[connection.channel].details[detail].displayName}
+                              onChange={evt => {
+                                this.props.onChangeDetailValue(detail, evt.target.value);
+                              }}
+                              open={this.state.openActions[detailIndex]}
+                              onOpen={() => {
+                                this.changeOpenModalIndex(true, detailIndex);
+                              }}
+                              onClose={() => {
+                                this.changeOpenModalIndex(false, detailIndex);
+                              }}
+                            >
+                              {Object.keys(channels[connection.channel].details[detail].values).map(valueKey => (
+                                <MenuItem key={valueKey} value={valueKey}>
+                                  <Grid container justify="space-between">
+                                    <div className={classes.categoryDataContainer}>
+                                      <span>{channels[connection.channel].details[detail].values[valueKey]}</span>
+                                    </div>
+                                  </Grid>
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      );
+                    }
+                    if (channels[connection.channel].details[detail].type === 'boolean') {
+                      return (
+                        <Grid key={`value_${detailIndex}`} item xs={12}>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                disabled={isReadOnly}
+                                checked={connection.details[detail] === undefined ? false : connection.details[detail]}
+                                onChange={(evt, value) => {
+                                  this.props.onChangeDetailValue(detail, value);
+                                }}
+                                value={detail}
+                                color="primary"
+                              />
+                            }
+                            label={channels[connection.channel].details[detail].displayName}
+                          />
+                        </Grid>
+                      );
+                    }
+                    if (channels[connection.channel].details[detail].type === 'textarea') {
+                      return (
+                        <Grid key={`value_${detailIndex}`} container item xs={12}>
                           <Grid item xs={12}>
                             <TextField
+                              disabled={isReadOnly}
                               autoComplete="off"
                               id={detail}
-                              value={
-                                connection.details[detail]
-                                  ? connection.details[detail]
-                                  : ''
-                              }
-                              label={
-                                channels[connection.channel].details[detail]
-                                  .displayName
-                              }
-                              placeholder={
-                                channels[connection.channel].details[detail]
-                                  .description
-                              }
+                              value={connection.details[detail] ? connection.details[detail] : ''}
+                              label={channels[connection.channel].details[detail].displayName}
+                              placeholder={channels[connection.channel].details[detail].description}
                               onChange={evt => {
-                                this.props.onChangeDetailValue(
-                                  detail,
-                                  evt.target.value,
-                                );
+                                this.props.onChangeDetailValue(detail, evt.target.value);
                               }}
                               margin="normal"
                               fullWidth
                               InputLabelProps={{
                                 shrink: true,
                               }}
-                              type={
-                                channels[connection.channel].details[detail]
-                                  .type === 'password'
-                                  ? 'password'
-                                  : (channels[connection.channel].details[detail]
-                                    .type === 'number'
-                                    ? 'number'
-                                    : 'text')
-                              }
+                              type={channels[connection.channel].details[detail].type === 'password' ? 'password' : 'text'}
+                              multiline
+                              rows={4}
                             />
                           </Grid>
                         </Grid>
                       );
-                    },
-                  )
+                    }
+                    return (
+                      <Grid key={`value_${detailIndex}`} container item xs={12}>
+                        <Grid item xs={12}>
+                          <TextField
+                            disabled={isReadOnly}
+                            autoComplete="off"
+                            id={detail}
+                            value={connection.details[detail] ? connection.details[detail] : ''}
+                            label={channels[connection.channel].details[detail].displayName}
+                            placeholder={channels[connection.channel].details[detail].description}
+                            onChange={evt => {
+                              this.props.onChangeDetailValue(detail, evt.target.value);
+                            }}
+                            margin="normal"
+                            fullWidth
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            type={
+                              channels[connection.channel].details[detail].type === 'password'
+                                ? 'password'
+                                : channels[connection.channel].details[detail].type === 'number'
+                                ? 'number'
+                                : 'text'
+                            }
+                          />
+                        </Grid>
+                      </Grid>
+                    );
+                  })
                 ) : (
                   <Typography>
                     <FormattedMessage {...messages.noDetailsInChanell} />
@@ -524,12 +376,7 @@ class DetailsForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {this.props.newConnection ? null : (
-          <DeleteFooter
-            onDelete={this.props.onDelete}
-            type={intl.formatMessage(messages.instanceName)}
-          />
-        )}
+        {this.props.newConnection || isReadOnly ? null : <DeleteFooter onDelete={this.props.onDelete} type={intl.formatMessage(messages.instanceName)} />}
       </Grid>
     );
   }
@@ -546,6 +393,10 @@ DetailsForm.propTypes = {
   errorState: PropTypes.object,
   onDelete: PropTypes.func,
   newConnection: PropTypes.bool,
+  isReadOnly: PropTypes.bool,
 };
 
+DetailsForm.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(DetailsForm));

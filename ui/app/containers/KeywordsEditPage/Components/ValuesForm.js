@@ -1,23 +1,12 @@
-import React from 'react';
-import Immutable from 'seamless-immutable';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import {
-  Grid,
-  Typography,
-  Button,
-  Modal,
-  TextField,
-  InputAdornment,
-} from '@material-ui/core';
+import { Button, Grid, InputAdornment, Modal, TextField, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import ChipInput from 'components/ChipInput';
-
-import messages from '../messages';
-
-import playHelpIcon from '../../../images/play-help-icon.svg';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import ChipInput from '../../../components/ChipInput';
 import DeleteFooter from '../../../components/DeleteFooter';
+import playHelpIcon from '../../../images/play-help-icon.svg';
+import messages from '../messages';
 
 const styles = {
   headerContainer: {
@@ -68,8 +57,7 @@ const styles = {
     width: '80%',
     height: '80%',
     backgroundColor: '#fff',
-    boxShadow:
-      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
+    boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   formContainer: {
     backgroundColor: '#ffffff',
@@ -156,7 +144,7 @@ class ValuesForm extends React.Component {
   };
 
   render() {
-    const { classes, intl, keyword } = this.props;
+    const { classes, intl, keyword, isReadOnly } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -164,16 +152,8 @@ class ValuesForm extends React.Component {
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.valuesFormTitle} />
             </Typography>
-            <Button
-              className={classes.helpButton}
-              variant="outlined"
-              onClick={this.handleOpen}
-            >
-              <img
-                className={classes.playIcon}
-                src={playHelpIcon}
-                alt={intl.formatMessage(messages.playHelpAlt)}
-              />
+            <Button className={classes.helpButton} variant="outlined" onClick={this.handleOpen}>
+              <img className={classes.playIcon} src={playHelpIcon} alt={intl.formatMessage(messages.playHelpAlt)} />
               <span className={classes.helpText}>
                 <FormattedMessage {...messages.help} />
               </span>
@@ -199,54 +179,23 @@ class ValuesForm extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid className={classes.formContainer} container item xs={12}>
-            <Grid
-              className={classes.formSubContainer}
-              id="formContainer"
-              container
-              item
-              xs={12}
-            >
+            <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
               {keyword.examples.map((example, exampleIndex) => (
-                <Grid
-                  key={`value_${exampleIndex}`}
-                  container
-                  justify="space-between"
-                  spacing={24}
-                  item
-                  xs={12}
-                >
-                  <Grid
-                    className={classes.keywordValueInputContainer}
-                    item
-                    xs={3}
-                  >
+                <Grid key={`value_${exampleIndex}`} container justify="space-between" spacing={24} item xs={12}>
+                  <Grid className={classes.keywordValueInputContainer} item xs={3}>
                     <TextField
+                      disabled={isReadOnly}
                       id="exampleValue"
-                      className={
-                        exampleIndex !== 0 ? classes.keywordValueInput : ''
-                      }
+                      className={exampleIndex !== 0 ? classes.keywordValueInput : ''}
                       value={example.value}
-                      label={
-                        exampleIndex === 0
-                          ? intl.formatMessage(
-                            messages.newKeywordValueTextField,
-                          )
-                          : null
-                      }
+                      label={exampleIndex === 0 ? intl.formatMessage(messages.newKeywordValueTextField) : null}
                       placeholder={
                         keyword.type === 'learned'
-                          ? intl.formatMessage(
-                            messages.newKeywordValueTextFieldPlaceholder,
-                          )
-                          : intl.formatMessage(
-                            messages.newKeywordRegexTextFieldPlaceholder,
-                          )
+                          ? intl.formatMessage(messages.newKeywordValueTextFieldPlaceholder)
+                          : intl.formatMessage(messages.newKeywordRegexTextFieldPlaceholder)
                       }
                       onChange={evt => {
-                        this.props.onChangeExampleName(
-                          exampleIndex,
-                          evt.target.value,
-                        );
+                        this.props.onChangeExampleName(exampleIndex, evt.target.value);
                       }}
                       margin="normal"
                       fullWidth
@@ -255,20 +204,11 @@ class ValuesForm extends React.Component {
                       }}
                     />
                   </Grid>
-                  <Grid
-                    className={classes.keywordValueInputContainer}
-                    item
-                    xs={9}
-                  >
+                  <Grid className={classes.keywordValueInputContainer} item xs={9}>
                     <ChipInput
+                      disabled={isReadOnly}
                       value={example.synonyms}
-                      label={
-                        exampleIndex === 0
-                          ? intl.formatMessage(
-                            messages.newKeywordSynonymTextField,
-                          )
-                          : null
-                      }
+                      label={exampleIndex === 0 ? intl.formatMessage(messages.newKeywordSynonymTextField) : null}
                       onAdd={newSyonynm => {
                         this.props.onChangeExampleSynonyms(
                           exampleIndex,
@@ -291,10 +231,7 @@ class ValuesForm extends React.Component {
                       fullWidth
                       disableUnderline
                       classes={{
-                        root:
-                          exampleIndex !== 0
-                            ? classes.chipInputRoot
-                            : classes.chipInputRootFirst,
+                        root: exampleIndex !== 0 ? classes.chipInputRoot : classes.chipInputRootFirst,
                         chipContainer: classes.chipContainer,
                         inputRoot: classes.inputRoot,
                         chip: classes.chip,
@@ -311,28 +248,17 @@ class ValuesForm extends React.Component {
                 </Grid>
               ))}
               <Grid container justify="space-between" spacing={24} item xs={12}>
-                <Grid
-                  className={classes.keywordValueInputContainer}
-                  item
-                  xs={3}
-                >
+                <Grid className={classes.keywordValueInputContainer} item xs={3}>
                   <TextField
+                    disabled={isReadOnly}
                     id="newExampleValue"
-                    label={
-                      keyword.examples.length === 0
-                        ? intl.formatMessage(messages.newKeywordValueTextField)
-                        : null
-                    }
+                    label={keyword.examples.length === 0 ? intl.formatMessage(messages.newKeywordValueTextField) : null}
                     value={this.state.newKeyword}
                     className={classes.keywordValueInput}
                     placeholder={
                       keyword.type === 'learned'
-                        ? intl.formatMessage(
-                          messages.newKeywordValueTextFieldPlaceholder,
-                        )
-                        : intl.formatMessage(
-                          messages.newKeywordRegexTextFieldPlaceholder,
-                        )
+                        ? intl.formatMessage(messages.newKeywordValueTextFieldPlaceholder)
+                        : intl.formatMessage(messages.newKeywordRegexTextFieldPlaceholder)
                     }
                     inputProps={{
                       style: {
@@ -365,10 +291,7 @@ class ValuesForm extends React.Component {
                       ),
                     }}
                     onKeyPress={evt => {
-                      if (
-                        evt.key === 'Enter' &&
-                        this.state.newKeyword.trim() !== ''
-                      ) {
+                      if (evt.key === 'Enter' && this.state.newKeyword.trim() !== '') {
                         evt.preventDefault();
                         this.setState({
                           newKeyword: '',
@@ -390,16 +313,8 @@ class ValuesForm extends React.Component {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    className={
-                      keyword.examples.length !== 0
-                        ? classes.keywordValueInput
-                        : ''
-                    }
-                    helperText={
-                      this.props.errorState.keywordName
-                        ? intl.formatMessage(messages.keywordValuesError)
-                        : ''
-                    }
+                    className={keyword.examples.length !== 0 ? classes.keywordValueInput : ''}
+                    helperText={this.props.errorState.keywordName ? intl.formatMessage(messages.keywordValuesError) : ''}
                     error={this.props.errorState.examples}
                   />
                 </Grid>
@@ -412,12 +327,7 @@ class ValuesForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {this.props.newKeyword ? null : (
-          <DeleteFooter
-            onDelete={this.props.onDelete}
-            type={intl.formatMessage(messages.instanceName)}
-          />
-        )}
+        {this.props.newKeyword || isReadOnly ? null : <DeleteFooter onDelete={this.props.onDelete} type={intl.formatMessage(messages.instanceName)} />}
       </Grid>
     );
   }
@@ -435,6 +345,11 @@ ValuesForm.propTypes = {
   errorState: PropTypes.object,
   onDelete: PropTypes.func,
   newKeyword: PropTypes.bool,
+  isReadOnly: PropTypes.bool,
+};
+
+ValuesForm.defaultProps = {
+  isReadOnly: false,
 };
 
 export default injectIntl(withStyles(styles)(ValuesForm));

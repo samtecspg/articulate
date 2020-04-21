@@ -46,6 +46,7 @@ import {
   TAG_KEYWORD,
   UNTAG_KEYWORD,
   LOAD_ACTIONS_PAGE,
+  UPDATE_SAYING,
 } from '../App/constants';
 import {
   makeSelectAgent,
@@ -158,7 +159,7 @@ export function* getSayings(payload) {
   const { api, filter, page, pageSize, ignoreKeywords = false } = payload;
   const { remainingText, found } = ExtractTokensFromString({
     text: filter,
-    tokens: ['category', 'actions', 'keywords'],
+    tokens: ['category', 'actions', 'keywords', 'actionIssues', 'keywordIssues', 'testTrainTimestamp'],
   });
   const tempFilter =
     filter === ''
@@ -167,6 +168,9 @@ export function* getSayings(payload) {
         category: found.category,
         actions: found.actions,
         keywords: found.keywords,
+        actionIssues: found.actionIssues,
+        keywordIssues: found.keywordIssues,
+        testTrainTimestamp: found.testTrainTimestamp,
         query: remainingText,
       });
   let skip = 0;
@@ -470,6 +474,21 @@ export function* putSayingsPageSize(payload) {
   }
 }
 
+export function* putSayingData(payload) {
+  const { api, saying, field, value } = payload;
+  const mutableSaying = Immutable.asMutable(saying, { deep: true });
+  mutableSaying[field] = value;
+  try {
+    yield call(putSaying, {
+      api,
+      sayingId: saying.id,
+      saying: mutableSaying,
+    });
+  } catch (err) {
+    yield put(updateSayingError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(LOAD_SAYINGS, getSayings);
   yield takeLatest(ADD_SAYING, postSaying);
@@ -488,4 +507,5 @@ export default function* rootSaga() {
   yield takeLatest(CHANGE_ACTIONS_PAGE_SIZE, putActionsPageSize);
   yield takeLatest(CHANGE_SAYING_CATEGORY, changeSayingCategory);
   yield takeLatest(LOAD_ACTIONS_PAGE, getActionsPage);
+  yield takeLatest(UPDATE_SAYING, putSayingData);
 }

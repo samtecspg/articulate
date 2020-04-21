@@ -2,6 +2,9 @@
     "name": "Chat Widget",
     "description": "Chat widget that can be injected in your website",
     "documentation": "https://github.com/samtecspg/articulate/blob/master/api/lib/channels/chat-widget/README.MD",
+    "userField": "sessionId",
+    "receivedTextField": "text",
+    "iconURL": "https://github.com/samtecspg/articulate/blob/master/ui/app/images/chat-widget.svg",
     "details": {
         "title": {
             "displayName": "Widget Name",

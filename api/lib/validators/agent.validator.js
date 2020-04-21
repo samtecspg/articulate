@@ -79,7 +79,14 @@ class AgentValidate {
                     welcomeAction: AgentSchema.welcomeAction,
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
-                    parameters: Joi.object()
+                    parameters: Joi.object(),
+                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet.default(false),
+                    enableAgentVersions: AgentSchema.enableAgentVersions.default(false),
+                    generateSlotsQuickResponses: AgentSchema.generateSlotsQuickResponses,
+                    accessPolicies: AgentSchema.accessPolicies,
+                    generateSlotsQuickResponsesMax: AgentSchema.generateSlotsQuickResponsesMax,
+                    generateActionsQuickResponses: AgentSchema.generateActionsQuickResponses,
+                    generateActionsQuickResponsesMax: AgentSchema.generateActionsQuickResponsesMax,
                 };
             })()
         };
@@ -133,7 +140,7 @@ class AgentValidate {
                     parameters: Joi.object()
                 };
             })()
-        }
+        };
 
         this.createAction = {
             params: (() => {
@@ -290,7 +297,16 @@ class AgentValidate {
                     modifiersRecognizerJustER: AgentSchema.modifiersRecognizerJustER,
                     creationDate: AgentSchema.creationDate,
                     modificationDate: AgentSchema.modificationDate,
-                    parameters: Joi.object()
+                    parameters: Joi.object(),
+                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet,
+                    enableAgentVersions: AgentSchema.enableAgentVersions,
+                    accessPolicies: AgentSchema.accessPolicies,
+                    isOriginalAgentVersion: AgentSchema.isOriginalAgentVersion,
+                    originalAgentVersionId: AgentSchema.originalAgentVersionId,
+                    originalAgentVersionName: AgentSchema.originalAgentVersionName,
+                    agentVersionNotes: AgentSchema.agentVersionNotes.allow(''),
+                    loadedAgentVersionName: AgentSchema.loadedAgentVersionName,
+                    currentAgentVersionCounter: AgentSchema.currentAgentVersionCounter
                 };
             })()
         };
@@ -558,7 +574,46 @@ class AgentValidate {
                     [PARAM_FILTER]: Joi
                         .object()
                         .optional()
-                        .description('Values to filter the the results (experimental)'),
+                        .description('Values to filter the the results (experimental)')
+                };
+            })()
+        };
+
+        this.findAllTrainingTests = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+
+                };
+            })(),
+            query: (() => {
+
+                return {
+                    [PARAM_SKIP]: Joi
+                        .number()
+                        .integer()
+                        .optional()
+                        .description('Number of resources to skip. Default=0'),
+                    [PARAM_LIMIT]: Joi
+                        .number()
+                        .integer()
+                        .optional()
+                        .description('Number of resources to return. Default=50'),
+                    [PARAM_DIRECTION]: Joi
+                        .string()
+                        .optional()
+                        .allow(SORT_ASC, SORT_DESC)
+                        .description('Sort direction. Default= ASC'),
+                    [PARAM_FIELD]: Joi
+                        .string()
+                        .allow(_(DocumentSchema).keys().sort().value())
+                        .optional()
+                        .description('Field to sort with. Default= "timeStamp"'),
+                    [PARAM_FILTER]: Joi
+                        .object()
+                        .optional()
+                        .description('Values to filter the the results (experimental)')
                 };
             })()
         };
@@ -669,7 +724,13 @@ class AgentValidate {
                     }).required().allow([]),
                     actions: SayingSchema.actions.allow([]),
                     creationDate: SayingSchema.creationDate,
-                    modificationDate: SayingSchema.modificationDate
+                    modificationDate: SayingSchema.modificationDate,
+                    starred: SayingSchema.starred.default(false),
+                    lastFailedTestingTimestamp: SayingSchema.lastFailedTestingTimestamp.default(null),
+                    lastFailedTestingKeywords: SayingSchema.lastFailedTestingKeywords.default([]),
+                    lastFailedTestingKeywordsTimeStamp: SayingSchema.lastFailedTestingKeywordsTimeStamp.default(null),
+                    lastFailedTestingActions: SayingSchema.lastFailedTestingActions.default([]),
+                    lastFailedTestingActionsTimeStamp: SayingSchema.lastFailedTestingActionsTimeStamp.default(null),
                 };
             })()
         };
@@ -892,6 +953,8 @@ class AgentValidate {
                     extraTrainingData: AgentSchema.extraTrainingData,
                     enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
                     model: AgentSchema.model,
+                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet,
+                    enableAgentVersions: AgentSchema.enableAgentVersions,
                     parameters: Joi.object(),
                     webhook: {
                         webhookKey: WebhookSchema.webhookKey.required().error(new Error('The webhook key is required. If this is an old export, please add a webhook key to this webhook')),
@@ -960,11 +1023,18 @@ class AgentValidate {
                                 extractor: SayingKeywordSchema.extractor
                             }).required().allow([]),
                             creationDate: KeywordSchema.creationDate,
-                            modificationDate: KeywordSchema.modificationDate
+                            modificationDate: KeywordSchema.modificationDate,
+                            starred: SayingSchema.starred,
+                            lastFailedTestingTimestamp: SayingSchema.lastFailedTestingTimestamp,
+                            lastFailedTestingKeywords: SayingSchema.lastFailedTestingKeywords,
+                            lastFailedTestingKeywordsTimeStamp: SayingSchema.lastFailedTestingKeywordsTimeStamp,
+                            lastFailedTestingActions: SayingSchema.lastFailedTestingActions,
+                            lastFailedTestingActionsTimeStamp: SayingSchema.lastFailedTestingActionsTimeStamp,
                         }),
                         creationDate: KeywordSchema.creationDate,
                         modificationDate: KeywordSchema.modificationDate
                     }),
+                    accessPolicies: Joi.object(),
                     actions: Joi.array().items({
                         actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
                         useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fullfilment.')),
@@ -1013,8 +1083,16 @@ class AgentValidate {
                         creationDate: KeywordSchema.creationDate,
                         modificationDate: KeywordSchema.modificationDate
                     }),
+                    isOriginalAgentVersion: AgentSchema.isOriginalAgentVersion,
+                    originalAgentVersionId: AgentSchema.originalAgentVersionId,
+                    originalAgentVersionName: AgentSchema.originalAgentVersionName,
+                    agentVersionNotes: AgentSchema.agentVersionNotes.allow(''),
+                    loadedAgentVersionName: AgentSchema.loadedAgentVersionName,
+                    currentAgentVersionCounter: AgentSchema.currentAgentVersionCounter,
                     creationDate: KeywordSchema.creationDate,
-                    modificationDate: KeywordSchema.modificationDate
+                    modificationDate: KeywordSchema.modificationDate,
+                    accessPolicies: AgentSchema.accessPolicies,
+                    isVersionImport: Joi.boolean(),
                 };
             })()
         };
@@ -1062,12 +1140,12 @@ class AgentValidate {
                     deletedValues: Joi.array().items({
                         synonym: SayingKeywordSchema.value,
                         keywordName: SayingKeywordSchema.keyword,
-                        keywordId: SayingKeywordSchema.keywordId,
+                        keywordId: SayingKeywordSchema.keywordId
                     }),
                     updatedValues: Joi.array().items({
                         synonym: SayingKeywordSchema.value,
                         keywordName: SayingKeywordSchema.keyword,
-                        keywordId: SayingKeywordSchema.keywordId,
+                        keywordId: SayingKeywordSchema.keywordId
                     })
                 };
             })()
@@ -1085,6 +1163,15 @@ class AgentValidate {
                 return {
                     text: ParseSchema.text.required(),
                     timezone: ParseSchema.timezone
+                };
+            })()
+        };
+
+        this.testTrain = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
                 };
             })()
         };

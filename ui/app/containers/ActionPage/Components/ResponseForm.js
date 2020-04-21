@@ -1,7 +1,8 @@
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
-import PropTypes from 'prop-types';
 import {
   Grid,
   Typography,
@@ -14,18 +15,14 @@ import {
   TableCell,
   InputAdornment,
 } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-
-import ResponseSettings from 'components/ResponseSettings';
-import SingleHighlightedSaying from './SingleHighlightedSaying';
-import ResponseRow from './ResponseRow';
-
-import messages from '../messages';
-
+import DeleteFooter from '../../../components/DeleteFooter';
+import ResponseSettings from '../../../components/ResponseSettings';
 import playHelpIcon from '../../../images/play-help-icon.svg';
 import singleQuotesIcon from '../../../images/single-quotes-icon.svg';
+import messages from '../messages';
+import ResponseRow from './ResponseRow';
+import SingleHighlightedSaying from './SingleHighlightedSaying';
 import trashIcon from '../../../images/trash-icon.svg';
-import DeleteFooter from '../../../components/DeleteFooter';
 
 const styles = {
   headerContainer: {
@@ -76,8 +73,7 @@ const styles = {
     width: '80%',
     height: '80%',
     backgroundColor: '#fff',
-    boxShadow:
-      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
+    boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   formContainer: {
     backgroundColor: '#ffffff',
@@ -177,7 +173,9 @@ class ResponseForm extends React.Component {
   }
 
   render() {
-    const { classes, intl, action, postFormat, richResponses } = this.props;
+
+    const { classes, intl, action, postFormat, agentSettings, isReadOnly, richResponses } = this.props;
+
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -185,16 +183,8 @@ class ResponseForm extends React.Component {
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.responseFormTitle} />
             </Typography>
-            <Button
-              className={classes.helpButton}
-              variant="outlined"
-              onClick={this.handleOpen}
-            >
-              <img
-                className={classes.playIcon}
-                src={playHelpIcon}
-                alt={intl.formatMessage(messages.playHelpAlt)}
-              />
+            <Button className={classes.helpButton} variant="outlined" onClick={this.handleOpen}>
+              <img className={classes.playIcon} src={playHelpIcon} alt={intl.formatMessage(messages.playHelpAlt)} />
               <span className={classes.helpText}>
                 <FormattedMessage {...messages.help} />
               </span>
@@ -215,11 +205,9 @@ class ResponseForm extends React.Component {
           {this.props.saying.userSays ? (
             <Grid className={classes.formDescriptionContainer} container>
               <Typography className={classes.formDescription}>
-                <img
-                  className={classes.singleQuotesIcon}
-                  src={singleQuotesIcon}
-                />
+                <img className={classes.singleQuotesIcon} src={singleQuotesIcon} />
                 <SingleHighlightedSaying
+                  isReadOnly={isReadOnly}
                   agentKeywords={this.props.agentKeywords}
                   keywords={this.props.saying.keywords}
                   text={this.props.saying.userSays}
@@ -232,22 +220,14 @@ class ResponseForm extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid className={classes.formContainer} container item xs={12}>
-            <Grid
-              className={classes.formSubContainer}
-              id="formContainer"
-              container
-              item
-              xs={12}
-            >
+            <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
               <Grid container spacing={24} item xs={12}>
                 <Grid item xs={12}>
                   <TextField
                     id="newResponse"
                     value={this.props.newResponse}
                     label={intl.formatMessage(messages.responseTextField)}
-                    placeholder={intl.formatMessage(
-                      messages.responseTextFieldPlaceholder,
-                    )}
+                    placeholder={intl.formatMessage(messages.responseTextFieldPlaceholder)}
                     onKeyPress={ev => {
                       if (ev.key === 'Enter' && ev.target.value.trim() !== '') {
                         ev.preventDefault();
@@ -263,22 +243,21 @@ class ResponseForm extends React.Component {
                       shrink: true,
                     }}
                     inputProps={{
+                      disabled: isReadOnly,
                       style: {
                         border: 'none',
                       },
                     }}
                     InputProps={{
                       className: classes.sayingInputContainer,
-                      endAdornment: (
+                      endAdornment: !isReadOnly && (
                         <InputAdornment position="end">
                           <span
                             className={classes.responseEnter}
                             onClick={ev => {
                               if (this.props.newResponse.trim() !== '') {
                                 ev.preventDefault();
-                                this.props.onAddResponse(
-                                  this.props.newResponse,
-                                );
+                                this.props.onAddResponse(this.props.newResponse);
                                 this.props.onUpdateNewResponse('');
                               }
                             }}
@@ -298,6 +277,7 @@ class ResponseForm extends React.Component {
                           <TableRow key={`${response}_${responseIndex}`}>
                             <TableCell>
                               <ResponseRow
+                                isReadOnly={isReadOnly}
                                 agentId={this.props.agentId}
                                 response={response}
                                 responseIndex={responseIndex}
@@ -318,14 +298,13 @@ class ResponseForm extends React.Component {
                                 onCopyResponse={this.props.onCopyResponse}
                                 onDeleteResponse={this.props.onDeleteResponse}
                                 onSearchActions={this.props.onSearchActions}
-                                agentFilteredActions={
-                                  this.props.agentFilteredActions
-                                }
+                                agentFilteredActions={this.props.agentFilteredActions}
                                 onGoToUrl={this.props.onGoToUrl}
                                 richResponses={richResponses}
                                 onAddRichResponse={this.props.onAddRichResponse}
                                 onDeleteRichResponse={this.props.onDeleteRichResponse}
                                 onEditRichResponse={this.props.onEditRichResponse}
+                                agentSettings={agentSettings}
                               />
                             </TableCell>
                           </TableRow>
@@ -356,6 +335,7 @@ class ResponseForm extends React.Component {
                       shrink: true,
                     }}
                     inputProps={{
+                      disabled: isReadOnly,
                       style: {
                         border: 'none',
                       },
@@ -375,6 +355,7 @@ class ResponseForm extends React.Component {
                         </InputAdornment>
                       ),
                     }}
+                    helperText={agentSettings.generateActionsQuickResponses ? intl.formatMessage(messages.automaticQuickResponsesActivated) : ''}
                     error={
                       this.props.errorState
                         ? this.props.errorState.quickResponses
@@ -410,13 +391,12 @@ class ResponseForm extends React.Component {
                     <FormattedMessage {...messages.postFormatTitle} />
                   </Typography>
                   <ResponseSettings
+                    isReadOnly={isReadOnly}
                     postFormat={postFormat}
                     usePostFormat={action.usePostFormat}
                     onChangeUsePostFormatData={this.props.onChangeActionData}
                     onChangePostFormatData={this.props.onChangePostFormatData}
-                    responseSettingDescription={
-                      messages.responseFormDescription
-                    }
+                    responseSettingDescription={messages.responseFormDescription}
                     errorState={this.props.errorState}
                   />
                 </Grid>
@@ -424,12 +404,7 @@ class ResponseForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {this.props.newAction ? null : (
-          <DeleteFooter
-            onDelete={this.props.onDelete}
-            type={intl.formatMessage(messages.instanceName)}
-          />
-        )}
+        {isReadOnly || this.props.newAction ? null : <DeleteFooter onDelete={this.props.onDelete} type={intl.formatMessage(messages.instanceName)} />}
       </Grid>
     );
   }
@@ -459,8 +434,14 @@ ResponseForm.propTypes = {
   onSearchActions: PropTypes.func,
   onGoToUrl: PropTypes.func,
   agentId: PropTypes.string,
+  isReadOnly: PropTypes.bool,
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
+  agentSettings: PropTypes.object,
+};
+
+ResponseForm.defaultProps = {
+  isReadOnly: false,
   richResponses: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   onAddRichResponse: PropTypes.func.isRequired,
   onDeleteRichResponse: PropTypes.func.isRequired,

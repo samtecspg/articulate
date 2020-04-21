@@ -136,6 +136,8 @@ class Form extends React.Component {
     const chipValuesPickedG1 = this.props.dialoguePageFilterActions;
     const textFilterValue = this.props.dialoguePageFilterSearchSaying;
     const chipValuesPickedG2 = this.props.dialoguePageFilterKeywords;
+    const issuesChipValuePickedG1 = this.props.dialoguePageFilterActionIssues;
+    const issuesChipValuePickedG2 = this.props.dialoguePageFilterKeywordIssues;
 
 
     var filter = '';
@@ -156,12 +158,24 @@ class Form extends React.Component {
       filter = filter + chipValuesPickedG2.join('" keywords:"')
       filter = filter + '"';
     }
+
+    if (issuesChipValuePickedG1) {
+      filter = filter + ' actionIssues:"'
+      filter = filter + ['true'].join('" actionIssues:"')
+      filter = filter + '"';
+    }
+
+    if (issuesChipValuePickedG2) {
+      filter = filter + ' keywordIssues:"'
+      filter = filter + ['true'].join('" keywordIssues:"')
+      filter = filter + '"';
+    }
     this.props.onChangeDialoguePageFilterString(filter);
     this.props.onSearchSaying(true);
   }
 
   render() {
-    const { classes, intl } = this.props;
+    const { classes, intl, isReadOnly } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -291,12 +305,21 @@ class Form extends React.Component {
                   chipsFilterLabelG2={intl.formatMessage(messages.pickKeywords)}
                   onChangeChipValuesPickedG2={this.props.onChangeDialoguePageFilterKeywords}
                   chipValuesPickedG2={this.props.dialoguePageFilterKeywords}
+                  showIssuesChipG1={true}
+                  onChangeIssuesChipValuesPickedG1={this.props.onChangeDialoguePageFilterActionIssues}
+                  issuesChipValuePickedG1={this.props.dialoguePageFilterActionIssues}
+                  showIssuesChipG2={true}
+                  onChangeIssuesChipValuesPickedG2={this.props.onChangeDialoguePageFilterKeywordIssues}
+                  issuesChipValuePickedG2={this.props.dialoguePageFilterKeywordIssues}
+
+
                 />
               )}
             </Grid>
           </Grid>
           {this.props.selectedTab === 'sayings' && (
             <SayingsDataForm
+              isReadOnly={isReadOnly}
               agentId={this.props.agentId}
               sayings={this.props.sayings}
               sayingsPageSize={this.props.sayingsPageSize}
@@ -332,10 +355,14 @@ class Form extends React.Component {
               onSearchActions={this.props.onSearchActions}
               newSayingActions={this.props.newSayingActions}
               onClearSayingToAction={this.props.onClearSayingToAction}
+              onToggleConversationBar={this.props.onToggleConversationBar}
+              onSendMessage={this.props.onSendMessage}
+              trainTest={this.props.trainTest}
             />
           )}
           {this.props.selectedTab === 'keywords' && (
             <KeywordsDataForm
+              isReadOnly={isReadOnly}
               agentId={this.props.agentId}
               keywords={this.props.agentKeywords}
               onCreateKeyword={this.props.onCreateKeyword}
@@ -354,6 +381,7 @@ class Form extends React.Component {
           )}
           {this.props.selectedTab === 'actions' && (
             <ActionsDataForm
+              isReadOnly={isReadOnly}
               agentId={this.props.agentId}
               actionsPage={this.props.actionsPage}
               onCreateAction={this.props.onCreateAction}
@@ -425,6 +453,7 @@ Form.propTypes = {
   selectedTab: PropTypes.string,
   handleTabChange: PropTypes.func,
   onChangeSayingCategory: PropTypes.func,
+  isReadOnly: PropTypes.bool,
   onChangeDialoguePageFilterSearchSaying: PropTypes.func,
   dialoguePageFilterSearchSaying: PropTypes.string,
   onChangeDialoguePageFilterCategory: PropTypes.func,
@@ -440,6 +469,18 @@ Form.propTypes = {
   onResetDialoguePageFilters: PropTypes.func,
   onChangeDialoguePageFilterKeywords: PropTypes.func,
   dialoguePageFilterKeywords: PropTypes.array,
+  onChangeDialoguePageFilterKeywordIssues: PropTypes.func,
+  dialoguePageFilterKeywordIssues: PropTypes.bool,
+  onChangeDialoguePageFilterActionIssues: PropTypes.func,
+  dialoguePageFilterActionIssues: PropTypes.bool,
+  onToggleConversationBar: PropTypes.func,
+  onSendMessage: PropTypes.func,
+  trainTest: PropTypes.object
 };
+
+Form.defaultProps = {
+  isReadOnly: false,
+};
+
 
 export default injectIntl(withStyles(styles)(Form));

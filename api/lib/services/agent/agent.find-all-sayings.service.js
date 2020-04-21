@@ -9,7 +9,7 @@ import RedisErrorHandler from '../../errors/redis.error-handler';
 
 module.exports = async function ({ id, loadCategoryId, skip, limit, direction, field, filter = {} }) {
 
-    const { globalService } = await this.server.services();
+    const { globalService, trainingTestService } = await this.server.services();
     const { redis } = this.server.app;
 
     try {
@@ -19,6 +19,8 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
             category: categoryFilter = [],
             actions: actionFilter = [],
             keywords: keywordFilter = [],
+            actionIssues: actionIssues = [],
+            keywordIssues: keywordIssues = [],
             query,
             ...restOfFilters
         } = filter;
@@ -37,6 +39,8 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
         categoryFilter = _.isArray(categoryFilter) ? categoryFilter : [categoryFilter];
         actionFilter = _.isArray(actionFilter) ? actionFilter : [actionFilter];
         keywordFilter = _.isArray(keywordFilter) ? keywordFilter : [keywordFilter];
+        actionIssues = _.isArray(actionIssues) ? actionIssues : [actionIssues];
+        keywordIssues = _.isArray(keywordIssues) ? keywordIssues : [keywordIssues];
         let filteredSayings = allSayings;
         if (categoryFilter.length > 0) {
             filteredSayings = filteredSayings.filter((saying) => {
@@ -56,6 +60,29 @@ module.exports = async function ({ id, loadCategoryId, skip, limit, direction, f
                 let keywordsNames = saying.keywords.map(keyword => { return keyword.keyword });
                 return keywordFilter.some(fil => keywordsNames.indexOf(fil) !== -1) ? saying : undefined
             })
+        }
+
+        if (actionIssues.length > 0 || keywordIssues.length > 0) {
+            let maxFailedTestingTimestamp = await trainingTestService.findByAgentId({ agentId: id, limit: 1 });
+            if (maxFailedTestingTimestamp.data && maxFailedTestingTimestamp.data.length > 0) {
+                maxFailedTestingTimestamp = maxFailedTestingTimestamp.data[0]._source.timeStamp
+                filteredSayings = filteredSayings.filter((saying) => {
+                    //For multi actions
+                    let flatLastFailedTestingActions = saying.lastFailedTestingActions.map(failAction => { if (failAction.includes('+__+')) { return failAction.split('+__+') } else { return failAction } }).flat();
+                    return (Number(saying.lastFailedTestingTimestamp) === maxFailedTestingTimestamp
+                        && (
+                            (actionIssues.length > 0 &&
+                                Number(saying.lastFailedTestingActionsTimeStamp) === maxFailedTestingTimestamp &&
+                                (actionFilter.length > 0 ? actionFilter.some(fil => flatLastFailedTestingActions.indexOf(fil) !== -1) : true)
+                            )
+                            ||
+                            (keywordIssues.length > 0 &&
+                                Number(saying.lastFailedTestingKeywordsTimeStamp) === maxFailedTestingTimestamp &&
+                                (keywordFilter.length > 0 ? keywordFilter.some(fil => saying.lastFailedTestingKeywords.indexOf(fil) !== -1) : true)
+                            )
+                        )) ? saying : undefined
+                })
+            }
         }
 
         const SayingModel = await redis.factory(MODEL_SAYING);

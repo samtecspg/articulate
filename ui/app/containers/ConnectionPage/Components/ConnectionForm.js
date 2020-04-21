@@ -1,34 +1,19 @@
-import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import {
-  Grid,
-  Typography,
-  Button,
-  Modal,
-  TextField,
-  MenuItem,
-  InputLabel,
-  FormControl,
-} from '@material-ui/core';
+import { Button, FormControl, Grid, InputLabel, MenuItem, Modal, TextField, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import _ from 'lodash';
-import { PROXY_ROUTE_PREFIX } from '../../../../common/constants';
-
-import messages from '../messages';
-
-import playHelpIcon from '../../../images/play-help-icon.svg';
-import DeleteFooter from '../../../components/DeleteFooter';
-import actionsJSON from './actions.json';
-import ChannelCard from './ChannelCard';
-import gravatars from '../../../components/Gravatar';
-
-import brace from 'brace';
-import AceEditor from 'react-ace';
-
 import 'brace/mode/html';
 import 'brace/theme/terminal';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import AceEditor from 'react-ace';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import { PROXY_ROUTE_PREFIX } from '../../../../common/constants';
+import DeleteFooter from '../../../components/DeleteFooter';
+import gravatars from '../../../components/Gravatar';
+import playHelpIcon from '../../../images/play-help-icon.svg';
+import messages from '../messages';
+import actionsJSON from './actions.json';
+import ChannelCard from './ChannelCard';
 
 const styles = {
   headerContainer: {
@@ -79,8 +64,7 @@ const styles = {
     width: '80%',
     height: '80%',
     backgroundColor: '#fff',
-    boxShadow:
-      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
+    boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   formContainer: {
     backgroundColor: '#ffffff',
@@ -103,7 +87,7 @@ const styles = {
   },
   cardsLabel: {
     marginTop: '20px',
-    marginBottom: '10px'
+    marginBottom: '10px',
   },
   agentIcon: {
     marginRight: '5px',
@@ -119,7 +103,7 @@ const styles = {
   },
   editor: {
     marginTop: '30px',
-  }
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -140,11 +124,9 @@ class ConnectionForm extends React.Component {
       const { queryPatterns } = connection.details;
       const clonedAction = _.cloneDeep(actionsJSON);
       clonedAction.actions[0].intent.trigger.queryPatterns = queryPatterns;
-      clonedAction.conversations.articulate_intent.url = `${
-        window.location.protocol
-        }//${window.location.hostname}${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${
-        connection.id
-        }/external`;
+      clonedAction.conversations.articulate_intent.url = `${window.location.protocol}//${window.location.hostname}${
+        window.location.port === 80 ? null : window.location.port ? `:${window.location.port}` : ''
+      }${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external`;
       this.setState({
         actionExport: clonedAction,
       });
@@ -175,9 +157,7 @@ class ConnectionForm extends React.Component {
   };
 
   fillEmptyCards() {
-    const numberOfPrebuiltChannels = Object.keys(
-      this.props.channels,
-    ).length;
+    const numberOfPrebuiltChannels = Object.keys(this.props.channels).length;
     const numberOfEmptyCardsNeeded = 4 - (numberOfPrebuiltChannels % 4);
     const emptyCards = [];
     for (let index = 0; index < numberOfEmptyCardsNeeded; index++) {
@@ -187,7 +167,7 @@ class ConnectionForm extends React.Component {
   }
 
   render() {
-    const { classes, intl, connection, channels, agents } = this.props;
+    const { classes, intl, connection, channels, agents, isReadOnly } = this.props;
 
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
@@ -196,16 +176,8 @@ class ConnectionForm extends React.Component {
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.connectionFormTitle} />
             </Typography>
-            <Button
-              className={classes.helpButton}
-              variant="outlined"
-              onClick={this.handleOpen}
-            >
-              <img
-                className={classes.playIcon}
-                src={playHelpIcon}
-                alt={intl.formatMessage(messages.playHelpAlt)}
-              />
+            <Button className={classes.helpButton} variant="outlined" onClick={this.handleOpen}>
+              <img className={classes.playIcon} src={playHelpIcon} alt={intl.formatMessage(messages.playHelpAlt)} />
               <span className={classes.helpText}>
                 <FormattedMessage {...messages.help} />
               </span>
@@ -231,16 +203,11 @@ class ConnectionForm extends React.Component {
         </Grid>
         <Grid item xs={12}>
           <Grid className={classes.formContainer} container item xs={12}>
-            <Grid
-              className={classes.formSubContainer}
-              id="formContainer"
-              container
-              item
-              xs={12}
-            >
+            <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
               <Grid container item xs={12}>
                 <Grid item md={12} sm={12} xs={12}>
                   <TextField
+                    disabled={isReadOnly}
                     select
                     id="agent"
                     value={connection.agent || 'select'}
@@ -250,10 +217,7 @@ class ConnectionForm extends React.Component {
                         this.props.onChangeConnectionData('agent', '');
                         this.props.onResetActions();
                       } else {
-                        this.props.onChangeConnectionData(
-                          'agent',
-                          parseInt(evt.target.value),
-                        );
+                        this.props.onChangeConnectionData('agent', parseInt(evt.target.value));
                         this.props.onLoadActions(evt.target.value);
                       }
                     }}
@@ -275,9 +239,12 @@ class ConnectionForm extends React.Component {
                             color: agent.uiColor,
                             className: classes.agentIcon,
                           })}
-                          <span style={{
-                            color: agent.uiColor,
-                          }} className={classes.agentName}>
+                          <span
+                            style={{
+                              color: agent.uiColor,
+                            }}
+                            className={classes.agentName}
+                          >
                             {agent.agentName}
                           </span>
                         </span>
@@ -285,61 +252,55 @@ class ConnectionForm extends React.Component {
                     ))}
                   </TextField>
                 </Grid>
-                <InputLabel className={classes.cardsLabel} shrink>Pick a chat platform:</InputLabel>
+                <InputLabel className={classes.cardsLabel} shrink>
+                  Pick a chat platform:
+                </InputLabel>
                 <Grid container spacing={16} justify="space-between" item md={12} sm={12} xs={12}>
-                  {Object.keys(channels).map(
-                    (channel, index) => (
-                      <ChannelCard
-                        disabled={!connection.agent || !this.props.newConnection}
-                        selected={channel === connection.channel}
-                        channelKey={channel}
-                        key={`channel_${index}`}
-                        channel={channels[channel]}
-                        onClick={() => {
-                          if (connection.agent && this.props.newConnection) {
-                            this.props.onChangeConnectionData(
-                              'channel',
-                              channel,
-                            );
-                          }
-                        }}
-                      />
-                    ),
-                  )}
+                  {Object.keys(channels).map((channel, index) => (
+                    <ChannelCard
+                      disabled={!connection.agent || !this.props.newConnection}
+                      selected={channel === connection.channel}
+                      channelKey={channel}
+                      key={`channel_${index}`}
+                      channel={channels[channel]}
+                      onClick={() => {
+                        if (connection.agent && this.props.newConnection) {
+                          this.props.onChangeConnectionData('channel', channel);
+                        }
+                      }}
+                    />
+                  ))}
                   {this.fillEmptyCards()}
                 </Grid>
               </Grid>
-              {!this.props.newConnection ? (connection.channel === 'web-demo' ?
-                <Grid container item xs={12}>
-                  <Grid item xs={12}>
-                    <TextField
-                      id="shareLink"
-                      value={`${window.location.protocol}//${
-                        window.location.hostname
-                        }${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}/demo/${
-                        connection.id
-                        }`}
-                      label={intl.formatMessage(messages.shareUrl)}
-                      margin="normal"
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      disabled
-                      inputProps={{
-                        className: classes.disabledFields,
-                      }}
-                    />
+              {!this.props.newConnection ? (
+                connection.channel === 'web-demo' ? (
+                  <Grid container item xs={12}>
+                    <Grid item xs={12}>
+                      <TextField
+                        id="shareLink"
+                        value={`${window.location.protocol}//${window.location.hostname}${
+                          window.location.port === 80 ? null : window.location.port ? `:${window.location.port}` : ''
+                        }/demo/${connection.id}`}
+                        label={intl.formatMessage(messages.shareUrl)}
+                        margin="normal"
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        disabled
+                        inputProps={{
+                          className: classes.disabledFields,
+                        }}
+                      />
+                    </Grid>
                   </Grid>
-                </Grid> :
-                (connection.channel === 'chat-widget' ?
+                ) : connection.channel === 'chat-widget' ? (
                   <Grid container item xs={12}>
                     <Grid item xs={12}>
                       <TextField
                         id="socketUrl"
-                        value={`ws://${
-                          window.location.hostname
-                          }:7500`}
+                        value={`ws://${window.location.hostname}:7500`}
                         label={intl.formatMessage(messages.socketUrl)}
                         margin="normal"
                         fullWidth
@@ -355,9 +316,7 @@ class ConnectionForm extends React.Component {
                     <Grid item xs={12}>
                       <TextField
                         id="socketPath"
-                        value={`/connection/${
-                          connection.id
-                          }/external`}
+                        value={`/connection/${connection.id}/external`}
                         label={intl.formatMessage(messages.socketPath)}
                         margin="normal"
                         fullWidth
@@ -373,11 +332,9 @@ class ConnectionForm extends React.Component {
                     <Grid item xs={12}>
                       <TextField
                         id="converseUrl"
-                        value={`${window.location.protocol}//${
-                          window.location.hostname
-                          }${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${
-                          connection.id
-                          }/external`}
+                        value={`${window.location.protocol}//${window.location.hostname}${
+                          window.location.port === 80 ? null : window.location.port ? `:${window.location.port}` : ''
+                        }${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external`}
                         label={intl.formatMessage(messages.converseUrl)}
                         margin="normal"
                         fullWidth
@@ -445,16 +402,15 @@ class ConnectionForm extends React.Component {
                         }}
                       />
                     </Grid>
-                  </Grid> :
-                  (<Grid container item xs={12}>
+                  </Grid>
+                ) : (
+                  <Grid container item xs={12}>
                     <Grid item xs={12}>
                       <TextField
                         id="callbackUrl"
-                        value={`${window.location.protocol}//${
-                          window.location.hostname
-                          }${window.location.port === 80 ? null : (window.location.port ? `:${window.location.port}` : '')}${PROXY_ROUTE_PREFIX}/connection/${
-                          connection.id
-                          }/external`}
+                        value={`${window.location.protocol}//${window.location.hostname}${
+                          window.location.port === 80 ? null : window.location.port ? `:${window.location.port}` : ''
+                        }${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external`}
                         label={intl.formatMessage(messages.callbackUrl)}
                         margin="normal"
                         fullWidth
@@ -489,9 +445,7 @@ class ConnectionForm extends React.Component {
                       <Grid item xs={12}>
                         <Button
                           variant="contained"
-                          href={`data: text/json;charset=utf-8,${encodeURIComponent(
-                            JSON.stringify(this.state.actionExport, null, 2),
-                          )}`}
+                          href={`data: text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state.actionExport, null, 2))}`}
                           download="actions.json"
                           style={{
                             marginTop: '20px',
@@ -502,16 +456,12 @@ class ConnectionForm extends React.Component {
                       </Grid>
                     ) : null}
                   </Grid>
-                  ))) : null}
+                )
+              ) : null}
             </Grid>
           </Grid>
         </Grid>
-        {this.props.newConnection ? null : (
-          <DeleteFooter
-            onDelete={this.props.onDelete}
-            type={intl.formatMessage(messages.instanceName)}
-          />
-        )}
+        {this.props.newConnection ? null : <DeleteFooter onDelete={this.props.onDelete} type={intl.formatMessage(messages.instanceName)} />}
       </Grid>
     );
   }
@@ -529,6 +479,11 @@ ConnectionForm.propTypes = {
   newConnection: PropTypes.bool,
   onLoadActions: PropTypes.func,
   onResetActions: PropTypes.func,
+  isReadOnly: PropTypes.bool,
+};
+
+ConnectionForm.defaultProps = {
+  isReadOnly: false,
 };
 
 export default injectIntl(withStyles(styles)(ConnectionForm));

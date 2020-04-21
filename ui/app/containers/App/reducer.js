@@ -1,5 +1,7 @@
-import Immutable from 'seamless-immutable';
+import _ from 'lodash';
 import material from 'material-colors';
+import Immutable from 'seamless-immutable';
+import { DEFAULT_LOCALE } from '../../i18n';
 import {
   ADD_ACTION,
   ADD_ACTION_ERROR,
@@ -10,15 +12,21 @@ import {
   ADD_AGENT,
   ADD_AGENT_ERROR,
   ADD_AGENT_FALLBACK,
+  ADD_AGENT_PARAMETER,
   ADD_AGENT_SUCCESS,
+  ADD_CATEGORY_PARAMETER,
   ADD_FALLBACK,
   ADD_HEADER_ACTION_WEBHOOK,
   ADD_HEADER_AGENT_WEBHOOK,
   ADD_KEYWORD_EXAMPLE,
+  ADD_MODIFIER_SAYING,
+  ADD_MODIFIER_SAYING_SUCCESS,
+  ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+  ADD_NEW_MODIFIER,
+  ADD_NEW_QUICK_RESPONSE,
   ADD_SAYING,
   ADD_SAYING_ERROR,
-  UPDATE_NEW_RESPONSE,
-  COPY_RESPONSE,
+  ADD_SLOT_TEXT_PROMPT_SLOT,
   CHAIN_ACTION_TO_RESPONSE,
   CHANGE_ACTION_DATA,
   CHANGE_ACTION_NAME,
@@ -27,12 +35,14 @@ import {
   CHANGE_ACTION_WEBHOOK_PAYLOAD_TYPE,
   CHANGE_AGENT_DATA,
   CHANGE_AGENT_NAME,
-  CHANGE_AGENT_SETTINGS_DATA,
-  ADD_AGENT_PARAMETER,
-  DELETE_AGENT_PARAMETER,
   CHANGE_AGENT_PARAMETER_NAME,
   CHANGE_AGENT_PARAMETER_VALUE,
+  CHANGE_AGENT_SETTINGS_DATA,
   CHANGE_CATEGORY_DATA,
+  CHANGE_CATEGORY_PARAMETER_NAME,
+  CHANGE_CATEGORY_PARAMETER_VALUE,
+  CHANGE_CONNECTION_DATA,
+  CHANGE_DETAIL_VALUE,
   CHANGE_EXAMPLE_NAME,
   CHANGE_EXAMPLE_SYNONYMS,
   CHANGE_HEADER_KEY_ACTION_WEBHOOK,
@@ -40,18 +50,30 @@ import {
   CHANGE_HEADER_VALUE_ACTION_WEBHOOK,
   CHANGE_HEADER_VALUE_AGENT_WEBHOOK,
   CHANGE_KEYWORD_DATA,
+  CHANGE_LOCALE,
+  CHANGE_MODIFIER_DATA,
+  CHANGE_MODIFIER_NAME,
   CHANGE_POST_FORMAT_DATA,
+  CHANGE_QUICK_RESPONSE,
   CHANGE_SETTINGS_DATA,
+  CHANGE_SLOT_DATA,
+  CHANGE_SLOT_NAME,
+  CHANGE_USER_DATA,
   CHANGE_WEBHOOK_DATA,
   CHANGE_WEBHOOK_PAYLOAD_TYPE,
   CHECK_API,
   CLEAR_SAYING_TO_ACTION,
   CLOSE_NOTIFICATION,
+  CLOSE_TEST_TRAIN_NOTIFICATION,
+  COPY_RESPONSE,
   COPY_SAYING_ERROR,
   COPY_SAYING_SUCCESS,
   CREATE_CATEGORY,
   CREATE_CATEGORY_ERROR,
   CREATE_CATEGORY_SUCCESS,
+  CREATE_CONNECTION,
+  CREATE_CONNECTION_ERROR,
+  CREATE_CONNECTION_SUCCESS,
   CREATE_KEYWORD,
   CREATE_KEYWORD_ERROR,
   CREATE_KEYWORD_SUCCESS,
@@ -64,10 +86,15 @@ import {
   DELETE_AGENT,
   DELETE_AGENT_ERROR,
   DELETE_AGENT_FALLBACK,
+  DELETE_AGENT_PARAMETER,
   DELETE_AGENT_SUCCESS,
   DELETE_CATEGORY,
   DELETE_CATEGORY_ERROR,
+  DELETE_CATEGORY_PARAMETER,
   DELETE_CATEGORY_SUCCESS,
+  DELETE_CONNECTION,
+  DELETE_CONNECTION_ERROR,
+  DELETE_CONNECTION_SUCCESS,
   DELETE_FALLBACK,
   DELETE_HEADER_ACTION_WEBHOOK,
   DELETE_HEADER_AGENT_WEBHOOK,
@@ -75,106 +102,163 @@ import {
   DELETE_KEYWORD_ERROR,
   DELETE_KEYWORD_EXAMPLE,
   DELETE_KEYWORD_SUCCESS,
+  DELETE_MODIFIER,
+  DELETE_MODIFIER_SAYING,
+  DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
+  DELETE_QUICK_RESPONSE,
   DELETE_SAYING,
   DELETE_SAYING_ERROR,
-  LOAD_ACTION,
-  LOAD_ACTION_ERROR,
-  LOAD_ACTION_SUCCESS,
-  RESET_ACTIONS,
-  LOAD_ACTIONS,
-  LOAD_ACTIONS_ERROR,
-  LOAD_ACTIONS_SUCCESS,
-  LOAD_ACTIONS_PAGE,
-  LOAD_ACTIONS_PAGE_ERROR,
-  LOAD_ACTIONS_PAGE_SUCCESS,
-  LOAD_AGENT,
-  LOAD_AGENT_DOCUMENTS_ERROR,
-  LOAD_AGENT_DOCUMENTS_SUCCESS,
-  LOAD_LOGS,
-  LOAD_LOGS_ERROR,
-  LOAD_LOGS_SUCCESS,
-  LOAD_AGENT_STATS_ERROR,
-  LOAD_AGENT_STATS_SUCCESS,
-  LOAD_AGENT_ERROR,
-  LOAD_AGENT_SUCCESS,
-  SET_AGENT_DEFAULTS,
-  LOAD_AGENTS,
-  LOAD_AGENTS_ERROR,
-  LOAD_AGENTS_SUCCESS,
-  LOAD_CONNECTIONS,
-  LOAD_CONNECTIONS_ERROR,
-  LOAD_CONNECTIONS_SUCCESS,
-  LOAD_CHANNELS,
-  LOAD_CHANNELS_ERROR,
-  LOAD_CHANNELS_SUCCESS,
+  DELETE_SESSION,
+  DELETE_SESSION_ERROR,
+  DELETE_SESSION_SUCCESS,
+  DELETE_SLOT,
+  DELETE_SLOT_TEXT_PROMPT_SLOT,
+  DELETE_USER,
+  DELETE_USER_ERROR,
+  DELETE_USER_SUCCESS,
+  EDIT_ACTION_RESPONSE,
+  EDIT_SLOT_TEXT_PROMPT,
   EXPORT_AGENT,
   EXPORT_AGENT_ERROR,
   EXPORT_AGENT_SUCCESS,
   IMPORT_AGENT,
   IMPORT_AGENT_ERROR,
   IMPORT_AGENT_SUCCESS,
+  IMPORT_CATEGORY,
+  IMPORT_CATEGORY_ERROR,
+  IMPORT_CATEGORY_SUCCESS,
+  LOAD_ACCESS_CONTROL,
+  LOAD_ACCESS_CONTROL_ERROR,
+  LOAD_ACCESS_CONTROL_SUCCESS,
+  LOAD_ACTION,
+  LOAD_ACTION_ERROR,
+  LOAD_ACTION_SUCCESS,
+  LOAD_ACTIONS,
+  LOAD_ACTIONS_ERROR,
+  LOAD_ACTIONS_PAGE,
+  LOAD_ACTIONS_PAGE_ERROR,
+  LOAD_ACTIONS_PAGE_SUCCESS,
+  LOAD_ACTIONS_SUCCESS,
+  LOAD_AGENT,
+  LOAD_AGENT_DOCUMENTS_ERROR,
+  LOAD_AGENT_DOCUMENTS_SUCCESS,
+  LOAD_AGENT_ERROR,
+  LOAD_AGENT_SESSIONS_ERROR,
+  LOAD_AGENT_SESSIONS_SUCCESS,
+  LOAD_AGENT_STATS_ERROR,
+  LOAD_AGENT_STATS_SUCCESS,
+  LOAD_AGENT_SUCCESS,
+  LOAD_AGENTS,
+  LOAD_AGENTS_ERROR,
+  LOAD_AGENT_VERSIONS,
+  LOAD_AGENT_VERSIONS_ERROR,
+  LOAD_AGENT_VERSIONS_SUCCESS,
+  LOAD_AGENT_VERSION,
+  LOAD_AGENT_VERSION_SUCCESS,
+  LOAD_AGENT_VERSION_ERROR,
+  LOAD_AGENTS_SUCCESS,
   LOAD_CATEGORIES,
   LOAD_CATEGORIES_ERROR,
   LOAD_CATEGORIES_SUCCESS,
   LOAD_CATEGORY,
   LOAD_CATEGORY_ERROR,
   LOAD_CATEGORY_SUCCESS,
-  LOAD_FILTERED_CATEGORIES,
-  LOAD_FILTERED_CATEGORIES_ERROR,
-  LOAD_FILTERED_CATEGORIES_SUCCESS,
+  LOAD_CHANNELS,
+  LOAD_CHANNELS_ERROR,
+  LOAD_CHANNELS_SUCCESS,
+  LOAD_CONNECTION,
+  LOAD_CONNECTION_ERROR,
+  LOAD_CONNECTION_SUCCESS,
+  LOAD_CONNECTIONS,
+  LOAD_CONNECTIONS_ERROR,
+  LOAD_CONNECTIONS_SUCCESS,
+  LOAD_CURRENT_USER,
+  LOAD_CURRENT_USER_ERROR,
+  LOAD_CURRENT_USER_SUCCESS,
   LOAD_FILTERED_ACTIONS,
   LOAD_FILTERED_ACTIONS_ERROR,
   LOAD_FILTERED_ACTIONS_SUCCESS,
+  LOAD_FILTERED_CATEGORIES,
+  LOAD_FILTERED_CATEGORIES_ERROR,
+  LOAD_FILTERED_CATEGORIES_SUCCESS,
   LOAD_KEYWORD,
   LOAD_KEYWORD_ERROR,
   LOAD_KEYWORD_SUCCESS,
   LOAD_KEYWORDS,
   LOAD_KEYWORDS_ERROR,
   LOAD_KEYWORDS_SUCCESS,
+  LOAD_LOGS,
+  LOAD_LOGS_ERROR,
+  LOAD_LOGS_SUCCESS,
+  LOAD_PREBUILT_CATEGORIES,
+  LOAD_PREBUILT_CATEGORIES_ERROR,
+  LOAD_PREBUILT_CATEGORIES_SUCCESS,
   LOAD_SAYINGS,
   LOAD_SAYINGS_ERROR,
   LOAD_SAYINGS_SUCCESS,
+  LOAD_SERVER_INFO,
+  LOAD_SERVER_INFO_ERROR,
+  LOAD_SERVER_INFO_SUCCESS,
+  LOAD_SESSION,
+  LOAD_SESSION_ERROR,
+  LOAD_SESSION_SUCCESS,
   LOAD_SETTINGS,
   LOAD_SETTINGS_ERROR,
   LOAD_SETTINGS_SUCCESS,
+  LOAD_STARRED_SAYING,
+  LOAD_STARRED_SAYING_ERROR,
+  LOAD_STARRED_SAYING_SUCCESS,
+  LOAD_STARRED_SAYINGS,
+  LOAD_STARRED_SAYINGS_ERROR,
+  LOAD_STARRED_SAYINGS_SUCCESS,
+  LOAD_USER,
+  LOAD_USER_ERROR,
+  LOAD_USER_SUCCESS,
+  LOAD_USERS,
+  LOAD_USERS_ERROR,
+  LOAD_USERS_SUCCESS,
+  LOGIN_USER,
+  LOGIN_USER_ERROR,
+  LOGIN_USER_SUCCESS,
   MISSING_API,
-  RESET_SAYINGS,
+  REFRESH_KEYWORD_EXAMPLE_UPDATE,
+  REFRESH_SERVER_INFO,
+  REMOVE_ACCESS_CONTROL_ERROR,
+  REMOVE_ACCESS_CONTROL_SUCCESS,
   RESET_ACTION_DATA,
+  RESET_ACTIONS,
   RESET_AGENT_DATA,
   RESET_CATEGORY_DATA,
+  RESET_CONNECTION_DATA,
   RESET_KEYWORD_DATA,
   RESET_MISSING_API,
+  RESET_SAYINGS,
   RESET_SESSION_SUCCESS,
   RESET_STATUS_FLAGS,
+  RESET_SUCCESS_AGENT,
   RESPOND_MESSAGE,
   SELECT_CATEGORY,
   SEND_MESSAGE,
   SEND_SAYING_TO_ACTION,
+  SET_AGENT_DEFAULTS,
+  SHOW_WARNING,
   ADD_NEW_SLOT,
-  ADD_SLOT_TEXT_PROMPT_SLOT,
-  CHANGE_SLOT_DATA,
-  CHANGE_SLOT_NAME,
-  DELETE_SLOT,
-  DELETE_SLOT_TEXT_PROMPT_SLOT,
-  EDIT_ACTION_RESPONSE,
   EDIT_TEXT_RESPONSE_FLAG,
   SORT_SLOTS,
-  ADD_NEW_MODIFIER,
-  ADD_MODIFIER_SAYING,
-  ADD_MODIFIER_SAYING_SUCCESS,
-  CHANGE_MODIFIER_DATA,
-  CHANGE_MODIFIER_NAME,
-  DELETE_MODIFIER,
-  DELETE_MODIFIER_SAYING,
   SORT_MODIFIERS,
   STORE_SOURCE_DATA,
   TAG_KEYWORD,
-  TOGGLE_CONVERSATION_BAR,
+  TAG_MODIFIER_KEYWORD,
   TOGGLE_CHAT_BUTTON,
+  TOGGLE_CONVERSATION_BAR,
   TRAIN_AGENT,
   TRAIN_AGENT_ERROR,
   UNCHAIN_ACTION_FROM_RESPONSE,
   UNTAG_KEYWORD,
+  UNTAG_MODIFIER_KEYWORD,
+  UPDATE_ACCESS_CONTROL,
+  UPDATE_ACCESS_CONTROL_ERROR,
+  UPDATE_ACCESS_CONTROL_SUCCESS,
   UPDATE_ACTION,
   UPDATE_ACTION_ERROR,
   UPDATE_ACTION_SUCCESS,
@@ -184,79 +268,27 @@ import {
   UPDATE_CATEGORY,
   UPDATE_CATEGORY_ERROR,
   UPDATE_CATEGORY_SUCCESS,
-  ADD_CATEGORY_PARAMETER,
-  DELETE_CATEGORY_PARAMETER,
-  CHANGE_CATEGORY_PARAMETER_NAME,
-  CHANGE_CATEGORY_PARAMETER_VALUE,
+  UPDATE_CONNECTION,
+  UPDATE_CONNECTION_ERROR,
+  UPDATE_CONNECTION_SUCCESS,
   UPDATE_KEYWORD,
   UPDATE_KEYWORD_ERROR,
   UPDATE_KEYWORD_SUCCESS,
-  UPDATE_SAYING_SUCCESS,
+  UPDATE_NEW_RESPONSE,
   UPDATE_SAYING_ERROR,
+  UPDATE_SAYING_SUCCESS,
   UPDATE_SETTINGS,
   UPDATE_SETTINGS_ERROR,
   UPDATE_SETTINGS_SUCCESS,
   UPDATE_SETTINGS_TOUCHED,
+  UPDATE_USER,
+  UPDATE_USER_ERROR,
+  UPDATE_USER_SUCCESS,
+  TEST_AGENT_TRAIN_SUCCESS,
+  LOAD_AGENT_TRAIN_TESTS_SUCCESS,
   UPDATE_SETTING,
   UPDATE_SETTING_ERROR,
   UPDATE_SETTING_SUCCESS,
-  UNTAG_MODIFIER_KEYWORD,
-  TAG_MODIFIER_KEYWORD,
-  CHANGE_LOCALE,
-  CHANGE_CONNECTION_DATA,
-  LOAD_CONNECTION,
-  LOAD_CONNECTION_ERROR,
-  LOAD_CONNECTION_SUCCESS,
-  LOAD_CURRENT_USER,
-  LOAD_CURRENT_USER_ERROR,
-  LOAD_CURRENT_USER_SUCCESS,
-  RESET_CONNECTION_DATA,
-  CREATE_CONNECTION,
-  CREATE_CONNECTION_ERROR,
-  CREATE_CONNECTION_SUCCESS,
-  UPDATE_CONNECTION,
-  UPDATE_CONNECTION_ERROR,
-  UPDATE_CONNECTION_SUCCESS,
-  CHANGE_DETAIL_VALUE,
-  DELETE_CONNECTION,
-  DELETE_CONNECTION_ERROR,
-  DELETE_CONNECTION_SUCCESS,
-  LOGIN_USER_ERROR,
-  LOAD_SESSION,
-  LOAD_SESSION_SUCCESS,
-  LOAD_SESSION_ERROR,
-  DELETE_SESSION,
-  DELETE_SESSION_SUCCESS,
-  DELETE_SESSION_ERROR,
-  SHOW_WARNING,
-  LOAD_PREBUILT_CATEGORIES,
-  LOAD_PREBUILT_CATEGORIES_ERROR,
-  LOAD_PREBUILT_CATEGORIES_SUCCESS,
-  IMPORT_CATEGORY,
-  IMPORT_CATEGORY_ERROR,
-  IMPORT_CATEGORY_SUCCESS,
-  REFRESH_SERVER_INFO,
-  LOAD_SERVER_INFO,
-  LOAD_SERVER_INFO_ERROR,
-  LOAD_SERVER_INFO_SUCCESS,
-  LOAD_AGENT_SESSIONS_SUCCESS,
-  LOAD_AGENT_SESSIONS_ERROR,
-  ADD_NEW_QUICK_RESPONSE,
-  DELETE_QUICK_RESPONSE,
-  CHANGE_QUICK_RESPONSE,
-  EDIT_SLOT_TEXT_PROMPT,
-  LOAD_USERS,
-  LOAD_USERS_SUCCESS,
-  LOAD_USERS_ERROR,
-  DELETE_USER,
-  DELETE_USER_SUCCESS,
-  DELETE_USER_ERROR,
-  RESET_SUCCESS_AGENT,
-  LOGIN_USER,
-  LOGIN_USER_SUCCESS,
-  REFRESH_KEYWORD_EXAMPLE_UPDATE,
-  ADD_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
-  DELETE_NEW_ACTION_RESPONSE_QUICK_RESPONSE,
   LOAD_RICH_RESPONSES,
   LOAD_RICH_RESPONSES_ERROR,
   LOAD_RICH_RESPONSES_SUCCESS,
@@ -269,6 +301,8 @@ import {
   CHANGE_DIALOGUE_PAGE_NUMBER_OF_FILTERS_APPLIED,
   CHANGE_DIALOGUE_PAGE_FILTER_STRING,
   CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS,
+  CHANGE_DIALOGUE_PAGE_FILTER_ACTION_ISSUES,
+  CHANGE_DIALOGUE_PAGE_FILTER_KEYWORD_ISSUES,
   CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING,
   CHANGE_REVIEW_PAGE_FILTER_CATEGORY,
   CHANGE_REVIEW_PAGE_FILTER_ACTIONS,
@@ -282,9 +316,13 @@ import {
   CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED,
   RESET_DIALOGUE_PAGE_FILTERS,
   RESET_REVIEW_PAGE_FILTERS,
-  RESET_REVIEW_PAGE_LOGS_FILTERS
+  RESET_REVIEW_PAGE_LOGS_FILTERS,
+  TEST_AGENT_TRAIN,
+  TEST_AGENT_TRAIN_ERROR,
+  LOAD_AGENT_TRAIN_TEST,
+  LOAD_AGENT_LATEST_TRAIN_TEST_SUCCESS
 } from './constants';
-import { DEFAULT_LOCALE } from '../../i18n';
+
 const happyEmojies = [
   '😀',
   '😁',
@@ -343,8 +381,135 @@ const errorEmojies = [
   '🚨',
 ];
 
-const agentColors = [material.red['900'], material.red['700'], material.red['500'], material.red['300'], material.red['100'], material.pink['900'], material.pink['700'], material.pink['500'], material.pink['300'], material.pink['100'], material.purple['900'], material.purple['700'], material.purple['500'], material.purple['300'], material.purple['100'], material.deepPurple['900'], material.deepPurple['700'], material.deepPurple['500'], material.deepPurple['300'], material.deepPurple['100'], material.indigo['900'], material.indigo['700'], material.indigo['500'], material.indigo['300'], material.indigo['100'], material.blue['900'], material.blue['700'], material.blue['500'], material.blue['300'], material.blue['100'], material.lightBlue['900'], material.lightBlue['700'], material.lightBlue['500'], material.lightBlue['300'], material.lightBlue['100'], material.cyan['900'], material.cyan['700'], material.cyan['500'], material.cyan['300'], material.cyan['100'], material.teal['900'], material.teal['700'], material.teal['500'], material.teal['300'], material.teal['100'], '#194D33', material.green['700'], material.green['500'], material.green['300'], material.green['100'], material.lightGreen['900'], material.lightGreen['700'], material.lightGreen['500'], material.lightGreen['300'], material.lightGreen['100'], material.lime['900'], material.lime['700'], material.lime['500'], material.lime['300'], material.lime['100'], material.yellow['900'], material.yellow['700'], material.yellow['500'], material.yellow['300'], material.yellow['100'], material.amber['900'], material.amber['700'], material.amber['500'], material.amber['300'], material.amber['100'], material.orange['900'], material.orange['700'], material.orange['500'], material.orange['300'], material.orange['100'], material.deepOrange['900'], material.deepOrange['700'], material.deepOrange['500'], material.deepOrange['300'], material.deepOrange['100'], material.brown['900'], material.brown['700'], material.brown['500'], material.brown['300'], material.brown['100'], material.blueGrey['900'], material.blueGrey['700'], material.blueGrey['500'], material.blueGrey['300'], material.blueGrey['100'], '#000000', '#525252', '#969696', '#D9D9D9', '#FFFFFF',];
-const keywordColors = ['#FFB5E8', '#FF9CEE', '#FFCCF9', '#FCC2FF', '#F6A6FF', '#B28DFF', '#C5A3FF', '#D5AAFF', '#ECD4FF', '#FBE4FF', '#DCD3FF', '#A79AFF', '#B5B9FF', '#97A2FF', '#AFCBFF', '#AFF8DB', '#C4FAF8', '#85E3FF', '#ACE7FF', '#6EB5FF', '#BFFCC6', '#DBFFD6', '#F3FFE3', '#E7FFAC', '#FFFFD1', '#FFC9DE', '#FFABAB', '#FFBEBC', '#FFCBC1', '#FFF5BA'];
+const agentColors = [
+  material.red['900'],
+  material.red['700'],
+  material.red['500'],
+  material.red['300'],
+  material.red['100'],
+  material.pink['900'],
+  material.pink['700'],
+  material.pink['500'],
+  material.pink['300'],
+  material.pink['100'],
+  material.purple['900'],
+  material.purple['700'],
+  material.purple['500'],
+  material.purple['300'],
+  material.purple['100'],
+  material.deepPurple['900'],
+  material.deepPurple['700'],
+  material.deepPurple['500'],
+  material.deepPurple['300'],
+  material.deepPurple['100'],
+  material.indigo['900'],
+  material.indigo['700'],
+  material.indigo['500'],
+  material.indigo['300'],
+  material.indigo['100'],
+  material.blue['900'],
+  material.blue['700'],
+  material.blue['500'],
+  material.blue['300'],
+  material.blue['100'],
+  material.lightBlue['900'],
+  material.lightBlue['700'],
+  material.lightBlue['500'],
+  material.lightBlue['300'],
+  material.lightBlue['100'],
+  material.cyan['900'],
+  material.cyan['700'],
+  material.cyan['500'],
+  material.cyan['300'],
+  material.cyan['100'],
+  material.teal['900'],
+  material.teal['700'],
+  material.teal['500'],
+  material.teal['300'],
+  material.teal['100'],
+  '#194D33',
+  material.green['700'],
+  material.green['500'],
+  material.green['300'],
+  material.green['100'],
+  material.lightGreen['900'],
+  material.lightGreen['700'],
+  material.lightGreen['500'],
+  material.lightGreen['300'],
+  material.lightGreen['100'],
+  material.lime['900'],
+  material.lime['700'],
+  material.lime['500'],
+  material.lime['300'],
+  material.lime['100'],
+  material.yellow['900'],
+  material.yellow['700'],
+  material.yellow['500'],
+  material.yellow['300'],
+  material.yellow['100'],
+  material.amber['900'],
+  material.amber['700'],
+  material.amber['500'],
+  material.amber['300'],
+  material.amber['100'],
+  material.orange['900'],
+  material.orange['700'],
+  material.orange['500'],
+  material.orange['300'],
+  material.orange['100'],
+  material.deepOrange['900'],
+  material.deepOrange['700'],
+  material.deepOrange['500'],
+  material.deepOrange['300'],
+  material.deepOrange['100'],
+  material.brown['900'],
+  material.brown['700'],
+  material.brown['500'],
+  material.brown['300'],
+  material.brown['100'],
+  material.blueGrey['900'],
+  material.blueGrey['700'],
+  material.blueGrey['500'],
+  material.blueGrey['300'],
+  material.blueGrey['100'],
+  '#000000',
+  '#525252',
+  '#969696',
+  '#D9D9D9',
+  '#FFFFFF',
+];
+const keywordColors = [
+  '#FFB5E8',
+  '#FF9CEE',
+  '#FFCCF9',
+  '#FCC2FF',
+  '#F6A6FF',
+  '#B28DFF',
+  '#C5A3FF',
+  '#D5AAFF',
+  '#ECD4FF',
+  '#FBE4FF',
+  '#DCD3FF',
+  '#A79AFF',
+  '#B5B9FF',
+  '#97A2FF',
+  '#AFCBFF',
+  '#AFF8DB',
+  '#C4FAF8',
+  '#85E3FF',
+  '#ACE7FF',
+  '#6EB5FF',
+  '#BFFCC6',
+  '#DBFFD6',
+  '#F3FFE3',
+  '#E7FFAC',
+  '#FFFFD1',
+  '#FFC9DE',
+  '#FFABAB',
+  '#FFBEBC',
+  '#FFCBC1',
+  '#FFF5BA',
+];
 
 // The initial state of the App
 const initialState = Immutable({
@@ -357,6 +522,7 @@ const initialState = Immutable({
   showChatButton: false,
   waitingResponse: false,
   notifications: [],
+  testTrainNotification: null,
   messages: [],
   category: {
     categoryName: '',
@@ -373,6 +539,7 @@ const initialState = Immutable({
   richResponses: false,
   connections: false,
   agents: false,
+  agentVersions: [],
   currentAgent: {
     gravatar: '',
     uiColor: '',
@@ -427,12 +594,17 @@ const initialState = Immutable({
   },
   agentSettings: {
     rasaURL: '',
+    rasaURLs: '[]',
     ducklingURL: '',
     ducklingDimension: '[]',
     spacyPretrainedEntities: '[]',
     categoryClassifierPipeline: '[]',
     sayingClassifierPipeline: '[]',
     keywordClassifierPipeline: '[]',
+    generateSlotsQuickResponses: false,
+    generateSlotsQuickResponsesMax: 1,
+    generateActionsQuickResponses: false,
+    generateActionsQuickResponsesMax: 1,
   },
   keyword: {
     type: 'learned',
@@ -495,7 +667,7 @@ const initialState = Immutable({
   actionOldPayloadJSON:
     '{\n\t"text": "{{text}}",\n\t"action": {{{JSONstringify action}}},\n\t"slots": {{{JSONstringify slots}}}\n}',
   actionOldPayloadXML:
-    "<?xml version='1.0' encoding='UTF-8'?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>",
+    '<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<data>\n\t<text>{{text}}</text>\n\t<action>{{{toXML action}}}</action>\n\t<slots>{{{toXML slots}}}</slots>\n</data>',
   actions: [],
   newSayingActions: [],
   agentJustEdited: false,
@@ -533,6 +705,7 @@ const initialState = Immutable({
   },
   settings: {
     rasaURL: '',
+    rasaURLs: [],
     rasaConcurrentRequests: '',
     uiLanguage: '',
     ducklingURL: '',
@@ -553,6 +726,7 @@ const initialState = Immutable({
   loading: false,
   loadingImportCategory: false,
   loadingKeywordExamplesUpdate: false,
+  loadingAgentVersion: false,
   error: false,
   success: false,
   successKeyword: false,
@@ -576,11 +750,23 @@ const initialState = Immutable({
   sessions: [],
   totalSessions: null,
   serverStatus: '',
+  starredSayings: [],
+  starredSaying: null,
   users: [],
   totalUsers: null,
+  accessPolicyGroups: [],
+  user: null,
+  userDataTouched: false,
+  testTrainResults: [],
+  totalTrainTests: null,
+  trainTest: null,
+  testTrainLoading: false,
+  testTrainError: false,
   dialoguePageFilterSearchSaying: '',
   dialoguePageFilterCategory: '',
   dialoguePageFilterActions: [],
+  dialoguePageFilterActionIssues: false,
+  dialoguePageFilterKeywordIssues: false,
   dialoguePageNumberOfFiltersApplied: 0,
   dialoguePageFilterString: '',
   dialoguePageFilterKeywords: [],
@@ -657,6 +843,8 @@ function appReducer(state = initialState, action) {
       return state.update('notifications', notifications =>
         notifications.filter((item, index) => index !== action.index),
       );
+    case CLOSE_TEST_TRAIN_NOTIFICATION:
+      return state.set('testTrainNotification', null)
     case SEND_MESSAGE:
       return state
         .update('messages', messages => messages.concat(action.message))
@@ -729,6 +917,21 @@ function appReducer(state = initialState, action) {
     case LOAD_AGENTS_SUCCESS:
       return state
         .set('agents', action.agents)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_AGENT_VERSIONS:
+      return state
+        .set('agentVersions', false)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_AGENT_VERSIONS_ERROR:
+      return state
+        .set('agentVersions', false)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_AGENT_VERSIONS_SUCCESS:
+      return state
+        .set('agentVersions', action.agentVersions)
         .set('loading', false)
         .set('error', false);
     case EXPORT_AGENT:
@@ -824,16 +1027,24 @@ function appReducer(state = initialState, action) {
         state.agent.status !== action.payload.agent.status;
       if (isATrainingUpdate) {
         if (action.payload.agent.status === 'Ready') {
-          state = state.update('notifications', notifications =>
-            notifications.concat({
-              template: 'agentFinishedTrainingTemplate',
-              agentName: action.payload.agent.agentName,
-              emoji:
-                happyEmojies[Math.floor(Math.random() * happyEmojies.length)],
-              type: 'success',
-              datetime: new Date(),
-            }),
-          );
+          //If we are in another agent we show the normal training notification
+          //If we are in the same agent we show the test training notification
+          if (state.agent.id === action.payload.agent.id) {
+            state = state.set('testTrainNotification', {
+              agentId: action.payload.agent.id
+            })
+          } else {
+            state = state.update('notifications', notifications =>
+              notifications.concat({
+                template: 'agentFinishedTrainingTemplate',
+                agentName: action.payload.agent.agentName,
+                emoji:
+                  happyEmojies[Math.floor(Math.random() * happyEmojies.length)],
+                type: 'success',
+                datetime: new Date(),
+              }),
+            );
+          }
         }
         if (action.payload.agent.status === 'Error') {
           state = state.update('notifications', notifications =>
@@ -901,6 +1112,7 @@ function appReducer(state = initialState, action) {
           state.settings.defaultWelcomeActionName,
         )
         .setIn(['agentSettings', 'rasaURL'], state.settings.rasaURL)
+        .setIn(['agentSettings', 'rasaURLs'], state.settings.rasaURLs)
         .setIn(
           ['agentSettings', 'categoryClassifierPipeline'],
           state.settings.categoryClassifierPipeline,
@@ -921,7 +1133,7 @@ function appReducer(state = initialState, action) {
         .setIn(
           ['agentSettings', 'ducklingDimension'],
           state.settings.ducklingDimension,
-        );
+        )
     case CHANGE_AGENT_NAME:
       return state
         .setIn(['agent', action.payload.field], action.payload.value)
@@ -1080,7 +1292,9 @@ function appReducer(state = initialState, action) {
         .set('agentTouched', false)
         .set('successAgent', true);
     case TRAIN_AGENT:
-      return state.set('error', false);
+      return state.set('error', false)
+        .set('testTrainNotification', null)
+        .set('trainTest', null)
     case TRAIN_AGENT_ERROR:
       state = state.update('notifications', notifications =>
         notifications.concat({
@@ -1207,27 +1421,31 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', action.error);
     case LOAD_AGENT_STATS_SUCCESS:
-      if (action.stats.statsName === "documentsAnalyticsRequestCount") {
+      if (action.stats.statsName === 'documentsAnalyticsRequestCount') {
         return state
           .set('documentsAnalyticsRequestCount', action.stats.stats.hits.total.value)
           .set('loading', false)
           .set('error', false);
-      } else if (action.stats.statsName === "documentsAnalyticsSessionsCount") {
+      }
+      else if (action.stats.statsName === 'documentsAnalyticsSessionsCount') {
         return state
           .set('documentsAnalyticsSessionsCount', action.stats.stats.aggregations.unique_sessions.value)
           .set('loading', false)
           .set('error', false);
-      } else if (action.stats.statsName === "filterdocumentsAnalyticsFallbacksCount") {
+      }
+      else if (action.stats.statsName === 'filterdocumentsAnalyticsFallbacksCount') {
         return state
           .set('documentsAnalyticsFallbacksCount', action.stats.stats.hits.total.value)
           .set('loading', false)
           .set('error', false);
-      } else if (action.stats.statsName === "filterdocumentsAnalyticsTopActions") {
+      }
+      else if (action.stats.statsName === 'filterdocumentsAnalyticsTopActions') {
         return state
           .set('documentsAnalyticsTopActions', action.stats.stats.aggregations.actions_count.buckets)
           .set('loading', false)
           .set('error', false);
-      } else if (action.stats.statsName === "filterdocumentsAnalyticsRequestsOverTime") {
+      }
+      else if (action.stats.statsName === 'filterdocumentsAnalyticsRequestsOverTime') {
         return state
           .set('documentsAnalyticsRequestsOverTime', action.stats.stats.aggregations.start_time.buckets)
           .set('loading', false)
@@ -1241,6 +1459,40 @@ function appReducer(state = initialState, action) {
         .set('totalDocuments', initialState.totalDocuments)
         .set('loading', false)
         .set('error', action.error);
+    case TEST_AGENT_TRAIN:
+      return state
+        .set('testTrainLoading', true)
+        .set('testTrainError', false)
+    case TEST_AGENT_TRAIN_ERROR:
+      return state
+        .set('testTrainLoading', false)
+        .set('testTrainError', action.error);
+    case TEST_AGENT_TRAIN_SUCCESS:
+      return state
+        .set('testTrainLoading', false)
+        .set('testTrainError', false)
+    case LOAD_AGENT_TRAIN_TESTS_SUCCESS:
+      return state
+        .set('totalTrainTests', action.trainTests.total)
+        .set('testTrainResults', action.trainTests.trainTests)
+    case LOAD_AGENT_TRAIN_TEST:
+      return state
+        .set('trainTest', state.testTrainResults[action.index])
+    case LOAD_AGENT_LATEST_TRAIN_TEST_SUCCESS:
+      return state
+        .set('trainTest', action.trainTest.trainTest)
+    case LOAD_AGENT_VERSION:
+      return state
+        .set('loadingAgentVersion', true)
+        .set('error', false);
+    case LOAD_AGENT_VERSION_ERROR:
+      return state
+        .set('loadingAgentVersion', false)
+        .set('error', action.error);
+    case LOAD_AGENT_VERSIONS_SUCCESS:
+      return state
+        .set('loadingAgentVersion', false)
+        .set('error', false);
     /* Sayings */
     case RESET_SAYINGS:
       return state
@@ -1917,7 +2169,7 @@ function appReducer(state = initialState, action) {
             return slot;
           }
           return slot;
-        }))
+        }));
       }
       return state.updateIn(
         ['action', 'slots'],
@@ -1927,7 +2179,7 @@ function appReducer(state = initialState, action) {
             return slot.update('quickResponses', quickResponses => quickResponses.concat(action.response));
           }
           return slot;
-        })
+        }),
       )
         .set('actionTouched', true);
     case DELETE_QUICK_RESPONSE:
@@ -1939,7 +2191,7 @@ function appReducer(state = initialState, action) {
             return slot.set('quickResponses', slot.quickResponses.filter((quickResponse, index) => { return index !== action.quickResponseIndex }));
           }
           return slot;
-        })
+        }),
       )
         .set('actionTouched', true);
     case CHANGE_QUICK_RESPONSE:
@@ -1956,7 +2208,7 @@ function appReducer(state = initialState, action) {
             }));
           }
           return slot;
-        })
+        }),
       )
         .set('actionTouched', true);
     case EDIT_SLOT_TEXT_PROMPT:
@@ -2748,35 +3000,98 @@ function appReducer(state = initialState, action) {
       return state.set('loading', false).set('error', false);
     case LOGIN_USER_ERROR:
       return state.set('loading', false).set('error', action.error);
+
+    /* Cheat sheet*/
+    case LOAD_STARRED_SAYINGS:
+      return state
+        .set('starredSayings', initialState.starredSayings)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_STARRED_SAYINGS_ERROR:
+      return state
+        .set('starredSayings', initialState.starredSayings)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_STARRED_SAYINGS_SUCCESS:
+      return state
+        .set('starredSayings', action.sayings)
+        .set('loading', false)
+        .set('error', false);
+    case LOAD_STARRED_SAYING:
+      return state
+        .set('starredSaying', initialState.starredSaying)
+        .set('loading', true)
+        .set('error', false);
+    case LOAD_STARRED_SAYING_ERROR:
+      return state
+        .set('starredSaying', initialState.starredSaying)
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_STARRED_SAYING_SUCCESS:
+      return state
+        .set('starredSaying', action.saying)
+        .set('loading', false)
+        .set('error', false);
     /* Users */
     case LOAD_USERS:
       return state
         .set('users', initialState.users)
         .set('totalUsers', initialState.totalUsers)
         .set('loading', true)
-        .set('error', false)
+        .set('error', false);
     case LOAD_USERS_SUCCESS:
       return state
         .set('users', action.users.data)
         .set('totalUsers', action.users.totalCount)
         .set('loading', false)
-        .set('error', false)
+        .set('error', false);
     case LOAD_USERS_ERROR:
       return state
         .set('loading', false)
-        .set('error', action.error)
+        .set('error', action.error);
     case DELETE_USER:
       return state
         .set('loading', true)
-        .set('error', false)
+        .set('error', false);
     case DELETE_USER_SUCCESS:
       return state
         .set('loading', false)
-        .set('error', false)
+        .set('error', false);
     case DELETE_USER_ERROR:
       return state
         .set('loading', false)
-        .set('error', action.error)
+        .set('error', action.error);
+    /* Access Policy Group */
+    case LOAD_ACCESS_CONTROL:
+      return state.set('loading', true).set('error', false);
+    case LOAD_ACCESS_CONTROL_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error);
+    case LOAD_ACCESS_CONTROL_SUCCESS:
+      return state
+        .set('accessPolicyGroups', action.accessPolicyGroups)
+        .set('loading', false)
+        .set('error', false);
+    case UPDATE_ACCESS_CONTROL:
+      return state
+        .set('loading', true)
+        .set('success', false)
+        .set('error', false);
+    case UPDATE_ACCESS_CONTROL_ERROR:
+      return state
+        .set('loading', false)
+        .set('success', false)
+        .set('error', action.error);
+    case UPDATE_ACCESS_CONTROL_SUCCESS:
+      return state
+        .update('accessPolicyGroups', accessPolicyGroups => {
+          const index = _.findIndex(accessPolicyGroups, ['id', action.accessPolicyGroup.id]);
+          return accessPolicyGroups.set(index, action.accessPolicyGroup);
+        })
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
     case LOAD_CURRENT_USER:
       return state
         .set('loadingCurrentUser', false);
@@ -2788,6 +3103,50 @@ function appReducer(state = initialState, action) {
       return state
         .set('currentUser', null)
         .set('loadingCurrentUser', true);
+    case REMOVE_ACCESS_CONTROL_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error);
+    case REMOVE_ACCESS_CONTROL_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('success', true)
+        .set('error', false);
+    case LOAD_USER:
+      return state
+        .set('loading', true)
+        .set('user', null)
+        .set('error', false);
+    case LOAD_USER_ERROR:
+      return state
+        .set('loading', false)
+        .set('user', null)
+        .set('error', action.error);
+    case LOAD_USER_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('success', true)
+        .set('user', action.user)
+        .set('error', false);
+    case CHANGE_USER_DATA:
+      return state
+        .setIn(['user', action.field], action.value)
+        .set('userDataTouched', true);
+    case UPDATE_USER:
+      return state
+        .set('loading', true)
+        .set('error', false);
+    case UPDATE_USER_ERROR:
+      return state
+        .set('loading', false)
+        .set('error', action.error);
+    case UPDATE_USER_SUCCESS:
+      return state
+        .set('loading', false)
+        .set('success', true)
+        .set('user', action.user)
+        .set('error', false)
+        .set('userDataTouched', false);
     case CHANGE_DIALOGUE_PAGE_FILTER_SEARCH_SAYING:
       return state
         .set('dialoguePageFilterSearchSaying', action.newValue);
@@ -2806,6 +3165,12 @@ function appReducer(state = initialState, action) {
     case CHANGE_DIALOGUE_PAGE_FILTER_KEYWORDS:
       return state
         .set('dialoguePageFilterKeywords', action.newValue);
+    case CHANGE_DIALOGUE_PAGE_FILTER_KEYWORD_ISSUES:
+      return state
+        .set('dialoguePageFilterKeywordIssues', !state.dialoguePageFilterKeywordIssues)
+    case CHANGE_DIALOGUE_PAGE_FILTER_ACTION_ISSUES:
+      return state
+        .set('dialoguePageFilterActionIssues', !state.dialoguePageFilterActionIssues)
     case RESET_DIALOGUE_PAGE_FILTERS:
       return state
         .set('dialoguePageFilterSearchSaying', '')
@@ -2814,6 +3179,8 @@ function appReducer(state = initialState, action) {
         .set('dialoguePageNumberOfFiltersApplied', 0)
         .set('dialoguePageFilterString', '')
         .set('dialoguePageFilterKeywords', [])
+        .set('dialoguePageFilterKeywordIssues', false)
+        .set('dialoguePageFilterActionIssues', false)
     case CHANGE_REVIEW_PAGE_FILTER_SEARCH_SAYING:
       return state
         .set('reviewPageFilterSearchSaying', action.newValue);

@@ -2,6 +2,8 @@ import Schmervice from 'schmervice';
 import TimingWrapper from '../../util/service-timing-wrapper';
 import ConverseCallWebhook from './agent/agent.converse-call-webhook.service';
 import ConverseCompileResponseTemplates from './agent/agent.converse-compile-response-templates.service';
+import ConverseGenerateAutomaticMissingSlotQuickResponses from './agent/agent.converse-generate-automatic-missing-slot-quick-responses.service';
+import ConverseGenerateAutomaticActionsQuickResponses from './agent/agent.converse-generate-automatic-actions-quick-responses.service';
 import ConverseCompileRichResponsesTemplates from './agent/agent.converse-compile-rich-responses-templates.service';
 import ConverseFillActionSlots from './agent/agent.converse-fill-action-slots.service';
 import ConverseFulfillEmptySlotsWithSavedValues from './agent/agent.converse-fulfill-empty-slots-with-saved-values.service';
@@ -22,8 +24,9 @@ import CreateWebhook from './agent/agent.create-webhook.service';
 import Create from './agent/agent.create.service';
 import Export from './agent/agent.export.service';
 import FindAllDocuments from './agent/agent.find-all-documents.service';
-import FindAllSayings from './agent/agent.find-all-sayings.service';
+import FindAllTrainingTests from './agent/agent.find-all-training-tests.service'
 import FindAllSessions from './agent/agent.find-all-sessions.service';
+import FindAllSayings from './agent/agent.find-all-sayings.service';
 import FindAllSettings from './agent/agent.find-all-settings.service';
 import FindSettingByName from './agent/agent.find-setting-by-name.service';
 import GetTrainedCategories from './agent/agent.get-trained-categories.service';
@@ -57,6 +60,7 @@ import UpdateWebhook from './agent/agent.update-webhook.service';
 import UpsertPostFormatInAction from './agent/agent.upsert-post-format-in-action.service';
 import UpsertSayingInCategory from './agent/agent.upsert-saying-in-category.service';
 import UpsertWebhookInAction from './agent/agent.upsert-webhook-in-action.service';
+import testTrain from './agent/agent.test.train.service';
 
 module.exports = class AgentService extends Schmervice.Service {
 
@@ -244,6 +248,16 @@ module.exports = class AgentService extends Schmervice.Service {
         return await TimingWrapper({ cls: this, fn: ConverseCompileRichResponsesTemplates, name: 'ConverseCompileRichResponsesTemplates' }).apply(this, arguments);
     }
 
+    async converseGenerateAutomaticMissingSlotQuickResponses() {
+
+        return await ConverseGenerateAutomaticMissingSlotQuickResponses.apply(this, arguments);
+    }
+
+    async converseGenerateAutomaticActionsQuickResponses() {
+
+        return await ConverseGenerateAutomaticActionsQuickResponses.apply(this, arguments);
+    }
+
     async converseCallWebhook() {
         return await TimingWrapper({ cls: this, fn: ConverseCallWebhook, name: 'ConverseCallWebhook' }).apply(this, arguments);
     }
@@ -284,8 +298,18 @@ module.exports = class AgentService extends Schmervice.Service {
         return await TimingWrapper({ cls: this, fn: FindAllDocuments, name: 'FindAllDocuments' }).apply(this, arguments);
     }
 
+    async findAllTrainingTests() {
+
+        return await FindAllTrainingTests.apply(this, arguments);
+    }
+
     async findAllSessions() {
         return await TimingWrapper({ cls: this, fn: FindAllSessions, name: 'FindAllSessions' }).apply(this, arguments);
+    }
+
+    async testTrain() {
+
+        return await testTrain.apply(this, arguments);
     }
 };
 

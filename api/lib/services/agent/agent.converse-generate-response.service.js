@@ -1,5 +1,10 @@
 import _ from 'lodash';
-import { MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK } from '../../../util/constants';
+import {
+    MODEL_ACTION,
+    MODEL_AGENT,
+    MODEL_WEBHOOK
+} from '../../../util/constants';
+
 const { VM, VMScript } = require('vm2');
 
 module.exports = async function ({ actionData, CSO }) {
@@ -48,7 +53,13 @@ module.exports = async function ({ actionData, CSO }) {
         if (missingSlotIndex !== null) {
             const missingSlot = missingSlots[missingSlotIndex];
             const response = await agentService.converseCompileResponseTemplates({ responses: missingSlot.textPrompts, templateContext: CSO, isTextPrompt: true, promptCount: CSO.currentAction.slots[missingSlot.slotName].promptCount });
-            return { ...response, quickResponses: missingSlots[0].quickResponses, fulfilled: false };
+            var missingSlotQuickResponses = [];
+            if (missingSlots[0].quickResponses && missingSlots[0].quickResponses.length > 0) {
+                missingSlotQuickResponses = missingSlots[0].quickResponses;
+            } else if (CSO.agent.settings.generateSlotsQuickResponses) {
+                missingSlotQuickResponses = await agentService.converseGenerateAutomaticMissingSlotQuickResponses({ CSO, missingSlot })
+            }
+            return { ...response, quickResponses: missingSlotQuickResponses, fulfilled: false };
         }
         if (!previousListenState && !CSO.context.listenFreeText) {
             return { slotPromptLimitReached: true }
@@ -116,9 +127,15 @@ module.exports = async function ({ actionData, CSO }) {
         if (webhookResponse.textResponse) {
             return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: { [webhook.webhookKey]: webhookResponse } };
         }
-        const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
+        let response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
+        if (CSO.agent.settings.generateActionsQuickResponses) {
+            response = await agentService.converseGenerateAutomaticActionsQuickResponses({ CSO, response });
+        }
         return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, webhook: { [webhook.webhookKey]: webhookResponse }, fulfilled: true };
     }
-    const response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
+    let response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
+    if (CSO.agent.settings.generateActionsQuickResponses) {
+        response = await agentService.converseGenerateAutomaticActionsQuickResponses({ CSO, response });
+    }
     return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, fulfilled: true };
 };

@@ -47,6 +47,10 @@ export default defineMessages({
     id: 'app.components.RasaSettings.requiredField',
     defaultMessage: '*Required',
   },
+  requiredUniqueField: {
+    id: 'app.components.RasaSettings.requiredUniqueField',
+    defaultMessage: '*Required and Unique',
+  },
   pipelineError: {
     id: 'app.components.RasaSettings.pipelineError',
     defaultMessage:
@@ -68,5 +72,9 @@ export default defineMessages({
   spacy: {
     id: 'app.components.RasaSettings.spacy',
     defaultMessage: 'Spacy',
+  },
+  addAnotherRasaUrl: {
+    id: 'app.components.RasaSettings.addAnotherRasaUrl',
+    defaultMessage: 'Add another URL',
   }
 });

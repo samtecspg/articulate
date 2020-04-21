@@ -28,6 +28,7 @@ module.exports = async function (
         sayingData,
         returnModel = false,
         isImport = false,
+        updateStatus = true
     }) {
 
     const { redis } = this.server.app;
@@ -53,7 +54,7 @@ module.exports = async function (
         }
         const SayingModel = models[MODEL_SAYING] || await redis.factory(MODEL_SAYING); //Empty model if we are going to do a create
 
-        if (!SayingModel.isLoaded && !isImport){
+        if (!SayingModel.isLoaded && !isImport) {
             sayingData.keywords = await agentService.identifyKeywords({ AgentModel, text: sayingData.userSays });
         }
 
@@ -127,9 +128,9 @@ module.exports = async function (
             // ADD Category <---> UsedKeywords
             await categoryService.linkKeywords({ model: CategoryModel, keywordModels: newKeywordModels });
             // IF it is not a Category Update REMOVE Category <-/-> UnusedKeyword
-            if (!OldCategoryModel){
+            if (!OldCategoryModel) {
                 await categoryService.unlinkKeywords({ model: CategoryModel, keywordModels: removedKeywordModels });
-            } else{
+            } else {
                 SayingModel.unlink(OldCategoryModel, MODEL_CATEGORY);
                 SayingModel.link(CategoryModel, MODEL_CATEGORY);
                 await SayingModel.saveInstance();
@@ -144,10 +145,12 @@ module.exports = async function (
         }
 
         // Update status
-        AgentModel.property('status', STATUS_OUT_OF_DATE);
-        CategoryModel.property('status', STATUS_OUT_OF_DATE);
-        await AgentModel.saveInstance();
-        await CategoryModel.saveInstance();
+        if (updateStatus) {
+            AgentModel.property('status', STATUS_OUT_OF_DATE);
+            CategoryModel.property('status', STATUS_OUT_OF_DATE);
+            await AgentModel.saveInstance();
+            await CategoryModel.saveInstance();
+        }
 
         return returnModel ? SayingModel : SayingModel.allProperties();
     }

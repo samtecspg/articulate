@@ -1,23 +1,10 @@
-import React from 'react';
-import { FormattedMessage, intlShape, injectIntl } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import {
-  Grid,
-  TextField,
-  Table,
-  TableBody,
-  TableRow,
-  TableCell,
-  Typography,
-  Button,
-  MenuItem,
-  Tooltip,
-} from '@material-ui/core';
+import { Button, Grid, MenuItem, Table, TableBody, TableCell, TableRow, TextField, Tooltip, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
-import messages from '../messages';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import copyIcon from '../../../images/icon-copy.svg';
+import messages from '../messages';
 
 const styles = {
   formContainer: {
@@ -112,24 +99,17 @@ class ActionsDataForm extends React.Component {
   };
 
   render() {
-    const { classes, actionsPage, intl } = this.props;
+    const { classes, actionsPage, intl, isReadOnly } = this.props;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
-        <Grid
-          className={classes.formSubContainer}
-          id="formContainer"
-          container
-          item
-          xs={12}
-        >
+        <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={12} md={12} sm={12} xs={12}>
               <Button
+                disabled={isReadOnly}
                 variant="contained"
                 onClick={() => {
-                  this.props.onCreateAction(
-                    `/agent/${this.props.agentId}/action/create?tab=actions`,
-                  );
+                  this.props.onCreateAction(`/agent/${this.props.agentId}/action/create?tab=actions`);
                 }}
               >
                 <FormattedMessage {...messages.create} />
@@ -144,40 +124,27 @@ class ActionsDataForm extends React.Component {
                   <Table>
                     <TableBody>
                       {actionsPage.map((action, index) => (
-                        <TableRow
-                          className={classes.actionRow}
-                          key={`${action}_${index}`}
-                        >
+                        <TableRow className={classes.actionRow} key={`${action}_${index}`}>
                           <TableCell
                             onClick={() => {
-                              this.props.onGoToUrl(
-                                `/agent/${this.props.agentId}/action/${
-                                action.id
-                                }`,
-                              );
+                              this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${action.id}`);
                             }}
                           >
                             <span>{action.actionName}</span>
                           </TableCell>
-                          <TableCell>
-                            <Tooltip
-                              onClick={() => {
-                                this.props.onGoToUrl(
-                                  `/agent/${
-                                  this.props.agentId
-                                  }/action/create?isDuplicate=true&actionId=${
-                                  action.id
-                                  }`,
-                                );
-                              }}
-                              title={intl.formatMessage(
-                                messages.duplicateAction,
-                              )}
-                              placement="top"
-                            >
-                              <img className={classes.icon} src={copyIcon} />
-                            </Tooltip>
-                          </TableCell>
+                          {!isReadOnly && (
+                            <TableCell>
+                              <Tooltip
+                                onClick={() => {
+                                  this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create?isDuplicate=true&actionId=${action.id}`);
+                                }}
+                                title={intl.formatMessage(messages.duplicateAction)}
+                                placement="top"
+                              >
+                                <img className={classes.icon} src={copyIcon} />
+                              </Tooltip>
+                            </TableCell>
+                          )}
                         </TableRow>
                       ))}
                     </TableBody>
@@ -219,16 +186,8 @@ class ActionsDataForm extends React.Component {
                     </Grid>
                     <Grid className={classes.pageNumberSubControl}>
                       <Typography
-                        onClick={
-                          this.props.currentActionsPage > 1
-                            ? this.props.moveActionsPageBack
-                            : null
-                        }
-                        className={
-                          this.props.currentActionsPage > 1
-                            ? classes.pageCursors
-                            : classes.pageCursorsDisabled
-                        }
+                        onClick={this.props.currentActionsPage > 1 ? this.props.moveActionsPageBack : null}
+                        className={this.props.currentActionsPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}
                       >
                         <FormattedMessage {...messages.backPage} />
                       </Typography>
@@ -240,11 +199,9 @@ class ActionsDataForm extends React.Component {
                           evt.target.value = evt.target.value.replace(/^0+/, '');
                           evt.target.value === ''
                             ? this.props.changeActionsPage(1)
-                            : evt.target.value <=
-                              this.props.numberOfActionsPages &&
-                              evt.target.value >= 1
-                              ? this.props.changeActionsPage(Number(evt.target.value))
-                              : false;
+                            : evt.target.value <= this.props.numberOfActionsPages && evt.target.value >= 1
+                            ? this.props.changeActionsPage(Number(evt.target.value))
+                            : false;
                         }}
                         fullWidth
                         InputLabelProps={{
@@ -261,22 +218,10 @@ class ActionsDataForm extends React.Component {
                         className={classes.pageTextfield}
                         type="number"
                       />
-                      <Typography className={classes.pagesLabel}>
-                        / {this.props.numberOfActionsPages}
-                      </Typography>
+                      <Typography className={classes.pagesLabel}>/ {this.props.numberOfActionsPages}</Typography>
                       <Typography
-                        onClick={
-                          this.props.currentActionsPage <
-                            this.props.numberOfActionsPages
-                            ? this.props.moveActionsPageForward
-                            : null
-                        }
-                        className={
-                          this.props.currentActionsPage <
-                            this.props.numberOfActionsPages
-                            ? classes.pageCursors
-                            : classes.pageCursorsDisabled
-                        }
+                        onClick={this.props.currentActionsPage < this.props.numberOfActionsPages ? this.props.moveActionsPageForward : null}
+                        className={this.props.currentActionsPage < this.props.numberOfActionsPages ? classes.pageCursors : classes.pageCursorsDisabled}
                       >
                         <FormattedMessage {...messages.nextPage} />
                       </Typography>
@@ -307,6 +252,10 @@ ActionsDataForm.propTypes = {
   moveActionsPageForward: PropTypes.func,
   onDuplicateAction: PropTypes.func,
   onGoToUrl: PropTypes.func,
+  isReadOnly: PropTypes.bool,
 };
 
+ActionsDataForm.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(ActionsDataForm));

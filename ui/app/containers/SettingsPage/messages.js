@@ -28,13 +28,11 @@ export default defineMessages({
     defaultMessage: 'Play video off how to add/edit an Agent',
   },
   defaultUISessionId: {
-    id:
-      'app.containers.SettingsPage.component.GeneralSettings.defaultUISessionId',
+    id: 'app.containers.SettingsPage.component.GeneralSettings.defaultUISessionId',
     defaultMessage: 'UI session id for chat:',
   },
   uiLanguageSelect: {
-    id:
-      'app.containers.SettingsPage.component.GeneralSettings.uiLanguageSelect',
+    id: 'app.containers.SettingsPage.component.GeneralSettings.uiLanguageSelect',
     defaultMessage: 'UI Language:',
   },
   languageSelect: {
@@ -46,26 +44,20 @@ export default defineMessages({
     defaultMessage: 'Default Agent Timezone:',
   },
   timezoneSelectPlaceholder: {
-    id:
-      'app.containers.SettingsPage.component.GeneralSettings.timezoneSelectPlaceholder',
+    id: 'app.containers.SettingsPage.component.GeneralSettings.timezoneSelectPlaceholder',
     defaultMessage: 'Search for a timezone',
   },
   fallbackTextField: {
-    id:
-      'app.containers.SettingsPage.component.GeneralSettings.fallbackTextField',
+    id: 'app.containers.SettingsPage.component.GeneralSettings.fallbackTextField',
     defaultMessage: 'Fallback Responses for Default Fallback Action:',
   },
   fallbackTextFieldPlaceholder: {
-    id:
-      'app.containers.SettingsPage.component.GeneralSettings.fallbackTextFieldPlaceholder',
-    defaultMessage:
-      "What your agent should say if he weren't able to recognize what user said?",
+    id: 'app.containers.SettingsPage.component.GeneralSettings.fallbackTextFieldPlaceholder',
+    defaultMessage: "What your agent should say if he weren't able to recognize what user said?",
   },
   fallbackHelperText: {
-    id:
-      'app.containers.SettingsPage.component.GeneralSettings.fallbackHelperText',
-    defaultMessage:
-      '*Please add at least one response for the default fallback action',
+    id: 'app.containers.SettingsPage.component.GeneralSettings.fallbackHelperText',
+    defaultMessage: '*Please add at least one response for the default fallback action',
   },
   requiredField: {
     id: 'app.containers.SettingsPage.component.GeneralSettings.requiredField',
@@ -88,28 +80,23 @@ export default defineMessages({
     defaultMessage: 'General',
   },
   generalSettingDescription: {
-    id:
-      'app.containers.SettingsPage.component.AgentSettingsForm.generalSettingDescription',
-    defaultMessage:
-      'These are some general settings for define default values in the creation of your agents',
+    id: 'app.containers.SettingsPage.component.AgentSettingsForm.generalSettingDescription',
+    defaultMessage: 'These are some general settings for define default values in the creation of your agents',
   },
   groupAndUsersSettings: {
     id: 'app.containers.SettingsPage.component.SettingsDataForm.groupAndUsersSettings',
     defaultMessage: 'Group and Users',
   },
   allowNewUsersSignUps: {
-    id:
-      'app.containers.SettingsPage.component.GroupAndUsersForm.allowNewUsersSignUps',
-    defaultMessage:
-      'Allow new users to sign up in the server',
+    id: 'app.containers.SettingsPage.component.GroupAndUsersForm.allowNewUsersSignUps',
+    defaultMessage: 'Allow new users to sign up in the server',
   },
   rasaSetting: {
     id: 'app.containers.SettingsPage.component.SettingsDataForm.rasaSetting',
     defaultMessage: 'Rasa',
   },
   ducklingSetting: {
-    id:
-      'app.containers.SettingsPage.component.SettingsDataForm.ducklingSetting',
+    id: 'app.containers.SettingsPage.component.SettingsDataForm.ducklingSetting',
     defaultMessage: 'Duckling',
   },
   timezones: {
@@ -126,20 +113,15 @@ export default defineMessages({
   },
   timezonesError: {
     id: 'app.containers.SettingsPage.component.GeneralSettings.timezonesError',
-    defaultMessage:
-      "Please verify this value. It should be an array of strings. Example: ['Africa/Abidjan', 'Africa/Accra'].",
+    defaultMessage: "Please verify this value. It should be an array of strings. Example: ['Africa/Abidjan', 'Africa/Accra'].",
   },
   agentLanguagesError: {
-    id:
-      'app.containers.SettingsPage.component.GeneralSettings.agentLanguagesError',
-    defaultMessage:
-      'Please verify this value. It should be an array of JSON objects with text and value attributes',
+    id: 'app.containers.SettingsPage.component.GeneralSettings.agentLanguagesError',
+    defaultMessage: 'Please verify this value. It should be an array of JSON objects with text and value attributes',
   },
   uiLanguagesError: {
-    id:
-      'app.containers.SettingsPage.component.GeneralSettings.uiLanguagesError',
-    defaultMessage:
-      'Please verify this value. It should be an array of JSON objects with text and value attributes',
+    id: 'app.containers.SettingsPage.component.GeneralSettings.uiLanguagesError',
+    defaultMessage: 'Please verify this value. It should be an array of JSON objects with text and value attributes',
   },
   defaultFallbackActionName: {
     id:
@@ -155,5 +137,21 @@ export default defineMessages({
   backButton: {
     id: 'app.containers.SettingsPage.component.GeneralSettings.backButton',
     defaultMessage: 'Exit',
+  },
+  groupPoliciesLabel: {
+    id: 'app.containers.SettingsPage.component.GeneralSettings.groupPoliciesLabel',
+    defaultMessage: 'Group Policies',
+  },
+  groupNameTextFieldPlaceholder: {
+    id: 'app.containers.SettingsPage.component.GeneralSettings.groupNameTextFieldPlaceholder',
+    defaultMessage: 'Group name',
+  },
+  groupNameTextField: {
+    id: 'app.containers.SettingsPage.component.GeneralSettings.groupNameTextField',
+    defaultMessage: 'Add new group:',
+  },
+  saveButton: {
+    id: 'app.containers.SettingsPage.saveButton',
+    defaultMessage: 'Save',
   },
 });

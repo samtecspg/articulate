@@ -128,6 +128,10 @@ const styles = {
     marginTop: '20px',
     fontSize: '12px'
   },
+  hintText2: {
+    color: '#a2a7b1',
+    fontSize: '12px'
+  },
   hintBorder: {
     border: '1px solid #c5cbd8',
     borderRadius: '5px',
@@ -184,13 +188,13 @@ class ResponseRow extends React.Component {
     this.setState({
       openRichResponseEditor: value
     })
-    if (value){
+    if (value) {
       const existingRichResponse = response.richResponses.filter((richResponseTemp) => {
 
         return richResponseTemp.type === richResponses[richResponse].type;
       });
       let payload = JSON.stringify(richResponses[richResponse].defaultPayload, null, 2);
-      if (existingRichResponse.length > 0){
+      if (existingRichResponse.length > 0) {
         payload = existingRichResponse[0].data;
       }
       this.setState({
@@ -213,12 +217,13 @@ class ResponseRow extends React.Component {
   }
 
   render() {
-    const { classes, action, response, responseIndex, intl, richResponses, onAddRichResponse, onDeleteRichResponse, onEditRichResponse } = this.props;
+    const { classes, action, response, responseIndex, intl, richResponses, onAddRichResponse, onDeleteRichResponse, onEditRichResponse, isReadOnly } = this.props;
     const usedRichResponses = _.map(response.richResponses, 'type');
     return (
       <Grid container>
         <Grid item xs={12}>
           <ContentEditable
+            disabled={isReadOnly}
             className={classes.response}
             innerRef={this.contentEditable}
             html={response.textResponse} // innerHTML of the editable div
@@ -246,9 +251,9 @@ class ResponseRow extends React.Component {
                   onClick={() => {
                     this.props.onGoToUrl(
                       `/agent/${
-                        this.props.agentId
+                      this.props.agentId
                       }/actionDummy/${actionId}?ref=action&actionId=${
-                        action.id
+                      action.id
                       }`,
                     );
                   }}
@@ -360,13 +365,13 @@ class ResponseRow extends React.Component {
               }}
               onChange={(evt) => {
                 evt.preventDefault();
-                if (!evt._targetInst || (evt._targetInst && ['img', 'input'].indexOf(evt._targetInst.type) === -1)){
-                  if (evt.target.value !== 'disableRichResponse'){
+                if (!evt._targetInst || (evt._targetInst && ['img', 'input'].indexOf(evt._targetInst.type) === -1)) {
+                  if (evt.target.value !== 'disableRichResponse') {
                     this.toggleRichResponseEditor(true, evt.target.value);
                   }
                 }
                 else {
-                  if (evt.target.value === 'disableRichResponse'){
+                  if (evt.target.value === 'disableRichResponse') {
                     this.props.onChangeTextResponseFlag(!response.disableTextResponse, responseIndex);
                   }
                   this.setState({
@@ -409,8 +414,8 @@ class ResponseRow extends React.Component {
                           {richResponses[richResponse].name}
                           {usedRichResponses.indexOf(richResponses[richResponse].type) > -1 &&
                             <div className={classes.richResponsesActions}>
-                              <img style={{zIndex: 99999999999 }} onClick={() => { this.toggleRichResponseEditor(true, richResponse); }} className={classes.addActionIcon} src={pencilIcon} />
-                              <img style={{zIndex: 99999999999 }} onClick={() => { onDeleteRichResponse(responseIndex, { type: richResponses[richResponse].type } ); }} className={classes.icon} src={trashIcon} />
+                              <img style={{ zIndex: 99999999999 }} onClick={() => { this.toggleRichResponseEditor(true, richResponse); }} className={classes.addActionIcon} src={pencilIcon} />
+                              <img style={{ zIndex: 99999999999 }} onClick={() => { onDeleteRichResponse(responseIndex, { type: richResponses[richResponse].type }); }} className={classes.icon} src={trashIcon} />
                             </div>
                           }
                         </Grid>
@@ -435,16 +440,17 @@ class ResponseRow extends React.Component {
                 <Button
                   className={classes.addButton}
                   onClick={() => {
+                    var props = this.props;
                     this.state.editingRichResponse ?
-                    onEditRichResponse(responseIndex, {
-                      type: this.state.richResponseType,
-                      data: this.state.richResponsePayload
-                    })
-                    :
-                    onAddRichResponse(responseIndex, {
-                      type: this.state.richResponseType,
-                      data: this.state.richResponsePayload
-                    });
+                      onEditRichResponse(responseIndex, {
+                        type: this.state.richResponseType,
+                        data: this.state.richResponsePayload
+                      })
+                      :
+                      onAddRichResponse(responseIndex, {
+                        type: this.state.richResponseType,
+                        data: this.state.richResponsePayload
+                      });
                     this.toggleRichResponseEditor(false);
                   }}
                   variant="contained"
@@ -459,6 +465,12 @@ class ResponseRow extends React.Component {
                   <span className={classes.hintBorder}>{'{{}}'}</span>
                   <span>&nbsp;{intl.formatMessage(messages.hint2)}</span>
                 </div>
+                {this.props.agentSettings.generateActionsQuickResponses &&
+                  this.state.richResponseType === 'quickResponses' && (
+                    <div className={classes.hintText2}>
+                      <span>{intl.formatMessage(messages.automaticQuickResponsesActivatedShort)}</span>
+                    </div>
+                  )}
               </Grid>
             </DialogTitle>
             <DialogContent className={classes.dialogContentContainer}>
@@ -506,7 +518,7 @@ class ResponseRow extends React.Component {
               } else {
                 this.props.onGoToUrl(
                   `/agent/${
-                    this.props.agentId
+                  this.props.agentId
                   }/actionDummy/create?ref=action&actionId=${action.id}`,
                 );
               }
@@ -514,13 +526,13 @@ class ResponseRow extends React.Component {
             onEditRoutePrefix={`/agent/${this.props.agentId}/actionDummy/`}
             onCreateRoute={`/agent/${
               this.props.agentId
-            }/actionDummy/create?ref=action&actionId=${action.id}`}
+              }/actionDummy/create?ref=action&actionId=${action.id}`}
             filteredValues={this.props.agentFilteredActions.filter(
               agentFilteredAction => {
                 return (
                   agentFilteredAction.actionName !== action.actionName &&
                   response.actions.indexOf(agentFilteredAction.actionName) ===
-                    -1
+                  -1
                 );
               },
             )}
@@ -574,10 +586,14 @@ ResponseRow.propTypes = {
   onSearchActions: PropTypes.func,
   onGoToUrl: PropTypes.func,
   agentId: PropTypes.string,
+  isReadOnly: PropTypes.bool,
   richResponses: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   onAddRichResponse: PropTypes.func.isRequired,
   onDeleteRichResponse: PropTypes.func.isRequired,
   onEditRichResponse: PropTypes.func.isRequired,
 };
 
+ResponseRow.defaultProps = {
+  isReadOnly: false,
+};
 export default injectIntl(withStyles(styles)(ResponseRow));

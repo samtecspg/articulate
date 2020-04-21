@@ -3,7 +3,7 @@ import * as Constants from '../../util/constants';
 module.exports = ({ error, message = null }) => {
 
     console.error({ error, message });
-    if (error.isHandled) {
+    if (error.isHandled || error.isBoom) {
         return error;
     }
     const response = { isHandled: true, statusCode: 500 };

@@ -10,7 +10,7 @@ module.exports = async function (
         AgentModel,
         text,
         trainedCategories,
-        rasaURL = null,
+        rasaURLs = null,
         rasaConcurrentRequests = null,
     }) {
 
@@ -30,7 +30,7 @@ module.exports = async function (
             text,
             project: agent.agentName,
             trainedCategory: categoryRecognizerTrainedCategory,
-            baseURL: rasaURL,
+            baseURLs: rasaURLs,
             rasaConcurrentRequests
         });
     }
@@ -44,7 +44,7 @@ module.exports = async function (
                 text,
                 project: agent.agentName,
                 trainedCategory,
-                baseURL: rasaURL,
+                baseURLs: rasaURLs,
                 rasaConcurrentRequests
             });
             const endTime = new Moment();

@@ -1,9 +1,15 @@
 import _ from 'lodash';
+//Plugins
+export const P_HAPI_GBAC = 'hapi-gbac';
+export const P_HAPI_ABAC = 'hapi-abac';
+export const P_GBAC = 'gbac';
+export const P_AUTHENTICATION = 'authentication';
 
 //DEBUG
 export const DEBUG_LEVEL_INFO = 'info';
 export const DEBUG_LEVEL_DEBUG = 'debug';
 export const DEBUG_LEVEL_ERROR = 'error';
+export const DEBUG_LEVEL_INSPECT = 'inspect';
 
 //ERRORS
 export const ERROR_NOT_FOUND = 'not found';
@@ -16,9 +22,10 @@ export const MODEL_ACTION = 'Action';
 export const MODEL_AGENT = 'Agent';
 export const MODEL_CONTEXT = 'Context';
 export const MODEL_CATEGORY = 'Category';
-export const MODEL_DOCUMENT = 'Document';
+export const MODEL_DOCUMENT = `${process.env.ES_INDEX_PREFIX ? `${process.env.ES_INDEX_PREFIX}-` : ''}Document`;
 //export const MODEL_LOG = 'filebeat-7.1.1-2019.11.08-000001';
 export const MODEL_LOG = '*filebeat*';
+export const MODEL_TRAINING_TEST = 'trainingTest';
 export const MODEL_KEYWORD = 'Keyword';
 export const MODEL_POST_FORMAT = 'PostFormat';
 export const MODEL_SAYING = 'Saying';
@@ -28,6 +35,7 @@ export const MODEL_CONNECTION = 'Connection';
 export const MODEL_SERVER = 'Server';
 export const MODEL_USER_ACCOUNT = 'UserAccount';
 export const MODEL_USER_IDENTITY = 'UserIdentity';
+export const MODEL_ACCESS_POLICY_GROUP = 'AccessPolicyGroup';
 export const MODEL_ALL = [
     MODEL_ACTION,
     MODEL_AGENT,
@@ -42,7 +50,8 @@ export const MODEL_ALL = [
     MODEL_CONNECTION,
     MODEL_SERVER,
     MODEL_USER_ACCOUNT,
-    MODEL_USER_IDENTITY
+    MODEL_USER_IDENTITY,
+    MODEL_ACCESS_POLICY_GROUP
 ];
 
 //ROUTES
@@ -70,6 +79,9 @@ export const ROUTE_CONNECTION = 'connection';
 export const ROUTE_EXTERNAL = 'external';
 export const ROUTE_USER_ACCOUNT = 'user';
 export const ROUTE_USER_IDENTITY = 'identity';
+export const ROUTE_ACCESS_CONTROL = 'ac';
+export const ROUTE_TEST_TRAIN = 'testTrain'
+export const ROUTE_TRAIN_TEST = 'trainTest'
 
 // STATUS
 export const STATUS_READY = 'Ready';
@@ -103,6 +115,12 @@ export const PARAM_TOKEN = 'token';
 export const PARAM_SECRET = 'secret';
 export const PARAM_PROFILE = 'profile';
 export const PARAM_IDENTITY = 'identity';
+export const PARAM_GROUP = 'group';
+export const PARAM_GROUPS = 'groups';
+export const PARAM_GROUP_NAME = 'groupName';
+export const PARAM_VALIDATE = 'validate';
+export const PARAM_RULES = 'rules';
+export const PARAM_IS_ADMIN = 'isAdmin';
 
 export const PARAM_ACTION_ID = ROUTE_ACTION + PARAMS_POSTFIX_ID;
 export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;
@@ -138,12 +156,14 @@ export const ROUTE_TO_MODEL = {
     [ROUTE_CONNECTION]: MODEL_CONNECTION,
     [ROUTE_POST_FORMAT]: MODEL_POST_FORMAT,
     [ROUTE_USER_ACCOUNT]: MODEL_USER_ACCOUNT,
-    [ROUTE_USER_IDENTITY]: MODEL_USER_IDENTITY
+    [ROUTE_USER_IDENTITY]: MODEL_USER_IDENTITY,
+    [ROUTE_ACCESS_CONTROL]: MODEL_ACCESS_POLICY_GROUP
 };
 export const MODEL_TO_ROUTE = _.invert(ROUTE_TO_MODEL);
 
 //CONFIG
 export const CONFIG_SETTINGS_RASA_URL = 'rasaURL';
+export const CONFIG_SETTINGS_RASA_URLs = 'rasaURLs';
 export const CONFIG_SETTINS_RASA_CONCURRENT_REQUESTS = 'rasaConcurrentRequests';
 export const CONFIG_SETTINGS_DUCKLING_URL = 'ducklingURL';
 export const CONFIG_SETTINGS_DUCKLING_DIMENSION = 'ducklingDimension';
@@ -172,13 +192,20 @@ export const CONFIG_SETTINGS_MODIFIER_ACTIONS = 'modifierActions';
 export const CONFIG_SETTINGS_MODIFIER_VALUE_SOURCE = 'modifierValueSources';
 export const CONFIG_SETTINGS_DEFAULT_UI_SESSION_ID = 'defaultUISessionId';
 export const CONFIG_SETTINGS_CONVERSATION_PANEL_WIDTH = 'conversationPanelWidth';
+export const CONFIG_SETTINGS_SLACK_LOGGING_URL = 'slackLoggingURL';
 export const CONFIG_SETTINGS_ALLOW_NEW_USERS_SIGN_UPS = 'allowNewUsersSignUps';
+export const CONFIG_SETTINGS_AGENT_VERSIONS = 'enableAgentVersions';
+export const GENERATE_SLOTS_QUICK_RESPONSES = 'generateSlotsQuickResponses';
+export const GENERATE_SLOTS_QUICK_RESPONSES_MAX = 'generateSlotsQuickResponsesMax';
+export const GENERATE_ACTIONS_QUICK_RESPONSES = 'generateActionsQuickResponses';
+export const GENERATE_ACTIONS_QUICK_RESPONSES_MAX = 'generateActionsQuickResponsesMax'
 
 export const CONFIG_KEYWORD_TYPE_LEARNED = 'learned';
 export const CONFIG_KEYWORD_TYPE_REGEX = 'regex';
 
 export const CONFIG_SETTINGS_RASA_TRAINING = [
     CONFIG_SETTINGS_RASA_URL,
+    CONFIG_SETTINGS_RASA_URLs,
     CONFIG_SETTINGS_DUCKLING_URL,
     CONFIG_SETTINGS_DUCKLING_DIMENSION,
     CONFIG_SETTINGS_SPACY_ENTITIES,
@@ -189,6 +216,7 @@ export const CONFIG_SETTINGS_RASA_TRAINING = [
 
 export const CONFIG_SETTINGS_DEFAULT_AGENT = [
     CONFIG_SETTINGS_RASA_URL,
+    CONFIG_SETTINGS_RASA_URLs,
     CONFIG_SETTINS_RASA_CONCURRENT_REQUESTS,
     CONFIG_SETTINGS_DUCKLING_URL,
     CONFIG_SETTINGS_DUCKLING_DIMENSION,
@@ -201,11 +229,18 @@ export const CONFIG_SETTINGS_DEFAULT_AGENT = [
     CONFIG_SETTINGS_ACTIONS_PAGE_SIZE,
     CONFIG_SETTINGS_MODIFIER_SAYINGS_PAGE_SIZE,
     CONFIG_SETTINGS_REVIEW_PAGE_SIZE,
-    CONFIG_SETTINGS_SESSIONS_PAGE_SIZE
+    CONFIG_SETTINGS_SESSIONS_PAGE_SIZE,
+    CONFIG_SETTINGS_SLACK_LOGGING_URL,
+    CONFIG_SETTINGS_AGENT_VERSIONS,
+    GENERATE_SLOTS_QUICK_RESPONSES,
+    GENERATE_SLOTS_QUICK_RESPONSES_MAX,
+    GENERATE_ACTIONS_QUICK_RESPONSES,
+    GENERATE_ACTIONS_QUICK_RESPONSES_MAX
 ];
 
 export const CONFIG_SETTINGS_ALL = [
     CONFIG_SETTINGS_RASA_URL,
+    CONFIG_SETTINGS_RASA_URLs,
     CONFIG_SETTINS_RASA_CONCURRENT_REQUESTS,
     CONFIG_SETTINGS_DUCKLING_URL,
     CONFIG_SETTINGS_DUCKLING_DIMENSION,
@@ -234,6 +269,7 @@ export const CONFIG_SETTINGS_ALL = [
     CONFIG_SETTINGS_MODIFIER_VALUE_SOURCE,
     CONFIG_SETTINGS_DEFAULT_UI_SESSION_ID,
     CONFIG_SETTINGS_CONVERSATION_PANEL_WIDTH,
+    CONFIG_SETTINGS_SLACK_LOGGING_URL,
     CONFIG_SETTINGS_ALLOW_NEW_USERS_SIGN_UPS
 ];
 
@@ -241,6 +277,7 @@ export const CONFIG_SETTINGS_STRING_VALUE = [
     CONFIG_SETTINGS_DEFAULT_UI_SESSION_ID,
     CONFIG_SETTINGS_LANGUAGES_DEFAULT,
     CONFIG_SETTINGS_RASA_URL,
+    CONFIG_SETTINGS_RASA_URLs,
     CONFIG_SETTINS_RASA_CONCURRENT_REQUESTS,
     CONFIG_SETTINGS_DUCKLING_URL,
     CONFIG_SETTINGS_TIMEZONES_DEFAULT,
@@ -253,6 +290,8 @@ export const CONFIG_SETTINGS_STRING_VALUE = [
     CONFIG_SETTINGS_ACTIONS_PAGE_SIZE,
     CONFIG_SETTINGS_REVIEW_PAGE_SIZE,
     CONFIG_SETTINGS_SESSIONS_PAGE_SIZE,
+    CONFIG_SETTINGS_CONVERSATION_PANEL_WIDTH,
+    CONFIG_SETTINGS_SLACK_LOGGING_URL,
     CONFIG_SETTINGS_USERS_PAGE_SIZE,
     CONFIG_SETTINGS_CONVERSATION_PANEL_WIDTH
 ];
@@ -326,3 +365,8 @@ export const SORT_DESC = 'DESC';
 export const PROVIDER_BASIC = 'basic';
 export const PROVIDER_TWITTER = 'twitter';
 export const PROVIDER_GITHUB = 'github';
+export const ACL_ACTION_READ = 'read';
+export const ACL_ACTION_WRITE = 'write';
+export const ACL_ACTION_CONVERSE = 'converse';
+export const DEFAULT_ADMIN_GROUP_NAME = 'admin';
+export const DEFAULT_GROUP_NAME = 'users';

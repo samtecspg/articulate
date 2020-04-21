@@ -39,10 +39,13 @@ import {
   makeSelectSelectedCategory,
   makeSelectTotalDocuments,
   makeSelectTotalSessions,
+  makeSelectTotalTrainTests,
   makeSelectLocale,
   makeSelectServerStatus,
   makeSelectLoadingCurrentUser,
   makeSelectLoading,
+  makeSelectAgentVersions,
+  makeSelectLoadingAgentVersion,
   makeSelectReviewPageFilterSearchSaying,
   makeSelectReviewPageFilterCategory,
   makeSelectReviewPageFilterActions,
@@ -53,7 +56,8 @@ import {
   makeSelectReviewPageFilterContainers,
   makeSelectReviewPageFilterMaxLogs,
   makeSelectReviewPageFilterLogsString,
-  makeSelectReviewPageLogsNumberOfFiltersApplied
+  makeSelectReviewPageLogsNumberOfFiltersApplied,
+  makeSelectTrainTests
 } from '../App/selectors';
 import Form from './Components/Form';
 import saga from './saga';
@@ -76,6 +80,7 @@ export class ReviewPage extends React.Component {
     this.handleTabChange = this.handleTabChange.bind(this);
     this.handleDeleteDocModalChange = this.handleDeleteDocModalChange.bind(this);
     this.onSearchLog = this.onSearchLog.bind(this);
+    this.handleTrainingTestSummaryModalChange = this.handleTrainingTestSummaryModalChange.bind(this);
     this.throttleDocuments = this.throttleDocuments.bind(this);
     this.throttleDocumentsFunction = this.throttleDocumentsFunction.bind(this);
     this.throttleSessions = this.throttleSessions.bind(this);
@@ -128,6 +133,14 @@ export class ReviewPage extends React.Component {
         numberOfPages: null,
         sortField: '@timestamp',
         sortDirection: 'desc'
+      },
+      training: {
+        total: null,
+        currentPage: 1,
+        pageSize: 5,
+        numberOfPages: null,
+        sortField: 'timeStamp',
+        sortDirection: 'desc'
       }
     },
     deleteDocModalOpen: false,
@@ -136,6 +149,7 @@ export class ReviewPage extends React.Component {
     deleteDocIndexId: '',
     deleteSessionModalOpen: false,
     deleteSessionId: '',
+    trainingTestSummaryModalOpen: false,
   };
 
   async initForm() {
@@ -147,6 +161,8 @@ export class ReviewPage extends React.Component {
       onLoadAgentSessions,
       onLoadLogs,
       onRefreshDocuments,
+      onLoadAgentTrainTests,
+      onLoadAgentTrainTest,
     } = this.props.actions;
 
     this.setState({
@@ -154,6 +170,7 @@ export class ReviewPage extends React.Component {
     });
     this.setNumberOfPages(this.props.agent.settings.reviewPageSize, 'documents');
     this.setNumberOfPages(this.props.agent.settings.sessionsPageSize, 'sessions');
+    this.setNumberOfPages(5, 'training');//FIXME
     onLoadKeywords();
     onLoadActions();
     onLoadCategories();
@@ -179,6 +196,13 @@ export class ReviewPage extends React.Component {
       direction: this.state.pageStatus.logs.sortDirection,
       filter: this.props.reviewPageFilterLogsString
     });
+
+    onLoadAgentTrainTests({
+      page: this.state.pageStatus.training.currentPage,
+      pageSize: this.state.pageStatus.training.pageSize,
+      field: this.state.pageStatus.training.sortField,
+      direction: this.state.pageStatus.training.sortDirection,
+    })
 
     const newPageStatus = this.state.pageStatus;
 
@@ -250,7 +274,7 @@ export class ReviewPage extends React.Component {
     if (!prevProps.agent.id && this.props.agent.id) {
       this.initForm();
     }
-    const { documents, sessions } = this.props;
+    const { documents, sessions, trainTests } = this.props;
     if (documents !== this.state.documents) {
       this.setState({ documents });
       this.setNumberOfPages(this.state.pageStatus.documents.pageSize, 'documents');
@@ -258,6 +282,10 @@ export class ReviewPage extends React.Component {
     if (sessions !== this.state.sessions) {
       this.setState({ sessions });
       this.setNumberOfPages(this.state.pageStatus.sessions.pageSize, 'sessions');
+    }
+    if (trainTests !== this.state.trainTests) {
+      this.setState({ trainTests });
+      this.setNumberOfPages(this.state.pageStatus.training.pageSize, 'training');
     }
   }
 
@@ -312,7 +340,7 @@ export class ReviewPage extends React.Component {
   }
 
   setNumberOfPages(pageSize, type) {
-    const numberOfPages = Math.ceil((type === 'documents' ? this.props.totalDocuments : this.props.totalSessions) / pageSize);
+    const numberOfPages = Math.ceil((type === 'documents' ? this.props.totalDocuments : type === 'sessions' ? this.props.totalSessions : this.props.totalTrainTests) / pageSize);
     const newPageStatus = this.state.pageStatus;
     newPageStatus[type].numberOfPages = numberOfPages;
     this.setState({
@@ -321,7 +349,7 @@ export class ReviewPage extends React.Component {
   }
 
   changePage(pageNumber) {
-    const { onLoadAgentDocuments, onLoadAgentSessions } = this.props.actions;
+    const { onLoadAgentDocuments, onLoadAgentSessions, onLoadAgentTrainTests } = this.props.actions;
     const newPageStatus = this.state.pageStatus;
     newPageStatus[this.state.selectedTab].currentPage = pageNumber;
     this.setState({
@@ -351,6 +379,14 @@ export class ReviewPage extends React.Component {
         this.state.pageStatus.sessions.sortField,
         this.state.pageStatus.sessions.sortDirection,
       );
+    }
+    if (this.state.selectedTab === 'training') {
+      onLoadAgentTrainTests({
+        page: pageNumber,
+        pageSize: this.state.pageStatus.training.pageSize,
+        field: this.state.pageStatus.training.sortField,
+        direction: this.state.pageStatus.training.sortDirection,
+      });
     }
   }
 
@@ -428,7 +464,7 @@ export class ReviewPage extends React.Component {
   }
 
   copySayingFromDocument(userSays, saying) {
-    const { agentCategories, agentKeywords, onGoToUrl, agent } = this.props;
+    const { agentCategories, agentKeywords } = this.props;
     const { onCopySaying } = this.props.actions;
     const category = _.find(agentCategories, {
       categoryName: saying.category,
@@ -532,6 +568,12 @@ export class ReviewPage extends React.Component {
     })
   }
 
+  handleTrainingTestSummaryModalChange = (trainingTestSummaryModalOpen) => {
+    this.setState({
+      trainingTestSummaryModalOpen
+    })
+  }
+
   deleteSession() {
     this.props.actions.onDeleteSession({
       sessionId: this.state.deleteSessionId,
@@ -563,7 +605,10 @@ export class ReviewPage extends React.Component {
       onChangeReviewPageLogsNumberOfFiltersApplied,
       onResetReviewPageFilters,
       onResetReviewPageLogsFilters,
-      onChangeReviewPageFilterString
+      onChangeReviewPageFilterString,
+      onLoadAgentTrainTest,
+      onLoadAgentLatestTrainTest,
+      onCloseTestTrainNotification
     } = this.props.actions;
 
     const {
@@ -670,12 +715,26 @@ export class ReviewPage extends React.Component {
               onResetReviewPageFilters={onResetReviewPageFilters}
               onResetReviewPageLogsFilters={onResetReviewPageLogsFilters}
               onChangeReviewPageFilterString={onChangeReviewPageFilterString}
+              trainTests={this.props.trainTests}
+              onLoadAgentTrainTest={onLoadAgentTrainTest}
+              onGoToUrl={this.props.onGoToUrl}
+              onLoadAgentLatestTrainTest={onLoadAgentLatestTrainTest}
+              onCloseTestTrainNotification={onCloseTestTrainNotification}
+              onTrainingTestSummaryModalChange={this.handleTrainingTestSummaryModalChange}
+              trainingTestSummaryModalOpen={this.state.trainingTestSummaryModalOpen}
             />
           }
           dialogueForm={Link}
           dialogueURL={`/agent/${agent.id}/dialogue`}
           analyticsForm={Link}
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
+          currentAgent={this.props.agent}
+          onAddAgentVersion={this.props.onAddAgentVersion}
+          onLoadAgentVersion={this.props.onLoadAgentVersion}
+          onUpdateAgentVersion={this.props.onUpdateAgentVersion}
+          onDeleteAgentVersion={this.props.onDeleteAgentVersion}
+          agentVersions={this.props.agentVersions ? this.props.agentVersions : []}
+          loadingAgentVersion={this.props.loadingAgentVersion}
         />
       </Grid>
     ) : (
@@ -720,7 +779,11 @@ ReviewPage.propTypes = {
     onChangeReviewPageFilterLogsString: PropTypes.func.isRequired,
     onChangeReviewPageLogsNumberOfFiltersApplied: PropTypes.func.isRequired,
     onResetReviewPageFilters: PropTypes.func.isRequired,
-    onResetReviewPageLogsFilters: PropTypes.func.isRequired
+    onResetReviewPageLogsFilters: PropTypes.func.isRequired,
+    onLoadAgentTrainTests: PropTypes.func.isRequired,
+    onLoadAgentTrainTest: PropTypes.func.isRequired,
+    onLoadAgentLatestTrainTest: PropTypes.func.isRequired,
+    onCloseTestTrainNotification: PropTypes.func.isRequired
   }),
   agent: PropTypes.object.isRequired,
   serverStatus: PropTypes.string,
@@ -764,6 +827,8 @@ const mapStateToProps = createStructuredSelector({
   sessions: makeSelectSessions(),
   locale: makeSelectLocale(),
   loading: makeSelectLoading(),
+  agentVersions: makeSelectAgentVersions(),
+  loadingAgentVersion: makeSelectLoadingAgentVersion(),
   reviewPageFilterSearchSaying: makeSelectReviewPageFilterSearchSaying(),
   reviewPageFilterCategory: makeSelectReviewPageFilterCategory(),
   reviewPageFilterActions: makeSelectReviewPageFilterActions(),
@@ -774,7 +839,9 @@ const mapStateToProps = createStructuredSelector({
   reviewPageFilterContainers: makeSelectReviewPageFilterContainers(),
   reviewPageFilterMaxLogs: makeSelectReviewPageFilterMaxLogs(),
   reviewPageFilterLogsString: makeSelectReviewPageFilterLogsString(),
-  reviewPageLogsNumberOfFiltersApplied: makeSelectReviewPageLogsNumberOfFiltersApplied()
+  reviewPageLogsNumberOfFiltersApplied: makeSelectReviewPageLogsNumberOfFiltersApplied(),
+  trainTests: makeSelectTrainTests(),
+  totalTrainTests: makeSelectTotalTrainTests()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -815,12 +882,28 @@ function mapDispatchToProps(dispatch) {
         onChangeReviewPageLogsNumberOfFiltersApplied: Actions.changeReviewPageLogsNumberOfFiltersApplied,
         onResetReviewPageFilters: Actions.resetReviewPageFilters,
         onResetReviewPageLogsFilters: Actions.resetReviewPageLogsFilters,
+        onLoadAgentTrainTests: Actions.loadAgentTrainTests,
+        onLoadAgentTrainTest: Actions.loadAgentTrainTest,
+        onLoadAgentLatestTrainTest: Actions.loadAgentLatestTrainTest,
+        onCloseTestTrainNotification: Actions.closeTestTrainNotification,
       },
       dispatch,
     ),
     onGoToUrl: url => {
       dispatch(push(url));
-    }
+    },
+    onLoadAgentVersion: (versionId, currentAgentId) => {
+      dispatch(Actions.loadAgentVersion(versionId, currentAgentId));
+    },
+    onUpdateAgentVersion: (version) => {
+      dispatch(Actions.updateAgentVersion(version));
+    },
+    onDeleteAgentVersion: (versionId, currentAgentId) => {
+      dispatch(Actions.deleteAgentVersion(versionId, currentAgentId));
+    },
+    onAddAgentVersion: id => {
+      dispatch(Actions.addAgentVersion(id));
+    },
   };
 }
 

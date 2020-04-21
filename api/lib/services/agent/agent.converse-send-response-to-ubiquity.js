@@ -74,8 +74,7 @@ module.exports = async function ({ actionData, CSO, documentUpdateData }) {
     const responseForUbiquity = CSO.debug ? fullConverseResult : converseResult;
 
     if (CSO.ubiquity && CSO.ubiquity.connection && CSO.ubiquity.connection.details.outgoingMessages) {
-
-        await channelService.reply({ connection: CSO.ubiquity.connection, event: CSO.ubiquity.event, response: responseForUbiquity, server: this.server });
+        await channelService.reply({ connection: CSO.ubiquity.connection, event: CSO.ubiquity.event, response: responseForUbiquity, sessionId: CSO.sessionId, server: this.server });
         await timeout(CSO.ubiquity.connection.details.waitTimeBetweenMessages);
     }
     else {

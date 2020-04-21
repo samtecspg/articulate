@@ -88,7 +88,7 @@ export default defineMessages({
     id:
       'app.containers.AgentPage.component.AgentDataForm.fallbackTextFieldPlaceholder',
     defaultMessage:
-      "What your agent should say if he weren't able to recognize what user said?",
+      'What your agent should say if he weren\'t able to recognize what user said?',
   },
   welcomeTextField: {
     id: 'app.containers.AgentPage.component.AgentDataForm.welcomeTextField',
@@ -114,7 +114,7 @@ export default defineMessages({
   },
   noFallbacks: {
     id: 'app.containers.AgentPage.component.AgentDataForm.noFallbacks',
-    defaultMessage: "You haven't specified any fallback response",
+    defaultMessage: 'You haven\'t specified any fallback response',
   },
   noWelcomes: {
     id: 'app.containers.AgentPage.component.AgentDataForm.noWelcomes',
@@ -158,6 +158,26 @@ export default defineMessages({
     id: 'app.containers.AgentPage.component.AgentSettingsForm.ducklingSetting',
     defaultMessage: 'Duckling',
   },
+  loggingSetting: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.loggingSetting',
+    defaultMessage: 'Logging',
+  },
+  discoverySetting: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.discoverySetting',
+    defaultMessage: 'Discovery Sheet',
+  },
+  discoveryURL: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.slackLogginURL',
+    defaultMessage: 'Discovery Sheet URL',
+  },
+  slackLoggingURL: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.slackLogginURL',
+    defaultMessage: 'Slack Logging URL',
+  },
+  slackLoggingURLPlaceholder: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.slackLogginURLPlaceholder',
+    defaultMessage: 'Incoming webhook url provided by slack',
+  },
   extraTrainingData: {
     id:
       'app.containers.AgentPage.component.AgentSettingsForm.extraTrainingData',
@@ -168,6 +188,14 @@ export default defineMessages({
       'app.containers.AgentPage.component.AgentSettingsForm.extraTrainingDataHelp',
     defaultMessage:
       'If you enable this option your keyword values and synonyms will be used to generate training data examples by substituing highlighted values in your sayings.',
+  },
+  enableDiscoverySheet: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.enableDiscoverySheet',
+    defaultMessage: 'Enable Discovery Sheet',
+  },
+  openDiscoverySheet: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.openDiscoverySheet',
+    defaultMessage: 'Open Discovery Sheet',
   },
   enableModelsPerCategory: {
     id:
@@ -214,5 +242,76 @@ export default defineMessages({
     id:
       'app.containers.AgentPage.component.AgentParametersForm.newAgentParameterValueTextFieldPlaceholder',
     defaultMessage: 'Type your parameter value',
+  },
+  accessControlSettings: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.accessControlSettings',
+    defaultMessage: 'Access Control',
+  },
+  accessControlLabel: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.accessControlSettings',
+    defaultMessage: 'Access Control',
+  },
+  AutomaticQuickRepliesSetting: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.automaticQuickRepliesSetting',
+    defaultMessage: 'Automatic Quick Replies',
+  },
+  slotsQuickReplies: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.slotsQuickReplies',
+    defaultMessage: 'Generate automatic quick replies for slots',
+  },
+  slotsQuickRepliesHelp: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.extraTrainingDataHelp',
+    defaultMessage:
+      'If you enable this option, your agent will automatically generate suggestions for missing required slots.',
+  },
+  slotsQuickRepliesLabel: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.slotsQuickRepliesLabel',
+    defaultMessage: 'Max quick replies generated for slots',
+  },
+  actionsQuickReplies: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.actionsQuickReplies',
+    defaultMessage: 'Generate automatic quick replies for actions',
+  },
+  actionsQuickRepliesHelp: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.extraTrainingDataHelp',
+    defaultMessage:
+      'If you enable this option, your agent will automatically generate suggestions after sending the response for an action using current context',
+  },
+  actionsQuickRepliesLabel: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.actionsQuickRepliesLabel',
+    defaultMessage: 'Max quick replies generated for actions',
+  },
+  automaticQuickRepliesSettingsDescription: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.automaticQuickRepliesSettingsDescription',
+    defaultMessage:
+      'Enabling this options will generate quick replies for missing slots and actions according to keywords possible values and the context of the conversation',
+  },
+  agentVersionsSetting: {
+    id: 'app.containers.AgentPage.component.AgentSettingsForm.agentVersionsSetting',
+    defaultMessage: 'Agent Versions',
+  },
+  agentVersions: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.agentVersions',
+    defaultMessage: 'Save agent versions',
+  },
+  agentVersionsDescription: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.agentVersionsDescription',
+    defaultMessage:
+      'Enabling this options will save a new version of the agent each time it is succesfully trained',
+  },
+  agentVersionsHelp: {
+    id:
+      'app.containers.AgentPage.component.AgentSettingsForm.agentVersionsHelp',
+    defaultMessage:
+      'If you enable this option, everytime your agent is succesfully trained, there will be a new version saved. You can load them using the icon next to the train button. You can also change the version name and add notes on it',
   },
 });

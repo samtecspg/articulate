@@ -28,6 +28,10 @@ const schema = {
     },
     modificationDate: {
         type: 'timestamp'
+    },
+    groups: {
+        type: 'json',
+        defaultValue: []
     }
 };
 

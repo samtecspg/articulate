@@ -23,7 +23,7 @@ module.exports = async function ({ connection, request, h }) {
   });
 
   if (!connection.details.outgoingMessages){
-    channelService.reply({ connection, event, response});
+    await channelService.reply({ connection, event, response, sessionId });
   }
 
   return h.response().code(200);

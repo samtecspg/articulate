@@ -5,7 +5,9 @@ import AuthorizeOauth from './user/user.authorize-oauth.service';
 import Create from './user/user.create-account.service';
 import FindById from './user/user.find-by-id.service';
 import RemoveById from './user/user.remove-by-id.service';
+import UpdateById from './user/user.update-by-id.service';
 import Validate from './user/user.validate.service';
+import NoAuthUser from './user/user.no-auth-user.service';
 
 class UserService extends Schmervice.Service {
     async create() {
@@ -31,6 +33,16 @@ class UserService extends Schmervice.Service {
     async authorizeOauth() {
         return await TimingWrapper({ cls: this, fn: AuthorizeOauth, name: 'AuthorizeOauth' }).apply(this, arguments);
     }
-}
+
+    async updateById() {
+
+        return await UpdateById.apply(this, arguments);
+    }
+
+    async noAuthUser() {
+
+        return await NoAuthUser.apply(this, arguments);
+    }
+};
 
 module.exports = UserService;

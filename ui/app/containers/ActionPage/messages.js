@@ -250,6 +250,11 @@ export default defineMessages({
     id: 'app.components.WebhookSettings.newActionResponseQuickResponsePlaceholder',
     defaultMessage: 'Please type possible responses that are going to be shown as buttons',
   },
+  automaticQuickResponsesActivated: {
+    id: 'app.containers.ActionPage.component.SlotForm.automaticQuickResponsesActivated',
+    defaultMessage:
+      '*Automatic suggestions are enabled. If you add quick responses they will override any automatic suggestions',
+  },
   addButton: {
     id: 'app.containers.ActionPage.component.ResponseRow.addButton',
     defaultMessage: 'Add',
@@ -269,5 +274,9 @@ export default defineMessages({
   disableTextResponse: {
     id: 'app.containers.ActionPage.component.ResponseRow.disableTextResponse',
     defaultMessage: 'Disable text response',
+  },
+  automaticQuickResponsesActivatedShort: {
+    id: 'app.containers.ActionPage.component.ResponseRow.automaticQuickResponsesActivatedShort',
+    defaultMessage: '* Automatic suggestions are enabled but they will be overriden by these'
   }
 });

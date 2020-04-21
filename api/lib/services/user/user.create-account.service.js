@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {
+    DEFAULT_GROUP_NAME,
     MODEL_USER_ACCOUNT,
     PARAM_PASSWORD,
     PARAM_SALT,
@@ -20,6 +21,7 @@ module.exports = async function ({ data, identity = null, filterSensitiveData = 
             data.salt = salt;
             identity = null;
         }
+        data.groups = [DEFAULT_GROUP_NAME];
         await model.createInstance({ data: _.omit(data, ['provider']) });
         let properties = model.allProperties();
         if (filterSensitiveData) {

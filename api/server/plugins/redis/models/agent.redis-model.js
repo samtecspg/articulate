@@ -1,5 +1,18 @@
-import { MODEL_AGENT } from '../../../../util/constants';
+import {
+    ACL_ACTION_CONVERSE,
+    ACL_ACTION_READ,
+    ACL_ACTION_WRITE,
+    MODEL_AGENT
+} from '../../../../util/constants';
 import BaseModel from '../lib/base-model';
+
+const defaults = {};
+
+defaults.accessPolicies = {
+    [`${MODEL_AGENT}:${ACL_ACTION_READ}`]: false,
+    [`${MODEL_AGENT}:${ACL_ACTION_WRITE}`]: false,
+    [`${MODEL_AGENT}:${ACL_ACTION_CONVERSE}`]: false
+};
 
 const schema = {
     gravatar: {
@@ -80,6 +93,42 @@ const schema = {
     },
     modificationDate: {
         type: 'timestamp'
+    },
+    enableDiscoverySheet: {
+        type: 'boolean',
+        defaultValue: false
+    },
+    enableAgentVersions: {
+        type: 'boolean',
+        defaultValue: false
+    },
+    accessPolicies: {
+        type: 'json',
+        defaultValue: {}
+    },
+    isOriginalAgentVersion: {
+        type: 'boolean',
+        defaultValue: true
+    },
+    originalAgentVersionId: {
+        type: 'number',
+        defaultValue: -1
+    },
+    originalAgentVersionName: {
+        type: 'string',
+        defaultValue: ''
+    },
+    agentVersionNotes: {
+        type: 'string',
+        defaultValue: ''
+    },
+    loadedAgentVersionName: {
+        type: 'string',
+        defaultValue: ''
+    },
+    currentAgentVersionCounter: {
+        type: 'number',
+        defaultValue: 0
     }
 };
 
@@ -88,6 +137,7 @@ class AgentRedisModel extends BaseModel {
 
         super({ schema });
         this.publish = true;
+        this.defaults = defaults;
     }
 
     static get modelName() {
@@ -105,4 +155,5 @@ class AgentRedisModel extends BaseModel {
         return schema;
     }
 }
+
 module.exports = AgentRedisModel;

@@ -9,6 +9,7 @@ module.exports = async (server) => {
     const CurrentSettings = await settingsService.findAll();
     const CurrentSettingsNames = Object.keys(CurrentSettings);
 
+
     await Promise.all(_.map(defaultSettings, async (value, name) => {
 
         if (CurrentSettingsNames.indexOf(name) > -1) {

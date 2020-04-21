@@ -22,7 +22,7 @@ module.exports = async function ({ connection, request, h }) {
       }
   });
 
-  const responsePayload = await channelService.reply({ connection, event, response });
+  const responsePayload = await channelService.reply({ connection, event, response, sessionId });
 
   return h.response(responsePayload.body).code(responsePayload.status);
 };

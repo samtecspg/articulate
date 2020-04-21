@@ -123,7 +123,7 @@ export class UsersPage extends React.PureComponent {
         <Grid
           style={{paddingBottom: this.props.settings.allowNewUsersSignUps ? null : 20 }}
           className={classes.container}
-          item 
+          item
           xs={12}
         >
           <Grid className={classes.titleContainer}>
@@ -131,7 +131,7 @@ export class UsersPage extends React.PureComponent {
               <FormattedMessage {...messages.title} />
             </Typography>
           </Grid>
-          {this.props.settings.allowNewUsersSignUps ? 
+          {this.props.settings.allowNewUsersSignUps ?
             <ActionButtons
               onFinishAction={() => {
                 this.props.onGoToUrl('/login?tab=signUp&ref=users')
@@ -150,6 +150,7 @@ export class UsersPage extends React.PureComponent {
           moveUsersPageBack={this.moveUsersPageBack}
           changeUsersPageSize={this.changeUsersPageSize}
           onDeleteUser={this.props.onDeleteUser.bind(null, this.state.currentUsersPage, this.state.usersPageSize)}
+          onGoToUrl={this.props.onGoToUrl}
         />
       </Grid>
     ) : (

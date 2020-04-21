@@ -1,27 +1,24 @@
-import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
-import { intlShape, injectIntl } from 'react-intl';
-
+import { Grid, MenuItem, Popover, Tooltip } from '@material-ui/core';
+import { createMuiTheme, MuiThemeProvider, withStyles } from '@material-ui/core/styles';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
-import {
-  createMuiTheme,
-  MuiThemeProvider,
-  withStyles
-} from '@material-ui/core/styles';
-import { createStructuredSelector } from 'reselect';
+import React, { Fragment } from 'react';
+import { injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
-import { Grid, Popover, MenuItem, Tooltip } from '@material-ui/core';
-
-import messages from './messages';
-import { checkCookie } from '../../utils/cookies';
-
-import settingsIcon from '../../images/settings-icon.svg';
-import userListIcon from '../../images/user-list-icon.svg';
-import userIconGray from '../../images/user-icon-gray.svg';
-import logoutIcon from '../../images/logout-icon.svg';
-
-import ExitModal from '../../components/ExitModal';
+import { Link } from 'react-router-dom';
+import { createStructuredSelector } from 'reselect';
+import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
 import { makeSelectCurrentUser } from '../../containers/App/selectors';
+import logoutIcon from '../../images/logout-icon.svg';
+import settingsIcon from '../../images/settings-icon.svg';
+import userIconGray from '../../images/user-icon-gray.svg';
+import userListIcon from '../../images/user-list-icon.svg';
+import AC from '../../utils/accessControl';
+import { checkCookie } from '../../utils/cookies';
+import ExitModal from '../ExitModal';
+import messages from './messages';
+
+const userAccessPolicies = [GROUP_ACCESS_CONTROL.USER_READ, GROUP_ACCESS_CONTROL.USER_WRITE];
 
 const tooltipTheme = createMuiTheme({
   overrides: {
@@ -32,10 +29,10 @@ const tooltipTheme = createMuiTheme({
         backgroundColor: 'none',
         color: '#4E4E4E',
         marginLeft: '-20px',
-        marginRight: '10px'
-      }
-    }
-  }
+        marginRight: '10px',
+      },
+    },
+  },
 });
 
 const styles = {
@@ -47,7 +44,7 @@ const styles = {
     width: '60px',
   },
   menuItem: {
-    paddingLeft: '12pt'
+    paddingLeft: '12pt',
   },
   popoverOption: {
     marginTop: '12px',
@@ -56,7 +53,7 @@ const styles = {
     display: 'inline-block',
     color: '#959595',
     fontSize: '14px',
-    fontFamily: 'Montserrat'
+    fontFamily: 'Montserrat',
   },
   popoverUserName: {
     display: 'inline-block',
@@ -65,19 +62,19 @@ const styles = {
     color: '#4E4E4E',
     marginRight: '80px',
     fontSize: '17px',
-    fontFamily: 'Montserrat'
+    fontFamily: 'Montserrat',
   },
   popoverValue: {
     display: 'inline-block',
     marginLeft: '8px',
     fontSize: '14px',
-    fontFamily: 'Montserrat'
+    fontFamily: 'Montserrat',
   },
   popoverValueBorder: {
     border: '1px solid',
     borderLeft: 'none',
     borderRight: 'none',
-    borderTop: 'none'
+    borderTop: 'none',
   },
   currentUser: {
     '&:hover': {
@@ -86,7 +83,7 @@ const styles = {
     filter: 'invert(1)',
     paddingBottom: '8px',
     cursor: 'pointer',
-    width: '100%'
+    width: '100%',
   },
   settingsImage: {
     width: '100%',
@@ -99,13 +96,12 @@ const styles = {
   },
 
   logoutIcon: {
-    display: 'inline-block'
-  }
+    display: 'inline-block',
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
 export class AppContent extends React.Component {
-
   constructor(props) {
     super(props);
     this.renderPopover = this.renderPopover.bind(this.renderPopover);
@@ -114,79 +110,77 @@ export class AppContent extends React.Component {
 
   state = {
     popOverAnchorEl: null,
-    openLogoutExitModal: false
-  }
+    openLogoutExitModal: false,
+  };
 
   handlePopoverClose = () => {
     this.setState({
-      popOverAnchorEl: null
+      popOverAnchorEl: null,
     });
   };
 
   renderPopover = (classes, intl) => {
-    return (<Popover
-      anchorEl={this.state.popOverAnchorEl}
-      open={Boolean(this.state.popOverAnchorEl)}
-      onClose={this.handlePopoverClose}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-      elevation={3}>
-      <Grid>
-        <span className={classes.popoverOption}>
-          {intl.formatMessage(messages.popoverUserTitle)}
-        </span>
-        <br />
-        <div className={classes.popoverValueBorder}>
-          <span className={classes.popoverUserName}>
-            {this.props.currentUser ? this.props.currentUser.email : null}
-          </span>
-        </div>
-        <MenuItem
-          className={classes.menuItem}
-          onClick={() => {
-            this.handlePopoverClose();
-            this.setState({ openLogoutExitModal: true })
-          }}
-        >
-          <img
-            className={
-              classes.logoutIcon
-            }
-            src={logoutIcon}
-          />
-          <span className={classes.popoverValue}>
-            {intl.formatMessage(messages.popoverUserSignOut)}
-          </span>
-        </MenuItem>
-      </Grid>
-    </Popover>);
-  }
+    return (
+      <Popover
+        anchorEl={this.state.popOverAnchorEl}
+        open={Boolean(this.state.popOverAnchorEl)}
+        onClose={this.handlePopoverClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        elevation={3}
+      >
+        <Grid>
+          <span className={classes.popoverOption}>{intl.formatMessage(messages.popoverUserTitle)}</span>
+          <br />
+          <div className={classes.popoverValueBorder}>
+            <span className={classes.popoverUserName}>{this.props.currentUser ? this.props.currentUser.email : null}</span>
+          </div>
+          <MenuItem
+            className={classes.menuItem}
+            onClick={() => {
+              this.handlePopoverClose();
+              this.setState({ openLogoutExitModal: true });
+            }}
+          >
+            <img className={classes.logoutIcon} src={logoutIcon} />
+            <span className={classes.popoverValue}>{intl.formatMessage(messages.popoverUserSignOut)}</span>
+          </MenuItem>
+        </Grid>
+      </Popover>
+    );
+  };
 
-  renderExitModal = (intl) => {
-    return (<ExitModal
-      open={this.state.openLogoutExitModal}
-      onSaveAndExit={() => {
-        this.setState({
-          openLogoutExitModal: false
-        });
-      }
-      }
-      onExit={() => {
-        this.setState({ openLogoutExitModal: false })
-        this.props.onLogoutUser();
-      }}
-      onClose={() => {
-        this.setState({ openLogoutExitModal: false });
-      }}
-      customMessage1={intl.formatMessage(messages.signOutQuestion)}
-      customMessage2={intl.formatMessage(messages.signOutExplanation)}
-      customMessageSaveAndExitButton={intl.formatMessage(messages.signOutNo)}
-      customMessageExitButton={intl.formatMessage(messages.signOutYes)}
-    />)
-  }
+  renderExitModal = intl => {
+    return (
+      <ExitModal
+        open={this.state.openLogoutExitModal}
+        onSaveAndExit={() => {
+          this.setState({
+            openLogoutExitModal: false,
+          });
+        }}
+        onExit={() => {
+          this.setState({ openLogoutExitModal: false });
+          this.props.onLogoutUser();
+        }}
+        onClose={() => {
+          this.setState({ openLogoutExitModal: false });
+        }}
+        customMessage1={intl.formatMessage(messages.signOutQuestion)}
+        customMessage2={intl.formatMessage(messages.signOutExplanation)}
+        customMessageSaveAndExitButton={intl.formatMessage(messages.signOutNo)}
+        customMessageExitButton={intl.formatMessage(messages.signOutYes)}
+      />
+    );
+  };
 
   render() {
     const { classes, intl, conversationBarOpen, demoMode } = this.props;
+    const isUserSettingsDisabled = AC.validate({
+      userPolicies: _.get(this.props.currentUser, 'simplifiedGroupPolicies', {}),
+      requiredPolicies: userAccessPolicies,
+    });
+
     return conversationBarOpen ? (
       <Grid container>
         <Grid container item xs={12}>
@@ -195,88 +189,80 @@ export class AppContent extends React.Component {
             {this.props.children}
           </Grid>
         </Grid>
-        {
-          demoMode ?
-            null :
-            <Grid className={classes.settings} item xs={12}>
-              {checkCookie() && (<Fragment>
+        {demoMode ? null : (
+          <Grid className={classes.settings} item xs={12}>
+            {checkCookie() && (
+              <Fragment>
                 <MuiThemeProvider theme={tooltipTheme}>
                   <Tooltip title={this.props.currentUser ? this.props.currentUser.email : ''} placement="right-start">
                     <img
                       className={this.state.popOverAnchorEl ? classes.currentUserClicked : classes.currentUser}
                       src={userIconGray}
                       alt={'intl.formatMessage(messages.usersIconAlt)'}
-                      onClick={(ev) => {
-                        this.setState({ popOverAnchorEl: ev.currentTarget })
+                      onClick={ev => {
+                        this.setState({ popOverAnchorEl: ev.currentTarget });
                       }}
                     />
                   </Tooltip>
                 </MuiThemeProvider>
-              </Fragment>)}
-              <Link id="settings" to="/settings">
-                <img
-                  src={settingsIcon}
-                  alt={intl.formatMessage(messages.settingsIconAlt)}
-                  className={classes.settingsImage}
-                />
-              </Link>
-              {this.renderPopover(classes, intl)}
-              {this.renderExitModal(intl)}
-            </Grid>
-        }
+              </Fragment>
+            )}
+            <Link id="settings" to="/settings">
+              <img src={settingsIcon} alt={intl.formatMessage(messages.settingsIconAlt)} className={classes.settingsImage} />
+            </Link>
+            {this.renderPopover(classes, intl)}
+            {this.renderExitModal(intl)}
+          </Grid>
+        )}
       </Grid>
     ) : (
-        <Grid container>
-          <Grid container item xs={12}>
-            <Grid item xl={2} lg={2} md={2} sm={1} xs={1} />
-            <Grid item xl={8} lg={8} md={8} sm={10} xs={10}>
-              {this.props.children}
-            </Grid>
-            <Grid item xl={2} lg={2} md={2} sm={1} xs={1} />
+      <Grid container>
+        <Grid container item xs={12}>
+          <Grid item xl={2} lg={2} md={2} sm={1} xs={1} />
+          <Grid item xl={8} lg={8} md={8} sm={10} xs={10}>
+            {this.props.children}
           </Grid>
-          {
-            demoMode ?
-              null :
-              <Grid className={classes.settings} item xs={12}>
-                <Link id="users" to="/users">
-                  <img
-                    style={{
-                      filter: 'invert(0.51)',
-                      paddingBottom: '8px'
-                    }}
-                    src={userListIcon}
-                    alt={intl.formatMessage(messages.usersIconAlt)}
-                  />
-                </Link>
-                <Fragment>
-
-                  {checkCookie() && (
-                    <MuiThemeProvider theme={tooltipTheme}>
-                      <Tooltip title={this.props.currentUser ? this.props.currentUser.email : ''} placement="right-start" >
-                        < img
-                          className={this.state.popOverAnchorEl ? classes.currentUserClicked : classes.currentUser}
-                          src={userIconGray}
-                          alt={'intl.formatMessage(messages.usersIconAlt)'}
-                          onClick={(ev) => {
-                            this.setState({ popOverAnchorEl: ev.currentTarget })
-                          }}
-                        />
-                      </Tooltip>
-                    </MuiThemeProvider>)}
-                </Fragment>
-                <Link id="settings" to="/settings">
-                  <img
-                    src={settingsIcon}
-                    alt={intl.formatMessage(messages.settingsIconAlt)}
-                    className={classes.settingsImage}
-                  />
-                </Link>
-                {this.renderPopover(classes, intl)}
-                {this.renderExitModal(intl)}
-              </Grid>
-          }
-        </Grid >
-      );
+          <Grid item xl={2} lg={2} md={2} sm={1} xs={1} />
+        </Grid>
+        {demoMode ? null : (
+          <Grid className={classes.settings} item xs={12}>
+            {isUserSettingsDisabled && (
+              <Link id="users" to="/users">
+                <img
+                  style={{
+                    filter: 'invert(0.51)',
+                    paddingBottom: '8px',
+                  }}
+                  src={userListIcon}
+                  alt={intl.formatMessage(messages.usersIconAlt)}
+                />
+              </Link>
+            )}
+            <Fragment>
+              {checkCookie() && (
+                <MuiThemeProvider theme={tooltipTheme}>
+                  <Tooltip title={this.props.currentUser ? this.props.currentUser.email : ''} placement="right-start">
+                    <img
+                      className={this.state.popOverAnchorEl ? classes.currentUserClicked : classes.currentUser}
+                      src={userIconGray}
+                      alt={'intl.formatMessage(messages.usersIconAlt)'}
+                      onClick={ev => {
+                        this.setState({ popOverAnchorEl: ev.currentTarget });
+                      }}
+                    />
+                  </Tooltip>
+                </MuiThemeProvider>
+              )}
+            </Fragment>
+            <Link id="settings" to="/settings">
+              <img src={settingsIcon} alt={intl.formatMessage(messages.settingsIconAlt)} className={classes.settingsImage} />
+            </Link>
+            {this.renderPopover(classes, intl)}
+            {this.renderExitModal(intl)}
+          </Grid>
+        )}
+      </Grid>
+    );
   }
 }
 
@@ -286,14 +272,13 @@ AppContent.propTypes = {
   intl: intlShape.isRequired,
   conversationBarOpen: PropTypes.bool,
   demoMode: PropTypes.bool,
+  currentUser: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: makeSelectCurrentUser()
+  currentUser: makeSelectCurrentUser(),
 });
 
-const withConnect = connect(
-  mapStateToProps
-);
+const withConnect = connect(mapStateToProps);
 
 export default withConnect(injectIntl(withStyles(styles)(AppContent)));

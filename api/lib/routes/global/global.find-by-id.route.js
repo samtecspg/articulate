@@ -1,6 +1,9 @@
 import Boom from 'boom';
 import Joi from 'joi';
 import {
+    ACL_ACTION_READ,
+    ACL_ACTION_WRITE,
+    P_HAPI_GBAC,
     PARAMS_POSTFIX_ID,
     ROUTE_TO_MODEL
 } from '../../../util/constants';
@@ -13,6 +16,12 @@ module.exports = ({ ROUTE }) => {
         method: 'get',
         path: `/${ROUTE}/{${ROUTE + PARAMS_POSTFIX_ID}}`,
         options: {
+            plugins: {
+                [P_HAPI_GBAC]: [
+                    `${ROUTE_TO_MODEL[ROUTE]}:${ACL_ACTION_READ}`,
+                    `${ROUTE_TO_MODEL[ROUTE]}:${ACL_ACTION_WRITE}`,
+                ]
+            },
             tags: ['api'],
             validate: {
                 params: (() => {

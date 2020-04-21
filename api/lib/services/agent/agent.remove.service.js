@@ -12,15 +12,24 @@ module.exports = async function ({ id }) {
         //TODO: Delete agentCategoryRecognizer
 
         const Connections = await globalService.searchByField({ field: 'agent', value: id, model: MODEL_CONNECTION });
-        if (Connections){
-            if (Connections.length > 0){
-                
+        if (Connections) {
+            if (Connections.length > 0) {
+
                 Connections.forEach(async (Connection) => {
 
                     await connectionService.updateById({ id: Connection.id, data: { agent: null } });
                 });
             }
         }
+
+        //Remove agent versions
+        const AgentVersions = await globalService.findAll({ model: MODEL_AGENT, filter: { originalAgentVersionId: id } });
+
+        await Promise.all(AgentVersions.data.map(async (Version) => {
+            await Agent.findById({ id: Version.id });
+            await Agent.removeInstance({ id: Version.id });
+        }));
+
         await Agent.findById({ id });
         return Agent.removeInstance({ id });
     }

@@ -1,34 +1,39 @@
-/**
- *
- * SettingsPage
- *
- */
-
-import { Grid, CircularProgress } from '@material-ui/core';
+import {
+  CircularProgress,
+  Grid,
+} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
 import { push } from 'react-router-redux';
+import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
 import ContentHeader from '../../components/ContentHeader';
+import AC from '../../utils/accessControl';
 import injectSaga from '../../utils/injectSaga';
 import {
+  addAccessPolicyGroup,
   addFallbackResponse,
   changeSettingsData,
   deleteFallbackResponse,
+  loadAccessPolicyGroups,
   loadSettings,
+  removeAccessPolicyGroup,
+  toggleChatButton,
+  toggleConversationBar,
+  updateAccessPolicyGroup,
   updateSettings,
   updateSettingsTouched,
-  toggleChatButton,
-  toggleConversationBar
 } from '../App/actions';
 import {
+  makeSelectAccessPolicyGroups,
+  makeSelectCurrentUser,
+  makeSelectError,
+  makeSelectLoading,
   makeSelectSettings,
   makeSelectSettingsTouched,
-  makeSelectLoading,
   makeSelectSuccess,
-  makeSelectError
 } from '../App/selectors';
 import ActionButtons from './Components/ActionButtons';
 import Form from './Components/Form';
@@ -46,6 +51,7 @@ export class SettingsPage extends React.PureComponent {
     this.props.onShowChatButton(false);
     this.props.onToggleConversationBar(false);
     this.props.onLoadSettings();
+    this.props.onLoadAccessPolicyGroups();
   }
 
   componentDidUpdate() {
@@ -59,8 +65,9 @@ export class SettingsPage extends React.PureComponent {
 
   state = {
     formError: false,
+    newAccessPolicyGroupName: '',
     errorState: {
-      rasaURL: false,
+      rasaURLs: false,
       rasaConcurrentRequests: false,
       ducklingURL: false,
       defaultUISessionId: false,
@@ -75,13 +82,13 @@ export class SettingsPage extends React.PureComponent {
       defaultTimezone: false,
       defaultAgentFallbackResponses: false,
     },
-    exitAfterSubmit: false
+    exitAfterSubmit: false,
   };
 
   submit(exit) {
     let errors = false;
     const newErrorState = {
-      rasaURL: false,
+      rasaURLs: false,
       rasaConcurrentRequests: false,
       ducklingURL: false,
       defaultUISessionId: false,
@@ -99,21 +106,24 @@ export class SettingsPage extends React.PureComponent {
       defaultAgentFallbackResponses: false,
     };
 
-    if (
-      !this.props.settings.defaultUISessionId ||
-      this.props.settings.defaultUISessionId === ''
-    ) {
+    if (!this.props.settings.defaultUISessionId || this.props.settings.defaultUISessionId === '') {
       errors = true;
       newErrorState.defaultUISessionId = true;
     } else {
       newErrorState.defaultUISessionId = false;
     }
 
-    if (!this.props.settings.rasaURL || this.props.settings.rasaURL === '') {
+    if (!this.props.settings.rasaURLs
+      || this.props.settings.rasaURLs.length === 0
+      || this.props.settings.rasaURLs.indexOf('') !== -1
+      || this.props.settings.rasaURLs.some((item) => {
+        return this.props.settings.rasaURLs.indexOf(item)
+          !== this.props.settings.rasaURLs.lastIndexOf(item);
+      })) {
       errors = true;
-      newErrorState.rasaURL = true;
+      newErrorState.rasaURLs = true;
     } else {
-      newErrorState.rasaURL = false;
+      newErrorState.rasaURLs = false;
     }
 
     if (!this.props.settings.rasaConcurrentRequests || this.props.settings.rasaConcurrentRequests === '') {
@@ -133,10 +143,7 @@ export class SettingsPage extends React.PureComponent {
       newErrorState.ducklingURL = false;
     }
 
-    if (
-      !this.props.settings.defaultAgentFallbackResponses ||
-      this.props.settings.defaultAgentFallbackResponses.length === 0
-    ) {
+    if (!this.props.settings.defaultAgentFallbackResponses || this.props.settings.defaultAgentFallbackResponses.length === 0) {
       errors = true;
       newErrorState.defaultAgentFallbackResponses = true;
     } else {
@@ -146,10 +153,7 @@ export class SettingsPage extends React.PureComponent {
     if (
       !Array.isArray(this.props.settings.agentLanguages) ||
       (Array.isArray(this.props.settings.agentLanguages) &&
-        this.props.settings.agentLanguages.filter(
-          agentLanguage =>
-            agentLanguage.value === this.props.settings.defaultAgentLanguage,
-        ).length === 0) ||
+        this.props.settings.agentLanguages.filter(agentLanguage => agentLanguage.value === this.props.settings.defaultAgentLanguage).length === 0) ||
       !this.props.settings.defaultAgentLanguage ||
       this.props.settings.defaultAgentLanguage === ''
     ) {
@@ -162,9 +166,7 @@ export class SettingsPage extends React.PureComponent {
     if (
       !Array.isArray(this.props.settings.uiLanguages) ||
       (Array.isArray(this.props.settings.uiLanguages) &&
-        this.props.settings.uiLanguages.filter(
-          uiLanguage => uiLanguage.value === this.props.settings.uiLanguage,
-        ).length === 0) ||
+        this.props.settings.uiLanguages.filter(uiLanguage => uiLanguage.value === this.props.settings.uiLanguage).length === 0) ||
       !this.props.settings.uiLanguage ||
       this.props.settings.uiLanguage === ''
     ) {
@@ -176,10 +178,7 @@ export class SettingsPage extends React.PureComponent {
 
     if (
       !Array.isArray(this.props.settings.timezones) ||
-      (Array.isArray(this.props.settings.timezones) &&
-        this.props.settings.timezones.indexOf(
-          this.props.settings.defaultTimezone,
-        ) === -1) ||
+      (Array.isArray(this.props.settings.timezones) && this.props.settings.timezones.indexOf(this.props.settings.defaultTimezone) === -1) ||
       !this.props.settings.defaultTimezone ||
       this.props.settings.defaultTimezone === ''
     ) {
@@ -284,7 +283,14 @@ export class SettingsPage extends React.PureComponent {
     }
   }
 
+  onUpdateNewAccessPolicyGroupName = ({ groupName }) => {
+    this.setState({ newAccessPolicyGroupName: groupName });
+  };
+
   render() {
+    const { currentUser } = this.props;
+    const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
+
     return this.props.settings.defaultUISessionId ? (
       <Grid container>
         <ContentHeader
@@ -292,7 +298,7 @@ export class SettingsPage extends React.PureComponent {
           subtitle={messages.createSubtitle}
           inlineElement={
             <ActionButtons
-              formError={this.state.formError}
+              fowrmError={this.state.formError}
               onFinishAction={() => { this.submit(false); }}
               touched={this.props.settingsTouched}
               loading={this.props.settingsLoading}
@@ -309,17 +315,22 @@ export class SettingsPage extends React.PureComponent {
           }
         />
         <Form
+          isReadOnly={isReadOnly}
           settings={this.props.settings}
           onChangeSettingsData={this.props.onChangeSettingsData}
           onAddFallbackResponse={this.props.onAddFallbackResponse}
           onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
           errorState={this.state.errorState}
+          accessPolicyGroups={this.props.accessPolicyGroups}
+          onUpdateAccessPolicyGroup={this.props.onUpdateAccessPolicyGroup}
+          onAddAccessPolicyGroup={this.props.onAddAccessPolicyGroup}
+          newAccessPolicyGroupName={this.state.newAccessPolicyGroupName}
+          onUpdateNewAccessPolicyGroupName={this.onUpdateNewAccessPolicyGroupName}
+          onRemoveAccessPolicyGroup={this.props.onRemoveAccessPolicyGroup}
         />
       </Grid>
     ) : (
-        <CircularProgress
-          style={{ position: 'absolute', top: '40%', left: '49%' }}
-        />
+        <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
       );
   }
 }
@@ -332,15 +343,26 @@ SettingsPage.propTypes = {
   onAddFallbackResponse: PropTypes.func.isRequired,
   onDeleteFallbackResponse: PropTypes.func.isRequired,
   onShowChatButton: PropTypes.func,
-  onToggleConversationBar: PropTypes.func
+  onToggleConversationBar: PropTypes.func,
+  onLoadSettings: PropTypes.func,
+  onLoadAccessPolicyGroups: PropTypes.func,
+  onUpdateAccessPolicyGroup: PropTypes.func,
+  onAddAccessPolicyGroup: PropTypes.func,
+  accessPolicyGroups: PropTypes.array,
+  currentUser: PropTypes.object,
+  onRemoveAccessPolicyGroup: PropTypes.func,
 };
-
+SettingsPage.defaultProps = {
+  accessPolicyGroups: [],
+};
 const mapStateToProps = createStructuredSelector({
   settings: makeSelectSettings(),
   settingsTouched: makeSelectSettingsTouched(),
   settingsSuccess: makeSelectSuccess(),
   settingsLoading: makeSelectLoading(),
-  settingsError: makeSelectError()
+  settingsError: makeSelectError(),
+  accessPolicyGroups: makeSelectAccessPolicyGroups(),
+  currentUser: makeSelectCurrentUser(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -354,7 +376,7 @@ function mapDispatchToProps(dispatch) {
     onSaveChanges: () => {
       dispatch(updateSettings());
     },
-    onUpdateSettingsTouched: (value) => {
+    onUpdateSettingsTouched: value => {
       dispatch(updateSettingsTouched(value));
     },
     onAddFallbackResponse: newFallback => {
@@ -371,6 +393,18 @@ function mapDispatchToProps(dispatch) {
     },
     onGoToUrl: url => {
       dispatch(push(url));
+    },
+    onLoadAccessPolicyGroups: () => {
+      dispatch(loadAccessPolicyGroups());
+    },
+    onUpdateAccessPolicyGroup: ({ groupName, rules }) => {
+      dispatch(updateAccessPolicyGroup({ groupName, rules }));
+    },
+    onAddAccessPolicyGroup: ({ groupName, rules }) => {
+      dispatch(addAccessPolicyGroup({ groupName, rules }));
+    },
+    onRemoveAccessPolicyGroup: ({ groupName }) => {
+      dispatch(removeAccessPolicyGroup({ groupName }));
     },
   };
 }

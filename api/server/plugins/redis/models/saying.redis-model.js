@@ -16,7 +16,28 @@ const schema = {
     },
     modificationDate: {
         type: 'timestamp'
-    }
+    },
+    starred: {
+        type: 'boolean'
+    },
+    lastFailedTestingTimestamp: {
+        type: 'timestamp'
+    },
+    lastFailedTestingKeywords: {
+        type: 'json',
+        defaultValue: []
+    },
+    lastFailedTestingKeywordsTimeStamp: {
+        type: 'timestamp'
+    },
+    lastFailedTestingActions: {
+        type: 'json',
+        defaultValue: []
+    },
+    lastFailedTestingActionsTimeStamp: {
+        type: 'timestamp'
+    },
+
 };
 
 class SayingRedisModel extends BaseModel {

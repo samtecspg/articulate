@@ -61,10 +61,16 @@ import {
   makeSelectSessionLoaded,
   makeSelectLoading,
   makeSelectConnection,
+  makeSelectTestTrainLoading,
+  makeSelectTestTrainError,
+  makeSelectDialoguePageFilterString,
+  makeSelectTrainTest,
+  makeSelectTestTrainNotification
 } from '../../containers/App/selectors';
 
 import {
   closeNotification,
+  closeTestTrainNotification,
   sendMessage,
   resetSession,
   loadSettings,
@@ -74,12 +80,24 @@ import {
   showWarning,
   respondMessage,
   storeSourceData,
+  loadAgentTrainTest,
+  testAgentTrain,
+  loadSayings,
+  changeDialoguePageFilterKeywords,
+  changeDialoguePageFilterActions,
+  changeDialoguePageFilterKeywordIssues,
+  changeDialoguePageFilterString,
+  changeDialoguePageNumberOfFiltersApplied,
+  changeDialoguePageFilterActionIssues,
+  resetDialoguePageFilters,
 } from '../../containers/App/actions';
 
 import LoadingWave from '../LoadingWave';
 import CodeModal from '../CodeModal';
 import Notifications from './components/Notifications';
+import TestTrainNotification from './components/TestTrainNotification'
 import gravatars from '../Gravatar';
+import { push } from 'react-router-redux';
 
 import Nes from 'nes';
 import { getWS } from '../../utils/locationResolver';
@@ -324,6 +342,11 @@ export class ConversationBar extends React.PureComponent {
     collapsibleActiveItem: -1,
   };
 
+  constructor(props) {
+    super(props);
+    this.onSearchSaying = this.onSearchSaying.bind(this);
+  }
+
   componentWillMount() {
     if (!this.props.settings.defaultAgentLanguage) {
       this.props.onLoadSettings();
@@ -501,6 +524,10 @@ export class ConversationBar extends React.PureComponent {
         socketClientConnected: false,
       });
     }
+  }
+
+  onSearchSaying() {
+    this.props.onLoadSayings(this.props.dialoguePageFilterString, 1, 5);
   }
 
   render() {
@@ -738,6 +765,29 @@ export class ConversationBar extends React.PureComponent {
             style={{ width: this.state.newWidth + 17 }}
             className={classes.contentContainer}
           >
+            {this.props.testTrainNotification &&
+              this.props.testTrainNotification.agentId === this.props.agent.id &&
+              this.props.agent.status === 'Ready' &&
+              <TestTrainNotification
+                notifications={this.props.notifications}
+                onCloseNotification={this.props.onCloseNotification}
+                onCloseTestTrainNotification={this.props.onCloseTestTrainNotification}
+                testTrain={this.props.testTrain}
+                testTrainLoading={this.props.testTrainLoading}
+                testTrainError={this.props.loadTestTrainError}
+                onTestAgentTrain={() => { this.props.onTestAgentTrain(this.props.agent.id) }}
+                onSearchSaying={this.onSearchSaying}
+                onChangeDialoguePageFilterKeywords={this.props.onChangeDialoguePageFilterKeywords}
+                onChangeDialoguePageFilterActions={this.props.onChangeDialoguePageFilterActions}
+                onChangeDialoguePageFilterString={this.props.onChangeDialoguePageFilterString}
+                onChangeDialoguePageFilterKeywordIssues={this.props.onChangeDialoguePageFilterKeywordIssues}
+                onChangeDialoguePageFilterActionIssues={this.props.onChangeDialoguePageFilterActionIssues}
+                onResetDialoguePageFilter={this.props.onResetDialoguePageFilter}
+                onChangeDialoguePageNumberOfFiltersApplied={this.props.onChangeDialoguePageNumberOfFiltersApplied}
+                onGoToUrl={this.props.onGoToUrl}
+                agent={this.props.agent}
+                onLoadAgentTrainTest={this.props.onLoadAgentTrainTest}
+              />}
             <Notifications
               notifications={this.props.notifications}
               onCloseNotification={this.props.onCloseNotification}
@@ -1118,7 +1168,7 @@ export class ConversationBar extends React.PureComponent {
             open={this.state.openCodeModal}
           />
         </Grid>
-      </Grid>
+      </Grid >
     );
   }
 }
@@ -1142,6 +1192,7 @@ const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   agent: makeSelectAgent(),
   notifications: makeSelectNotifications(),
+  testTrainNotification: makeSelectTestTrainNotification(),
   messages: makeSelectMessages(),
   waitingResponse: makeSelectWaitingResponse(),
   CSO: makeSelectCSO(),
@@ -1149,6 +1200,10 @@ const mapStateToProps = createStructuredSelector({
   sessionId: makeSelectSessionId(),
   sessionLoaded: makeSelectSessionLoaded(),
   connection: makeSelectConnection(),
+  testTrain: makeSelectTrainTest(),
+  testTrainLoading: makeSelectTestTrainLoading(),
+  testTrainError: makeSelectTestTrainError(),
+  dialoguePageFilterString: makeSelectDialoguePageFilterString()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -1158,6 +1213,9 @@ function mapDispatchToProps(dispatch) {
     },
     onCloseNotification: index => {
       dispatch(closeNotification(index));
+    },
+    onCloseTestTrainNotification: () => {
+      dispatch(closeTestTrainNotification());
     },
     onSendMessage: ({ message, sessionId, newSession, isDemo }) => {
       dispatch(
@@ -1188,7 +1246,50 @@ function mapDispatchToProps(dispatch) {
     },
     onStoreSourceData: (payload) => {
       dispatch(storeSourceData(payload));
-    }
+    },
+    onTestAgentTrain: (agentId) => {
+      dispatch(testAgentTrain(agentId));
+    },
+    onLoadTestTrain: () => {
+      dispatch(loadTestTrain());
+    },
+    onLoadTestTrainLoading: () => {
+      dispatch(loadTestTrainLoading());
+    },
+    onLoadTestTrainError: () => {
+      dispatch(loadTestTrainError());
+    },
+    onLoadSayings: (filter, page, pageSize, ignoreKeywords) => {
+      dispatch(loadSayings(filter, page, pageSize, ignoreKeywords));
+    },
+    onChangeDialoguePageFilterActions: newValue => {
+      dispatch(changeDialoguePageFilterActions(newValue));
+    },
+    onChangeDialoguePageNumberOfFiltersApplied: newValue => {
+      dispatch(changeDialoguePageNumberOfFiltersApplied(newValue));
+    },
+    onChangeDialoguePageFilterString: newValue => {
+      dispatch(changeDialoguePageFilterString(newValue));
+    },
+    onChangeDialoguePageFilterKeywords: newValue => {
+      dispatch(changeDialoguePageFilterKeywords(newValue));
+    },
+    onChangeDialoguePageFilterKeywordIssues: () => {
+      dispatch(changeDialoguePageFilterKeywordIssues())
+    },
+    onChangeDialoguePageFilterActionIssues: () => {
+      dispatch(changeDialoguePageFilterActionIssues())
+    },
+    onResetDialoguePageFilter: () => {
+      dispatch(resetDialoguePageFilters())
+    },
+    onChangeDialoguePageNumberOfFiltersApplied: newValue => {
+      dispatch(changeDialoguePageNumberOfFiltersApplied(newValue))
+    },
+    onGoToUrl: url => {
+      dispatch(push(url));
+    },
+
   };
 }
 

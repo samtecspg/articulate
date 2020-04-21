@@ -12,7 +12,6 @@ const Routes = require('require-dir')('./user');
 
 module.exports = [
     ..._.values(Routes),
-    GlobalFindAll({ ROUTE: ROUTE_USER_ACCOUNT }),
     GlobalSearchByField({ ROUTE: ROUTE_USER_ACCOUNT }),
     GlobalFindInModelPath({ models: [MODEL_USER_ACCOUNT, MODEL_USER_IDENTITY] })
 ];

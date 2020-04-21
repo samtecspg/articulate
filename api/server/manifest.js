@@ -10,7 +10,8 @@ import Toys from 'toys';
 import Package from '../package.json';
 import {
     AUTH_ENABLED,
-    AUTH_PROVIDERS
+    AUTH_PROVIDERS,
+    RASA_URL
 } from '../util/env';
 
 const redisOptions = {
@@ -87,7 +88,7 @@ module.exports = new Confidence.Store({
 
                 plugin: './plugins/rasa-nlu',
                 options: { //options passed to axios
-                    baseURL: process.env.RASA_URL || 'http://rasa:5000'
+                    baseURL: RASA_URL
                 }
             },
             {
@@ -118,7 +119,6 @@ module.exports = new Confidence.Store({
                 options: redisOptions
             },
             {
-
                 plugin: './plugins/handlebars',
                 options: {}
             },
@@ -128,7 +128,9 @@ module.exports = new Confidence.Store({
             },
             {
                 plugin: '../lib', // Main plugin
-                options: {}
+                options: {
+                    agentLimit: parseInt(process.env.AGENT_LIMIT || -1)
+                }
             },
             {
                 plugin: {
@@ -136,6 +138,18 @@ module.exports = new Confidence.Store({
                     $default: 'hpal-debug',
                     production: Toys.noop
                 }
+            },
+            {
+                plugin: './plugins/gbac',
+                options: { enabled: AUTH_ENABLED }
+            },
+            {
+                plugin: './plugins/hapi-gbac',
+                options: { enabled: AUTH_ENABLED }
+            },
+            {
+                plugin: './plugins/hapi-abac',
+                options: { enabled: AUTH_ENABLED }
             },
             {
                 plugin: './plugins/swagger',
@@ -150,7 +164,8 @@ module.exports = new Confidence.Store({
                     documentationPage: false,
                     schemes: process.env.SWAGGER_SCHEMES || null,
                     host: process.env.SWAGGER_HOST || null,
-                    basePath: process.env.SWAGGER_BASE_PATH || null
+                    basePath: process.env.SWAGGER_BASE_PATH || '/api',
+                    auth: AUTH_ENABLED ? 'session' : undefined
                 }
             }
         ]

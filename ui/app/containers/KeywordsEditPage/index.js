@@ -3,16 +3,16 @@
  * KeywordsEditPage
  *
  */
-
-import React from 'react';
+import { CircularProgress, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-
-import { Grid, CircularProgress } from '@material-ui/core';
+import { createStructuredSelector } from 'reselect';
 import injectSaga from 'utils/injectSaga';
+import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
+import AC from '../../utils/accessControl';
 import MainTab from './Components/MainTab';
 import KeywordForm from './Components/KeywordForm';
 import ValuesForm from './Components/ValuesForm';
@@ -27,36 +27,37 @@ import {
   makeSelectKeywords,
   makeSelectLoading,
   makeSelectKeywordTouched,
+  makeSelectCurrentUser,
   makeSelectkeywordExamplesUpdate,
   makeSelectLoadingKeywordExamplesUpdate,
   makeSelectSuccessKeywordExamplesUpdate
 } from '../App/selectors';
 
 import {
-  changeKeywordData,
   addKeywordExample,
-  deleteKeywordExample,
-  loadKeyword,
-  resetKeywordData,
-  createKeyword,
-  updateKeyword,
-  changeExampleSynonyms,
-  resetStatusFlag,
-  changeExampleName,
-  deleteKeyword,
-  addNewModifier,
-  changeModifierName,
-  changeModifierData,
   addModifierSaying,
-  deleteModifierSaying,
-  sortModifiers,
+  addNewModifier,
+  changeExampleName,
+  changeExampleSynonyms,
+  changeKeywordData,
+  changeModifierData,
+  changeModifierName,
+  createKeyword,
+  deleteKeyword,
+  deleteKeywordExample,
   deleteModifier,
-  untagModifierKeyword,
-  tagModifierKeyword,
-  onChangeModifiersSayingsPageSize,
-  loadSettings,
+  deleteModifierSaying,
+  loadKeyword,
   loadKeywords,
-  toggleChatButton
+  loadSettings,
+  onChangeModifiersSayingsPageSize,
+  resetKeywordData,
+  resetStatusFlag,
+  sortModifiers,
+  tagModifierKeyword,
+  toggleChatButton,
+  untagModifierKeyword,
+  updateKeyword,
 } from '../App/actions';
 import ModifiersForm from './Components/ModifiersForm';
 
@@ -108,9 +109,7 @@ export class KeywordsEditPage extends React.Component {
     }
     if (this.props.success) {
       if (this.state.exitAfterSubmit) {
-        this.props.onSuccess(
-          `/agent/${this.props.agent.id}/dialogue?tab=keywords`,
-        );
+        this.props.onSuccess(`/agent/${this.props.agent.id}/dialogue?tab=keywords`);
       }
       if (this.state.isNewKeyword) {
         this.setState({
@@ -149,10 +148,7 @@ export class KeywordsEditPage extends React.Component {
       modifiersTabs: [],
     };
 
-    if (
-      !this.props.keyword.keywordName ||
-      this.props.keyword.keywordName === ''
-    ) {
+    if (!this.props.keyword.keywordName || this.props.keyword.keywordName === '') {
       errors = true;
       newErrorState.keywordName = true;
       newErrorState.tabs.push(0);
@@ -160,10 +156,7 @@ export class KeywordsEditPage extends React.Component {
       newErrorState.keywordName = false;
     }
 
-    if (
-      !this.props.keyword.examples ||
-      this.props.keyword.examples.length === 0
-    ) {
+    if (!this.props.keyword.examples || this.props.keyword.examples.length === 0) {
       errors = true;
       newErrorState.examples = true;
       newErrorState.tabs.push(1);
@@ -203,11 +196,7 @@ export class KeywordsEditPage extends React.Component {
         } else {
           newModifierError.valueSource = false;
         }
-        if (
-          modifier.valueSource &&
-          modifier.valueSource === 'static' &&
-          !modifier.staticValue
-        ) {
+        if (modifier.valueSource && modifier.valueSource === 'static' && !modifier.staticValue) {
           errors = true;
           newModifierError.staticValue = true;
           newErrorState.tabs.push(2);
@@ -239,39 +228,37 @@ export class KeywordsEditPage extends React.Component {
   }
 
   render() {
-    return this.props.settings &&
-      this.props.agent.id &&
-      this.props.agentKeywords ? (
+    const { currentUser } = this.props;
+    const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
+
+    return this.props.settings && this.props.agent.id && this.props.agentKeywords ? (
         <Grid container>
           <MainTab
+          isReadOnly={isReadOnly}
             touched={this.props.touched}
             keywordValuesTouched={this.props.keywordValuesTouched.filter((keyword) => { return keyword.count != 0 }).length > 0}
             loading={this.props.loading || this.props.loadingKeywordExamplesUpdate}
             success={this.props.success || this.props.successKeywordExamplesUpdate}
             goBack={() => {
-              this.props.onGoToUrl(
-                `/agent/${this.props.agent.id}/dialogue?tab=keywords`,
-              );
+            this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue?tab=keywords`);
             }}
-            onSaveAndExit={(updateKeywords = false) => {
-              this.submit(true, updateKeywords);
+          onSaveAndExit={(updateKeywords = false) => {
+            this.submit(true, updateKeywords);
             }}
             newKeyword={this.state.isNewKeyword}
             keywordName={this.props.keyword.keywordName}
             formError={this.state.formError}
-            hideFinishButton={
-              this.state.currentTab === 'keyword' &&
-              !this.state.userCompletedAllRequiredFields
-            }
+          hideFinishButton={this.state.currentTab === 'keyword' && !this.state.userCompletedAllRequiredFields}
             isLastTab={this.state.currentTab === 'modifiers'}
-            onFinishAction={(updateKeywords = false) => {
-              this.submit(false, updateKeywords);
+          onFinishAction={(updateKeywords = false) => {
+            this.submit(false, updateKeywords);
             }}
             onNextAction={this.moveNextTab}
             selectedTab={this.state.currentTab}
             errorState={this.state.errorState}
             keywordForm={
               <KeywordForm
+              isReadOnly={isReadOnly}
                 keyword={this.props.keyword}
                 onChangeKeywordData={this.props.onChangeKeywordData}
                 errorState={this.state.errorState}
@@ -281,6 +268,7 @@ export class KeywordsEditPage extends React.Component {
             }
             valuesForm={
               <ValuesForm
+              isReadOnly={isReadOnly}
                 keyword={this.props.keyword}
                 onChangeKeywordData={this.props.onChangeKeywordData}
                 onAddKeywordExample={this.props.onAddKeywordExample}
@@ -294,6 +282,7 @@ export class KeywordsEditPage extends React.Component {
             }
             modifiersForm={
               <ModifiersForm
+              isReadOnly={isReadOnly}
                 keyword={this.props.keyword}
                 settings={this.props.settings}
                 onChangeModifierData={this.props.onChangeModifierData}
@@ -309,22 +298,15 @@ export class KeywordsEditPage extends React.Component {
                 agentKeywords={this.props.agentKeywords}
                 onUntagModifierKeyword={this.props.onUntagModifierKeyword}
                 onTagModifierKeyword={this.props.onTagModifierKeyword}
-                modifierSayingsPageSize={
-                  this.props.agent.settings.modifierSayingsPageSize
-                }
-                onChangeModifiersSayingsPageSize={this.props.onChangeModifiersSayingsPageSize.bind(
-                  null,
-                  this.props.agent.id,
-                )}
+              modifierSayingsPageSize={this.props.agent.settings.modifierSayingsPageSize}
+              onChangeModifiersSayingsPageSize={this.props.onChangeModifiersSayingsPageSize.bind(null, this.props.agent.id)}
               />
             }
             onChangeTab={this.onChangeTab}
           />
         </Grid>
       ) : (
-        <CircularProgress
-          style={{ position: 'absolute', top: '40%', left: '49%' }}
-        />
+      <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
       );
   }
 }
@@ -355,6 +337,7 @@ KeywordsEditPage.propTypes = {
   touched: PropTypes.bool,
   keywordValuesTouched: PropTypes.array,
   onShowChatButton: PropTypes.func,
+  currentUser: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -367,6 +350,8 @@ const mapStateToProps = createStructuredSelector({
   successKeywordExamplesUpdate: makeSelectSuccessKeywordExamplesUpdate(),
   loadingKeywordExamplesUpdate: makeSelectLoadingKeywordExamplesUpdate(),
   touched: makeSelectKeywordTouched(),
+  keywordValuesTouched: makeSelectkeywordExamplesUpdate(),
+  currentUser: makeSelectCurrentUser(),
   keywordValuesTouched: makeSelectkeywordExamplesUpdate()
 });
 
@@ -433,26 +418,8 @@ function mapDispatchToProps(dispatch) {
     onDeleteModifier: modifierIndex => {
       dispatch(deleteModifier(modifierIndex));
     },
-    onTagModifierKeyword: (
-      modifierIndex,
-      sayingIndex,
-      value,
-      start,
-      end,
-      keywordId,
-      keywordName,
-    ) => {
-      dispatch(
-        tagModifierKeyword(
-          modifierIndex,
-          sayingIndex,
-          value,
-          start,
-          end,
-          keywordId,
-          keywordName,
-        ),
-      );
+    onTagModifierKeyword: (modifierIndex, sayingIndex, value, start, end, keywordId, keywordName) => {
+      dispatch(tagModifierKeyword(modifierIndex, sayingIndex, value, start, end, keywordId, keywordName));
     },
     onUntagModifierKeyword: (modifierIndex, sayingIndex, start, end) => {
       dispatch(untagModifierKeyword(modifierIndex, sayingIndex, start, end));

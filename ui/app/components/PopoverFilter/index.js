@@ -348,6 +348,12 @@ export class PopoverFilter extends React.Component {
         if (this.props.showCheckboxFilter && Number(this.props.currentJustMax) !== this.props.initialJustMax) {
             numFilters++;
         }
+        if (this.props.issuesChipValuePickedG1) {
+            numFilters++;
+        }
+        if (this.props.issuesChipValuePickedG2) {
+            numFilters++;
+        }
         await this.props.onChangeNumberFiltersApplied(numFilters);
     }
 
@@ -728,6 +734,9 @@ export class PopoverFilter extends React.Component {
             chipValues={parameters.chipValues}
             chipValuesPicked={parameters.chipValuesPicked}
             onChangeChipValuesPicked={parameters.onChangeChipValuesPicked}
+            showIssuesChip={parameters.showIssuesChip}
+            issuesChipValuePicked={parameters.issuesChipValuePicked}
+            onChangeIssuesChipValuesPicked={parameters.onChangeIssuesChipValuesPicked}
         />
     }
 
@@ -884,7 +893,10 @@ export class PopoverFilter extends React.Component {
                             customFirstChipLabel: this.props.customFirstChipLabelG1,
                             chipValues: this.props.chipValuesG1,
                             chipValuesPicked: this.props.chipValuesPickedG1,
-                            onChangeChipValuesPicked: this.props.onChangeChipValuesPickedG1
+                            onChangeChipValuesPicked: this.props.onChangeChipValuesPickedG1,
+                            showIssuesChip: this.props.showIssuesChipG1,
+                            issuesChipValuePicked: this.props.issuesChipValuePickedG1,
+                            onChangeIssuesChipValuesPicked: this.props.onChangeIssuesChipValuesPickedG1
                         })}
                         {this.props.showChipsG2 && this.renderChipGroup(classes, intl, {
                             chipsFilterLabel: this.props.chipsFilterLabelG2,
@@ -893,7 +905,10 @@ export class PopoverFilter extends React.Component {
                             customFirstChipLabel: this.props.customFirstChipLabelG2,
                             chipValues: this.props.chipValuesG2,
                             chipValuesPicked: this.props.chipValuesPickedG2,
-                            onChangeChipValuesPicked: this.props.onChangeChipValuesPickedG2
+                            onChangeChipValuesPicked: this.props.onChangeChipValuesPickedG2,
+                            showIssuesChip: this.props.showIssuesChipG2,
+                            issuesChipValuePicked: this.props.issuesChipValuePickedG2,
+                            onChangeIssuesChipValuesPicked: this.props.onChangeIssuesChipValuesPickedG2
                         })}
                         {this.props.showMinMaxFilter && this.renderMinMax(classes, intl)}
                     </Grid>

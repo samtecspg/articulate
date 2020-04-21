@@ -102,7 +102,7 @@ class WebhookForm extends React.Component {
   };
 
   render() {
-    const { classes, intl, action, webhook } = this.props;
+    const { classes, intl, action, webhook, isReadOnly } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -151,6 +151,7 @@ class WebhookForm extends React.Component {
                 <FormattedMessage {...messages.webhookFormDescription} />
               </Typography>
               <WebhookSettings
+                isReadOnly={isReadOnly}
                 webhook={webhook}
                 useWebhook={action.useWebhook}
                 onChangeUseWebhook={this.props.onChangeActionData}
@@ -167,7 +168,7 @@ class WebhookForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {this.props.newAction ? null : (
+        { isReadOnly ||this.props.newAction ? null : (
           <DeleteFooter
             onDelete={this.props.onDelete}
             type={intl.formatMessage(messages.instanceName)}
@@ -191,6 +192,11 @@ WebhookForm.propTypes = {
   onChangeHeaderName: PropTypes.func,
   onChangeHeaderValue: PropTypes.func,
   errorState: PropTypes.object,
+  isReadOnly: PropTypes.bool,
+};
+
+WebhookForm.defaultProps = {
+  isReadOnly: false,
 };
 
 export default injectIntl(withStyles(styles)(WebhookForm));

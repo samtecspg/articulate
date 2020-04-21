@@ -1,11 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import systemKeywords from 'systemKeywords';
-
 import { Tooltip } from '@material-ui/core';
-import xIcon from '../../../images/x-icon.svg';
+import { withStyles } from '@material-ui/core/styles';
 import fontColorContrast from 'font-color-contrast';
+import PropTypes from 'prop-types';
+import React from 'react';
+import systemKeywords from 'systemKeywords';
+import xIcon from '../../../images/x-icon.svg';
 
 const compareKeywords = (a, b) => {
   if (a.start < b.start) return -1;
@@ -41,7 +40,7 @@ const styles = {
 };
 
 const HighlightedSaying = withStyles(styles)(props => {
-  const { classes } = props;
+  const { classes, isReadOnly } = props;
   const keywords = [...props.keywords].sort(compareKeywords);
   const keyword = keywords.length > 0 ? keywords.splice(0, 1)[0] : null;
   let formattedElement = null;
@@ -85,16 +84,19 @@ const HighlightedSaying = withStyles(styles)(props => {
             }}
           >
             {taggedText}
-            <img
-              onClick={() => {
-                props.onUntagKeyword(keyword.start, keyword.end);
-              }}
-              className={classes.deleteHighlight}
-              src={xIcon}
-            />
+            {!isReadOnly && (
+              <img
+                onClick={() => {
+                  props.onUntagKeyword(keyword.start, keyword.end);
+                }}
+                className={classes.deleteHighlight}
+                src={xIcon}
+              />
+            )}
           </span>
         </Tooltip>
         <HighlightedSaying
+          isReadOnly={isReadOnly}
           agentKeywords={props.agentKeywords}
           keywords={keywords}
           text={afterTaggedText}
@@ -119,6 +121,11 @@ HighlightedSaying.propTypes = {
   keywordIndex: PropTypes.number,
   lastStart: PropTypes.number,
   onUntagKeyword: PropTypes.func,
+  isReadOnly: PropTypes.bool,
+};
+
+HighlightedSaying.defaultProps = {
+  isReadOnly: false,
 };
 
 export default HighlightedSaying;

@@ -1,14 +1,24 @@
-import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Modal, TextField } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  Modal,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-import messages from '../messages';
+import PropTypes from 'prop-types';
+import React from 'react';
+import {
+  FormattedMessage,
+  injectIntl,
+  intlShape,
+} from 'react-intl';
+import DeleteFooter from '../../../components/DeleteFooter';
 
 import playHelpIcon from '../../../images/play-help-icon.svg';
-import DeleteFooter from '../../../components/DeleteFooter';
+
+import messages from '../messages';
 
 const styles = {
   headerContainer: {
@@ -93,7 +103,7 @@ class ActionForm extends React.Component {
   };
 
   render() {
-    const { classes, intl, action } = this.props;
+    const { classes, intl, action , isReadOnly} = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -146,6 +156,7 @@ class ActionForm extends React.Component {
               <Grid container spacing={24} item xs={12}>
                 <Grid item xs={12}>
                   <TextField
+                    disabled={isReadOnly}
                     id="actionName"
                     label={intl.formatMessage(messages.actionNameTextField)}
                     value={action.actionName}
@@ -171,7 +182,7 @@ class ActionForm extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        {this.props.newAction ? null : (
+        {isReadOnly || this.props.newAction ? null : (
           <DeleteFooter
             onDelete={this.props.onDelete}
             type={intl.formatMessage(messages.instanceName)}
@@ -188,6 +199,11 @@ ActionForm.propTypes = {
   action: PropTypes.object,
   onChangeActionName: PropTypes.func,
   errorState: PropTypes.object,
+  isReadOnly: PropTypes.bool,
+};
+
+ActionForm.defaultProps = {
+  isReadOnly: false,
 };
 
 export default injectIntl(withStyles(styles)(ActionForm));

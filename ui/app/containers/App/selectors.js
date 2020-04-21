@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import Immutable from 'seamless-immutable';
 
 const selectGlobal = state => state.global;
 const selectRoute = state => state.router;
@@ -39,6 +40,12 @@ const makeSelectLoading = () =>
   createSelector(
     selectGlobal,
     globalState => globalState.loading,
+  );
+
+const makeSelectLoadingAgentVersion = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.loadingAgentVersion,
   );
 
 const makeSelectLoadingImportCategory = () =>
@@ -87,6 +94,12 @@ const makeSelectNotifications = () =>
   createSelector(
     selectGlobal,
     globalState => globalState.notifications,
+  );
+
+const makeSelectTestTrainNotification = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.testTrainNotification,
   );
 
 const makeSelectMessages = () =>
@@ -139,6 +152,21 @@ const makeSelectAgent = () =>
     selectGlobal,
     globalState => globalState.agent,
   );
+
+const makeSelectAgentVersions = () =>
+  createSelector(
+    selectGlobal,
+    globalState => makeSelectAgentVersionsSorted(globalState.agentVersions)
+  );
+
+const makeSelectAgentVersionsSorted = (versions) => {
+  var tempArray = Immutable.asMutable(versions);
+  var temp = tempArray && tempArray.length ? tempArray
+    .sort((a, b) => (Number(b.creationDate) > Number(a.creationDate)) ? 1 : -1)
+    .filter(version => { return !version.isOriginalAgentVersion })
+    : []
+  return temp
+};
 
 const makeSelectCurrentAgent = () =>
   createSelector(
@@ -224,6 +252,46 @@ const makeSelectTotalSessions = () =>
   createSelector(
     selectGlobal,
     globalState => globalState.totalSessions,
+  );
+
+const makeSelectTrainTests = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.testTrainResults,
+  );
+
+const makeSelectTotalTrainTests = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.totalTrainTests,
+  );
+
+const makeSelectTrainTest = () =>
+  createSelector(
+    selectGlobal,
+    globalState => makeSelectTrainTestOnlyFails(globalState.trainTest),
+  );
+
+const makeSelectTrainTestOnlyFails = (trainTest) => {
+  var tempTest = null;
+  if (trainTest) {
+    tempTest = Immutable.asMutable(trainTest);
+    tempTest.keywords = tempTest.keywords.filter(keyword => { return keyword.bad > 0 })
+    tempTest.actions = tempTest.actions.filter(action => { return action.bad > 0 })
+  }
+  return tempTest;
+};
+
+const makeSelectTestTrainLoading = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.testTrainLoading,
+  );
+
+const makeSelectTestTrainError = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.testTrainError,
   );
 
 /*Logs*/
@@ -476,6 +544,19 @@ const makeSelectLocale = () =>
     globalState => globalState.locale,
   );
 
+/* Cheat sheet */
+const makeSelectStarredSayings = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.starredSayings,
+  );
+
+const makeSelectStarredSaying = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.starredSaying,
+  );
+
 /* Users */
 const makeSelectUsers = () =>
   createSelector(
@@ -499,7 +580,23 @@ const makeSelectLoadingCurrentUser = () =>
     selectGlobal,
     globalState => globalState.loadingCurrentUser,
   );
+const makeSelectAccessPolicyGroups = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.accessPolicyGroups,
+  );
 
+const makeSelectUser = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.user,
+  );
+
+const makeSelectUserDataTouched = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.userDataTouched,
+  );
 /* Dialogue Page Filters */
 const makeSelectDialoguePageFilterSearchSaying = () =>
   createSelector(
@@ -530,6 +627,16 @@ const makeSelectDialoguePageFilterKeywords = () =>
   createSelector(
     selectGlobal,
     globalState => globalState.dialoguePageFilterKeywords
+  )
+const makeSelectDialoguePageFilterActionIssues = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterActionIssues
+  )
+const makeSelectDialoguePageFilterKeywordIssues = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.dialoguePageFilterKeywordIssues
   )
 
 /* Review Page Filters */
@@ -596,12 +703,14 @@ export {
   makeSelectSessionLoaded,
   makeSelectMissingAPI,
   makeSelectLoading,
+  makeSelectLoadingAgentVersion,
   makeSelectLoadingImportCategory,
   makeSelectError,
   makeSelectSuccess,
   makeSelectConversationBarOpen,
   makeSelectShowChatButton,
   makeSelectNotifications,
+  makeSelectTestTrainNotification,
   makeSelectMessages,
   makeSelectWaitingResponse,
   makeSelectCSO,
@@ -610,6 +719,7 @@ export {
   makeSelectAgents,
   makeSelectAgentExport,
   makeSelectAgent,
+  makeSelectAgentVersions,
   makeSelectCurrentAgent,
   makeSelectAgentWebhook,
   makeSelectAgentPostFormat,
@@ -660,12 +770,22 @@ export {
   makeSelectSessions,
   makeSelectTotalSessions,
   makeSelectLocale,
+  makeSelectStarredSayings,
+  makeSelectStarredSaying,
   makeSelectUsers,
   makeSelectTotalUsers,
   makeSelectSuccessKeywordExamplesUpdate,
   makeSelectLoadingKeywordExamplesUpdate,
+  makeSelectAccessPolicyGroups,
   makeSelectCurrentUser,
   makeSelectLoadingCurrentUser,
+  makeSelectUser,
+  makeSelectUserDataTouched,
+  makeSelectTestTrainError,
+  makeSelectTestTrainLoading,
+  makeSelectTrainTests,
+  makeSelectTrainTest,
+  makeSelectTotalTrainTests,
   makeSelectRichResponses,
   makeSelectDialoguePageFilterSearchSaying,
   makeSelectDialoguePageFilterCategory,
@@ -673,6 +793,8 @@ export {
   makeSelectDialoguePageNumberOfFiltersApplied,
   makeSelectDialoguePageFilterString,
   makeSelectDialoguePageFilterKeywords,
+  makeSelectDialoguePageFilterActionIssues,
+  makeSelectDialoguePageFilterKeywordIssues,
   makeSelectReviewPageFilterSearchSaying,
   makeSelectReviewPageFilterCategory,
   makeSelectReviewPageFilterActions,
@@ -683,5 +805,5 @@ export {
   makeSelectReviewPageFilterContainers,
   makeSelectReviewPageFilterMaxLogs,
   makeSelectReviewPageFilterLogsString,
-  makeSelectReviewPageLogsNumberOfFiltersApplied
+  makeSelectReviewPageLogsNumberOfFiltersApplied,
 };

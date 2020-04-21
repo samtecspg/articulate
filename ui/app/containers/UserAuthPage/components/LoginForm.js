@@ -74,6 +74,9 @@ function LoginForm(props) {
         <Button variant="contained" className={classes.button} component={Link} to="/api/auth/github" target="_self">
           github
         </Button>
+        <Button variant="contained" className={classes.button} component={Link} to="/api/auth/azuread" target="_self">
+          azure
+        </Button>
       </Grid>
     </form>
   );

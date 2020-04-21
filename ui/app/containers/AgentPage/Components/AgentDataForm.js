@@ -1,27 +1,18 @@
-import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import {
-  Grid,
-  Typography,
-  TextField,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
-  FormHelperText,
-} from '@material-ui/core';
-import Slider from '@material-ui/lab/Slider';
+import { FormControl, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import Slider from '@material-ui/lab/Slider';
 
 import ColorPicker from 'components/ColorPicker';
-import AutoComplete from '../../../components/AutoComplete';
 
-import messages from '../messages';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
+import AutoComplete from '../../../components/AutoComplete';
+import gravatars from '../../../components/Gravatar';
 
 import pencilIcon from '../../../images/pencil-icon.svg';
-import gravatars from '../../../components/Gravatar';
+
+import messages from '../messages';
 
 const styles = {
   formContainer: {
@@ -83,26 +74,19 @@ class AgentDataForm extends React.Component {
   };
 
   getThresholdLabel() {
-    return this.props.agent.multiCategory
-      ? messages.sliderCategoryRecognitionThresholdLabel
-      : messages.sliderActionRecognitionThresholdLabel;
+    return this.props.agent.multiCategory ? messages.sliderCategoryRecognitionThresholdLabel : messages.sliderActionRecognitionThresholdLabel;
   }
 
   render() {
-    const { classes, intl, agent, settings } = this.props;
+    const { classes, intl, agent, settings, isReadOnly } = this.props;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
-        <Grid
-          className={classes.formSubContainer}
-          id="formContainer"
-          container
-          item
-          xs={12}
-        >
+        <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={1} md={6} sm={12} xs={12}>
               <TextField
                 select
+                disabled={isReadOnly}
                 id="gravatar"
                 value={agent.gravatar}
                 label=""
@@ -140,11 +124,10 @@ class AgentDataForm extends React.Component {
             <Grid item lg={3} md={6} sm={12} xs={12}>
               <TextField
                 id="agentName"
+                disabled={isReadOnly}
                 label={intl.formatMessage(messages.agentTextField)}
                 value={agent.agentName}
-                placeholder={intl.formatMessage(
-                  messages.agentTextFieldPlaceholder,
-                )}
+                placeholder={intl.formatMessage(messages.agentTextFieldPlaceholder)}
                 onChange={evt => {
                   this.props.onChangeAgentName('agentName', evt.target.value);
                 }}
@@ -187,6 +170,7 @@ class AgentDataForm extends React.Component {
             </Grid>
             <Grid item lg={4} md={12} sm={12} xs={12}>
               <TextField
+                disabled={isReadOnly}
                 select
                 id="language"
                 value={agent.language}
@@ -210,15 +194,14 @@ class AgentDataForm extends React.Component {
             </Grid>
             <Grid item lg={4} md={12} sm={12} xs={12}>
               <AutoComplete
+                disabled={isReadOnly}
                 label={intl.formatMessage(messages.timezoneSelect)}
                 suggestions={this.props.settings.timezones}
                 value={agent.timezone}
                 onChange={timezone => {
                   this.props.onChangeAgentData('timezone', timezone);
                 }}
-                placeholder={intl.formatMessage(
-                  messages.timezoneSelectPlaceholder,
-                )}
+                placeholder={intl.formatMessage(messages.timezoneSelectPlaceholder)}
                 helperText={intl.formatMessage(messages.requiredField)}
               />
             </Grid>
@@ -226,12 +209,11 @@ class AgentDataForm extends React.Component {
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={12} md={12} sm={12} xs={12}>
               <TextField
+                disabled={isReadOnly}
                 id="description"
                 label={intl.formatMessage(messages.descriptionTextField)}
                 value={agent.description}
-                placeholder={intl.formatMessage(
-                  messages.descriptionTextFieldPlaceholder,
-                )}
+                placeholder={intl.formatMessage(messages.descriptionTextFieldPlaceholder)}
                 onChange={evt => {
                   this.props.onChangeAgentData('description', evt.target.value);
                 }}
@@ -249,13 +231,11 @@ class AgentDataForm extends React.Component {
           </Grid>
           <Grid container spacing={24} item xs={12}>
             <Grid item lg={4} md={10} sm={9} xs={8}>
-              <Typography
-                className={classes.sliderLabel}
-                id="categoryClassifierThreshold"
-              >
+              <Typography className={classes.sliderLabel} id="categoryClassifierThreshold">
                 <FormattedMessage {...this.getThresholdLabel()} />
               </Typography>
               <Slider
+                disabled={isReadOnly}
                 style={{
                   position: 'relative',
                   top: '10px',
@@ -272,6 +252,7 @@ class AgentDataForm extends React.Component {
             </Grid>
             <Grid item lg={2} md={2} sm={3} xs={4}>
               <TextField
+                disabled={isReadOnly}
                 id="categoryClassifierThreshold"
                 margin="normal"
                 value={agent.categoryClassifierThreshold}
@@ -279,9 +260,7 @@ class AgentDataForm extends React.Component {
                   evt.target.value === ''
                     ? this.props.onChangeCategoryClassifierThreshold(0)
                     : evt.target.value <= 100 && evt.target.value >= 0
-                      ? this.props.onChangeCategoryClassifierThreshold(
-                        evt.target.value,
-                      )
+                      ? this.props.onChangeCategoryClassifierThreshold(evt.target.value)
                       : false;
                 }}
                 fullWidth
@@ -303,21 +282,19 @@ class AgentDataForm extends React.Component {
             </Grid>
             <Grid item lg={3} md={12} sm={12} xs={12}>
               <FormControl margin="normal" fullWidth>
-                <InputLabel focused={this.state.openActions}>
-                  {intl.formatMessage(messages.fallbackTextField)}
-                </InputLabel>
+                <InputLabel focused={this.state.openActions}>{intl.formatMessage(messages.fallbackTextField)}</InputLabel>
                 <Select
                   id="fallbackAction"
                   value={agent.fallbackAction}
                   label={intl.formatMessage(messages.fallbackTextField)}
                   onChange={evt => {
+                    if (isReadOnly) {
+                      return;
+                    }
                     if (evt.target.value === 'create') {
                       this.props.onGoToUrl(`/agent/${agent.id}/action/create`);
                     } else {
-                      this.props.onChangeAgentData(
-                        'fallbackAction',
-                        evt.target.value,
-                      );
+                      this.props.onChangeAgentData('fallbackAction', evt.target.value);
                     }
                   }}
                   open={this.state.openActions}
@@ -363,9 +340,7 @@ class AgentDataForm extends React.Component {
                     </MenuItem>
                   ))}
                 </Select>
-                <FormHelperText error={this.props.errorState.fallbackAction}>
-                  {intl.formatMessage(messages.requiredField)}
-                </FormHelperText>
+                <FormHelperText error={this.props.errorState.fallbackAction}>{intl.formatMessage(messages.requiredField)}</FormHelperText>
               </FormControl>
             </Grid>
 
@@ -464,6 +439,12 @@ AgentDataForm.propTypes = {
   newAgent: PropTypes.bool,
   agentActions: PropTypes.array,
   onGoToUrl: PropTypes.func,
+  defaultaFallbackActionName: PropTypes.string,
+  isReadOnly: PropTypes.bool,
+};
+
+AgentDataForm.defaultProps = {
+  isReadOnly: false,
   defaultFallbackActionName: PropTypes.string,
   defaultaWelcomeActionName: PropTypes.string,
 };

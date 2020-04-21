@@ -14,7 +14,13 @@ class SayingModel {
             creationDate: Joi
                 .string(),
             modificationDate: Joi
-                .string()
+                .string(),
+            starred: Joi.boolean(),
+            lastFailedTestingTimestamp: Joi.string(),
+            lastFailedTestingKeywords: Joi.array(),
+            lastFailedTestingKeywordsTimeStamp: Joi.string(),
+            lastFailedTestingActions: Joi.array(),
+            lastFailedTestingActionsTimeStamp: Joi.string(),
         };
     };
 }

@@ -1,20 +1,15 @@
+import { Button, Grid, Modal, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import React from 'react';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-
-import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Modal } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-
-import SortableModifiersTabs from './SortableModifiersTabs';
-import ModifierForm from './ModifierForm';
-
-import messages from '../messages';
-
-import playHelpIcon from '../../../images/play-help-icon.svg';
-import singleQuotesIcon from '../../../images/single-quotes-icon.svg';
+import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import DeleteFooter from '../../../components/DeleteFooter';
+import playHelpIcon from '../../../images/play-help-icon.svg';
+import messages from '../messages';
+import ModifierForm from './ModifierForm';
+import SortableModifiersTabs from './SortableModifiersTabs';
 
 const styles = {
   headerContainer: {
@@ -65,8 +60,7 @@ const styles = {
     width: '80%',
     height: '80%',
     backgroundColor: '#fff',
-    boxShadow:
-      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
+    boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   formContainer: {
     backgroundColor: '#ffffff',
@@ -122,7 +116,7 @@ class ModifiersForm extends React.Component {
   };
 
   render() {
-    const { classes, intl, keyword } = this.props;
+    const { classes, intl, keyword, isReadOnly } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -130,16 +124,8 @@ class ModifiersForm extends React.Component {
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.modifiersFormTitle} />
             </Typography>
-            <Button
-              className={classes.helpButton}
-              variant="outlined"
-              onClick={this.handleOpen}
-            >
-              <img
-                className={classes.playIcon}
-                src={playHelpIcon}
-                alt={intl.formatMessage(messages.playHelpAlt)}
-              />
+            <Button className={classes.helpButton} variant="outlined" onClick={this.handleOpen}>
+              <img className={classes.playIcon} src={playHelpIcon} alt={intl.formatMessage(messages.playHelpAlt)} />
               <span className={classes.helpText}>
                 <FormattedMessage {...messages.help} />
               </span>
@@ -176,51 +162,27 @@ class ModifiersForm extends React.Component {
           {keyword.modifiers.map((modifier, index) =>
             this.state.selectedTab === index ? (
               <ModifierForm
+                isReadOnly={isReadOnly}
                 keyword={keyword}
                 modifier={modifier}
                 settings={this.props.settings}
                 key={`modifierForm_${index}`}
-                onAddModifierSaying={this.props.onAddModifierSaying.bind(
-                  null,
-                  index,
-                )}
-                onDeleteModifierSaying={this.props.onDeleteModifierSaying.bind(
-                  null,
-                  index,
-                )}
-                onChangeModifierData={this.props.onChangeModifierData.bind(
-                  null,
-                  index,
-                )}
-                onChangeModifierName={this.props.onChangeModifierName.bind(
-                  null,
-                  index,
-                )}
+                onAddModifierSaying={this.props.onAddModifierSaying.bind(null, index)}
+                onDeleteModifierSaying={this.props.onDeleteModifierSaying.bind(null, index)}
+                onChangeModifierData={this.props.onChangeModifierData.bind(null, index)}
+                onChangeModifierName={this.props.onChangeModifierName.bind(null, index)}
                 saying={this.props.saying}
                 errorState={this.props.errorState.modifiers[index]}
                 agentKeywords={this.props.agentKeywords}
-                onUntagModifierKeyword={this.props.onUntagModifierKeyword.bind(
-                  null,
-                  index,
-                )}
-                onTagModifierKeyword={this.props.onTagModifierKeyword.bind(
-                  null,
-                  index,
-                )}
+                onUntagModifierKeyword={this.props.onUntagModifierKeyword.bind(null, index)}
+                onTagModifierKeyword={this.props.onTagModifierKeyword.bind(null, index)}
                 modifierSayingsPageSize={this.props.modifierSayingsPageSize}
-                onChangeModifiersSayingsPageSize={
-                  this.props.onChangeModifiersSayingsPageSize
-                }
+                onChangeModifiersSayingsPageSize={this.props.onChangeModifiersSayingsPageSize}
               />
             ) : null,
           )}
         </Grid>
-        {this.props.newKeyword ? null : (
-          <DeleteFooter
-            onDelete={this.props.onDelete}
-            type={intl.formatMessage(messages.instanceName)}
-          />
-        )}
+        {this.props.newKeyword || isReadOnly ? null : <DeleteFooter onDelete={this.props.onDelete} type={intl.formatMessage(messages.instanceName)} />}
       </Grid>
     );
   }
@@ -247,8 +209,11 @@ ModifiersForm.propTypes = {
   onTagModifierKeyword: PropTypes.func,
   modifierSayingsPageSize: PropTypes.number,
   onChangeModifiersSayingsPageSize: PropTypes.func,
+  isReadOnly: PropTypes.bool,
 };
 
-export default DragDropContext(HTML5Backend)(
-  injectIntl(withStyles(styles)(ModifiersForm)),
-);
+ModifiersForm.defaultProps = {
+  isReadOnly: false,
+};
+
+export default DragDropContext(HTML5Backend)(injectIntl(withStyles(styles)(ModifiersForm)));

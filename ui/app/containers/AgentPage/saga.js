@@ -5,7 +5,10 @@ import {
   ROUTE_AGENT,
   ROUTE_POST_FORMAT,
   ROUTE_SETTINGS,
+  ROUTE_USER,
   ROUTE_WEBHOOK,
+  ROUTE_EXPORT,
+  ROUTE_IMPORT
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import { getActions } from '../ActionPage/saga';
@@ -15,6 +18,8 @@ import {
   deleteAgentError,
   deleteAgentSuccess,
   loadAgentsSuccess,
+  loadUsersError,
+  loadUsersSuccess,
   updateAgentError,
   updateAgentSuccess,
 } from '../App/actions';
@@ -22,6 +27,7 @@ import {
   ADD_AGENT,
   DELETE_AGENT,
   LOAD_ACTIONS,
+  LOAD_USERS,
   UPDATE_AGENT,
 } from '../App/constants';
 import {
@@ -158,8 +164,8 @@ export function* postAgent(payload) {
       response.categoryClassifierThreshold * 100,
     );
     yield put(addAgentSuccess(response));
-  } catch (err) {
-    yield put(addAgentError(err));
+  } catch (error) {
+    yield put(addAgentError(error.response.data.message));
   }
 }
 
@@ -169,6 +175,8 @@ export function* putAgent(payload) {
   const mutableAgent = Immutable.asMutable(agent, { deep: true });
   mutableAgent.categoryClassifierThreshold =
     agent.categoryClassifierThreshold / 100;
+  mutableAgent.originalAgentVersionName = mutableAgent.agentName;
+  mutableAgent.loadedAgentVersionName = mutableAgent.agentName + '_v' + mutableAgent.currentAgentVersionCounter;
   const { api } = payload;
   delete mutableAgent.id;
   delete mutableAgent.settings;
@@ -225,9 +233,24 @@ export function* deleteAgent(payload) {
   }
 }
 
+export function* getUsers(payload) {
+  const { api } = payload;
+  try {
+    const params = {
+      skip: 0,
+      limit: -1,
+    };
+    const response = yield call(api.get, toAPIPath([ROUTE_USER]), { params });
+    yield put(loadUsersSuccess(response));
+  } catch (err) {
+    yield put(loadUsersError(err));
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest(ADD_AGENT, postAgent);
   yield takeLatest(UPDATE_AGENT, putAgent);
   yield takeLatest(DELETE_AGENT, deleteAgent);
   yield takeLatest(LOAD_ACTIONS, getActions);
+  yield takeLatest(LOAD_USERS, getUsers);
 }

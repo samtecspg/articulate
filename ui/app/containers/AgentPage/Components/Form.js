@@ -1,19 +1,15 @@
+import { Button, Grid, Modal, Tab, Tabs, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import { Grid, Typography, Button, Modal, Tabs, Tab } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-
-import messages from '../messages';
-
-import playHelpIcon from '../../../images/play-help-icon.svg';
+import DeleteFooter from '../../../components/DeleteFooter';
 import gravatars from '../../../components/Gravatar';
-
+import playHelpIcon from '../../../images/play-help-icon.svg';
+import messages from '../messages';
 import AgentDataForm from './AgentDataForm';
 import AgentParametersForm from './AgentParametersForm';
 import AgentSettingsForm from './AgentSettingsForm';
-import DeleteFooter from '../../../components/DeleteFooter';
 
 const styles = {
   headerContainer: {
@@ -73,8 +69,7 @@ const styles = {
     width: '80%',
     height: '80%',
     backgroundColor: '#fff',
-    boxShadow:
-      '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
+    boxShadow: '0px 3px 5px -1px rgba(0, 0, 0, 0.2),0px 5px 8px 0px rgba(0, 0, 0, 0.14),0px 1px 14px 0px rgba(0, 0, 0, 0.12)',
   },
   settingsIcon: {
     height: '18px',
@@ -133,7 +128,7 @@ class Form extends React.Component {
   };
 
   render() {
-    const { classes, intl } = this.props;
+    const { classes, intl, isReadOnly } = this.props;
     return (
       <Grid className={classes.headerContainer} container item xs={12}>
         <Grid className={classes.titleContainer} item xs={12}>
@@ -147,16 +142,8 @@ class Form extends React.Component {
             <Typography className={classes.title} variant="h2">
               <FormattedMessage {...messages.title} />
             </Typography>
-            <Button
-              className={classes.helpButton}
-              variant="outlined"
-              onClick={this.handleOpen}
-            >
-              <img
-                className={classes.playIcon}
-                src={playHelpIcon}
-                alt={intl.formatMessage(messages.playHelpAlt)}
-              />
+            <Button className={classes.helpButton} variant="outlined" onClick={this.handleOpen}>
+              <img className={classes.playIcon} src={playHelpIcon} alt={intl.formatMessage(messages.playHelpAlt)} />
               <span className={classes.helpText}>
                 <FormattedMessage {...messages.help} />
               </span>
@@ -164,6 +151,7 @@ class Form extends React.Component {
             <Modal open={this.state.openModal} onClose={this.handleClose}>
               <Grid className={classes.modalContent} container>
                 <iframe
+                  title="Help"
                   width="100%"
                   height="100%"
                   src="https://www.youtube.com/embed/Xc1j2F1Em9M"
@@ -201,13 +189,7 @@ class Form extends React.Component {
               icon={
                 this.props.errorState.tabs.indexOf(0) > -1 ? (
                   <div id="notificationDot" className={classes.notificationDot}>
-                    <span className={classes.numOfErrorsLabel}>
-                      {
-                        this.props.errorState.tabs.filter(
-                          element => element === 0,
-                        ).length
-                      }
-                    </span>
+                    <span className={classes.numOfErrorsLabel}>{this.props.errorState.tabs.filter(element => element === 0).length}</span>
                   </div>
                 ) : null
               }
@@ -222,13 +204,7 @@ class Form extends React.Component {
               icon={
                 this.props.errorState.tabs.indexOf(1) > -1 ? (
                   <div id="notificationDot" className={classes.notificationDot}>
-                    <span className={classes.numOfErrorsLabel}>
-                      {
-                        this.props.errorState.tabs.filter(
-                          element => element === 1,
-                        ).length
-                      }
-                    </span>
+                    <span className={classes.numOfErrorsLabel}>{this.props.errorState.tabs.filter(element => element === 1).length}</span>
                   </div>
                 ) : null
               }
@@ -237,19 +213,8 @@ class Form extends React.Component {
             <Tab
               icon={[
                 this.props.errorState.tabs.indexOf(2) > -1 ? (
-                  <div
-                    style={{ left: '0px' }}
-                    key="notification_settings"
-                    id="notificationDot"
-                    className={classes.notificationDot}
-                  >
-                    <span className={classes.numOfErrorsLabel}>
-                      {
-                        this.props.errorState.tabs.filter(
-                          element => element === 2,
-                        ).length
-                      }
-                    </span>
+                  <div style={{ left: '0px' }} key="notification_settings" id="notificationDot" className={classes.notificationDot}>
+                    <span className={classes.numOfErrorsLabel}>{this.props.errorState.tabs.filter(element => element === 2).length}</span>
                   </div>
                 ) : null,
               ]}
@@ -263,13 +228,12 @@ class Form extends React.Component {
           </Tabs>
           {this.state.selectedTab === 0 && (
             <AgentDataForm
+              isReadOnly={isReadOnly}
               agent={this.props.agent}
               settings={this.props.settings}
               onChangeAgentData={this.props.onChangeAgentData}
               onChangeAgentName={this.props.onChangeAgentName}
-              onChangeCategoryClassifierThreshold={
-                this.props.onChangeCategoryClassifierThreshold
-              }
+              onChangeCategoryClassifierThreshold={this.props.onChangeCategoryClassifierThreshold}
               onAddFallbackResponse={this.props.onAddFallbackResponse}
               onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
               errorState={this.props.errorState}
@@ -282,6 +246,7 @@ class Form extends React.Component {
           )}
           {this.state.selectedTab === 1 && (
             <AgentParametersForm
+              isReadOnly={isReadOnly}
               agent={this.props.agent}
               errorState={this.props.errorState}
               onAddNewParameter={this.props.onAddNewParameter}
@@ -292,6 +257,7 @@ class Form extends React.Component {
           )}
           {this.state.selectedTab === 2 && (
             <AgentSettingsForm
+              isReadOnly={isReadOnly}
               agent={this.props.agent}
               webhook={this.props.webhook}
               postFormat={this.props.postFormat}
@@ -306,15 +272,14 @@ class Form extends React.Component {
               onChangePostFormatData={this.props.onChangePostFormatData}
               onChangeAgentSettingsData={this.props.onChangeAgentSettingsData}
               errorState={this.props.errorState}
+              users={this.props.users}
+              selectedAccessControlUser={this.props.selectedAccessControlUser}
+              onAccessControlUserChange={this.props.onAccessControlUserChange}
+              onUpdateAccessPolicy={this.props.onUpdateAccessPolicy}
             />
           )}
         </Grid>
-        {this.props.newAgent ? null : (
-          <DeleteFooter
-            onDelete={this.props.onDelete}
-            type={intl.formatMessage(messages.instanceName)}
-          />
-        )}
+        {this.props.newAgent || isReadOnly ? null : <DeleteFooter onDelete={this.props.onDelete} type={intl.formatMessage(messages.instanceName)} />}
       </Grid>
     );
   }
@@ -352,6 +317,15 @@ Form.propTypes = {
   onDeleteParameter: PropTypes.func,
   onChangeParameterName: PropTypes.func,
   onChangeParameterValue: PropTypes.func,
+  users: PropTypes.array,
+  selectedAccessControlUser: PropTypes.object,
+  onAccessControlUserChange: PropTypes.func,
+  onUpdateAccessPolicy: PropTypes.func,
+  isReadOnly: PropTypes.bool,
+};
+
+Form.defaultProps = {
+  isReadOnly: false,
 };
 
 export default injectIntl(withStyles(styles)(Form));

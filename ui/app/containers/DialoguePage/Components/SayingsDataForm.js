@@ -1,34 +1,17 @@
-import {
-  Grid,
-  InputAdornment,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  TextField,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-
+import { Grid, InputAdornment, MenuItem, Table, TableBody, TableCell, TableRow, TextField, Tooltip, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { useShallowEqual } from 'shouldcomponentupdate-children';
-
 import _ from 'lodash';
-
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import Immutable from 'seamless-immutable';
-
-import addActionIcon from '../../../images/add-action-icon.svg';
-
-import trashIcon from '../../../images/trash-icon.svg';
-
-import messages from '../messages';
-
-import SayingRow from './SayingRow';
+import { useShallowEqual } from 'shouldcomponentupdate-children';
 import FilterSelect from '../../../components/FilterSelect';
+import addActionIcon from '../../../images/add-action-icon.svg';
+import trashIcon from '../../../images/trash-icon.svg';
+import tryErrorIcon from '../../../images/icon-error-try.svg';
+import messages from '../messages';
+import SayingRow from './SayingRow';
 
 const styles = {
   formContainer: {
@@ -43,11 +26,17 @@ const styles = {
   deleteCell: {
     width: '20px',
   },
+  tryErrorCell: {
+    width: '20px',
+  },
   deleteIcon: {
     '&:hover': {
       filter: 'invert(0)',
     },
     filter: 'invert(1)',
+    cursor: 'pointer',
+  },
+  tryErrorIcon: {
     cursor: 'pointer',
   },
   highlightLabel: {
@@ -217,7 +206,7 @@ class SayingsDataForm extends React.Component {
     openActions: false,
     anchorEl: null,
     changedPage: false,
-    currentlyDeletingSaying: false
+    currentlyDeletingSaying: false,
   };
 
   constructor(props) {
@@ -232,25 +221,17 @@ class SayingsDataForm extends React.Component {
   }
 
   componentWillUpdate(nextProps) {
-    if (
-      this.props.currentSayingsPage !== nextProps.currentSayingsPage ||
-      this.props.sayingsPageSize !== nextProps.sayingsPageSize
-    ) {
+    if (this.props.currentSayingsPage !== nextProps.currentSayingsPage || this.props.sayingsPageSize !== nextProps.sayingsPageSize) {
       this.setState({
         changedPage: true,
       });
-    } else if (
-      !_.isEqual(
-        Immutable.asMutable(this.props.sayings, { deep: true }),
-        Immutable.asMutable(nextProps.sayings, { deep: true }),
-      )
-    ) {
+    } else if (!_.isEqual(Immutable.asMutable(this.props.sayings, { deep: true }), Immutable.asMutable(nextProps.sayings, { deep: true }))) {
       this.setState({
         changedPage: false,
       });
       if (this.state.currentlyDeletingSaying) {
         this.setState({
-          currentlyDeletingSaying: false
+          currentlyDeletingSaying: false,
         });
       }
     }
@@ -263,296 +244,275 @@ class SayingsDataForm extends React.Component {
   }
 
   render() {
-    const { classes, intl, sayings, category, userSays } = this.props;
+    const { classes, intl, sayings, category, userSays, isReadOnly } = this.props;
     return (
       <Grid className={classes.formContainer} container item xs={12}>
-        <Grid
-          className={classes.formSubContainer}
-          id="formContainer"
-          container
-          item
-          xs={12}
-        >
-          <Grid container item xs={12}>
-            <Grid item lg={2} md={2} sm={4} xs={4}>
-              <FilterSelect
-                value={category}
-                valueDisplayField="categoryName"
-                valueField="id"
-                thresholdField="actionThreshold"
-                onSelect={this.props.onSelectCategory}
-                onSearch={this.props.onSearchCategory}
-                onGoToUrl={({ isEdit = false, url = '' }) => {
-                  if (isEdit) {
-                    this.props.onGoToUrl(url);
-                  } else {
-                    this.props.onGoToUrl(
-                      `/agent/${this.props.agentId}/addCategory`,
-                    );
-                  }
-                }}
-                onEditRoutePrefix={`/agent/${this.props.agentId}/category/`}
-                onCreateRoute={`/agent/${this.props.agentId}/addCategory`}
-                filteredValues={this.props.agentFilteredCategories}
-                values={this.props.agentCategories}
-                inputLabelMessage={messages.categorySelect}
-                displayThreshold
-                displayEdit
-                helperText={
-                  this.state.errorCategory
-                    ? intl.formatMessage(messages.requiredField)
-                    : ''
-                }
-                error={this.state.errorCategory}
-              />
-            </Grid>
-            <Grid item lg={10} md={10} sm={8} xs={8}>
-              <TextField
-                id="newSaying"
-                inputRef={component => this.newSaying = component}
-                defaultValue={userSays || undefined}
-                label={intl.formatMessage(messages.sayingTextField)}
-                placeholder={intl.formatMessage(
-                  messages.sayingTextFieldPlaceholder,
-                )}
-                onKeyPress={ev => {
-                  if (
-                    ev.key === 'Enter'
-                  ) {
-                    if (!category || category === '' || category === 'select') {
-                      this.setState({
-                        errorCategory: true,
-                      });
-                    } else if (ev.target.value.trim() !== '') {
-                      this.setState({
-                        errorCategory: false,
-                      });
-                      ev.preventDefault();
-                      this.props.onAddSaying(ev.target.value);
-                      ev.target.value = '';
+        <Grid className={classes.formSubContainer} id="formContainer" container item xs={12}>
+          {!isReadOnly && (
+            <Grid container item xs={12}>
+              <Grid item lg={2} md={2} sm={4} xs={4}>
+                <FilterSelect
+                  value={category}
+                  valueDisplayField="categoryName"
+                  valueField="id"
+                  thresholdField="actionThreshold"
+                  onSelect={this.props.onSelectCategory}
+                  onSearch={this.props.onSearchCategory}
+                  onGoToUrl={({ isEdit = false, url = '' }) => {
+                    if (isEdit) {
+                      this.props.onGoToUrl(url);
+                    } else {
+                      this.props.onGoToUrl(`/agent/${this.props.agentId}/addCategory`);
                     }
-                  }
-                }}
-                margin="normal"
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{
-                  className: classes.sayingInput,
-                  style: {
-                    border: 'none',
-                  },
-                }}
-                InputProps={{
-                  className: classes.sayingInputContainer,
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {this.props.newSayingActions.map((action, index) => {
-                        let actionId = this.props.agentActions.filter(
-                          agentAction => agentAction.actionName === action,
-                        );
-                        actionId = actionId
-                          ? Array.isArray(actionId) && actionId.length > 0
-                            ? actionId[0].id
-                            : 2
-                          : null;
-                        return (
-                          <div
-                            key={`newSayingAction_${index}`}
-                            className={classes.actionBackgroundContainer}
-                          >
-                            <span
-                              className={classes.actionLabel}
-                              onClick={() => {
-                                this.props.onClearSayingToAction();
-                                this.props.onGoToUrl(
-                                  `/agent/${
-                                  this.props.agentId
-                                  }/action/${actionId}`,
-                                );
-                              }}
-                            >
-                              {action.length > 15 ? (
-                                <Tooltip title={action} placement="top">
-                                  <span>{`${action.substring(0, 15)}...`}</span>
-                                </Tooltip>
-                              ) : (
-                                  action
-                                )}
-                            </span>
-                            <a
-                              onClick={() => {
-                                this.props.onDeleteNewSayingAction(action);
-                              }}
-                              className={classes.deleteActionX}
-                            >
-                              x
-                            </a>
-                          </div>
-                        );
-                      })}
-                      <img
-                        id="addActions"
-                        className={classes.addActionIcon}
-                        src={addActionIcon}
-                        onClick={evt => {
-                          this.setState({
-                            changedPage: false,
-                            openActions: true,
-                            anchorEl: evt.currentTarget,
-                          });
-                        }}
-                      />
-                      <span
-                        className={classes.sayingEnter}
-                        onClick={ev => {
-                          if (
-                            !category ||
-                            category === '' ||
-                            category === 'select'
-                          ) {
+                  }}
+                  onEditRoutePrefix={`/agent/${this.props.agentId}/category/`}
+                  onCreateRoute={`/agent/${this.props.agentId}/addCategory`}
+                  filteredValues={this.props.agentFilteredCategories}
+                  values={this.props.agentCategories}
+                  inputLabelMessage={messages.categorySelect}
+                  displayThreshold
+                  displayEdit
+                  helperText={this.state.errorCategory ? intl.formatMessage(messages.requiredField) : ''}
+                  error={this.state.errorCategory}
+                />
+              </Grid>
+              <Grid item lg={10} md={10} sm={8} xs={8}>
+                <TextField
+                  disabled={isReadOnly}
+                  id="newSaying"
+                  inputRef={component => (this.newSaying = component)}
+                  defaultValue={userSays || undefined}
+                  label={intl.formatMessage(messages.sayingTextField)}
+                  placeholder={intl.formatMessage(messages.sayingTextFieldPlaceholder)}
+                  onKeyPress={ev => {
+                    if (ev.key === 'Enter') {
+                      if (!category || category === '' || category === 'select') {
+                        this.setState({
+                          errorCategory: true,
+                        });
+                      } else if (ev.target.value.trim() !== '') {
+                        this.setState({
+                          errorCategory: false,
+                        });
+                        ev.preventDefault();
+                        this.props.onAddSaying(ev.target.value);
+                        ev.target.value = '';
+                      }
+                    }
+                  }}
+                  margin="normal"
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    className: classes.sayingInput,
+                    style: {
+                      border: 'none',
+                    },
+                  }}
+                  InputProps={{
+                    className: classes.sayingInputContainer,
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {this.props.newSayingActions.map((action, index) => {
+                          let actionId = this.props.agentActions.filter(agentAction => agentAction.actionName === action);
+                          actionId = actionId ? (Array.isArray(actionId) && actionId.length > 0 ? actionId[0].id : 2) : null;
+                          return (
+                            <div key={`newSayingAction_${index}`} className={classes.actionBackgroundContainer}>
+                              <span
+                                className={classes.actionLabel}
+                                onClick={() => {
+                                  this.props.onClearSayingToAction();
+                                  this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${actionId}`);
+                                }}
+                              >
+                                {action.length > 15 ? (
+                                  <Tooltip title={action} placement="top">
+                                    <span>{`${action.substring(0, 15)}...`}</span>
+                                  </Tooltip>
+                                ) : (
+                                    action
+                                  )}
+                              </span>
+                              <a
+                                onClick={() => {
+                                  this.props.onDeleteNewSayingAction(action);
+                                }}
+                                className={classes.deleteActionX}
+                              >
+                                x
+                              </a>
+                            </div>
+                          );
+                        })}
+                        <img
+                          id="addActions"
+                          className={classes.addActionIcon}
+                          src={addActionIcon}
+                          onClick={evt => {
                             this.setState({
-                              errorCategory: true,
+                              changedPage: false,
+                              openActions: true,
+                              anchorEl: evt.currentTarget,
                             });
-                          } else {
-                            this.setState({
-                              errorCategory: false,
-                            });
-                            if (this.newSaying.value.trim() !== '') {
-                              ev.preventDefault();
-                              this.props.onAddSaying(
-                                this.newSaying.value,
-                              );
-                              this.newSaying.value = '';
+                          }}
+                        />
+                        <span
+                          className={classes.sayingEnter}
+                          onClick={ev => {
+                            if (!category || category === '' || category === 'select') {
+                              this.setState({
+                                errorCategory: true,
+                              });
+                            } else {
+                              this.setState({
+                                errorCategory: false,
+                              });
+                              if (this.newSaying.value.trim() !== '') {
+                                ev.preventDefault();
+                                this.props.onAddSaying(this.newSaying.value);
+                                this.newSaying.value = '';
+                              }
                             }
-                          }
-                        }}
-                      >
-                        {intl.formatMessage(messages.sayingEnter)}
-                      </span>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <FilterSelect
-                showRecent
-                value="select"
-                valueDisplayField="actionName"
-                valueField="actionName"
-                onSelect={value => {
-                  if (value) {
-                    // Then add the saying for the new action
-                    this.props.onAddNewSayingAction(value);
-                  }
-                  this.setState({
-                    changedPage: false,
-                    openActions: false,
-                    anchorEl: null,
-                  });
-                }}
-                onSearch={this.props.onSearchActions}
-                onGoToUrl={({ isEdit = false, url = '' }) => {
-                  this.props.onClearSayingToAction();
-                  if (isEdit) {
-                    this.props.onGoToUrl(url);
-                  } else {
-                    this.props.onGoToUrl(
-                      `/agent/${this.props.agentId}/action/create`,
-                    );
-                  }
-                }}
-                onEditRoutePrefix={`/agent/${this.props.agentId}/action/`}
-                onCreateRoute={`/agent/${this.props.agentId}/action/create`}
-                filteredValues={this.props.agentFilteredActions}
-                values={this.props.agentActions}
-                SelectProps={{
-                  open: this.state.openActions,
-                  onClose: () => {
+                          }}
+                        >
+                          {intl.formatMessage(messages.sayingEnter)}
+                        </span>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <FilterSelect
+                  showRecent
+                  value="select"
+                  valueDisplayField="actionName"
+                  valueField="actionName"
+                  onSelect={value => {
+                    if (value) {
+                      // Then add the saying for the new action
+                      this.props.onAddNewSayingAction(value);
+                    }
                     this.setState({
                       changedPage: false,
                       openActions: false,
                       anchorEl: null,
                     });
-                  },
-                  onOpen: () => {
-                    this.setState({
-                      changedPage: false,
-                      openActions: true,
-                    });
-                  },
-                  MenuProps: {
-                    anchorEl: this.state.anchorEl,
-                  },
-                }}
-                style={{
-                  display: 'none',
-                }}
-                displayEdit
-              />
+                  }}
+                  onSearch={this.props.onSearchActions}
+                  onGoToUrl={({ isEdit = false, url = '' }) => {
+                    this.props.onClearSayingToAction();
+                    if (isEdit) {
+                      this.props.onGoToUrl(url);
+                    } else {
+                      this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create`);
+                    }
+                  }}
+                  onEditRoutePrefix={`/agent/${this.props.agentId}/action/`}
+                  onCreateRoute={`/agent/${this.props.agentId}/action/create`}
+                  filteredValues={this.props.agentFilteredActions}
+                  values={this.props.agentActions}
+                  SelectProps={{
+                    open: this.state.openActions,
+                    onClose: () => {
+                      this.setState({
+                        changedPage: false,
+                        openActions: false,
+                        anchorEl: null,
+                      });
+                    },
+                    onOpen: () => {
+                      this.setState({
+                        changedPage: false,
+                        openActions: true,
+                      });
+                    },
+                    MenuProps: {
+                      anchorEl: this.state.anchorEl,
+                    },
+                  }}
+                  style={{
+                    display: 'none',
+                  }}
+                  displayEdit
+                />
+              </Grid>
             </Grid>
-          </Grid>
+          )}
+
           <Grid container item xs={12}>
             {sayings.length > 0 ? (
               <Grid container>
-                <Typography className={classes.highlightLabel}>
-                  <FormattedMessage {...messages.highlightTooltip} />
-                </Typography>
+                {!isReadOnly && (
+                  <Typography className={classes.highlightLabel}>
+                    <FormattedMessage {...messages.highlightTooltip} />
+                  </Typography>
+                )}
                 <Table>
                   <TableBody>
                     {sayings.map((saying, index) => (
                       <TableRow key={`${saying}_${index}`}>
                         <TableCell>
                           <SayingRow
+                            isReadOnly={isReadOnly}
                             agentId={this.props.agentId}
                             saying={saying}
                             onDeleteAction={this.props.onDeleteAction}
                             agentKeywords={this.props.agentKeywords}
                             agentActions={this.props.agentActions}
                             agentCategories={this.props.agentCategories}
-                            onChangeSayingCategory={
-                              this.props.onChangeSayingCategory
-                            }
+                            onChangeSayingCategory={this.props.onChangeSayingCategory}
                             onTagKeyword={this.props.onTagKeyword}
                             onUntagKeyword={this.props.onUntagKeyword}
                             onAddAction={this.props.onAddAction}
                             onGoToUrl={this.props.onGoToUrl}
-                            onSendSayingToAction={
-                              this.props.onSendSayingToAction
-                            }
-                            agentFilteredActions={
-                              this.props.agentFilteredActions
-                            }
+                            onSendSayingToAction={this.props.onSendSayingToAction}
+                            agentFilteredActions={this.props.agentFilteredActions}
                             onSearchActions={this.props.onSearchActions}
+                            onUpdateSayingData={this.props.onUpdateSayingData}
                           />
                         </TableCell>
-                        <TableCell className={classes.deleteCell}>
-                          <img
-                            onClick={() => {
-                              if (!this.state.currentlyDeletingSaying) {
-                                this.setState({
-                                  currentlyDeletingSaying: true
-                                });
-                                this.props.onDeleteSaying(
-                                  saying.id,
-                                  saying.category,
-                                );
+                        {!isReadOnly && (
+                          <Fragment>
+                            <TableCell className={classes.tryErrorCell}>
+                              {this.props.trainTest && this.props.trainTest.timeStamp === Number(saying.lastFailedTestingTimestamp) && (
+
+                                <img
+                                  onClick={() => {
+                                    this.props.onToggleConversationBar(true);
+                                    this.props.onSendMessage({
+                                      author: 'User',
+                                      message: saying.userSays,
+                                    });
+                                  }}
+                                  className={classes.tryErrorIcon}
+                                  src={tryErrorIcon}
+                                />
+
+                              )
                               }
-                            }}
-                            className={classes.deleteIcon}
-                            src={trashIcon}
-                          />
-                        </TableCell>
+                            </TableCell>
+                            <TableCell className={classes.deleteCell}>
+                              <img
+                                onClick={() => {
+                                  if (!this.state.currentlyDeletingSaying) {
+                                    this.setState({
+                                      currentlyDeletingSaying: true,
+                                    });
+                                    this.props.onDeleteSaying(saying.id, saying.category);
+                                  }
+                                }}
+                                className={classes.deleteIcon}
+                                src={trashIcon}
+                              />
+                            </TableCell>
+                          </Fragment>
+                        )}
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-                <Grid
-                  id="pageControl"
-                  className={classes.pageControl}
-                  item
-                  xs={12}
-                >
+                <Grid id="pageControl" className={classes.pageControl} item xs={12}>
                   <Grid className={classes.pageSubControl}>
                     <Typography className={classes.pageSizeLabels}>
                       <FormattedMessage {...messages.show} />
@@ -589,16 +549,8 @@ class SayingsDataForm extends React.Component {
                   </Grid>
                   <Grid className={classes.pageNumberSubControl}>
                     <Typography
-                      onClick={
-                        this.props.currentSayingsPage > 1
-                          ? this.props.moveSayingsPageBack
-                          : null
-                      }
-                      className={
-                        this.props.currentSayingsPage > 1
-                          ? classes.pageCursors
-                          : classes.pageCursorsDisabled
-                      }
+                      onClick={this.props.currentSayingsPage > 1 ? this.props.moveSayingsPageBack : null}
+                      className={this.props.currentSayingsPage > 1 ? classes.pageCursors : classes.pageCursorsDisabled}
                     >
                       <FormattedMessage {...messages.backPage} />
                     </Typography>
@@ -610,9 +562,7 @@ class SayingsDataForm extends React.Component {
                         evt.target.value = evt.target.value.replace(/^0+/, '');
                         evt.target.value === ''
                           ? this.props.changeSayingsPage(1)
-                          : evt.target.value <=
-                            this.props.numberOfSayingsPages &&
-                            evt.target.value >= 1
+                          : evt.target.value <= this.props.numberOfSayingsPages && evt.target.value >= 1
                             ? this.props.changeSayingsPage(Number(evt.target.value))
                             : false;
                       }}
@@ -631,22 +581,10 @@ class SayingsDataForm extends React.Component {
                       className={classes.pageTextfield}
                       type="number"
                     />
-                    <Typography className={classes.pagesLabel}>
-                      / {this.props.numberOfSayingsPages}
-                    </Typography>
+                    <Typography className={classes.pagesLabel}>/ {this.props.numberOfSayingsPages}</Typography>
                     <Typography
-                      onClick={
-                        this.props.currentSayingsPage <
-                          this.props.numberOfSayingsPages
-                          ? this.props.moveSayingsPageForward
-                          : null
-                      }
-                      className={
-                        this.props.currentSayingsPage <
-                          this.props.numberOfSayingsPages
-                          ? classes.pageCursors
-                          : classes.pageCursorsDisabled
-                      }
+                      onClick={this.props.currentSayingsPage < this.props.numberOfSayingsPages ? this.props.moveSayingsPageForward : null}
+                      className={this.props.currentSayingsPage < this.props.numberOfSayingsPages ? classes.pageCursors : classes.pageCursorsDisabled}
                     >
                       <FormattedMessage {...messages.nextPage} />
                     </Typography>
@@ -696,6 +634,14 @@ SayingsDataForm.propTypes = {
   onDeleteNewSayingAction: PropTypes.func,
   onClearSayingToAction: PropTypes.func,
   onChangeSayingCategory: PropTypes.func,
+  onUpdateSayingData: PropTypes.func,
+  isReadOnly: PropTypes.bool,
+  onToggleConversationBar: PropTypes.func,
+  onSendMessage: PropTypes.func,
+  trainTest: PropTypes.object
 };
 
+SayingsDataForm.defaultProps = {
+  isReadOnly: false,
+};
 export default useShallowEqual(injectIntl(withStyles(styles)(SayingsDataForm)));

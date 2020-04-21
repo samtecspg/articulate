@@ -203,5 +203,25 @@ export default defineMessages({
   refreshLog: {
     id: 'app.containers.ReviewPage.Logs.refreshLog',
     defaultMessage: 'Refresh Log',
-  }
+  },
+  trainTestFullSummaryAlert1: {
+    id: 'app.containers.ReviewPage.component.Form.trainTestFullSummaryAlert1',
+    defaultMessage: 'Warning! This agent has changed'
+  },
+  trainTestFullSummaryAlert2: {
+    id: 'app.containers.ReviewPage.component.Form.trainTestFullSummaryAlert2',
+    defaultMessage: 'There have been changes in this agent from the moment this testing was done. Do you want to continue?'
+  },
+  trainTestFullSummaryYes: {
+    id: 'app.containers.ReviewPage.component.Form.trainTestFullSummaryYes',
+    defaultMessage: 'Yes'
+  },
+  trainTestFullSummaryNo: {
+    id: 'app.containers.ReviewPage.component.Form.trainTestFullSummaryNo',
+    defaultMessage: 'No'
+  },
+  testSummary: {
+    id: 'app.containers.ReviewPage.component.Form.testSummary',
+    defaultMessage: 'Test Summary'
+  },
 });

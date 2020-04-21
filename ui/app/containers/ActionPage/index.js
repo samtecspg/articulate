@@ -4,24 +4,21 @@
  *
  */
 
-import React from 'react';
+import {
+  CircularProgress,
+  Grid,
+} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import qs from 'query-string';
+import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import { withStyles } from '@material-ui/core/styles';
-
-import { Grid, CircularProgress } from '@material-ui/core';
+import { createStructuredSelector } from 'reselect';
 import injectSaga from 'utils/injectSaga';
-import qs from 'query-string';
-import MainTab from './Components/MainTab';
-import ActionForm from './Components/ActionForm';
-import SlotsForm from './Components/SlotsForm';
-import WebhookForm from './Components/WebhookForm';
-import ResponseForm from './Components/ResponseForm';
-
-import saga from './saga';
+import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
+import AC from '../../utils/accessControl';
 
 import {
   makeSelectAction,
@@ -37,54 +34,63 @@ import {
   makeSelectActionTouched,
   makeSelectNewActionResponse,
   makeSelectRichResponses,
+  makeSelectCurrentUser,
 } from '../App/selectors';
 
 import {
-  loadAction,
-  loadActions,
-  loadKeywords,
+  addAction,
   changeActionName,
   changeActionData,
   addActionResponse,
-  deleteActionResponse,
+  addNewActionResponseQuickResponse,
+  addNewHeaderActionWebhook,
+  addNewQuickResponse,
+  addNewSlot,
+  addSlotTextPrompt,
+  chainActionToResponse,
+  changeActionPostFormatData,
   changeActionWebhookData,
   changeActionWebhookPayloadType,
-  changeActionPostFormatData,
-  addAction,
-  updateAction,
-  resetStatusFlag,
-  resetActionData,
-  chainActionToResponse,
-  unchainActionFromResponse,
-  addNewHeaderActionWebhook,
-  deleteHeaderActionWebhook,
   changeHeaderNameActionWebhook,
   changeHeaderValueActionWebhook,
-  deleteAction,
-  addNewSlot,
-  changeSlotName,
-  changeSlotData,
-  addSlotTextPrompt,
-  deleteSlotTextPrompt,
-  sortSlots,
-  deleteSlot,
-  copyResponse,
-  updateNewResponse,
-  editActionResponse,
-  loadFilteredActions,
-  addNewQuickResponse,
-  deleteQuickResponse,
   changeQuickResponse,
-  editSlotTextPrompt,
-  toggleChatButton,
-  addNewActionResponseQuickResponse,
+  changeSlotData,
+  changeSlotName,
+  copyResponse,
+  deleteAction,
+  deleteActionResponse,
+  deleteHeaderActionWebhook,
   deleteNewActionResponseQuickResponse,
+  deleteQuickResponse,
+  deleteSlot,
+  deleteSlotTextPrompt,
+  editActionResponse,
+  editSlotTextPrompt,
+  loadAction,
+  loadActions,
+  loadFilteredActions,
+  loadKeywords,
+  resetActionData,
+  resetStatusFlag,
+  sortSlots,
+  toggleChatButton,
+  unchainActionFromResponse,
+  updateAction,
+  updateNewResponse,
   loadRichResponses,
   addRichResponse,
   deleteRichResponse,
   editRichResponse,
   changeTextResponseFlag,
 } from '../App/actions';
+
+import ActionForm from './Components/ActionForm';
+import MainTab from './Components/MainTab';
+import ResponseForm from './Components/ResponseForm';
+import SlotsForm from './Components/SlotsForm';
+import WebhookForm from './Components/WebhookForm';
+
+import saga from './saga';
 
 const styles = {
   goBackCard: {
@@ -170,7 +176,8 @@ export class ActionPage extends React.Component {
         this.props.onLoadAction(this.state.actionId, this.state.isDuplicate);
       }
       this.props.onResetData();
-    } else {
+    }
+    else {
       this.props.onLoadAction(this.props.match.params.actionId);
     }
     this.props.onShowChatButton(true);
@@ -261,7 +268,8 @@ export class ActionPage extends React.Component {
       errors = true;
       newErrorState.actionName = true;
       newErrorState.tabs.push(0);
-    } else {
+    }
+    else {
       newErrorState.actionName = false;
     }
 
@@ -272,7 +280,8 @@ export class ActionPage extends React.Component {
       errors = true;
       newErrorState.webhookKey = true;
       newErrorState.tabs.push(2);
-    } else {
+    }
+    else {
       newErrorState.webhookKey = false;
     }
 
@@ -283,7 +292,8 @@ export class ActionPage extends React.Component {
       errors = true;
       newErrorState.webhookUrl = true;
       newErrorState.tabs.push(2);
-    } else {
+    }
+    else {
       newErrorState.webhookUrl = false;
     }
 
@@ -294,7 +304,8 @@ export class ActionPage extends React.Component {
       errors = true;
       newErrorState.responses = true;
       newErrorState.tabs.push(3);
-    } else {
+    }
+    else {
       newErrorState.responses = false;
     }
 
@@ -310,7 +321,8 @@ export class ActionPage extends React.Component {
           newSlotError.slotName = true;
           newErrorState.tabs.push(1);
           newErrorState.slotsTabs.push(slotIndex);
-        } else {
+        }
+        else {
           newSlotError.slotName = false;
         }
         if (!slot.keyword) {
@@ -318,7 +330,8 @@ export class ActionPage extends React.Component {
           newSlotError.keyword = true;
           newErrorState.tabs.push(1);
           newErrorState.slotsTabs.push(slotIndex);
-        } else {
+        }
+        else {
           newSlotError.keyword = false;
         }
         if (slot.isRequired && slot.textPrompts.length === 0) {
@@ -326,7 +339,8 @@ export class ActionPage extends React.Component {
           newSlotError.textPrompts = true;
           newErrorState.tabs.push(1);
           newErrorState.slotsTabs.push(slotIndex);
-        } else {
+        }
+        else {
           newSlotError.textPrompts = false;
         }
         newErrorState.slots.push(newSlotError);
@@ -341,7 +355,8 @@ export class ActionPage extends React.Component {
         throw 'Response payload is not an object';
       }
       newErrorState.postFormatPayload = false;
-    } catch (e) {
+    }
+    catch (e) {
       errors = true;
       newErrorState.postFormatPayload = true;
       newErrorState.tabs.push(3);
@@ -356,7 +371,8 @@ export class ActionPage extends React.Component {
         throw 'Webhook payload is not an object';
       }
       newErrorState.webhookPayload = false;
-    } catch (e) {
+    }
+    catch (e) {
       errors = true;
       newErrorState.webhookPayload = true;
       newErrorState.tabs.push(2);
@@ -374,10 +390,12 @@ export class ActionPage extends React.Component {
           this.state.ref !== 'agent' &&
           this.state.ref !== 'action',
         );
-      } else {
+      }
+      else {
         this.props.onEditAction();
       }
-    } else {
+    }
+    else {
       this.setState({
         formError: true,
         errorState: { ...newErrorState },
@@ -386,7 +404,11 @@ export class ActionPage extends React.Component {
   }
 
   render() {
-    const { classes, richResponses } = this.props;
+
+    const { classes, agent, currentUser, richResponses } = this.props;
+    const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
+
+
     return this.props.agent.id &&
       (this.props.saying.keywords.length === 0 ||
         (this.props.saying.keywords.length > 0 &&
@@ -401,6 +423,7 @@ export class ActionPage extends React.Component {
             />
           </Grid>
           <MainTab
+            isReadOnly={isReadOnly}
             touched={this.props.touched}
             loading={this.props.loading}
             success={this.props.success}
@@ -424,6 +447,7 @@ export class ActionPage extends React.Component {
             errorState={this.state.errorState}
             actionForm={
               <ActionForm
+                isReadOnly={isReadOnly}
                 action={this.props.action}
                 onChangeActionName={this.props.onChangeActionName}
                 errorState={this.state.errorState}
@@ -437,6 +461,7 @@ export class ActionPage extends React.Component {
             }
             slotsForm={
               <SlotsForm
+                isReadOnly={isReadOnly}
                 action={this.props.action}
                 newSlot={this.props.newSlot}
                 onChangeSlotData={this.props.onChangeSlotData}
@@ -460,10 +485,12 @@ export class ActionPage extends React.Component {
                 onAddNewQuickResponse={this.props.onAddNewQuickResponse}
                 onEditSlotTextPrompt={this.props.onEditSlotTextPrompt}
                 onCopyTextPrompt={this.props.onCopyTextPrompt}
+                agentSettings={agent.settings}
               />
             }
             webhookForm={
               <WebhookForm
+                isReadOnly={isReadOnly}
                 action={this.props.action}
                 webhook={this.props.webhook}
                 onChangeActionData={this.props.onChangeActionData}
@@ -484,7 +511,9 @@ export class ActionPage extends React.Component {
             }
             responseForm={
               <ResponseForm
+                isReadOnly={isReadOnly}
                 agentId={this.props.agent.id}
+                agentSettings={agent.settings}
                 action={this.props.action}
                 postFormat={this.props.postFormat}
                 onChangeActionData={this.props.onChangeActionData}
@@ -584,6 +613,9 @@ ActionPage.propTypes = {
   onShowChatButton: PropTypes.func.isRequired,
   onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
   onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
+  currentUser: PropTypes.object,
+  onDeleteNewActionResponseQuickResponse: PropTypes.func.isRequired,
+  onAddNewActionResponseQuickResponse: PropTypes.func.isRequired,
   richResponses: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   onAddRichResponse: PropTypes.func.isRequired,
   onDeleteRichResponse: PropTypes.func.isRequired,
@@ -603,6 +635,7 @@ const mapStateToProps = createStructuredSelector({
   touched: makeSelectActionTouched(),
   newResponse: makeSelectNewActionResponse(),
   agentFilteredActions: makeSelectFilteredActions(),
+  currentUser: makeSelectCurrentUser(),
   richResponses: makeSelectRichResponses(),
 });
 

@@ -1,26 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import deburr from 'lodash/deburr';
-import Autosuggest from 'react-autosuggest';
-
 import {
-  TextField,
-  InputAdornment,
   IconButton,
-  Paper,
+  InputAdornment,
   MenuItem,
+  Paper,
+  TextField,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import deburr from 'lodash/deburr';
+import PropTypes from 'prop-types';
+import React from 'react';
+import Autosuggest from 'react-autosuggest';
 import cancelIcon from '../../images/cancel-icon.svg';
 
 function renderInputComponent(inputProps) {
   const {
-    value,
-    classes,
-    onChange,
-    inputRef = () => {},
-    ref,
-    ...other
+    value, classes, onChange, inputRef = () => {
+    }, ref, ...other
   } = inputProps;
 
   return (
@@ -141,16 +136,14 @@ class Autocomplete extends React.Component {
     return inputLength === 0
       ? []
       : transformedSuggestions.filter(suggestion => {
-          const keep =
-            count < 5 &&
-            suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
+        const keep = count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
 
-          if (keep) {
-            count += 1;
-          }
+        if (keep) {
+          count += 1;
+        }
 
-          return keep;
-        });
+        return keep;
+      });
   }
 
   handleSuggestionsFetchRequested = ({ value }) => {
@@ -172,7 +165,7 @@ class Autocomplete extends React.Component {
   };
 
   render() {
-    const { classes, placeholder, value, label, helperText } = this.props;
+    const { classes, placeholder, value, label, helperText, disabled } = this.props;
 
     const autosuggestProps = {
       renderInputComponent,
@@ -194,6 +187,7 @@ class Autocomplete extends React.Component {
             onChange: this.handleChange,
             label,
             helperText,
+            disabled
           }}
           theme={{
             container: classes.container,
@@ -220,6 +214,10 @@ Autocomplete.propTypes = {
   helperText: PropTypes.any,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
+Autocomplete.defaultProps = {
+  disabled: false,
+};
 export default withStyles(styles)(Autocomplete);

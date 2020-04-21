@@ -2,12 +2,7 @@ import { push } from 'react-router-redux';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { ROUTE_USER } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
-import {
-  loginUserError,
-  loginUserSuccess,
-  signUpUserError,
-  signUpUserSuccess,
-} from '../App/actions';
+import { loginUserError, loginUserSuccess, signUpUserError, signUpUserSuccess } from '../App/actions';
 import { LOGIN_USER, SIGN_UP_USER } from '../App/constants';
 
 export function* loginUser(payload) {
@@ -27,7 +22,7 @@ export function* loginUser(payload) {
       yield put(loginUserError('Invalid Username or Password'));
     }
   } catch (err) {
-    yield put(loginUserError(err));
+    yield put(loginUserError('Invalid Username or Password'));
   }
 }
 
@@ -43,10 +38,9 @@ export function* signUpUser(payload) {
   try {
     const response = yield call(api.post, toAPIPath([ROUTE_USER]), data);
     yield put(signUpUserSuccess(response));
-    if (ref === 'users'){
+    if (ref === 'users') {
       yield put(push('/users'));
-    }
-    else {
+    } else {
       yield put(push('/'));
     }
     window.location.reload();

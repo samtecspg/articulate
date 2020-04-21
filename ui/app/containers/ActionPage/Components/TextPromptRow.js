@@ -42,11 +42,12 @@ class TextPromptRow extends React.Component {
   }
 
   render() {
-    const { classes, textPrompt, textPromptIndex, intl } = this.props;
+    const { classes, textPrompt, textPromptIndex, intl , isReadOnly} = this.props;
     return (
       <Grid container>
         <Grid item xs={12}>
           <ContentEditable
+            disabled={isReadOnly}
             className={classes.textPrompt}
             innerRef={this.contentEditable}
             html={textPrompt} // innerHTML of the editable div
@@ -55,29 +56,33 @@ class TextPromptRow extends React.Component {
             }} // handle innerHTML change
             tagName="span" // Use a custom HTML tag (uses a div by default)
           />
-          <Tooltip
-            title={intl.formatMessage(messages.copyTextPrompt)}
-            placement="top"
-          >
-            <img
-              onClick={() => {
-                this.props.onCopyTextPrompt(textPrompt);
-              }}
-              className={classes.icon}
-              src={copyIcon}
-            />
-          </Tooltip>
-          <img
-            style={{
-              position: 'relative',
-              bottom: '1px'
-            }}
-            onClick={() => {
-              this.props.onDeleteTextPrompt(textPromptIndex);
-            }}
-            className={classes.icon}
-            src={trashIcon}
-          />
+          {!isReadOnly && (
+            <React.Fragment>
+              <Tooltip
+                title={intl.formatMessage(messages.copyTextPrompt)}
+                placement="top"
+              >
+                <img
+                  onClick={() => {
+                    this.props.onCopyTextPrompt(textPrompt);
+                  }}
+                  className={classes.icon}
+                  src={copyIcon}
+                />
+              </Tooltip>
+              <img
+                style={{
+                  position: 'relative',
+                  bottom: '1px'
+                }}
+                onClick={() => {
+                  this.props.onDeleteTextPrompt(textPromptIndex);
+                }}
+                className={classes.icon}
+                src={trashIcon}
+              />
+            </React.Fragment>
+          )}
         </Grid>
       </Grid>
     );
@@ -93,6 +98,12 @@ TextPromptRow.propTypes = {
   onDeleteTextPrompt: PropTypes.func,
   onCopyTextPrompt: PropTypes.func,
   agentId: PropTypes.string,
+  isReadOnly: PropTypes.bool,
 };
+
+TextPromptRow.defaultProps = {
+  isReadOnly: false,
+};
+
 
 export default injectIntl(withStyles(styles)(TextPromptRow));

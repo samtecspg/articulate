@@ -1,16 +1,14 @@
-import React from 'react';
-import { FormattedMessage } from 'react-intl';
-
-import PropTypes from 'prop-types';
-import { Grid, Typography, Switch } from '@material-ui/core';
+import { Grid, Switch, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-
-import brace from 'brace';
-import AceEditor from 'react-ace';
+import 'brace/mode/json';
 
 import 'brace/mode/xml';
-import 'brace/mode/json';
 import 'brace/theme/terminal';
+
+import PropTypes from 'prop-types';
+import React from 'react';
+import AceEditor from 'react-ace';
+import { FormattedMessage } from 'react-intl';
 
 import messages from './messages';
 
@@ -38,7 +36,7 @@ const styles = {
 /* eslint-disable react/prefer-stateless-function */
 export class ResponseSettings extends React.Component {
   render() {
-    const { classes, usePostFormat, postFormat } = this.props;
+    const { classes, usePostFormat, postFormat,isReadOnly } = this.props;
     return (
       <Grid container spacing={16}>
         <Grid className={classes.toggleContainer} container item xs={12}>
@@ -48,13 +46,11 @@ export class ResponseSettings extends React.Component {
             </Typography>
           ) : null}
           <Switch
+            disabled={isReadOnly}
             className={classes.toggle}
             checked={usePostFormat}
             onChange={() => {
-              this.props.onChangeUsePostFormatData(
-                'usePostFormat',
-                !usePostFormat,
-              );
+              this.props.onChangeUsePostFormatData('usePostFormat', !usePostFormat);
             }}
             value="usePostFormat"
             color="primary"
@@ -70,12 +66,9 @@ export class ResponseSettings extends React.Component {
                   mode="json"
                   theme="terminal"
                   name="webhookPayload"
-                  readOnly={false}
+                  readOnly={isReadOnly}
                   onLoad={this.onLoad}
-                  onChange={this.props.onChangePostFormatData.bind(
-                    null,
-                    'postFormatPayload',
-                  )}
+                  onChange={this.props.onChangePostFormatData.bind(null, 'postFormatPayload')}
                   fontSize={14}
                   showPrintMargin
                   showGutter
@@ -91,11 +84,7 @@ export class ResponseSettings extends React.Component {
                   }}
                 />,
                 this.props.errorState.postFormatPayload ? (
-                  <Typography
-                    key="postFormatPayloadError"
-                    variant="caption"
-                    className={classes.errorLabel}
-                  >
+                  <Typography key="postFormatPayloadError" variant="caption" className={classes.errorLabel}>
                     <FormattedMessage {...messages.payloadError} />
                   </Typography>
                 ) : null,
@@ -115,6 +104,11 @@ ResponseSettings.propTypes = {
   onChangePostFormatData: PropTypes.func,
   responseSettingDescription: PropTypes.object,
   errorState: PropTypes.object,
+  isReadOnly: PropTypes.bool,
+};
+
+ResponseSettings.defaultProps = {
+  isReadOnly: false,
 };
 
 export default withStyles(styles)(ResponseSettings);

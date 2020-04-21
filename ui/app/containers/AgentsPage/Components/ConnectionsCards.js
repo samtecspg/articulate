@@ -1,16 +1,8 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {
-  Grid,
-  Card,
-  CardContent,
-  CardHeader,
-  Typography,
-} from '@material-ui/core';
-
+import { Grid, Card, CardContent, CardHeader, Typography } from '@material-ui/core';
 import messages from '../messages';
 import gravatars from '../../../components/Gravatar';
 import ChannelsLogos from '../../../components/ChannelsLogos';
@@ -160,27 +152,25 @@ class ConnectionsCards extends React.Component {
 
   state = {
     showLeftArrow: false,
-    showRightArrow: document.getElementById('dvConnectionsCardsContainer') ? document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth :  false
+    showRightArrow: document.getElementById('dvConnectionsCardsContainer')
+      ? document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth
+      : false,
   };
 
   componentDidMount() {
     if (document.getElementById('dvConnectionsCardsContainer').addEventListener) {
       // IE9, Chrome, Safari, Opera
-      document
-        .getElementById('dvConnectionsCardsContainer')
-        .addEventListener('mousewheel', this.scrollHorizontally, false);
+      document.getElementById('dvConnectionsCardsContainer').addEventListener('mousewheel', this.scrollHorizontally, false);
       // Firefox
-      document
-        .getElementById('dvConnectionsCardsContainer')
-        .addEventListener('DOMMouseScroll', this.scrollHorizontally, false);
+      document.getElementById('dvConnectionsCardsContainer').addEventListener('DOMMouseScroll', this.scrollHorizontally, false);
     } else {
       // IE 6/7/8
-      document
-        .getElementById('dvConnectionsCardsContainer')
-        .attachEvent('onmousewheel', this.scrollHorizontally);
+      document.getElementById('dvConnectionsCardsContainer').attachEvent('onmousewheel', this.scrollHorizontally);
     }
     this.setState({
-      showRightArrow: document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth > document.getElementById('dvConnectionsCardsContainer').scrollLeft
+      showRightArrow:
+        document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth >
+        document.getElementById('dvConnectionsCardsContainer').scrollLeft,
     });
   }
 
@@ -190,42 +180,56 @@ class ConnectionsCards extends React.Component {
     document.getElementById('dvConnectionsCardsContainer').scrollLeft -= delta * 10;
     this.setState({
       showLeftArrow: document.getElementById('dvConnectionsCardsContainer').scrollLeft > 0,
-      showRightArrow: document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth > document.getElementById('dvConnectionsCardsContainer').scrollLeft
+      showRightArrow:
+        document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth >
+        document.getElementById('dvConnectionsCardsContainer').scrollLeft,
     });
     e.preventDefault();
   }
-
-  state = {
-    selectedConnection: null,
-  };
 
   addEmptyCards(numOfCards) {
     const emptyCards = [];
     // the ui show 4 cards as max per row
     const numberOfRows = Math.ceil(numOfCards / 4);
     for (let index = 0; index < numberOfRows * 4 - (1 + numOfCards); index++) {
-      emptyCards.push(
-        <Grid
-          key={`emptyCard_${index}`}
-          className={this.props.classes.emptyCard}
-        />,
-      );
+      emptyCards.push(<Grid key={`emptyCard_${index}`} className={this.props.classes.emptyCard} />);
     }
     return emptyCards;
   }
 
   render() {
-    const { classes, connections, channels, agents } = this.props;
+    const { classes, connections, channels, agents, isReadOnly } = this.props;
     return (
       <Grid container>
-        <Grid onClick={() => {
-          document.getElementById('dvConnectionsCardsContainer').scrollLeft -= 205;
-          this.setState({
-            showRightArrow: document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth > document.getElementById('dvConnectionsCardsContainer').scrollLeft,
-            showLeftArrow: document.getElementById('dvConnectionsCardsContainer').scrollLeft > 0
-          });
-        }} className={classes.scrollerContainer} item xs={1}>
-          {this.state.showLeftArrow ? <img src={rightArrowIcon} style={{cursor: 'pointer', height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40, WebkitTransform: 'scaleX(-1)', transform: 'scaleX(-1)'}} /> : null}
+        <Grid
+          onClick={() => {
+            document.getElementById('dvConnectionsCardsContainer').scrollLeft -= 205;
+            this.setState({
+              showRightArrow:
+                document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth >
+                document.getElementById('dvConnectionsCardsContainer').scrollLeft,
+              showLeftArrow: document.getElementById('dvConnectionsCardsContainer').scrollLeft > 0,
+            });
+          }}
+          className={classes.scrollerContainer}
+          item
+          xs={1}
+        >
+          {this.state.showLeftArrow ? (
+            <img
+              src={rightArrowIcon}
+              style={{
+                cursor: 'pointer',
+                height: '20px',
+                filter: 'invert(0.55)',
+                position: 'relative',
+                top: '40%',
+                left: 40,
+                WebkitTransform: 'scaleX(-1)',
+                transform: 'scaleX(-1)',
+              }}
+            />
+          ) : null}
         </Grid>
         <Grid
           id="dvConnectionsCardsContainer"
@@ -236,24 +240,22 @@ class ConnectionsCards extends React.Component {
           item
           xs={10}
         >
-          <Grid key="newConnectionCard" item>
-            <Card className={classes.newConnectionCard}>
-              <CardContent
-                onClick={() => {
-                  this.props.onGoToUrl('/connection/create');
-                }}
-                className={classes.newConnectionCardContent}
-              >
-                <FormattedMessage {...messages.createConnection} />
-              </CardContent>
-            </Card>
-          </Grid>
+          {!isReadOnly && (
+            <Grid key="newConnectionCard" item>
+              <Card className={classes.newConnectionCard}>
+                <CardContent
+                  onClick={() => {
+                    this.props.onGoToUrl('/connection/create');
+                  }}
+                  className={classes.newConnectionCardContent}
+                >
+                  <FormattedMessage {...messages.createConnection} />
+                </CardContent>
+              </Card>
+            </Grid>
+          )}
           {connections.map((connection, index) => {
-            const agent = connection.agent
-              ? agents.filter(
-                  tempAgent => parseInt(tempAgent.id) === connection.agent,
-                )[0]
-              : null;
+            const agent = connection.agent ? agents.filter(tempAgent => parseInt(tempAgent.id) === connection.agent)[0] : null;
             return (
               <Grid key={`connectionCard_${index}`} item>
                 <Card className={classes.connectionCard}>
@@ -263,11 +265,7 @@ class ConnectionsCards extends React.Component {
                     }}
                     className={classes.connectionCardContent}
                   >
-                    <Grid
-                      className={classes.connectionDataContainer}
-                      container
-                      justify="center"
-                    >
+                    <Grid className={classes.connectionDataContainer} container justify="center">
                       <Grid container justify="center" item xs={12}>
                         {agent
                           ? gravatars[agent.gravatar - 1]({
@@ -277,34 +275,18 @@ class ConnectionsCards extends React.Component {
                           : null}
                       </Grid>
                       <Grid container justify="center" item xs={12}>
-                        <Typography
-                          className={classes.agentNameTitle}
-                          style={{ color: agent ? agent.uiColor : '' }}
-                        >
+                        <Typography className={classes.agentNameTitle} style={{ color: agent ? agent.uiColor : '' }}>
                           {agent ? agent.agentName : null}
                         </Typography>
                       </Grid>
                       <Grid container justify="center" item xs={12}>
-                        <img
-                          className={classes.connectionLink}
-                          src={
-                            connection.agent
-                              ? connectionIcon
-                              : brokenConnectionIcon
-                          }
-                        />
+                        <img className={classes.connectionLink} src={connection.agent ? connectionIcon : brokenConnectionIcon} />
                       </Grid>
                       <Grid container justify="center" item xs={12}>
-                        <ChannelsLogos
-                          logo={connection.channel}
-                          className={classes.channelIcon}
-                        />
+                        <ChannelsLogos logo={connection.channel} className={classes.channelIcon} />
                       </Grid>
                       <Grid container justify="center" item xs={12}>
-                        <Typography
-                          className={classes.agentNameTitle}
-                          style={{ color: ChannelsColors[connection.channel] }}
-                        >
+                        <Typography className={classes.agentNameTitle} style={{ color: ChannelsColors[connection.channel] }}>
                           {channels[connection.channel].name}
                         </Typography>
                       </Grid>
@@ -316,18 +298,23 @@ class ConnectionsCards extends React.Component {
           })}
           {this.addEmptyCards(connections.length)}
         </Grid>
-        <Grid onClick={() => {
-          document.getElementById('dvConnectionsCardsContainer').scrollLeft -= -205;
-          this.setState({
-            showRightArrow: document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth > document.getElementById('dvConnectionsCardsContainer').scrollLeft,
-            showLeftArrow: document.getElementById('dvConnectionsCardsContainer').scrollLeft > 0
-          });
-        }} className={classes.scrollerContainer} item xs={1}>
-          {
-            this.state.showRightArrow ?
-            <img src={rightArrowIcon} style={{cursor: 'pointer', height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40}} /> :
-            null
-          }
+        <Grid
+          onClick={() => {
+            document.getElementById('dvConnectionsCardsContainer').scrollLeft -= -205;
+            this.setState({
+              showRightArrow:
+                document.getElementById('dvConnectionsCardsContainer').scrollWidth - document.getElementById('dvConnectionsCardsContainer').clientWidth >
+                document.getElementById('dvConnectionsCardsContainer').scrollLeft,
+              showLeftArrow: document.getElementById('dvConnectionsCardsContainer').scrollLeft > 0,
+            });
+          }}
+          className={classes.scrollerContainer}
+          item
+          xs={1}
+        >
+          {this.state.showRightArrow ? (
+            <img src={rightArrowIcon} style={{ cursor: 'pointer', height: '20px', filter: 'invert(0.55)', position: 'relative', top: '40%', left: 40 }} />
+          ) : null}
         </Grid>
       </Grid>
     );
@@ -340,6 +327,9 @@ ConnectionsCards.propTypes = {
   agents: PropTypes.array.isRequired,
   channels: PropTypes.object.isRequired,
   onGoToUrl: PropTypes.func,
+  isReadOnly: PropTypes.bool,
 };
-
+ConnectionsCards.defaultProps = {
+  isReadOnly: false,
+};
 export default withStyles(styles)(ConnectionsCards);

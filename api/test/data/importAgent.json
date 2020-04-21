@@ -21,6 +21,9 @@
   },
   "settings": {
     "rasaURL": "http://localhost:5000",
+    "rasaURLs": [
+      "http://localhost:5000"
+    ],
     "ducklingURL": "http://localhost:8000",
     "ducklingDimension": [
       "amount-of-money",
@@ -128,7 +131,13 @@
     "actionsPageSize": 5,
     "modifierSayingsPageSize": 10,
     "reviewPageSize": 5,
-    "sessionsPageSize": 5
+    "sessionsPageSize": 5,
+    "enableAgentVersions": true,
+    "generateSlotsQuickResponses": false,
+    "generateSlotsQuickResponsesMax": 1,
+    "generateActionsQuickResponses": false,
+    "generateActionsQuickResponsesMax": 1,
+    "slackLoggingURL": "www.webhook.com"
   },
   "categoryRecognizer": true,
   "modifiersRecognizer": true,

@@ -1,1340 +1,1479 @@
 {
-    "gravatar": 3,
-    "uiColor": "#C5A3FF",
-    "agentName": "unitTestConverseBot",
-    "description": "Test converse functionality",
-    "language": "en",
-    "timezone": "UTC",
-    "useWebhook": false,
-    "usePostFormat": false,
-    "multiCategory": false,
-    "categoryClassifierThreshold": 0.5,
-    "fallbackAction": "Default Fallback Action",
-    "welcomeAction": "Default Welcome Action",
-    "status": "Ready",
-    "lastTraining": "2020-03-26T17:00:42Z",
-    "extraTrainingData": false,
-    "enableModelsPerCategory": false,
-    "model": "default_5916acc6-3f45-6535-d63a-1fa90190bc70",
-    "parameters": {},
-    "settings": {
-        "rasaURL": "http://localhost:5000",
-        "ducklingURL": "http://localhost:8000",
-        "ducklingDimension": [
-            "amount-of-money",
-            "distance",
-            "duration",
-            "email",
-            "number",
-            "ordinal",
-            "phone-number",
-            "quantity",
-            "temperature",
-            "time",
-            "url",
-            "volume"
-        ],
-        "spacyPretrainedEntities": [
-            "PERSON",
-            "NORP",
-            "FAC",
-            "ORG",
-            "GPE",
-            "LOC",
-            "PRODUCT",
-            "EVENT",
-            "WORK_OF_ART",
-            "LAW",
-            "LANGUAGE",
-            "DATE",
-            "TIME",
-            "PERCENT",
-            "MONEY",
-            "QUANTITY",
-            "ORDINAL",
-            "CARDINAL"
-        ],
-        "categoryClassifierPipeline": [
-            {
-                "name": "intent_featurizer_count_vectors",
-                "token_pattern": "(?u)\\b\\w\\w+\\b|[\\u263a-\\U0001f645]"
-            },
-            {
-                "name": "intent_classifier_tensorflow_embedding",
-                "intent_tokenization_flag": true,
-                "intent_split_symbol": "+__+"
-            }
-        ],
-        "sayingClassifierPipeline": [
-            {
-                "name": "intent_featurizer_count_vectors",
-                "token_pattern": "(?u)\\b\\w\\w+\\b|[\\u263a-\\U0001f645]"
-            },
-            {
-                "name": "intent_classifier_tensorflow_embedding",
-                "intent_tokenization_flag": true,
-                "intent_split_symbol": "+__+"
-            },
-            {
-                "name": "nlp_spacy"
-            },
-            {
-                "name": "tokenizer_spacy"
-            },
-            {
-                "name": "ner_crf"
-            },
-            {
-                "name": "ner_synonyms"
-            },
-            {
-                "name": "ner_spacy"
-            }
-        ],
-        "keywordClassifierPipeline": [
-            {
-                "name": "nlp_spacy"
-            },
-            {
-                "name": "tokenizer_spacy"
-            },
-            {
-                "name": "ner_crf"
-            },
-            {
-                "name": "ner_synonyms"
-            },
-            {
-                "name": "ner_spacy"
-            }
-        ],
-        "sayingsPageSize": 5,
-        "keywordsPageSize": 5,
-        "actionsPageSize": 5,
-        "modifierSayingsPageSize": 5,
-        "reviewPageSize": 5,
-        "sessionsPageSize": 5
+  "gravatar": 3,
+  "uiColor": "#C5A3FF",
+  "agentName": "unitTestConverseBot",
+  "description": "Test converse functionality",
+  "language": "en",
+  "timezone": "UTC",
+  "useWebhook": false,
+  "usePostFormat": false,
+  "multiCategory": false,
+  "categoryClassifierThreshold": 0.5,
+  "fallbackAction": "Default Fallback Action",
+  "welcomeAction": "Default Welcome Action",
+  "status": "Ready",
+  "lastTraining": "2020-01-20T17:13:02Z",
+  "extraTrainingData": false,
+  "enableModelsPerCategory": false,
+  "model": "default_941d8fbe-b9f2-643e-efe8-dd0fb25736e1",
+  "parameters": {},
+  "settings": {
+    "rasaURL": "http://localhost:5000",
+    "rasaURLs": [
+      "http://localhost:5000"
+    ],
+    "ducklingURL": "http://localhost:8000",
+    "ducklingDimension": [
+      "amount-of-money",
+      "distance",
+      "duration",
+      "email",
+      "number",
+      "ordinal",
+      "phone-number",
+      "quantity",
+      "temperature",
+      "time",
+      "url",
+      "volume"
+    ],
+    "spacyPretrainedEntities": [
+      "PERSON",
+      "NORP",
+      "FAC",
+      "ORG",
+      "GPE",
+      "LOC",
+      "PRODUCT",
+      "EVENT",
+      "WORK_OF_ART",
+      "LAW",
+      "LANGUAGE",
+      "DATE",
+      "TIME",
+      "PERCENT",
+      "MONEY",
+      "QUANTITY",
+      "ORDINAL",
+      "CARDINAL"
+    ],
+    "categoryClassifierPipeline": [
+      {
+        "name": "intent_featurizer_count_vectors",
+        "token_pattern": "(?u)\\b\\w\\w+\\b|[\\u263a-\\U0001f645]"
+      },
+      {
+        "name": "intent_classifier_tensorflow_embedding",
+        "intent_tokenization_flag": true,
+        "intent_split_symbol": "+__+"
+      }
+    ],
+    "sayingClassifierPipeline": [
+      {
+        "name": "intent_featurizer_count_vectors",
+        "token_pattern": "(?u)\\b\\w\\w+\\b|[\\u263a-\\U0001f645]"
+      },
+      {
+        "name": "intent_classifier_tensorflow_embedding",
+        "intent_tokenization_flag": true,
+        "intent_split_symbol": "+__+"
+      },
+      {
+        "name": "nlp_spacy"
+      },
+      {
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "ner_crf"
+      },
+      {
+        "name": "ner_synonyms"
+      },
+      {
+        "name": "ner_spacy"
+      }
+    ],
+    "keywordClassifierPipeline": [
+      {
+        "name": "nlp_spacy"
+      },
+      {
+        "name": "tokenizer_spacy"
+      },
+      {
+        "name": "ner_crf"
+      },
+      {
+        "name": "ner_synonyms"
+      },
+      {
+        "name": "ner_spacy"
+      }
+    ],
+    "sayingsPageSize": 50,
+    "keywordsPageSize": 5,
+    "actionsPageSize": 5,
+    "modifierSayingsPageSize": 5,
+    "reviewPageSize": 5,
+    "sessionsPageSize": 5,
+    "generateSlotsQuickResponses": true,
+    "generateActionsQuickResponses": true,
+    "generateSlotsQuickResponsesMax": 1,
+    "generateActionsQuickResponsesMax": "1"
+  },
+  "categoryRecognizer": true,
+  "modifiersRecognizer": true,
+  "modifiersRecognizerJustER": "",
+  "creationDate": "1578418789000",
+  "modificationDate": "1578419075000",
+  "enableDiscoverySheet": false,
+  "enableAgentVersions": false,
+  "actions": [
+    {
+      "actionName": "Default Fallback Action",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Default Response",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1578418789000",
+      "modificationDate": "1578418789000"
     },
-    "categoryRecognizer": true,
-    "modifiersRecognizer": true,
-    "modifiersRecognizerJustER": "",
-    "creationDate": "1585241933000",
-    "modificationDate": "1585242294000",
-    "actions": [
+    {
+      "actionName": "normalAction",
+      "slots": [],
+      "responses": [
         {
-            "actionName": "Default Fallback Action",
-            "slots": [],
-            "responses": [
-                {
-                    "textResponse": "Default Response",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "normalAction",
-            "slots": [],
-            "responses": [
-                {
-                    "textResponse": "Normal Action Response",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "normalAction2",
-            "slots": [],
-            "responses": [
-                {
-                    "textResponse": "Normal Action Response 2",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "modifierAction",
-            "slots": [
-                {
-                    "slotName": "modifierRequiredSlot",
-                    "uiColor": "#B28DFF",
-                    "keyword": "modifierKeyword",
-                    "keywordId": 549,
-                    "isList": false,
-                    "isRequired": true,
-                    "quickResponses": [],
-                    "textPrompts": [
-                        "The slot is required"
-                    ]
-                }
-            ],
-            "responses": [
-                {
-                    "textResponse": "The slots: {{slots.modifierRequiredSlot.original}}",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "rememberSlot",
-            "slots": [
-                {
-                    "slotName": "slotToRemember",
-                    "uiColor": "#FFCBC1",
-                    "keyword": "normalKeyword",
-                    "keywordId": 656,
-                    "isList": false,
-                    "isRequired": false,
-                    "quickResponses": [],
-                    "textPrompts": [],
-                    "remainingLife": 4
-                }
-            ],
-            "responses": [
-                {
-                    "textResponse": "Remember slot response",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "listAction",
-            "slots": [
-                {
-                    "slotName": "listSlot",
-                    "uiColor": "#C5A3FF",
-                    "keyword": "listKeyword",
-                    "keywordId": 853,
-                    "isList": true,
-                    "isRequired": false,
-                    "quickResponses": [],
-                    "textPrompts": [],
-                    "freeText": false
-                }
-            ],
-            "responses": [
-                {
-                    "textResponse": "The list: {{andList slots.listSlot.value}}",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "chainedActionResponse",
-            "slots": [],
-            "responses": [
-                {
-                    "textResponse": "Chained action response",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "regexActions",
-            "slots": [
-                {
-                    "slotName": "regexSlot",
-                    "uiColor": "#FCC2FF",
-                    "keyword": "regexKeyword",
-                    "keywordId": 1368,
-                    "isList": false,
-                    "isRequired": true,
-                    "quickResponses": [],
-                    "textPrompts": [
-                        "Enter regex match"
-                    ],
-                    "freeText": false
-                }
-            ],
-            "responses": [
-                {
-                    "textResponse": "The answer {{ slots.regexSlot.original}}",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "webhookAction",
-            "slots": [],
-            "responses": [
-                {
-                    "textResponse": "This is the answer {{webhook.webhookKey.response.name}}",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": true,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000",
-            "webhook": {
-                "webhookKey": "webhookKey",
-                "webhookUrl": "https://pokeapi.co/api/v2/pokemon/pikachu/",
-                "webhookVerb": "GET",
-                "webhookPayloadType": "None",
-                "webhookPayload": "",
-                "webhookHeaders": [],
-                "webhookUser": "",
-                "webhookPassword": "",
-                "postScript": "",
-                "creationDate": "1585241933000",
-                "modificationDate": "1585241933000"
-            }
-        },
-        {
-            "actionName": "freeTextSlotAction",
-            "slots": [
-                {
-                    "slotName": "freeTextSlot",
-                    "uiColor": "#4e4e4e",
-                    "keyword": "sys.any",
-                    "keywordId": 0,
-                    "isList": false,
-                    "isRequired": true,
-                    "quickResponses": [],
-                    "textPrompts": [
-                        "Enter free text slot"
-                    ],
-                    "freeText": true,
-                    "remainingLife": null,
-                    "promptCountLimit": null
-                }
-            ],
-            "responses": [
-                {
-                    "textResponse": "The answer {{{ slots.freeTextSlot.original }}}",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "quickResponseAction",
-            "slots": [],
-            "responses": [
-                {
-                    "richResponses": [
-                        {
-                            "type": "quickResponses",
-                            "data": {
-                                "quickResponses": [
-                                    "With a quick reply",
-                                    "With another quick reply"
-                                ]
-                            }
-                        }
-                    ],
-                    "textResponse": "This is an action",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "keywordVsActionsAction",
-            "slots": [
-                {
-                    "slotName": "keywordVsActionSlot",
-                    "uiColor": "#FCC2FF",
-                    "keyword": "keywordVsActionKeyword",
-                    "keywordId": 422,
-                    "isList": false,
-                    "isRequired": true,
-                    "quickResponses": [],
-                    "textPrompts": [
-                        "Enter keywordVsActionSlot"
-                    ],
-                    "freeText": false
-                }
-            ],
-            "responses": [
-                {
-                    "textResponse": "This keywordVsAction response should only appear once",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "Default Welcome Action",
-            "slots": [],
-            "responses": [
-                {
-                    "richResponses": [],
-                    "textResponse": "This is a welcome action",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "richResponsesAction",
-            "slots": [],
-            "responses": [
-                {
-                    "richResponses": [
-                        {
-                            "type": "video",
-                            "data": "{\n  \"video\": \"http://techslides.com/demos/sample-videos/small.mp4\"\n}"
-                        },
-                        {
-                            "type": "richText",
-                            "data": "{\n  \"text\": \"<h2>This is a title</h2><p>This is text</p><a href='https://www.w3schools.com'>This is a link</a>\"\n}"
-                        },
-                        {
-                            "type": "quickResponses",
-                            "data": "{\n  \"quickResponses\": [\n    \"Quick response 1\",\n    \"Quick Response 2\",\n    \"Quick Response 3\"\n  ]\n}"
-                        },
-                        {
-                            "type": "image",
-                            "data": "{\n  \"imageURL\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tree_example_VIS.jpg/1600px-Tree_example_VIS.jpg\"\n}"
-                        },
-                        {
-                            "type": "collapsible",
-                            "data": "[\n  {\n    \"title\": \"Title 1\",\n    \"content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"\n  }\n]"
-                        },
-                        {
-                            "type": "cardsCarousel",
-                            "data": "[\n  {\n    \"title\": \"Card 1\",\n    \"description\": \"This is a card\",\n    \"imageURL\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tree_example_VIS.jpg/1600px-Tree_example_VIS.jpg\",\n    \"linkURL\": \"https://www.google.com\"\n  }\n]"
-                        },
-                        {
-                            "type": "buttons",
-                            "data": "[\n  {\n    \"label\": \"Button 1\",\n    \"linkURL\": \"http://www.google.com\"\n  }\n]"
-                        },
-                        {
-                            "type": "audio",
-                            "data": "{\n  \"audio\": \"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3\"\n}"
-                        }
-                    ],
-                    "textResponse": "This response contains rich responses",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": false,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
-        },
-        {
-            "actionName": "globalWebhookAction",
-            "slots": [],
-            "responses": [
-                {
-                    "richResponses": [],
-                    "textResponse": "Here is the response {{webhook.globalWebhook.response.name}}",
-                    "actions": [],
-                    "disableTextResponse": false
-                }
-            ],
-            "useWebhook": true,
-            "usePostFormat": false,
-            "creationDate": "1585241933000",
-            "modificationDate": "1585242294000",
-            "webhook": {
-                "webhookKey": "globalWebhook",
-                "webhookUrl": "https://pokeapi.co/api/v2/pokemon/bulbasaur/",
-                "webhookVerb": "GET",
-                "webhookPayloadType": "None",
-                "webhookPayload": "",
-                "webhookHeaders": [],
-                "webhookUser": "",
-                "webhookPassword": "",
-                "postScript": "",
-                "creationDate": "1585241933000",
-                "modificationDate": "1585242294000"
-            }
+          "textResponse": "Normal Action Response",
+          "actions": [],
+          "disableTextResponse": false
         }
-    ],
-    "categories": [
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1578418789000",
+      "modificationDate": "1578418789000"
+    },
+    {
+      "actionName": "normalAction2",
+      "slots": [],
+      "responses": [
         {
-            "categoryName": "unitTestNormalCategory",
-            "enabled": true,
-            "actionThreshold": 0.5,
-            "status": "Out of Date",
-            "lastTraining": "1970-01-01T00:00:00Z",
-            "model": "",
-            "extraTrainingData": true,
-            "parameters": {},
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000",
-            "sayings": [
-                {
-                    "userSays": "This is normalKeyword1 action",
-                    "keywords": [
-                        {
-                            "start": 8,
-                            "end": 22,
-                            "value": "normalKeyword1",
-                            "keyword": "normalKeyword",
-                            "keywordId": 23
-                        }
-                    ],
-                    "actions": [
-                        "normalAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "This is normalKeyword2Synonym action",
-                    "keywords": [
-                        {
-                            "start": 8,
-                            "end": 29,
-                            "value": "normalKeyword2Synonym",
-                            "keyword": "normalKeyword",
-                            "keywordId": 23
-                        }
-                    ],
-                    "actions": [
-                        "normalAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "This is normalKeyword3",
-                    "keywords": [
-                        {
-                            "start": 8,
-                            "end": 22,
-                            "value": "normalKeyword3",
-                            "keyword": "normalKeyword",
-                            "keywordId": 23
-                        }
-                    ],
-                    "actions": [
-                        "normalAction2"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "This is also normalKeyword3",
-                    "keywords": [
-                        {
-                            "start": 13,
-                            "end": 27,
-                            "value": "normalKeyword3",
-                            "keyword": "normalKeyword",
-                            "keywordId": 23
-                        }
-                    ],
-                    "actions": [
-                        "normalAction2"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "Remember NormalKeyword2",
-                    "keywords": [
-                        {
-                            "start": 9,
-                            "end": 23,
-                            "value": "normalKeyword2",
-                            "keyword": "normalKeyword",
-                            "keywordId": 23
-                        }
-                    ],
-                    "actions": [
-                        "rememberSlot"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "Also remember NormalKeyword3",
-                    "keywords": [
-                        {
-                            "start": 14,
-                            "end": 28,
-                            "value": "normalKeyword3",
-                            "keyword": "normalKeyword",
-                            "keywordId": 23
-                        }
-                    ],
-                    "actions": [
-                        "rememberSlot"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                }
-            ]
+          "textResponse": "Normal Action Response 2",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "actionName": "modifierAction",
+      "slots": [
+        {
+          "slotName": "modifierRequiredSlot",
+          "uiColor": "#B28DFF",
+          "keyword": "modifierKeyword",
+          "keywordId": 549,
+          "isList": false,
+          "isRequired": true,
+          "quickResponses": [],
+          "textPrompts": [
+            "The slot is required"
+          ]
+        }
+      ],
+      "responses": [
+        {
+          "textResponse": "The slots: {{slots.modifierRequiredSlot.original}}",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "actionName": "rememberSlot",
+      "slots": [
+        {
+          "slotName": "slotToRemember",
+          "uiColor": "#FFCBC1",
+          "keyword": "normalKeyword",
+          "keywordId": 656,
+          "isList": false,
+          "isRequired": false,
+          "quickResponses": [],
+          "textPrompts": [],
+          "remainingLife": 4
+        }
+      ],
+      "responses": [
+        {
+          "textResponse": "Remember slot response",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "actionName": "listAction",
+      "slots": [
+        {
+          "slotName": "listSlot",
+          "uiColor": "#C5A3FF",
+          "keyword": "listKeyword",
+          "keywordId": 853,
+          "isList": true,
+          "isRequired": false,
+          "quickResponses": [],
+          "textPrompts": [],
+          "freeText": false
+        }
+      ],
+      "responses": [
+        {
+          "textResponse": "The list: {{andList slots.listSlot.value}}",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "actionName": "chainedActionResponse",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "Chained action response",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "actionName": "regexActions",
+      "slots": [
+        {
+          "slotName": "regexSlot",
+          "uiColor": "#FCC2FF",
+          "keyword": "regexKeyword",
+          "keywordId": 1368,
+          "isList": false,
+          "isRequired": true,
+          "quickResponses": [],
+          "textPrompts": [
+            "Enter regex match"
+          ],
+          "freeText": false
+        }
+      ],
+      "responses": [
+        {
+          "textResponse": "The answer {{ slots.regexSlot.original}}",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "actionName": "webhookAction",
+      "slots": [],
+      "responses": [
+        {
+          "textResponse": "This is the answer {{webhook.webhookKey.response.name}}",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": true,
+      "usePostFormat": false,
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
+      "webhook": {
+        "webhookKey": "webhookKey",
+        "webhookUrl": "https://pokeapi.co/api/v2/pokemon/pikachu/",
+        "webhookVerb": "GET",
+        "webhookPayloadType": "None",
+        "webhookPayload": "",
+        "webhookHeaders": [],
+        "webhookUser": "",
+        "webhookPassword": "",
+        "postScript": "",
+        "creationDate": "1579540078000",
+        "modificationDate": "1579540078000"
+      }
+    },
+    {
+      "actionName": "freeTextSlotAction",
+      "slots": [
+        {
+          "slotName": "freeTextSlot",
+          "uiColor": "#4e4e4e",
+          "keyword": "sys.any",
+          "keywordId": 0,
+          "isList": false,
+          "isRequired": true,
+          "quickResponses": [],
+          "textPrompts": [
+            "Enter free text slot"
+          ],
+          "freeText": true,
+          "remainingLife": null,
+          "promptCountLimit": null
+        }
+      ],
+      "responses": [
+        {
+          "textResponse": "The answer {{{ slots.freeTextSlot.original }}}",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "actionName": "quickResponseAction",
+      "slots": [],
+      "responses": [
+        {
+          "richResponses": [
+            {
+              "type": "quickResponses",
+              "data": {
+                "quickResponses": [
+                  "With a quick reply",
+                  "With another quick reply"
+                ]
+              }
+            }
+          ],
+          "textResponse": "This is an action",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "actionName": "keywordVsActionsAction",
+      "slots": [
+        {
+          "slotName": "keywordVsActionSlot",
+          "uiColor": "#FCC2FF",
+          "keyword": "keywordVsActionKeyword",
+          "keywordId": 422,
+          "isList": false,
+          "isRequired": true,
+          "quickResponses": [],
+          "textPrompts": [
+            "Enter keywordVsActionSlot"
+          ],
+          "freeText": false
+        }
+      ],
+      "responses": [
+        {
+          "textResponse": "This keywordVsAction response should only appear once",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "actionName": "Default Welcome Action",
+      "slots": [],
+      "responses": [
+        {
+          "richResponses": [],
+          "textResponse": "This is a welcome action",
+          "actions": [],
+          "disableTextResponse": false
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1578418789000",
+      "modificationDate": "1578418789000"
+    },
+    {
+      "actionName": "actionForAutomaticQuickReplies",
+      "slots": [
+        {
+          "slotName": "AutomaticQuickRepliesSlot1",
+          "uiColor": "#A79AFF",
+          "keyword": "keywordForAutomaticReplies",
+          "keywordId": 113,
+          "isList": false,
+          "isRequired": true,
+          "quickResponses": [],
+          "textPrompts": [
+            "Enter slot for automatic quick replies"
+          ],
+          "freeText": false
         },
         {
-            "categoryName": "unitTestModifierCategory",
-            "enabled": true,
-            "actionThreshold": 0.5,
-            "status": "Out of Date",
-            "lastTraining": "2019-09-10T18:54:54Z",
-            "model": "",
-            "extraTrainingData": true,
-            "parameters": {},
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000",
-            "sayings": [
-                {
-                    "userSays": "Request a modifier",
-                    "keywords": [],
-                    "actions": [
-                        "modifierAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "This is a modifierKeyword1",
-                    "keywords": [
-                        {
-                            "start": 10,
-                            "end": 26,
-                            "value": "modifierKeyword1",
-                            "keyword": "modifierKeyword",
-                            "keywordId": 24
-                        }
-                    ],
-                    "actions": [
-                        "modifierAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "This is a modifierKeyword2",
-                    "keywords": [
-                        {
-                            "start": 10,
-                            "end": 26,
-                            "value": "modifierKeyword2",
-                            "keyword": "modifierKeyword",
-                            "keywordId": 24
-                        }
-                    ],
-                    "actions": [
-                        "modifierAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                }
-            ]
-        },
+          "slotName": "AutomaticQuickRepliesSlot2",
+          "uiColor": "#FF9CEE",
+          "keyword": "keywordForAutomaticReplies2",
+          "keywordId": 114,
+          "isList": false,
+          "isRequired": true,
+          "quickResponses": [],
+          "textPrompts": [
+            "Enter slot for automatic quick replies 2"
+          ],
+          "freeText": false
+        }
+      ],
+      "responses": [
         {
-            "categoryName": "unitTestListCategory",
-            "enabled": true,
-            "actionThreshold": 0.5,
-            "status": "Out of Date",
-            "lastTraining": "2019-09-11T17:14:37Z",
-            "model": "",
-            "extraTrainingData": true,
-            "parameters": {},
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000",
-            "sayings": [
-                {
-                    "userSays": "The list is listKeyword1, listKeyword2 and listKeyword3",
-                    "keywords": [
-                        {
-                            "start": 12,
-                            "end": 24,
-                            "value": "listKeyword1",
-                            "keyword": "listKeyword",
-                            "keywordId": 25
-                        },
-                        {
-                            "start": 26,
-                            "end": 38,
-                            "value": "listKeyword2",
-                            "keyword": "listKeyword",
-                            "keywordId": 25
-                        },
-                        {
-                            "start": 43,
-                            "end": 55,
-                            "value": "listKeyword3",
-                            "keyword": "listKeyword",
-                            "keywordId": 25
-                        }
-                    ],
-                    "actions": [
-                        "listAction",
-                        "chainedActionResponse"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "The other list is listKeyword2, listKeyword1 and listKeyword3",
-                    "keywords": [
-                        {
-                            "start": 18,
-                            "end": 30,
-                            "value": "listKeyword2",
-                            "keyword": "listKeyword",
-                            "keywordId": 25
-                        },
-                        {
-                            "start": 32,
-                            "end": 44,
-                            "value": "listKeyword1",
-                            "keyword": "listKeyword",
-                            "keywordId": 25
-                        },
-                        {
-                            "start": 49,
-                            "end": 61,
-                            "value": "listKeyword3",
-                            "keyword": "listKeyword",
-                            "keywordId": 25
-                        }
-                    ],
-                    "actions": [
-                        "listAction",
-                        "chainedActionResponse"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                }
-            ]
-        },
+          "textResponse": "This is the response with automatic quick replies",
+          "actions": []
+        }
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1578418789000",
+      "modificationDate": "1578418789000"
+    },
+    {
+      "actionName": "richResponsesAction",
+      "slots": [],
+      "responses": [
         {
-            "categoryName": "unitTestRegexCategory",
-            "enabled": true,
-            "actionThreshold": 0.5,
-            "status": "Out of Date",
-            "lastTraining": "2019-09-12T17:40:56Z",
-            "model": "",
-            "extraTrainingData": true,
-            "parameters": {},
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000",
-            "sayings": [
-                {
-                    "userSays": "This is a regexSlot",
-                    "keywords": [],
-                    "actions": [
-                        "regexActions"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "This is also a regexSlot",
-                    "keywords": [],
-                    "actions": [
-                        "regexActions"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                }
-            ]
-        },
-        {
-            "categoryName": "unitTestWebhookCategory",
-            "enabled": true,
-            "actionThreshold": 0.5,
-            "status": "Out of Date",
-            "lastTraining": "2019-09-12T17:40:56Z",
-            "model": "",
-            "extraTrainingData": true,
-            "parameters": {
-                "": ""
+          "richResponses": [
+            {
+              "type": "video",
+              "data": "{\n  \"video\": \"http://techslides.com/demos/sample-videos/small.mp4\"\n}"
             },
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000",
-            "sayings": [
-                {
-                    "userSays": "Get a webhook reponse",
-                    "keywords": [],
-                    "actions": [
-                        "webhookAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "Get another webhook response",
-                    "keywords": [],
-                    "actions": [
-                        "webhookAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                }
-            ]
-        },
-        {
-            "categoryName": "unitTestFreeTextSlot",
-            "enabled": true,
-            "actionThreshold": 0.5,
-            "status": "Out of Date",
-            "lastTraining": "2019-09-12T18:07:31Z",
-            "model": "",
-            "extraTrainingData": true,
-            "parameters": {},
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000",
-            "sayings": [
-                {
-                    "userSays": "This is a freeTextSlot",
-                    "keywords": [],
-                    "actions": [
-                        "freeTextSlotAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "This is also a freeTextSlot",
-                    "keywords": [],
-                    "actions": [
-                        "freeTextSlotAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                }
-            ]
-        },
-        {
-            "categoryName": "unitTestActionQuickResponse",
-            "enabled": true,
-            "actionThreshold": 0.5,
-            "status": "Out of Date",
-            "lastTraining": "2019-11-26T17:13:41Z",
-            "model": "",
-            "extraTrainingData": false,
-            "parameters": {},
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000",
-            "sayings": [
-                {
-                    "userSays": "Get a quick response from action",
-                    "keywords": [],
-                    "actions": [
-                        "quickResponseAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "Get another quick response from action",
-                    "keywords": [],
-                    "actions": [
-                        "quickResponseAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                }
-            ]
-        },
-        {
-            "categoryName": "unitTestKeywordVsActionCategory",
-            "enabled": true,
-            "actionThreshold": 0.5,
-            "status": "Out of Date",
-            "lastTraining": "2019-12-12T16:37:45Z",
-            "model": "",
-            "extraTrainingData": false,
-            "parameters": {},
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000",
-            "sayings": [
-                {
-                    "userSays": "I want a keywordsVsActions action",
-                    "keywords": [],
-                    "actions": [
-                        "keywordVsActionsAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "I want a keywordsVsActions action with value1",
-                    "keywords": [
-                        {
-                            "start": 39,
-                            "end": 45,
-                            "value": "value1",
-                            "keyword": "keywordVsActionKeyword",
-                            "keywordId": 27
-                        }
-                    ],
-                    "actions": [
-                        "keywordVsActionsAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "I want a keywordsVsActions action with value2",
-                    "keywords": [
-                        {
-                            "start": 39,
-                            "end": 45,
-                            "value": "value2",
-                            "keyword": "keywordVsActionKeyword",
-                            "keywordId": 27
-                        }
-                    ],
-                    "actions": [
-                        "keywordVsActionsAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "I want a keywordsVsActions action with value3",
-                    "keywords": [
-                        {
-                            "start": 39,
-                            "end": 45,
-                            "value": "value3",
-                            "keyword": "keywordVsActionKeyword",
-                            "keywordId": 27
-                        }
-                    ],
-                    "actions": [
-                        "keywordVsActionsAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "I want a keywordsVsActions action with value1, value2, value3",
-                    "keywords": [
-                        {
-                            "start": 39,
-                            "end": 45,
-                            "value": "value1",
-                            "keyword": "keywordVsActionKeyword",
-                            "keywordId": 27
-                        },
-                        {
-                            "start": 47,
-                            "end": 53,
-                            "value": "value2",
-                            "keyword": "keywordVsActionKeyword",
-                            "keywordId": 27
-                        },
-                        {
-                            "start": 55,
-                            "end": 61,
-                            "value": "value3",
-                            "keyword": "keywordVsActionKeyword",
-                            "keywordId": 27
-                        }
-                    ],
-                    "actions": [
-                        "keywordVsActionsAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                }
-            ]
-        },
-        {
-            "categoryName": "unitTestRichResponses",
-            "enabled": true,
-            "actionThreshold": 0.5,
-            "status": "Out of Date",
-            "lastTraining": "2020-01-20T17:11:46Z",
-            "model": "",
-            "extraTrainingData": false,
-            "parameters": {},
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000",
-            "sayings": [
-                {
-                    "userSays": "I test rich responses",
-                    "keywords": [],
-                    "actions": [
-                        "richResponsesAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "I test rich responses too",
-                    "keywords": [],
-                    "actions": [
-                        "richResponsesAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                }
-            ]
-        },
-        {
-            "categoryName": "unitTestGlobalWebhook",
-            "enabled": true,
-            "actionThreshold": 0.5,
-            "status": "Out of Date",
-            "lastTraining": "2020-03-26T16:49:51Z",
-            "model": "",
-            "extraTrainingData": false,
-            "parameters": {},
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000",
-            "sayings": [
-                {
-                    "userSays": "I want a global webhook",
-                    "keywords": [],
-                    "actions": [
-                        "globalWebhookAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                },
-                {
-                    "userSays": "I also want a global webhook",
-                    "keywords": [],
-                    "actions": [
-                        "globalWebhookAction"
-                    ],
-                    "creationDate": "1585241933000",
-                    "modificationDate": "1585241933000"
-                }
-            ]
+            {
+              "type": "richText",
+              "data": "{\n  \"text\": \"<h2>This is a title</h2><p>This is text</p><a href='https://www.w3schools.com'>This is a link</a>\"\n}"
+            },
+            {
+              "type": "quickResponses",
+              "data": "{\n  \"quickResponses\": [\n    \"Quick response 1\",\n    \"Quick Response 2\",\n    \"Quick Response 3\"\n  ]\n}"
+            },
+            {
+              "type": "image",
+              "data": "{\n  \"imageURL\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tree_example_VIS.jpg/1600px-Tree_example_VIS.jpg\"\n}"
+            },
+            {
+              "type": "collapsible",
+              "data": "[\n  {\n    \"title\": \"Title 1\",\n    \"content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"\n  }\n]"
+            },
+            {
+              "type": "cardsCarousel",
+              "data": "[\n  {\n    \"title\": \"Card 1\",\n    \"description\": \"This is a card\",\n    \"imageURL\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tree_example_VIS.jpg/1600px-Tree_example_VIS.jpg\",\n    \"linkURL\": \"https://www.google.com\"\n  }\n]"
+            },
+            {
+              "type": "buttons",
+              "data": "[\n  {\n    \"label\": \"Button 1\",\n    \"linkURL\": \"http://www.google.com\"\n  }\n]"
+            },
+            {
+              "type": "audio",
+              "data": "{\n  \"audio\": \"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3\"\n}"
+            }
+          ],
+          "textResponse": "This response contains rich responses",
+          "actions": [],
+          "disableTextResponse": false
         }
-    ],
-    "keywords": [
+      ],
+      "useWebhook": false,
+      "usePostFormat": false,
+      "creationDate": "1579540233000",
+      "modificationDate": "1579540886000"
+    }
+  ],
+  "categories": [
+    {
+      "categoryName": "unitTestNormalCategory",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Out of Date",
+      "lastTraining": "1970-01-01T00:00:00Z",
+      "model": "",
+      "extraTrainingData": true,
+      "parameters": {},
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
+      "sayings": [
         {
-            "keywordName": "normalKeyword",
-            "uiColor": "#FFCBC1",
-            "examples": [
-                {
-                    "value": "normalKeyword1",
-                    "synonyms": [
-                        "normalKeyword1",
-                        "normalKeyword1Synonym"
-                    ]
-                },
-                {
-                    "value": "normalKeyword2",
-                    "synonyms": [
-                        "normalKeyword2",
-                        "normalKeyword2Synonym"
-                    ]
-                },
-                {
-                    "value": "normalKeyword3",
-                    "synonyms": [
-                        "normalKeyword3"
-                    ]
-                }
-            ],
-            "regex": "",
-            "type": "learned",
-            "modifiers": [],
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
+          "userSays": "This is normalKeyword1 action",
+          "keywords": [
+            {
+              "start": 8,
+              "end": 22,
+              "value": "normalKeyword1",
+              "keyword": "normalKeyword",
+              "keywordId": 26
+            }
+          ],
+          "actions": [
+            "normalAction"
+          ],
+          "creationDate": "1579540078000",
+          "modificationDate": "1579540078000"
         },
         {
-            "keywordName": "modifierKeyword",
-            "uiColor": "#B28DFF",
-            "examples": [
-                {
-                    "value": "modifierKeyword1",
-                    "synonyms": [
-                        "modifierKeyword1"
-                    ]
-                },
-                {
-                    "value": "modifierKeyword2",
-                    "synonyms": [
-                        "modifierKeyword2"
-                    ]
-                }
-            ],
-            "regex": "",
-            "type": "learned",
-            "modifiers": [
-                {
-                    "modifierName": "ModifierSet",
-                    "action": "SET",
-                    "valueSource": "keyword",
-                    "staticValue": "",
-                    "sayings": [
-                        {
-                            "userSays": "use also modifierKeyword2",
-                            "keywords": [
-                                {
-                                    "start": 9,
-                                    "end": 25,
-                                    "value": "modifierKeyword2",
-                                    "keyword": "modifierKeyword",
-                                    "keywordId": 24
-                                }
-                            ]
-                        },
-                        {
-                            "userSays": "use modifierKeyword1",
-                            "keywords": [
-                                {
-                                    "start": 4,
-                                    "end": 20,
-                                    "value": "modifierKeyword1",
-                                    "keyword": "modifierKeyword",
-                                    "keywordId": 24
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "modifierName": "ModifierUnset",
-                    "action": "UNSET",
-                    "valueSource": "keyword",
-                    "staticValue": "",
-                    "sayings": [
-                        {
-                            "userSays": "unset modifierKeyword1",
-                            "keywords": [
-                                {
-                                    "start": 6,
-                                    "end": 22,
-                                    "value": "modifierKeyword1",
-                                    "keyword": "modifierKeyword",
-                                    "keywordId": 24
-                                }
-                            ]
-                        },
-                        {
-                            "userSays": "also unset ModifierKeyword2",
-                            "keywords": [
-                                {
-                                    "start": 11,
-                                    "end": 27,
-                                    "value": "modifierKeyword2",
-                                    "keyword": "modifierKeyword",
-                                    "keywordId": 24
-                                }
-                            ]
-                        },
-                        {
-                            "userSays": "unset ModifierKeyword1",
-                            "keywords": [
-                                {
-                                    "start": 6,
-                                    "end": 22,
-                                    "value": "modifierKeyword1",
-                                    "keyword": "modifierKeyword",
-                                    "keywordId": 24
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "modifierName": "ModifierAdd",
-                    "action": "ADD",
-                    "valueSource": "keyword",
-                    "staticValue": "",
-                    "sayings": [
-                        {
-                            "userSays": "also add modifierKeyword2",
-                            "keywords": [
-                                {
-                                    "start": 9,
-                                    "end": 25,
-                                    "value": "modifierKeyword2",
-                                    "keyword": "modifierKeyword",
-                                    "keywordId": 24
-                                }
-                            ]
-                        },
-                        {
-                            "userSays": "add modifierKeyword1",
-                            "keywords": [
-                                {
-                                    "start": 4,
-                                    "end": 20,
-                                    "value": "modifierKeyword1",
-                                    "keyword": "modifierKeyword",
-                                    "keywordId": 24
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "modifierName": "ModifierRemove",
-                    "action": "REMOVE",
-                    "valueSource": "keyword",
-                    "staticValue": "",
-                    "sayings": [
-                        {
-                            "userSays": "remove modifierKeyword1",
-                            "keywords": [
-                                {
-                                    "start": 7,
-                                    "end": 23,
-                                    "value": "modifierKeyword1",
-                                    "keyword": "modifierKeyword",
-                                    "keywordId": 24
-                                }
-                            ]
-                        },
-                        {
-                            "userSays": "remove modifierKeyword2",
-                            "keywords": [
-                                {
-                                    "start": 7,
-                                    "end": 23,
-                                    "value": "modifierKeyword2",
-                                    "keyword": "modifierKeyword",
-                                    "keywordId": 24
-                                }
-                            ]
-                        },
-                        {
-                            "userSays": "also remove modifierKeyword2",
-                            "keywords": [
-                                {
-                                    "start": 12,
-                                    "end": 28,
-                                    "value": "modifierKeyword2",
-                                    "keyword": "modifierKeyword",
-                                    "keywordId": 24
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
+          "userSays": "This is normalKeyword2Synonym action",
+          "keywords": [
+            {
+              "start": 8,
+              "end": 29,
+              "value": "normalKeyword2Synonym",
+              "keyword": "normalKeyword",
+              "keywordId": 26
+            }
+          ],
+          "actions": [
+            "normalAction"
+          ],
+          "creationDate": "1579540078000",
+          "modificationDate": "1579540078000"
         },
         {
-            "keywordName": "listKeyword",
-            "uiColor": "#C5A3FF",
-            "examples": [
-                {
-                    "value": "listKeyword1",
-                    "synonyms": [
-                        "listKeyword1"
-                    ]
-                },
-                {
-                    "value": "listKeyword2",
-                    "synonyms": [
-                        "listKeyword2"
-                    ]
-                },
-                {
-                    "value": "listKeyword3",
-                    "synonyms": [
-                        "listKeyword3"
-                    ]
-                }
-            ],
-            "regex": "",
-            "type": "learned",
-            "modifiers": [],
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
+          "userSays": "This is normalKeyword3",
+          "keywords": [
+            {
+              "start": 8,
+              "end": 22,
+              "value": "normalKeyword3",
+              "keyword": "normalKeyword",
+              "keywordId": 26
+            }
+          ],
+          "actions": [
+            "normalAction2"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
         },
         {
-            "keywordName": "regexKeyword",
-            "uiColor": "#FCC2FF",
-            "examples": [
-                {
-                    "value": "^\\d{9}$",
-                    "synonyms": [
-                        "^\\d{9}$"
-                    ]
-                }
-            ],
-            "regex": "^\\d{9}$",
-            "type": "regex",
-            "modifiers": [],
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
+          "userSays": "This is also normalKeyword3",
+          "keywords": [
+            {
+              "start": 13,
+              "end": 27,
+              "value": "normalKeyword3",
+              "keyword": "normalKeyword",
+              "keywordId": 26
+            }
+          ],
+          "actions": [
+            "normalAction2"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
         },
         {
-            "keywordName": "keywordVsActionKeyword",
-            "uiColor": "#FCC2FF",
-            "examples": [
-                {
-                    "value": "value1",
-                    "synonyms": [
-                        "value1"
-                    ]
-                },
-                {
-                    "value": "value2",
-                    "synonyms": [
-                        "value2"
-                    ]
-                },
-                {
-                    "value": "value3",
-                    "synonyms": [
-                        "value3"
-                    ]
-                }
-            ],
-            "regex": "",
-            "type": "learned",
-            "modifiers": [],
-            "creationDate": "1585241933000",
-            "modificationDate": "1585241933000"
+          "userSays": "Remember NormalKeyword2",
+          "keywords": [
+            {
+              "start": 9,
+              "end": 23,
+              "value": "normalKeyword2",
+              "keyword": "normalKeyword",
+              "keywordId": 26
+            }
+          ],
+          "actions": [
+            "rememberSlot"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        },
+        {
+          "userSays": "Also remember NormalKeyword3",
+          "keywords": [
+            {
+              "start": 14,
+              "end": 28,
+              "value": "normalKeyword3",
+              "keyword": "normalKeyword",
+              "keywordId": 26
+            }
+          ],
+          "actions": [
+            "rememberSlot"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
         }
-    ]
+      ]
+    },
+    {
+      "categoryName": "unitTestModifierCategory",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Out of Date",
+      "lastTraining": "2019-09-10T18:54:54Z",
+      "model": "",
+      "extraTrainingData": true,
+      "parameters": {},
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
+      "sayings": [
+        {
+          "userSays": "Request a modifier",
+          "keywords": [],
+          "actions": [
+            "modifierAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        },
+        {
+          "userSays": "This is a modifierKeyword1",
+          "keywords": [
+            {
+              "start": 10,
+              "end": 26,
+              "value": "modifierKeyword1",
+              "keyword": "modifierKeyword",
+              "keywordId": 27
+            }
+          ],
+          "actions": [
+            "modifierAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        },
+        {
+          "userSays": "This is a modifierKeyword2",
+          "keywords": [
+            {
+              "start": 10,
+              "end": 26,
+              "value": "modifierKeyword2",
+              "keyword": "modifierKeyword",
+              "keywordId": 130
+            }
+          ],
+          "actions": [
+            "modifierAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        }
+      ]
+    },
+    {
+      "categoryName": "unitTestListCategory",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Out of Date",
+      "lastTraining": "2019-09-11T17:14:37Z",
+      "model": "",
+      "extraTrainingData": true,
+      "parameters": {},
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
+      "sayings": [
+        {
+          "userSays": "The list is listKeyword1, listKeyword2 and listKeyword3",
+          "keywords": [
+            {
+              "start": 12,
+              "end": 24,
+              "value": "listKeyword1",
+              "keyword": "listKeyword",
+              "keywordId": 28
+            },
+            {
+              "start": 26,
+              "end": 38,
+              "value": "listKeyword2",
+              "keyword": "listKeyword",
+              "keywordId": 28
+            },
+            {
+              "start": 43,
+              "end": 55,
+              "value": "listKeyword3",
+              "keyword": "listKeyword",
+              "keywordId": 28
+            }
+          ],
+          "actions": [
+            "listAction",
+            "chainedActionResponse"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        },
+        {
+          "userSays": "The other list is listKeyword2, listKeyword1 and listKeyword3",
+          "keywords": [
+            {
+              "start": 18,
+              "end": 30,
+              "value": "listKeyword2",
+              "keyword": "listKeyword",
+              "keywordId": 28
+            },
+            {
+              "start": 32,
+              "end": 44,
+              "value": "listKeyword1",
+              "keyword": "listKeyword",
+              "keywordId": 28
+            },
+            {
+              "start": 49,
+              "end": 61,
+              "value": "listKeyword3",
+              "keyword": "listKeyword",
+              "keywordId": 28
+            }
+          ],
+          "actions": [
+            "listAction",
+            "chainedActionResponse"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        }
+      ]
+    },
+    {
+      "categoryName": "unitTestRegexCategory",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Out of Date",
+      "lastTraining": "2019-09-12T17:40:56Z",
+      "model": "",
+      "extraTrainingData": true,
+      "parameters": {},
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
+      "sayings": [
+        {
+          "userSays": "This is a regexSlot",
+          "keywords": [],
+          "actions": [
+            "regexActions"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        },
+        {
+          "userSays": "This is also a regexSlot",
+          "keywords": [],
+          "actions": [
+            "regexActions"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        }
+      ]
+    },
+    {
+      "categoryName": "unitTestWebhookCategory",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Out of Date",
+      "lastTraining": "2019-09-12T17:40:56Z",
+      "model": "",
+      "extraTrainingData": true,
+      "parameters": {
+        "": ""
+      },
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
+      "sayings": [
+        {
+          "userSays": "Get a webhook reponse",
+          "keywords": [],
+          "actions": [
+            "webhookAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        },
+        {
+          "userSays": "Get another webhook response",
+          "keywords": [],
+          "actions": [
+            "webhookAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        }
+      ]
+    },
+    {
+      "categoryName": "unitTestFreeTextSlot",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Out of Date",
+      "lastTraining": "2019-09-12T18:07:31Z",
+      "model": "",
+      "extraTrainingData": true,
+      "parameters": {},
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
+      "sayings": [
+        {
+          "userSays": "This is a freeTextSlot",
+          "keywords": [],
+          "actions": [
+            "freeTextSlotAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        },
+        {
+          "userSays": "This is also a freeTextSlot",
+          "keywords": [],
+          "actions": [
+            "freeTextSlotAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        }
+      ]
+    },
+    {
+      "categoryName": "unitTestActionQuickResponse",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Out of Date",
+      "lastTraining": "2019-11-26T17:13:41Z",
+      "model": "",
+      "extraTrainingData": false,
+      "parameters": {},
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
+      "sayings": [
+        {
+          "userSays": "Get a quick response from action",
+          "keywords": [],
+          "actions": [
+            "quickResponseAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        },
+        {
+          "userSays": "Get another quick response from action",
+          "keywords": [],
+          "actions": [
+            "quickResponseAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        }
+      ]
+    },
+    {
+      "categoryName": "unitTestKeywordVsActionCategory",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Out of Date",
+      "lastTraining": "2019-12-12T16:37:45Z",
+      "model": "",
+      "extraTrainingData": false,
+      "parameters": {},
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000",
+      "sayings": [
+        {
+          "userSays": "I want a keywordsVsActions action",
+          "keywords": [],
+          "actions": [
+            "keywordVsActionsAction"
+          ],
+          "creationDate": "1579540078000",
+          "modificationDate": "1579540078000"
+        },
+        {
+          "userSays": "I want a keywordsVsActions action with value1",
+          "keywords": [
+            {
+              "start": 39,
+              "end": 45,
+              "value": "value1",
+              "keyword": "keywordVsActionKeyword",
+              "keywordId": 30
+            }
+          ],
+          "actions": [
+            "keywordVsActionsAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        },
+        {
+          "userSays": "I want a keywordsVsActions action with value2",
+          "keywords": [
+            {
+              "start": 39,
+              "end": 45,
+              "value": "value2",
+              "keyword": "keywordVsActionKeyword",
+              "keywordId": 30
+            }
+          ],
+          "actions": [
+            "keywordVsActionsAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        },
+        {
+          "userSays": "I want a keywordsVsActions action",
+          "keywords": [],
+          "actions": [
+            "keywordVsActionsAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        },
+        {
+          "userSays": "I want a keywordsVsActions action with value3",
+          "keywords": [
+            {
+              "start": 39,
+              "end": 45,
+              "value": "value3",
+              "keyword": "keywordVsActionKeyword",
+              "keywordId": 30
+            }
+          ],
+          "actions": [
+            "keywordVsActionsAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        },
+        {
+          "userSays": "I want a keywordsVsActions action with value1, value2, value3",
+          "keywords": [
+            {
+              "start": 39,
+              "end": 45,
+              "value": "value1",
+              "keyword": "keywordVsActionKeyword",
+              "keywordId": 30
+            },
+            {
+              "start": 47,
+              "end": 53,
+              "value": "value2",
+              "keyword": "keywordVsActionKeyword",
+              "keywordId": 30
+            },
+            {
+              "start": 55,
+              "end": 61,
+              "value": "value3",
+              "keyword": "keywordVsActionKeyword",
+              "keywordId": 30
+            }
+          ],
+          "actions": [
+            "keywordVsActionsAction"
+          ],
+          "creationDate": "1578418789000",
+          "modificationDate": "1578418789000",
+          "starred": false
+        }
+      ]
+    },
+    {
+      "categoryName": "unitTestAutomaticQuickReplies",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Out of Date",
+      "lastTraining": "2020-01-07T17:15:57Z",
+      "model": "",
+      "extraTrainingData": false,
+      "parameters": {},
+      "creationDate": "1578418789000",
+      "modificationDate": "1578419015000",
+      "sayings": [
+        {
+          "userSays": "is there a valueForAutomaticQuickReplies and valueForAutomaticQuickReplies2 ?",
+          "keywords": [
+            {
+              "start": 11,
+              "end": 40,
+              "value": "valueForAutomaticQuickReplies",
+              "keyword": "keywordForAutomaticReplies",
+              "keywordId": 134
+            },
+            {
+              "start": 45,
+              "end": 75,
+              "value": "valueForAutomaticQuickReplies2",
+              "keyword": "keywordForAutomaticReplies2",
+              "keywordId": 135
+            }
+          ],
+          "actions": [
+            "actionForAutomaticQuickReplies"
+          ],
+          "creationDate": "1578418940000",
+          "modificationDate": "1578418940000",
+          "starred": false
+        },
+        {
+          "userSays": "is there a valueForAutomaticQuickReplies?",
+          "keywords": [
+            {
+              "start": 11,
+              "end": 40,
+              "value": "valueForAutomaticQuickReplies",
+              "keyword": "keywordForAutomaticReplies",
+              "keywordId": 134
+            }
+          ],
+          "actions": [
+            "actionForAutomaticQuickReplies"
+          ],
+          "creationDate": "1578418968000",
+          "modificationDate": "1578418968000",
+          "starred": false
+        },
+        {
+          "userSays": "is there a valueForAutomaticQuickReplies2?",
+          "keywords": [
+            {
+              "start": 11,
+              "end": 41,
+              "value": "valueForAutomaticQuickReplies2",
+              "keyword": "keywordForAutomaticReplies2",
+              "keywordId": 135
+            }
+          ],
+          "actions": [
+            "actionForAutomaticQuickReplies"
+          ],
+          "creationDate": "1578418980000",
+          "modificationDate": "1578418980000",
+          "starred": false
+        },
+        {
+          "userSays": "is there a automaticQuickReply?",
+          "keywords": [],
+          "actions": [
+            "actionForAutomaticQuickReplies"
+          ],
+          "creationDate": "1578419015000",
+          "modificationDate": "1578419015000",
+          "starred": false
+        }
+      ]
+    },
+    {
+      "categoryName": "unitTestRichResponses",
+      "enabled": true,
+      "actionThreshold": 0.5,
+      "status": "Out of Date",
+      "lastTraining": "2020-01-20T17:11:46Z",
+      "model": "",
+      "extraTrainingData": false,
+      "parameters": {},
+      "creationDate": "1579540306000",
+      "modificationDate": "1579540337000",
+      "sayings": [
+        {
+          "userSays": "I test rich responses",
+          "keywords": [],
+          "actions": [
+            "richResponsesAction"
+          ],
+          "creationDate": "1579540326000",
+          "modificationDate": "1579540326000"
+        },
+        {
+          "userSays": "I test rich responses too",
+          "keywords": [],
+          "actions": [
+            "richResponsesAction"
+          ],
+          "creationDate": "1579540337000",
+          "modificationDate": "1579540337000"
+        }
+      ]
+    }
+  ],
+  "keywords": [
+    {
+      "keywordName": "normalKeyword",
+      "uiColor": "#FFCBC1",
+      "examples": [
+        {
+          "value": "normalKeyword1",
+          "synonyms": [
+            "normalKeyword1",
+            "normalKeyword1Synonym"
+          ]
+        },
+        {
+          "value": "normalKeyword2",
+          "synonyms": [
+            "normalKeyword2",
+            "normalKeyword2Synonym"
+          ]
+        },
+        {
+          "value": "normalKeyword3",
+          "synonyms": [
+            "normalKeyword3"
+          ]
+        }
+      ],
+      "regex": "",
+      "type": "learned",
+      "modifiers": [],
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "keywordName": "modifierKeyword",
+      "uiColor": "#B28DFF",
+      "examples": [
+        {
+          "value": "modifierKeyword1",
+          "synonyms": [
+            "modifierKeyword1"
+          ]
+        },
+        {
+          "value": "modifierKeyword2",
+          "synonyms": [
+            "modifierKeyword2"
+          ]
+        }
+      ],
+      "regex": "",
+      "type": "learned",
+      "modifiers": [
+        {
+          "modifierName": "ModifierSet",
+          "action": "SET",
+          "valueSource": "keyword",
+          "staticValue": "",
+          "sayings": [
+            {
+              "userSays": "use also modifierKeyword2",
+              "keywords": [
+                {
+                  "start": 9,
+                  "end": 25,
+                  "value": "modifierKeyword2",
+                  "keyword": "modifierKeyword",
+                  "keywordId": 27
+                }
+              ]
+            },
+            {
+              "userSays": "use modifierKeyword1",
+              "keywords": [
+                {
+                  "start": 4,
+                  "end": 20,
+                  "value": "modifierKeyword1",
+                  "keyword": "modifierKeyword",
+                  "keywordId": 27
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "modifierName": "ModifierUnset",
+          "action": "UNSET",
+          "valueSource": "keyword",
+          "staticValue": "",
+          "sayings": [
+            {
+              "userSays": "unset modifierKeyword1",
+              "keywords": [
+                {
+                  "start": 6,
+                  "end": 22,
+                  "value": "modifierKeyword1",
+                  "keyword": "modifierKeyword",
+                  "keywordId": 27
+                }
+              ]
+            },
+            {
+              "userSays": "also unset ModifierKeyword2",
+              "keywords": [
+                {
+                  "start": 11,
+                  "end": 27,
+                  "value": "modifierKeyword2",
+                  "keyword": "modifierKeyword",
+                  "keywordId": 27
+                }
+              ]
+            },
+            {
+              "userSays": "unset ModifierKeyword1",
+              "keywords": [
+                {
+                  "start": 6,
+                  "end": 22,
+                  "value": "modifierKeyword1",
+                  "keyword": "modifierKeyword",
+                  "keywordId": 27
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "modifierName": "ModifierAdd",
+          "action": "ADD",
+          "valueSource": "keyword",
+          "staticValue": "",
+          "sayings": [
+            {
+              "userSays": "also add modifierKeyword2",
+              "keywords": [
+                {
+                  "start": 9,
+                  "end": 25,
+                  "value": "modifierKeyword2",
+                  "keyword": "modifierKeyword",
+                  "keywordId": 27
+                }
+              ]
+            },
+            {
+              "userSays": "add modifierKeyword1",
+              "keywords": [
+                {
+                  "start": 4,
+                  "end": 20,
+                  "value": "modifierKeyword1",
+                  "keyword": "modifierKeyword",
+                  "keywordId": 27
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "modifierName": "ModifierRemove",
+          "action": "REMOVE",
+          "valueSource": "keyword",
+          "staticValue": "",
+          "sayings": [
+            {
+              "userSays": "remove modifierKeyword1",
+              "keywords": [
+                {
+                  "start": 7,
+                  "end": 23,
+                  "value": "modifierKeyword1",
+                  "keyword": "modifierKeyword",
+                  "keywordId": 27
+                }
+              ]
+            },
+            {
+              "userSays": "remove modifierKeyword2",
+              "keywords": [
+                {
+                  "start": 7,
+                  "end": 23,
+                  "value": "modifierKeyword2",
+                  "keyword": "modifierKeyword",
+                  "keywordId": 27
+                }
+              ]
+            },
+            {
+              "userSays": "also remove modifierKeyword2",
+              "keywords": [
+                {
+                  "start": 12,
+                  "end": 28,
+                  "value": "modifierKeyword2",
+                  "keyword": "modifierKeyword",
+                  "keywordId": 27
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "keywordName": "listKeyword",
+      "uiColor": "#C5A3FF",
+      "examples": [
+        {
+          "value": "listKeyword1",
+          "synonyms": [
+            "listKeyword1"
+          ]
+        },
+        {
+          "value": "listKeyword2",
+          "synonyms": [
+            "listKeyword2"
+          ]
+        },
+        {
+          "value": "listKeyword3",
+          "synonyms": [
+            "listKeyword3"
+          ]
+        }
+      ],
+      "regex": "",
+      "type": "learned",
+      "modifiers": [],
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "keywordName": "regexKeyword",
+      "uiColor": "#FCC2FF",
+      "examples": [
+        {
+          "value": "^\\d{9}$",
+          "synonyms": [
+            "^\\d{9}$"
+          ]
+        }
+      ],
+      "regex": "^\\d{9}$",
+      "type": "regex",
+      "modifiers": [],
+      "creationDate": "1579540078000",
+      "modificationDate": "1579540078000"
+    },
+    {
+      "keywordName": "keywordVsActionKeyword",
+      "uiColor": "#FCC2FF",
+      "examples": [
+        {
+          "value": "value1",
+          "synonyms": [
+            "value1"
+          ]
+        },
+        {
+          "value": "value2",
+          "synonyms": [
+            "value2"
+          ]
+        },
+        {
+          "value": "value3",
+          "synonyms": [
+            "value3"
+          ]
+        }
+      ],
+      "regex": "",
+      "type": "learned",
+      "modifiers": [],
+      "creationDate": "1578418789000",
+      "modificationDate": "1578418789000"
+    },
+    {
+      "keywordName": "keywordForAutomaticReplies",
+      "uiColor": "#A79AFF",
+      "examples": [
+        {
+          "value": "valueForAutomaticQuickReplies",
+          "synonyms": [
+            "valueForAutomaticQuickReplies"
+          ]
+        }
+      ],
+      "regex": "",
+      "type": "learned",
+      "modifiers": [],
+      "creationDate": "1578418789000",
+      "modificationDate": "1578418789000"
+    },
+    {
+      "keywordName": "keywordForAutomaticReplies2",
+      "uiColor": "#FF9CEE",
+      "examples": [
+        {
+          "value": "valueForAutomaticQuickReplies2",
+          "synonyms": [
+            "valueForAutomaticQuickReplies2"
+          ]
+        }
+      ],
+      "regex": "",
+      "type": "learned",
+      "modifiers": [],
+      "creationDate": "1578418789000",
+      "modificationDate": "1578418789000"
+    }
+  ]
 }
