@@ -55,8 +55,9 @@ const HighlightedSaying = withStyles(styles)(props => {
       end - lastStart,
       props.text.length,
     );
+    debugger;
     let filteredKeyword = props.agentKeywords.filter(
-      agentKeyword => agentKeyword.keywordName === keyword.keyword,
+      agentKeyword => Number(agentKeyword.id) === Number(keyword.keywordId),
     )[0];
     if (!filteredKeyword) {
       filteredKeyword = systemKeywords.filter(
