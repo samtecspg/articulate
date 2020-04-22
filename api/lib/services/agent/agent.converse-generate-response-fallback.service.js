@@ -1,8 +1,8 @@
 import { MODEL_AGENT, MODEL_ACTION, MODEL_WEBHOOK } from '../../../util/constants';
-const {VM, VMScript} = require('vm2');
+const { VM, VMScript } = require('vm2');
 
 module.exports = async function ({ CSO }) {
-    
+
     const { agentService, globalService } = await this.server.services();
 
     const fallbackAction = CSO.agent.actions.find((action) => {
@@ -11,7 +11,7 @@ module.exports = async function ({ CSO }) {
 
     if (fallbackAction.useWebhook || CSO.agent.useWebhook) {
         let modelPath, webhook;
-        if (fallbackAction.useWebhook){
+        if (fallbackAction.useWebhook) {
             modelPath = [
                 {
                     model: MODEL_AGENT,
@@ -37,7 +37,7 @@ module.exports = async function ({ CSO }) {
                     model: MODEL_WEBHOOK
                 }
             ];
-            webhook = await globalService.findInModelPath({ modelPath, isFindById, isSingleResult, skip, limit, direction, field });
+            webhook = await globalService.findInModelPath({ modelPath, isFindById: false, isSingleResult: true, skip: 0, limit: -1 });
         }
         const webhookResponse = await agentService.converseCallWebhook({
             url: webhook.webhookUrl,
@@ -49,10 +49,10 @@ module.exports = async function ({ CSO }) {
             password: webhook.webhookPassword ? webhook.webhookPassword : undefined,
             templateContext: CSO
         });
-        CSO.webhook = { 
-            [webhook.webhookKey]: {...webhookResponse}
+        CSO.webhook = {
+            [webhook.webhookKey]: { ...webhookResponse }
         };
-        if (webhook.postScript){
+        if (webhook.postScript) {
             const vm = new VM({
                 timeout: 1000,
                 sandbox: {

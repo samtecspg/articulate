@@ -49,14 +49,15 @@ describe('Agent', () => {
         context.importedAgentId = response.result.id;
     });
 
+    // We added 5 seconds before and after each test because the ES document save is now async, so we have to wait for it
     beforeEach(() => {
 
         return new Promise((resolve) => {
 
-            // Wait 3 second
+            // Wait 5 second
             setTimeout(() => {
                 resolve();
-            }, 4000);
+            }, 5000);
         });
     });
 
@@ -64,10 +65,10 @@ describe('Agent', () => {
 
         return new Promise((resolve) => {
 
-            // Wait 3 second
+            // Wait 5 second
             setTimeout(() => {
                 resolve();
-            }, 4000);
+            }, 5000);
         });
     });
 
@@ -596,7 +597,7 @@ describe('Agent', () => {
         });
 
         expect(response.statusCode).to.equal(200);
-        expect(response.result.textResponse).to.be.equal("Here is the response bulbasaur");
+        expect(response.result.textResponse).to.be.equal("This is the answer bulbasaur");
         expect(response.result.responses).to.be.an.array();
         expect(response.result.responses.length).to.be.greaterThan(0);
         expect(response.result.responses[0].fulfilled).to.be.equal(true);
