@@ -17,10 +17,12 @@ import {
   loadKeywordError,
   loadKeywordSuccess,
   loadKeyword,
+  loadKeywords,
   updateKeywordError,
   updateKeywordSuccess,
   refreshKeywordExamplesUpdate,
   recognizeUpdatedKeywords,
+  loadSayings
 } from '../App/actions';
 import {
   ADD_MODIFIER_SAYING,
@@ -37,6 +39,7 @@ import {
   makeSelectAgentSettings,
   makeSelectKeyword,
   makeSelectkeywordExamplesUpdate,
+  makeSelectDialoguePageFilterString,
 } from '../App/selectors';
 import { getKeywords } from '../DialoguePage/saga';
 
@@ -98,6 +101,10 @@ export function* putKeyword(payload) {
     }
     yield put(loadKeyword(keywordId));
     yield put(updateKeywordSuccess(response));
+    var agentSettings = yield select(makeSelectAgentSettings());
+    var dialoguePageFilterString = yield select(makeSelectDialoguePageFilterString());
+    //This is in case the name of the keyword change, the sayings are updated so they are loaded again
+    yield put(loadSayings(dialoguePageFilterString, 1, agentSettings.sayingsPageSize));
   } catch (err) {
     yield put(updateKeywordError(err));
   }
