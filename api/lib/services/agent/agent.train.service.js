@@ -95,6 +95,10 @@ module.exports = async function ({ id, returnModel = false }) {
             return agentSaying.actions.length === 0;
         });
 
+        if (!agent.settings.rasaURLs || agent.settings.rasaURLs.length === 0) {
+            throw new Error('There is no URL specified for RASA');
+        }
+
         if (sayingsWithoutActions.length > 0) {
             return Promise.reject(InvalidAgentTrain({ message: `The following user sayings doesn't have actions asigned: "${_.map(sayingsWithoutActions, 'userSays').join('", "')}"` }));
         }

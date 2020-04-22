@@ -45,6 +45,14 @@ module.exports = async function ({ id }) {
         // [Agent]
         exported = AgentModel.export();
 
+        // This is for compatibility with older agents
+        if (exported.originalAgentVersionName === "") {
+            exported.originalAgentVersionName = exported.agentName
+        }
+        if (exported.loadedAgentVersionName === "") {
+            exported.loadedAgentVersionName = exported.agentName + '_v' + exported.currentAgentVersionCounter;
+        }
+
         // [Agent] [Action]
         const ActionModels = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_ACTION, returnModel });
         exported = {
