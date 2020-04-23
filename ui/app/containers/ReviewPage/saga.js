@@ -39,12 +39,9 @@ import {
 } from '../App/actions';
 
 import {
-  ADD_ACTION_SAYING,
   CHANGE_REVIEW_PAGE_SIZE,
   CHANGE_SESSIONS_PAGE_SIZE,
   COPY_SAYING,
-  DELETE_ACTION_SAYING,
-  DELETE_SAYING,
   LOAD_ACTIONS,
   LOAD_AGENT_DOCUMENTS,
   LOAD_LOGS,
@@ -53,10 +50,6 @@ import {
   LOAD_CATEGORIES,
   LOAD_FILTERED_CATEGORIES,
   LOAD_KEYWORDS,
-  LOAD_SAYINGS,
-  TAG_KEYWORD,
-  UNTAG_KEYWORD,
-  LOAD_SESSION,
   DELETE_SESSION_DATA,
 } from '../App/constants';
 
@@ -64,7 +57,6 @@ import { makeSelectAgent, makeSelectAgentSettings } from '../App/selectors';
 
 import { getKeywords } from '../DialoguePage/saga';
 import ExtractTokensFromString from '../../utils/extractTokensFromString';
-//import { getSession } from '../../components/ConversationBar/saga';
 
 export function* postSaying(payload) {
   const agent = yield select(makeSelectAgent());
@@ -149,64 +141,6 @@ export function* tagKeyword(payload) {
     keywordToAdd.keywordId = 0;
   }
   mutableSaying.keywords.push(keywordToAdd);
-  try {
-    yield call(putSaying, {
-      api,
-      sayingId: saying.id,
-      saying: mutableSaying,
-      filter,
-      page,
-      pageSize,
-    });
-  } catch (err) {
-    yield put(updateSayingError(err));
-  }
-}
-
-export function* untagKeyword(payload) {
-  const { api, saying, start, end, filter, page, pageSize } = payload;
-  const mutableSaying = Immutable.asMutable(saying, { deep: true });
-  mutableSaying.keywords = mutableSaying.keywords.filter(
-    keyword => keyword.start !== start || keyword.end !== end,
-  );
-  try {
-    yield call(putSaying, {
-      api,
-      sayingId: saying.id,
-      saying: mutableSaying,
-      filter,
-      page,
-      pageSize,
-    });
-  } catch (err) {
-    yield put(updateSayingError(err));
-  }
-}
-
-export function* addAction(payload) {
-  const { api, saying, actionName, filter, page, pageSize } = payload;
-  const mutableSaying = Immutable.asMutable(saying, { deep: true });
-  mutableSaying.actions.push(actionName);
-  try {
-    yield call(putSaying, {
-      api,
-      sayingId: saying.id,
-      saying: mutableSaying,
-      filter,
-      page,
-      pageSize,
-    });
-  } catch (err) {
-    yield put(updateSayingError(err));
-  }
-}
-
-export function* deleteAction(payload) {
-  const { api, saying, actionName, filter, page, pageSize } = payload;
-  const mutableSaying = Immutable.asMutable(saying, { deep: true });
-  mutableSaying.actions = mutableSaying.actions.filter(
-    action => action !== actionName,
-  );
   try {
     yield call(putSaying, {
       api,
@@ -521,10 +455,6 @@ export function* getAgentSessions(payload) {
 
 export default function* rootSaga() {
   yield takeLatest(COPY_SAYING, postSaying);
-  yield takeLatest(TAG_KEYWORD, tagKeyword);
-  yield takeLatest(UNTAG_KEYWORD, untagKeyword);
-  yield takeLatest(ADD_ACTION_SAYING, addAction);
-  yield takeLatest(DELETE_ACTION_SAYING, deleteAction);
   yield takeLatest(LOAD_KEYWORDS, getKeywords);
   yield takeLatest(LOAD_ACTIONS, getActions);
   yield takeLatest(LOAD_CATEGORIES, getCategories);
@@ -536,5 +466,4 @@ export default function* rootSaga() {
   yield takeLatest(DELETE_SESSION_DATA, deleteSessionData);
   yield takeLatest(LOAD_AGENT_SESSIONS, getAgentSessions);
   yield takeLatest(LOAD_LOGS, getLogs);
-  //yield takeLatest(LOAD_SESSION, getSession);
 }
