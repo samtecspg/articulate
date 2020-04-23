@@ -197,7 +197,7 @@ class SayingRow extends React.Component {
   }
 
   render() {
-    const { classes, saying, agentKeywords , isReadOnly} = this.props;
+    const { classes, saying, agentKeywords, isReadOnly } = this.props;
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -380,9 +380,9 @@ class SayingRow extends React.Component {
                         key={`keyword_${index}`}
                         value={`${keyword.id},${keyword.keywordName}`}
                       >
-                      <span style={{ color: keyword.uiColor }}>
-                        {keyword.keywordName}
-                      </span>
+                        <span style={{ color: keyword.uiColor }}>
+                          {keyword.keywordName}
+                        </span>
                       </MenuItem>
                     ))}
                   </Select>

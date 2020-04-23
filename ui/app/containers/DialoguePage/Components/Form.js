@@ -358,6 +358,7 @@ class Form extends React.Component {
               onToggleConversationBar={this.props.onToggleConversationBar}
               onSendMessage={this.props.onSendMessage}
               trainTest={this.props.trainTest}
+              onUpdateSayingData={this.props.onUpdateSayingData}
             />
           )}
           {this.props.selectedTab === 'keywords' && (
@@ -475,7 +476,8 @@ Form.propTypes = {
   dialoguePageFilterActionIssues: PropTypes.bool,
   onToggleConversationBar: PropTypes.func,
   onSendMessage: PropTypes.func,
-  trainTest: PropTypes.object
+  trainTest: PropTypes.object,
+  onUpdateSayingData: PropTypes.func
 };
 
 Form.defaultProps = {

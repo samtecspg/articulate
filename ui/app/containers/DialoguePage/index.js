@@ -93,6 +93,7 @@ import {
   changeDialoguePageFilterKeywordIssues,
   toggleConversationBar,
   sendMessage,
+  updateSaying
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -543,6 +544,7 @@ export class DialoguePage extends React.PureComponent {
                 onToggleConversationBar={this.props.onToggleConversationBar}
                 onSendMessage={this.props.onSendMessage}
                 trainTest={this.props.trainTest}
+                onUpdateSayingData={this.props.onUpdateSayingData}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -782,6 +784,9 @@ function mapDispatchToProps(dispatch) {
     },
     onSendMessage: (payload) => {
       dispatch(sendMessage(payload))
+    },
+    onUpdateSayingData: (saying, field, value) => {
+      dispatch(updateSaying(saying, field, value))
     }
   };
 }

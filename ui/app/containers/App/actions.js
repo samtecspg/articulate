@@ -1302,6 +1302,16 @@ export function untagKeyword(filter, page, pageSize, saying, start, end) {
   };
 }
 
+export function updateSaying(saying, field, value) {
+  return {
+    type: UPDATE_SAYING,
+    apiCall: true,
+    saying,
+    field,
+    value
+  };
+}
+
 export function updateSayingSuccess(saying) {
   return {
     type: UPDATE_SAYING_SUCCESS,
