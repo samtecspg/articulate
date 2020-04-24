@@ -198,7 +198,8 @@ export const CONFIG_SETTINGS_AGENT_VERSIONS = 'enableAgentVersions';
 export const GENERATE_SLOTS_QUICK_RESPONSES = 'generateSlotsQuickResponses';
 export const GENERATE_SLOTS_QUICK_RESPONSES_MAX = 'generateSlotsQuickResponsesMax';
 export const GENERATE_ACTIONS_QUICK_RESPONSES = 'generateActionsQuickResponses';
-export const GENERATE_ACTIONS_QUICK_RESPONSES_MAX = 'generateActionsQuickResponsesMax'
+export const GENERATE_ACTIONS_QUICK_RESPONSES_MAX = 'generateActionsQuickResponsesMax';
+export const CONFIG_SETTINGS_ENABLE_AGENT_VERSIONS = 'enableAgentVersions'
 
 export const CONFIG_KEYWORD_TYPE_LEARNED = 'learned';
 export const CONFIG_KEYWORD_TYPE_REGEX = 'regex';
@@ -235,7 +236,8 @@ export const CONFIG_SETTINGS_DEFAULT_AGENT = [
     GENERATE_SLOTS_QUICK_RESPONSES,
     GENERATE_SLOTS_QUICK_RESPONSES_MAX,
     GENERATE_ACTIONS_QUICK_RESPONSES,
-    GENERATE_ACTIONS_QUICK_RESPONSES_MAX
+    GENERATE_ACTIONS_QUICK_RESPONSES_MAX,
+    CONFIG_SETTINGS_ENABLE_AGENT_VERSIONS
 ];
 
 export const CONFIG_SETTINGS_ALL = [

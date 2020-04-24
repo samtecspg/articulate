@@ -605,6 +605,7 @@ const initialState = Immutable({
     generateSlotsQuickResponsesMax: 1,
     generateActionsQuickResponses: false,
     generateActionsQuickResponsesMax: 1,
+    enableAgentVersions: false
   },
   keyword: {
     type: 'learned',
@@ -1133,6 +1134,10 @@ function appReducer(state = initialState, action) {
         .setIn(
           ['agentSettings', 'ducklingDimension'],
           state.settings.ducklingDimension,
+        )
+        .setIn(
+          ['agentSettings', 'enableAgentVersions'],
+          state.settings.enableAgentVersions,
         )
     case CHANGE_AGENT_NAME:
       return state

@@ -87,6 +87,8 @@ class AgentValidate {
                     generateSlotsQuickResponsesMax: AgentSchema.generateSlotsQuickResponsesMax,
                     generateActionsQuickResponses: AgentSchema.generateActionsQuickResponses,
                     generateActionsQuickResponsesMax: AgentSchema.generateActionsQuickResponsesMax,
+                    originalAgentVersionName: AgentSchema.originalAgentVersionName,
+                    loadedAgentVersionName: AgentSchema.loadedAgentVersionName,
                 };
             })()
         };
