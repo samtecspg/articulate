@@ -20,6 +20,7 @@ export const ERROR_FIELD_NOT_FOUND = 'Field not found';
 export const MODEL_RELATION_USED = 'usedBy';
 export const MODEL_ACTION = 'Action';
 export const MODEL_AGENT = 'Agent';
+export const MODEL_AGENT_VERSION = 'AgentVersion';
 export const MODEL_CONTEXT = 'Context';
 export const MODEL_CATEGORY = 'Category';
 export const MODEL_DOCUMENT = `${process.env.ES_INDEX_PREFIX ? `${process.env.ES_INDEX_PREFIX}-` : ''}Document`;
@@ -80,8 +81,9 @@ export const ROUTE_EXTERNAL = 'external';
 export const ROUTE_USER_ACCOUNT = 'user';
 export const ROUTE_USER_IDENTITY = 'identity';
 export const ROUTE_ACCESS_CONTROL = 'ac';
-export const ROUTE_TEST_TRAIN = 'testTrain'
-export const ROUTE_TRAIN_TEST = 'trainTest'
+export const ROUTE_TEST_TRAIN = 'testTrain';
+export const ROUTE_TRAIN_TEST = 'trainTest';
+export const ROUTE_AGENT_VERSION = 'agentVersion';
 
 // STATUS
 export const STATUS_READY = 'Ready';
@@ -124,6 +126,7 @@ export const PARAM_IS_ADMIN = 'isAdmin';
 
 export const PARAM_ACTION_ID = ROUTE_ACTION + PARAMS_POSTFIX_ID;
 export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;
+export const PARAM_AGENT_VERSION_ID = ROUTE_AGENT_VERSION + PARAMS_POSTFIX_ID;
 export const PARAM_USER_ACCOUNT_ID = ROUTE_USER_ACCOUNT + PARAMS_POSTFIX_ID;
 export const PARAM_CATEGORY_ID = ROUTE_CATEGORY + PARAMS_POSTFIX_ID;
 export const PARAM_KEYWORD_ID = ROUTE_KEYWORD + PARAMS_POSTFIX_ID;

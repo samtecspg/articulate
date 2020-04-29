@@ -5,7 +5,8 @@ import {
     MODEL_KEYWORD,
     MODEL_POST_FORMAT,
     MODEL_SAYING,
-    MODEL_WEBHOOK
+    MODEL_WEBHOOK,
+    MODEL_AGENT_VERSION
 } from '../../../util/constants';
 import NotFoundError from '../../errors/global.not-found-error';
 import RedisErrorHandler from '../../errors/redis.error-handler';
@@ -19,7 +20,7 @@ const TYPE_POST_FORMAT = 'postFormat';
 const USE_WEBHOOK = 'useWebhook';
 const USE_POST_FORMAT = 'usePostFormat';
 
-module.exports = async function ({ id }) {
+module.exports = async function ({ id, isVersionCreation = false }) {
 
     const { redis } = this.server.app;
     const { globalService } = await this.server.services();
@@ -38,9 +39,9 @@ module.exports = async function ({ id }) {
         }
     };
     try {
-        const AgentModel = await redis.factory(MODEL_AGENT, id);
+        const AgentModel = await redis.factory(isVersionCreation ? MODEL_AGENT_VERSION : MODEL_AGENT, id);
         if (!AgentModel.isLoaded) {
-            return Promise.reject(NotFoundError({ id, model: MODEL_AGENT }));
+            return Promise.reject(NotFoundError({ id, model: isVersionCreation ? MODEL_AGENT_VERSION : MODEL_AGENT }));
         }
         // [Agent]
         exported = AgentModel.export();

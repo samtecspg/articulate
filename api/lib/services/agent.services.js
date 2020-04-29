@@ -61,6 +61,11 @@ import UpsertPostFormatInAction from './agent/agent.upsert-post-format-in-action
 import UpsertSayingInCategory from './agent/agent.upsert-saying-in-category.service';
 import UpsertWebhookInAction from './agent/agent.upsert-webhook-in-action.service';
 import testTrain from './agent/agent.test.train.service';
+import CreateAgentVersion from './agent/agent.create-agent-version.service';
+import FindAllAgentVersions from './agent/agent.find-all-agent-versions.service';
+import LoadAgentVersionIntoAgent from './agent/agent.load-agent-version-into-agent.service';
+import UpdateAgentVersion from './agent/agent.update-agent-version.service';
+import RemoveAgentVersion from './agent/agent.remove-agent-version.service';
 
 module.exports = class AgentService extends Schmervice.Service {
 
@@ -310,6 +315,26 @@ module.exports = class AgentService extends Schmervice.Service {
     async testTrain() {
 
         return await testTrain.apply(this, arguments);
+    }
+
+    async createAgentVersion() {
+        return await TimingWrapper({ cls: this, fn: CreateAgentVersion, name: 'CreateAgentVersion' }).apply(this, arguments);
+    }
+
+    async findAllAgentVersions() {
+        return await TimingWrapper({ cls: this, fn: FindAllAgentVersions, name: 'FindAllAgentVersions' }).apply(this, arguments);
+    }
+
+    async loadAgentVersionIntoAgent() {
+        return await TimingWrapper({ cls: this, fn: LoadAgentVersionIntoAgent, name: 'LoadAgentVersionIntoAgent' }).apply(this, arguments);
+    }
+
+    async updateAgentVersion() {
+        return await TimingWrapper({ cls: this, fn: UpdateAgentVersion, name: 'UpdateAgentVersion' }).apply(this, arguments);
+    }
+
+    async removeAgentVersion() {
+        return await TimingWrapper({ cls: this, fn: RemoveAgentVersion, name: 'RemoveAgentVersion' }).apply(this, arguments);
     }
 };
 
