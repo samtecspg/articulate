@@ -765,7 +765,7 @@ export class ConversationBar extends React.PureComponent {
             style={{ width: this.state.newWidth + 17 }}
             className={classes.contentContainer}
           >
-            {this.props.testTrainNotification &&
+            {!this.props.demoMode && this.props.testTrainNotification &&
               this.props.testTrainNotification.agentId === this.props.agent.id &&
               this.props.agent.status === 'Ready' &&
               <TestTrainNotification
@@ -788,10 +788,10 @@ export class ConversationBar extends React.PureComponent {
                 agent={this.props.agent}
                 onLoadAgentTrainTest={this.props.onLoadAgentTrainTest}
               />}
-            <Notifications
+            {demoMode ? null : <Notifications
               notifications={this.props.notifications}
               onCloseNotification={this.props.onCloseNotification}
-            />
+            />}
             <Grid className={classes.messagesContainer}>
               {this.props.messages.map((message, index) => {
                 if (message.author === 'User') {
