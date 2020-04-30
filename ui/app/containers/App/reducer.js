@@ -1263,6 +1263,7 @@ function appReducer(state = initialState, action) {
       return state
         .set('agent', action.agent)
         .set('currentAgent', action.agent)
+        .set('agentVersions', initialState.agentVersions)
         .set('loading', false)
         .set('success', true)
         .set('error', false)

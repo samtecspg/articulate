@@ -1,10 +1,10 @@
-import { MODEL_AGENT, MODEL_CONNECTION } from '../../../util/constants';
+import { MODEL_AGENT, MODEL_CONNECTION, MODEL_AGENT_VERSION } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
 module.exports = async function ({ id }) {
 
     const { redis } = this.server.app;
-    const { globalService, connectionService } = await this.server.services();
+    const { globalService, connectionService, agentVersionService } = await this.server.services();
     const Agent = await redis.factory(MODEL_AGENT);
     try {
         //TODO: Delete Categories
@@ -23,11 +23,10 @@ module.exports = async function ({ id }) {
         }
 
         //Remove agent versions
-        const AgentVersions = await globalService.findAll({ model: MODEL_AGENT, filter: { originalAgentVersionId: id } });
+        const AgentVersions = await globalService.findAll({ model: MODEL_AGENT_VERSION, filter: { originalAgentVersionId: id } });
 
         await Promise.all(AgentVersions.data.map(async (Version) => {
-            await Agent.findById({ id: Version.id });
-            await Agent.removeInstance({ id: Version.id });
+            await agentVersionService.delete({ id: Version.id })
         }));
 
         await Agent.findById({ id });

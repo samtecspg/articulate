@@ -5,7 +5,8 @@ import {
     MODEL_KEYWORD,
     MODEL_SAYING,
     STATUS_OUT_OF_DATE,
-    MODEL_ACTION
+    MODEL_ACTION,
+    MODEL_AGENT_VERSION
 } from '../../../util/constants';
 import InvalidKeywordsFromAgent from '../../errors/global.invalid-keywords-from-agent';
 import InvalidActionsFromAgent from '../../errors/global.invalid-actions-from-agent';
@@ -28,14 +29,15 @@ module.exports = async function (
         sayingData,
         returnModel = false,
         isImport = false,
-        updateStatus = true
+        updateStatus = true,
+        isVersionCreation = false
     }) {
 
     const { redis } = this.server.app;
     const { globalService, categoryService, keywordService, actionService, agentService } = await this.server.services();
     try {
         sayingData.actions = sayingData.actions || [];
-        const modelPath = [MODEL_AGENT, MODEL_CATEGORY];
+        const modelPath = [isVersionCreation ? MODEL_AGENT_VERSION : MODEL_AGENT, MODEL_CATEGORY];
         const modelPathIds = [id, categoryId, sayingId];
         if (sayingId) {
             modelPath.push(MODEL_SAYING);
@@ -44,7 +46,7 @@ module.exports = async function (
 
         // Load Used Models
         const models = await globalService.getAllModelsInPath({ modelPath, ids: modelPathIds, returnModel: true });
-        const AgentModel = models[MODEL_AGENT];
+        const AgentModel = models[isVersionCreation ? MODEL_AGENT_VERSION : MODEL_AGENT];
         let OldCategoryModel = null;
         let CategoryModel = models[MODEL_CATEGORY];
         if (sayingData.category && categoryId !== sayingData.category) {

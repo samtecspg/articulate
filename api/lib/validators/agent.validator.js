@@ -22,7 +22,8 @@ import {
     PARAM_TIMEZONE,
     RASA_INTENT_SPLIT_SYMBOL,
     SORT_ASC,
-    SORT_DESC
+    SORT_DESC,
+    PARAM_AGENT_VERSION_ID
 } from '../../util/constants';
 
 const AgentSchema = require('../models/agent.model').schema;
@@ -1174,6 +1175,90 @@ class AgentValidate {
 
                 return {
                     [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })()
+        };
+
+        this.createAgentVersion = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })()
+        };
+
+        this.findAllAgentVersions = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
+                };
+            })()
+        };
+
+        this.loadAgentVersionIntoAgent = {
+            params: (() => {
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
+                    [PARAM_AGENT_VERSION_ID]: AgentSchema.id.required().description('Id of the agent version'),
+                };
+            })()
+        };
+
+        this.updateAgentVersion = {
+            params: (() => {
+
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
+                    [PARAM_AGENT_VERSION_ID]: AgentSchema.id.required().description('Id of the agent')
+                };
+            })(),
+            payload: (() => {
+
+                return {
+                    gravatar: AgentSchema.gravatar,
+                    uiColor: AgentSchema.uiColor,
+                    agentName: AgentSchema.agentName,
+                    description: AgentSchema.description,
+                    language: AgentSchema.language.valid(_.map(defaultSettings.agentLanguages, 'value')).default('en'),
+                    timezone: AgentSchema.timezone.valid(defaultSettings.timezones).default('UTC'),
+                    useWebhook: AgentSchema.useWebhook,
+                    usePostFormat: AgentSchema.usePostFormat,
+                    multiCategory: AgentSchema.multiCategory,
+                    categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold,
+                    fallbackAction: AgentSchema.fallbackAction,
+                    welcomeAction: AgentSchema.welcomeAction,
+                    status: AgentSchema.status,
+                    lastTraining: AgentSchema.lastTraining.allow(''),
+                    extraTrainingData: AgentSchema.extraTrainingData,
+                    enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
+                    model: AgentSchema.model.allow(''),
+                    categoryRecognizer: AgentSchema.categoryRecognizer,
+                    modifiersRecognizer: AgentSchema.modifiersRecognizer,
+                    modifiersRecognizerJustER: AgentSchema.modifiersRecognizerJustER,
+                    creationDate: AgentSchema.creationDate,
+                    modificationDate: AgentSchema.modificationDate,
+                    parameters: Joi.object(),
+                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet,
+                    enableAgentVersions: AgentSchema.enableAgentVersions,
+                    accessPolicies: AgentSchema.accessPolicies,
+                    isOriginalAgentVersion: AgentSchema.isOriginalAgentVersion,
+                    originalAgentVersionId: AgentSchema.originalAgentVersionId,
+                    originalAgentVersionName: AgentSchema.originalAgentVersionName,
+                    agentVersionNotes: AgentSchema.agentVersionNotes.allow(''),
+                    loadedAgentVersionName: AgentSchema.loadedAgentVersionName,
+                    currentAgentVersionCounter: AgentSchema.currentAgentVersionCounter,
+                    versionNameAgentId: Joi.string().required()
+                };
+            })()
+        };
+
+        this.deleteAgentVersion = {
+            params: (() => {
+                return {
+                    [PARAM_AGENT_ID]: AgentSchema.id.required().description('Id of the agent'),
+                    [PARAM_AGENT_VERSION_ID]: AgentSchema.id.required().description('Id of the agent version'),
                 };
             })()
         };

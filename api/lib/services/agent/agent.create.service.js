@@ -7,13 +7,13 @@ import {
     CONFIG_SETTINGS_DEFAULT_FALLBACK_ACTION_NAME,
     CONFIG_SETTINGS_RESPONSES_AGENT_DEFAULT,
     CONFIG_SETTINGS_DEFAULT_WELCOME_ACTION_NAME,
-    CONFIG_SETTINGS_WELCOME_RESPONSES_AGENT_DEFAULT
-
+    CONFIG_SETTINGS_WELCOME_RESPONSES_AGENT_DEFAULT,
+    MODEL_AGENT_VERSION
 } from '../../../util/constants';
 import OverLimitErrorHandler from '../../errors/global.over-limit';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ data, isImport = false, returnModel = false, userCredentials = null }) {
+module.exports = async function ({ data, isImport = false, returnModel = false, userCredentials = null, isVersionCreation = false }) {
 
     const defaultFallbackAction = {
         useWebhook: false,
@@ -38,7 +38,7 @@ module.exports = async function ({ data, isImport = false, returnModel = false, 
         data.enableModelsPerCategory = true;
     }
 
-    const AgentModel = await redis.factory(MODEL_AGENT);
+    const AgentModel = isVersionCreation ? await redis.factory(MODEL_AGENT_VERSION) : await redis.factory(MODEL_AGENT);
     const agentCount = await AgentModel.count();
     const agentLimit = this.options.agentLimit;
     const defaults = AgentModel.defaults;

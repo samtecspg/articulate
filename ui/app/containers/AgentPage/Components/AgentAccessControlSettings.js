@@ -33,7 +33,7 @@ export function AgentAccessControlSettings({ classes, users, accessPolicies, onU
   }
   const currentUser = !selectedUser ? users[0] : selectedUser;
   const currentIsAdmin = currentUser.groups.indexOf('admin') >= 0;
-  const currentAccessPolicies = accessPolicies[currentUser.id] || AGENT_ACCESS_POLICIES;
+  const currentAccessPolicies = accessPolicies ? accessPolicies[currentUser.id] : false || AGENT_ACCESS_POLICIES;
   return (
     <div>
       <Typography className={classes.label} id="groupPoliciesLabel">

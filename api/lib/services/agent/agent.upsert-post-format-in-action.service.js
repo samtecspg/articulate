@@ -1,17 +1,18 @@
 import {
     MODEL_ACTION,
     MODEL_AGENT,
-    MODEL_POST_FORMAT
+    MODEL_POST_FORMAT,
+    MODEL_AGENT_VERSION
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id, actionId, postFormatData, returnModel = false }) {
+module.exports = async function ({ id, actionId, postFormatData, returnModel = false, isVersionCreation = false }) {
 
     const { globalService, postFormatService } = await this.server.services();
 
     try {
         const modelPath = [
-            { model: MODEL_AGENT, id },
+            { model: isVersionCreation ? MODEL_AGENT_VERSION : MODEL_AGENT, id },
             { model: MODEL_ACTION, id: actionId }
         ];
         let actionModel = await globalService.findInModelPath({ modelPath, returnModel: true });

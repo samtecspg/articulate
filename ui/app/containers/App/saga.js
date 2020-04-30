@@ -20,7 +20,8 @@ import {
   ROUTE_EXPORT,
   ROUTE_IMPORT,
   ROUTE_KEYWORD,
-  ROUTE_TRAIN_TEST
+  ROUTE_TRAIN_TEST,
+  ROUTE_AGENT_VERSION
 
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
@@ -204,29 +205,8 @@ export function* getAgent(payload) {
 export function* postagentVersion(payload) {
   const { api, id } = payload;
   try {
-    var agent = yield select(makeSelectAgent());
-    const mutableAgent = Immutable.asMutable(agent, { deep: true });
-    mutableAgent.categoryClassifierThreshold =
-      agent.categoryClassifierThreshold / 100;
-    mutableAgent.currentAgentVersionCounter = mutableAgent.currentAgentVersionCounter + 1;
-    delete mutableAgent.id;
-    delete mutableAgent.settings;
-    delete mutableAgent.status;
-    delete mutableAgent.lastTraining;
-    const response = yield call(
-      api.put,
-      toAPIPath([ROUTE_AGENT, id]),
-      mutableAgent,
-    );
-    agent = yield call(api.get, toAPIPath([ROUTE_AGENT, id, ROUTE_EXPORT]));
-    agent.originalAgentVersionName = agent.agentName;
-    agent.agentName = agent.agentName + '_v' + agent.currentAgentVersionCounter;
-    agent.loadedAgentVersionName = agent.agentName;
-    agent.isOriginalAgentVersion = false;
-    agent.originalAgentVersionId = Number(id);
-    agent.agentVersionNotes = '';
-    var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), agent);
-    yield put(addAgentVersionSuccess(importResponse));
+    const version = yield call(api.post, toAPIPath([ROUTE_AGENT, id, ROUTE_AGENT_VERSION]));
+    yield put(addAgentVersionSuccess(version));
     yield put(loadAgentVersions(id));
   } catch (err) {
     yield put(addAgentVersionError(err));
@@ -236,13 +216,7 @@ export function* postagentVersion(payload) {
 export function* getagentVersions(payload) {
   const { api, originalAgentVersionId } = payload;
   try {
-    var filter = JSON.stringify({
-      originalAgentVersionId: Number(originalAgentVersionId)
-    });
-    const params = {
-      filter
-    };
-    const response = yield call(api.get, toAPIPath([ROUTE_AGENT]), { params });
+    const response = yield call(api.get, toAPIPath([ROUTE_AGENT, Number(originalAgentVersionId), ROUTE_AGENT_VERSION]));
     yield put(loadAgentVersionsSuccess(response.data));
   } catch (err) {
     yield put(loadAgentVersionsError(_.get(err, 'response.data', true)));
@@ -252,16 +226,7 @@ export function* getagentVersions(payload) {
 export function* getAgentVersion(payload) {
   const { api, versionId, currentAgentId } = payload;
   try {
-    var versionAgent = yield call(api.get, toAPIPath([ROUTE_AGENT, Number(versionId), ROUTE_EXPORT]));
-    versionAgent.isVersionImport = true;
-    versionAgent.isOriginalAgentVersion = true;
-    versionAgent.lastTraining = "2020-01-01T00:00:00Z";
-    versionAgent.categories.forEach(function (category, index, categories) {
-      if (categories[index].lastTraining === 'Invalid date') {
-        categories[index].lastTraining = "2020-01-01T00:00:00Z";
-      }
-    });
-    var importResponse = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), versionAgent);
+    var agentWithLoadedVersion = yield call(api.put, toAPIPath([ROUTE_AGENT, Number(currentAgentId), ROUTE_AGENT_VERSION, Number(versionId), 'load']));
     window.location.reload();
     yield put(loadAgentVersionSuccess());
   } catch (err) {
@@ -281,7 +246,7 @@ export function* putAgentVersion(payload) {
 
     const response = yield call(
       api.put,
-      toAPIPath([ROUTE_AGENT, id]),
+      toAPIPath([ROUTE_AGENT, currentAgentId, ROUTE_AGENT_VERSION, id]),
       version,
     );
     yield put(updateAgentVersionSuccess(response));
@@ -294,7 +259,7 @@ export function* putAgentVersion(payload) {
 export function* deleteAgentVersion(payload) {
   const { api, versionId, currentAgentId } = payload;
   try {
-    yield call(api.delete, toAPIPath([ROUTE_AGENT, versionId]));
+    yield call(api.delete, toAPIPath([ROUTE_AGENT, versionId, ROUTE_AGENT_VERSION, versionId]));
     yield put(deleteAgentVersionSuccess());
     yield put(loadAgentVersions(currentAgentId));
   } catch (err) {
