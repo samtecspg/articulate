@@ -128,13 +128,13 @@ module.exports = async function ({ actionData, CSO }) {
             return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, textResponse: webhookResponse.textResponse, actions: webhookResponse.actions ? webhookResponse.actions : [], fulfilled: true, webhook: { [webhook.webhookKey]: webhookResponse } };
         }
         let response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
-        if (CSO.agent.settings.generateActionsQuickResponses) {
+        if (response && CSO.agent.settings.generateActionsQuickResponses) {
             response = await agentService.converseGenerateAutomaticActionsQuickResponses({ CSO, response });
         }
         return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, webhook: { [webhook.webhookKey]: webhookResponse }, fulfilled: true };
     }
     let response = await agentService.converseCompileResponseTemplates({ responses: actionData.responses, templateContext: CSO });
-    if (CSO.agent.settings.generateActionsQuickResponses) {
+    if (response && CSO.agent.settings.generateActionsQuickResponses) {
         response = await agentService.converseGenerateAutomaticActionsQuickResponses({ CSO, response });
     }
     return { slots: CSO.context.actionQueue[CSO.actionIndex].slots, ...response, fulfilled: true };

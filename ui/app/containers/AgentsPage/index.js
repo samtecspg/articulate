@@ -54,7 +54,7 @@ export class AgentsPage extends React.PureComponent {
           userPolicies={currentUser.simplifiedGroupPolicies}
           fallback={<MainContentHeader title={messages.titleAccessDenied} sizesForHideInlineElement={['sm', 'xs']} />}
         >
-          <MainContentHeader title={messages.title} sizesForHideInlineElement={['sm', 'xs']} />
+          <MainContentHeader title={messages.title} sizesForHideInlineElement={['sm', 'xs']} showHelp={true} />
 
           {agents ? (
             <React.Fragment>
@@ -73,7 +73,7 @@ export class AgentsPage extends React.PureComponent {
                 userPolicies={currentUser.simplifiedGroupPolicies}
                 fallback={<MainContentHeader title={messages.connectionsTitleAccessDenied} sizesForHideInlineElement={['sm', 'xs']} />}
               >
-                <MainContentHeader title={messages.connectionsTitle} sizesForHideInlineElement={['sm', 'xs']} />
+                <MainContentHeader title={messages.connectionsTitle} sizesForHideInlineElement={['sm', 'xs']} showHelp={false} />
                 {agents && connections && channels ? (
                   <ConnectionsCards
                     isReadOnly={isConnectionReadOnly}
@@ -83,13 +83,13 @@ export class AgentsPage extends React.PureComponent {
                     onGoToUrl={this.props.onGoToUrl}
                   />
                 ) : (
-                  <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
-                )}
+                    <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
+                  )}
               </AccessControl>
             </React.Fragment>
           ) : (
-            <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
-          )}
+              <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
+            )}
         </AccessControl>
       </Grid>
     );

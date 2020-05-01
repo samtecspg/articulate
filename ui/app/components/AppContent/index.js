@@ -189,7 +189,7 @@ export class AppContent extends React.Component {
             {this.props.children}
           </Grid>
         </Grid>
-        {demoMode ? null : (
+        {demoMode ? (
           <Grid className={classes.settings} item xs={12}>
             {checkCookie() && (
               <Fragment>
@@ -207,62 +207,104 @@ export class AppContent extends React.Component {
                 </MuiThemeProvider>
               </Fragment>
             )}
-            <Link id="settings" to="/settings">
-              <img src={settingsIcon} alt={intl.formatMessage(messages.settingsIconAlt)} className={classes.settingsImage} />
-            </Link>
             {this.renderPopover(classes, intl)}
             {this.renderExitModal(intl)}
           </Grid>
-        )}
+        ) : (
+            <Grid className={classes.settings} item xs={12}>
+              {checkCookie() && (
+                <Fragment>
+                  <MuiThemeProvider theme={tooltipTheme}>
+                    <Tooltip title={this.props.currentUser ? this.props.currentUser.email : ''} placement="right-start">
+                      <img
+                        className={this.state.popOverAnchorEl ? classes.currentUserClicked : classes.currentUser}
+                        src={userIconGray}
+                        alt={'intl.formatMessage(messages.usersIconAlt)'}
+                        onClick={ev => {
+                          this.setState({ popOverAnchorEl: ev.currentTarget });
+                        }}
+                      />
+                    </Tooltip>
+                  </MuiThemeProvider>
+                </Fragment>
+              )}
+              <Link id="settings" to="/settings">
+                <img src={settingsIcon} alt={intl.formatMessage(messages.settingsIconAlt)} className={classes.settingsImage} />
+              </Link>
+              {this.renderPopover(classes, intl)}
+              {this.renderExitModal(intl)}
+            </Grid>
+          )}
       </Grid>
     ) : (
-      <Grid container>
-        <Grid container item xs={12}>
-          <Grid item xl={2} lg={2} md={2} sm={1} xs={1} />
-          <Grid item xl={8} lg={8} md={8} sm={10} xs={10}>
-            {this.props.children}
+        <Grid container>
+          <Grid container item xs={12}>
+            <Grid item xl={2} lg={2} md={2} sm={1} xs={1} />
+            <Grid item xl={8} lg={8} md={8} sm={10} xs={10}>
+              {this.props.children}
+            </Grid>
+            <Grid item xl={2} lg={2} md={2} sm={1} xs={1} />
           </Grid>
-          <Grid item xl={2} lg={2} md={2} sm={1} xs={1} />
-        </Grid>
-        {demoMode ? null : (
-          <Grid className={classes.settings} item xs={12}>
-            {isUserSettingsDisabled && (
-              <Link id="users" to="/users">
-                <img
-                  style={{
-                    filter: 'invert(0.51)',
-                    paddingBottom: '8px',
-                  }}
-                  src={userListIcon}
-                  alt={intl.formatMessage(messages.usersIconAlt)}
-                />
-              </Link>
-            )}
-            <Fragment>
-              {checkCookie() && (
-                <MuiThemeProvider theme={tooltipTheme}>
-                  <Tooltip title={this.props.currentUser ? this.props.currentUser.email : ''} placement="right-start">
+          {demoMode ? (
+            <Grid className={classes.settings} item xs={12}>
+              <Fragment>
+                {checkCookie() && (
+                  <MuiThemeProvider theme={tooltipTheme}>
+                    <Tooltip title={this.props.currentUser ? this.props.currentUser.email : ''} placement="right-start">
+                      <img
+                        className={this.state.popOverAnchorEl ? classes.currentUserClicked : classes.currentUser}
+                        src={userIconGray}
+                        alt={'intl.formatMessage(messages.usersIconAlt)'}
+                        onClick={ev => {
+                          this.setState({ popOverAnchorEl: ev.currentTarget });
+                        }}
+                      />
+                    </Tooltip>
+                  </MuiThemeProvider>
+                )}
+              </Fragment>
+              {this.renderPopover(classes, intl)}
+              {this.renderExitModal(intl)}
+            </Grid>
+          ) : (
+              <Grid className={classes.settings} item xs={12}>
+                {isUserSettingsDisabled && (
+                  <Link id="users" to="/users">
                     <img
-                      className={this.state.popOverAnchorEl ? classes.currentUserClicked : classes.currentUser}
-                      src={userIconGray}
-                      alt={'intl.formatMessage(messages.usersIconAlt)'}
-                      onClick={ev => {
-                        this.setState({ popOverAnchorEl: ev.currentTarget });
+                      style={{
+                        filter: 'invert(0.51)',
+                        paddingBottom: '8px',
                       }}
+                      src={userListIcon}
+                      alt={intl.formatMessage(messages.usersIconAlt)}
                     />
-                  </Tooltip>
-                </MuiThemeProvider>
-              )}
-            </Fragment>
-            <Link id="settings" to="/settings">
-              <img src={settingsIcon} alt={intl.formatMessage(messages.settingsIconAlt)} className={classes.settingsImage} />
-            </Link>
-            {this.renderPopover(classes, intl)}
-            {this.renderExitModal(intl)}
-          </Grid>
-        )}
-      </Grid>
-    );
+                  </Link>
+                )}
+                <Fragment>
+                  {checkCookie() && (
+                    <MuiThemeProvider theme={tooltipTheme}>
+                      <Tooltip title={this.props.currentUser ? this.props.currentUser.email : ''} placement="right-start">
+                        <img
+                          className={this.state.popOverAnchorEl ? classes.currentUserClicked : classes.currentUser}
+                          src={userIconGray}
+                          alt={'intl.formatMessage(messages.usersIconAlt)'}
+                          onClick={ev => {
+                            this.setState({ popOverAnchorEl: ev.currentTarget });
+                          }}
+                        />
+                      </Tooltip>
+                    </MuiThemeProvider>
+                  )}
+                </Fragment>
+                <Link id="settings" to="/settings">
+                  <img src={settingsIcon} alt={intl.formatMessage(messages.settingsIconAlt)} className={classes.settingsImage} />
+                </Link>
+                {this.renderPopover(classes, intl)}
+                {this.renderExitModal(intl)}
+              </Grid>
+            )}
+        </Grid>
+      );
   }
 }
 

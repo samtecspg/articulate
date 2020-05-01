@@ -150,9 +150,11 @@ export function* postAgent(payload) {
     'categoryClassifierThreshold',
     agent.categoryClassifierThreshold / 100,
   );
+  agent = agent.set('originalAgentVersionName', agent.agentName);
+  agent = agent.set('loadedAgentVersionName', agent.agentName + '_v0');
   const { api } = payload;
   try {
-    const response = yield call(api.post, toAPIPath([ROUTE_AGENT]), agent);
+    let response = yield call(api.post, toAPIPath([ROUTE_AGENT]), agent);
     if (agent.useWebhook) {
       yield call(postAgentWebhook, { id: response.id, api });
     }
@@ -163,6 +165,8 @@ export function* postAgent(payload) {
     response.categoryClassifierThreshold = parseInt(
       response.categoryClassifierThreshold * 100,
     );
+    //We load the agent again in case a new setting is needed after saving for UI purposes
+    response = yield call(api.get, toAPIPath([ROUTE_AGENT, response.id]));
     yield put(addAgentSuccess(response));
   } catch (error) {
     yield put(addAgentError(error.response.data.message));

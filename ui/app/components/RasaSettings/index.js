@@ -221,7 +221,7 @@ export class RasaSettings extends React.Component {
         </Grid>
         <Grid container spacing={16} item xs={12} style={{ marginTop: '10px' }}>
           <Grid item lg={12} md={8} sm={12} xs={12}>
-            {settings.rasaURLs ? settings.rasaURLs.map((rasaURL, index) => {
+            {settings.rasaURLs && Array.isArray(settings.rasaURLs) ? settings.rasaURLs.map((rasaURL, index) => {
               return (<TextField
                 disabled={isReadOnly}
                 id={"rasaURL_" + index}

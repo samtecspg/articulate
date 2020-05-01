@@ -4,20 +4,21 @@ import {
     MODEL_CATEGORY,
     MODEL_KEYWORD,
     STATUS_OUT_OF_DATE,
-    MODEL_ACTION
+    MODEL_ACTION,
+    MODEL_AGENT_VERSION
 } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ id, keywordId, keywordData, returnModel = false }) {
+module.exports = async function ({ id, keywordId, keywordData, returnModel = false, isVersionCreation = false }) {
 
     const { globalService, agentService } = await this.server.services();
     try {
-        const modelPath = [MODEL_AGENT, MODEL_KEYWORD];
+        const modelPath = isVersionCreation ? [MODEL_AGENT_VERSION, MODEL_KEYWORD] : [MODEL_AGENT, MODEL_KEYWORD];
         const modelPathIds = [id, keywordId];
 
         // Load Used Models
         const models = await globalService.getAllModelsInPath({ modelPath, ids: modelPathIds, returnModel: true });
-        const AgentModel = models[MODEL_AGENT];
+        const AgentModel = models[isVersionCreation ? MODEL_AGENT_VERSION : MODEL_AGENT];
         const KeywordModel = models[MODEL_KEYWORD];
         const changedName = KeywordModel.property('keywordName') !== keywordData.keywordName;
         const oldKeywordName = KeywordModel.property('keywordName')
@@ -61,7 +62,7 @@ module.exports = async function ({ id, keywordId, keywordData, returnModel = fal
         });
         await Promise.all(actionsUpdatePromise);
 
-        if (changedName) {
+        if (changedName && !isVersionCreation) {
             var sayings = await agentService.findAllSayings({ id, skip: 0, limit: -1, filter: { keywords: [oldKeywordName] } });
             var sayingsModified = sayings.data.map(
                 saying => {

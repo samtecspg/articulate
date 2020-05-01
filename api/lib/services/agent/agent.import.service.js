@@ -1,11 +1,12 @@
 import _ from 'lodash';
-import { STATUS_OUT_OF_DATE, MODEL_AGENT, MODEL_ACTION, MODEL_KEYWORD, MODEL_CATEGORY, MODEL_SAYING } from '../../../util/constants';
+import { STATUS_OUT_OF_DATE, MODEL_AGENT, MODEL_ACTION, MODEL_KEYWORD, MODEL_CATEGORY, MODEL_SAYING, MODEL_AGENT_VERSION } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
 module.exports = async function ({ payload }) {
 
     const { agentService, categoryService, globalService, sayingService, actionService, keywordService } = await this.server.services();
     const {
+        isVersionCreation,
         isVersionImport,
         actions,
         categories,
@@ -34,11 +35,13 @@ module.exports = async function ({ payload }) {
                 },
                 isImport: true,
                 returnModel: true,
-                userCredentials
+                userCredentials,
+                isVersionCreation
             });
         } else {
             agent.loadedAgentVersionName = agent.agentName;
             agent.agentName = originalAgentName;
+            delete agent.versionNameAgentId;
             AgentModel = await agentService.updateById({ id: agent.originalAgentVersionId, data: agent, returnModel: true });
             await agentService.removePostFormat({ id: agent.originalAgentVersionId, returnModel: true });
             await agentService.removeWebhook({ id: agent.originalAgentVersionId, returnModel: true });
@@ -137,7 +140,8 @@ module.exports = async function ({ payload }) {
                         keywordId: keywordsDir[keyword.keywordName],
                         keywordData: {
                             modifiers: keyword.modifiers
-                        }
+                        },
+                        isVersionCreation
                     });
                 }
             }));
@@ -150,14 +154,15 @@ module.exports = async function ({ payload }) {
                 const { postFormat, webhook, ...actionData } = action;
                 const ActionModel = await agentService.createAction({
                     AgentModel,
-                    actionData
+                    actionData,
                 });
 
                 if (action.usePostFormat) {
                     await agentService.upsertPostFormatInAction({
                         id: AgentModel.id,
                         actionId: ActionModel.id,
-                        postFormatData: postFormat
+                        postFormatData: postFormat,
+                        isVersionCreation
                     });
                 }
 
@@ -165,7 +170,8 @@ module.exports = async function ({ payload }) {
                     await agentService.upsertWebhookInAction({
                         id: AgentModel.id,
                         actionId: ActionModel.id,
-                        data: webhook
+                        data: webhook,
+                        isVersionCreation
                     });
                 }
             }));
@@ -192,12 +198,13 @@ module.exports = async function ({ payload }) {
                         id: AgentModel.id,
                         categoryId: CategoryModel.id,
                         sayingData: saying,
-                        isImport: true
+                        isImport: true,
+                        isVersionCreation
                     });
                 }));
             }));
         }
-        return await agentService.export({ id: AgentModel.id });
+        return await agentService.export({ id: AgentModel.id, isVersionCreation });
     }
     catch (error) {
         throw RedisErrorHandler({ error });

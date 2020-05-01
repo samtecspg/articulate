@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { withRouter } from 'react-router-dom';
 
@@ -96,48 +96,50 @@ export class ContentHeader extends React.Component {
       <Grid className={classes.container} item xs={12}>
         {this.props.backButton
           ? [
-              <span className={classes.backArrow} key="backArrow">
-                {'< '}
-              </span>,
-              <a
-                key="backLink"
-                className={classes.backButton}
-                onClick={this.props.goBack}
-              >
-                <FormattedMessage {...this.props.backButton} />
-              </a>,
-            ]
+            <span className={classes.backArrow} key="backArrow">
+              {'< '}
+            </span>,
+            <a
+              key="backLink"
+              className={classes.backButton}
+              onClick={this.props.goBack}
+            >
+              <FormattedMessage {...this.props.backButton} />
+            </a>,
+          ]
           : null}
         <Typography variant="h1">
           <FormattedMessage {...this.props.title} />
           &nbsp;
         </Typography>
-        <Button
-          className={classes.helpButton}
-          variant="outlined"
-          onClick={this.handleOpen}
-        >
-          <img
-            className={classes.playIcon}
-            src={playHelpIcon}
-            alt={intl.formatMessage(messages.playHelpAlt)}
-          />
-          <span className={classes.helpText}>
-            <FormattedMessage {...messages.help} />
-          </span>
-        </Button>
-        <Modal open={this.state.openModal} onClose={this.handleClose}>
-          <Grid className={classes.modalContent} container>
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/pWjaslx94J0"
-              frameBorder="0"
-              allow="autoplay; encrypted-media"
-              allowFullScreen
+        {this.props.showHelp && (<Fragment>
+          <Button
+            className={classes.helpButton}
+            variant="outlined"
+            onClick={this.handleOpen}
+          >
+            <img
+              className={classes.playIcon}
+              src={playHelpIcon}
+              alt={intl.formatMessage(messages.playHelpAlt)}
             />
-          </Grid>
-        </Modal>
+            <span className={classes.helpText}>
+              <FormattedMessage {...messages.help} />
+            </span>
+          </Button>
+          <Modal open={this.state.openModal} onClose={this.handleClose}>
+            <Grid className={classes.modalContent} container>
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/pWjaslx94J0"
+                frameBorder="0"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+              />
+            </Grid>
+          </Modal>
+        </Fragment>)}
         <Hidden only={this.props.sizesForHideInlineElement}>
           {this.props.inlineElement ? this.props.inlineElement : null}
         </Hidden>
@@ -153,6 +155,7 @@ ContentHeader.propTypes = {
   classes: PropTypes.object.isRequired,
   sizesForHideInlineElement: PropTypes.array,
   goBack: PropTypes.func,
+  showHelp: PropTypes.bool
 };
 
 ContentHeader.defaultProps = {

@@ -11,12 +11,14 @@ module.exports = async function ({ CSO, response }) {
       availableKeywordsSlots,
       availableSayings
     );
-    response.richResponses.push({
-      type: 'quickResponses',
-      data: {
-        quickResponses: generatedQuickResponses
-      }
-    })
+    if (generatedQuickResponses.length > 0) {
+      response.richResponses.push({
+        type: 'quickResponses',
+        data: {
+          quickResponses: generatedQuickResponses
+        }
+      })
+    }
   }
   return response;
 };
