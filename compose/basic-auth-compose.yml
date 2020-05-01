@@ -6,7 +6,7 @@ services:
      - SESSION_SECRET=${SESSION_SECRET:-_super_secret_session_secret_needs_to_be_long_}
      - AUTH_ENABLED=true
      - AUTH_USER=${AUTH_USER:-arty}
-     - AUTH_PASSWORD
+     - AUTH_PASSWORD=${AUTH_PASSWORD:-changeme}
      - AUTH_FORCE_DEFAULT_USER=${AUTH_FORCE_DEFAULT_USER:-false}
   ui:
-    image: samtecspg/articulate-ui:repo-head
+    image: samtecspg/articulate-ui:repo-head-basic-auth
