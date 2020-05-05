@@ -13,7 +13,7 @@ module.exports = async function ({ data, returnModel = false }) {
     const { globalService } = await this.server.services();
     const AccessPolicyGroup = await redis.factory(MODEL_ACCESS_POLICY_GROUP);
     try {
-        const { name, rules } = data;
+        const { name, rules , isAdmin} = data;
         const Models = await globalService.searchByField({ field: PARAM_NAME, value: name, model: MODEL_ACCESS_POLICY_GROUP });
         const defaults = AccessPolicyGroup.defaults;
         const filteredRules = _.pick(rules, _.keys(defaults.rules));
@@ -22,10 +22,10 @@ module.exports = async function ({ data, returnModel = false }) {
                 throw RedisErrorHandler({ error: new Boom.forbidden(`Group [${name}] is read only.`) });
             }
 
-            await AccessPolicyGroup.updateInstance({ id: Models.id, data: { name, rules: { ...defaults.rules, ...filteredRules } } });
+            await AccessPolicyGroup.updateInstance({ id: Models.id, data: { isAdmin,name, rules: { ...defaults.rules, ...filteredRules } } });
         }
         else {
-            await AccessPolicyGroup.createInstance({ data: { name, rules: { ...defaults.rules, ...filteredRules } } });
+            await AccessPolicyGroup.createInstance({ data: {isAdmin, name, rules: { ...defaults.rules, ...filteredRules } } });
 
         }
         return returnModel ? AccessPolicyGroup : AccessPolicyGroup.allProperties();
