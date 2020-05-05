@@ -85,6 +85,18 @@ export class AnalyticsPage extends React.PureComponent {
           handler,
         );
       };
+      client.onError = err => {
+        let subscriptions = client.subscriptions();
+        subscriptions.forEach(subscription => {
+          client.unsubscribe(subscription);
+        })
+      };
+      client.onDisconnect = (willReconnect, log) => {
+        let subscriptions = client.subscriptions();
+        subscriptions.forEach(subscription => {
+          client.unsubscribe(subscription);
+        })
+      };
       client.connect({
         delay: 1000,
         auth: AUTH_ENABLED
@@ -102,7 +114,9 @@ export class AnalyticsPage extends React.PureComponent {
   }
 
   throttleStats = _.throttle(
-    function () { this.props.onLoadStats(this.getAgentStatsFilters(this.state.dateRange)) }
+    function () {
+      this.props.onLoadStats(this.getAgentStatsFilters(this.state.dateRange))
+    }
     ,
     5000,
     { trailing: true });
@@ -176,7 +190,6 @@ export class AnalyticsPage extends React.PureComponent {
   }
 
   getAgentStatsFilters = function (dateRange) {
-
     let filterDocumentsAnalyticsRequestCount = {
       "from": 0,
       "size": 0,
@@ -192,7 +205,6 @@ export class AnalyticsPage extends React.PureComponent {
         }
       }
     }
-
     if (dateRange && dateRange != 'all') {
       filterDocumentsAnalyticsRequestCount.query.bool.must.push({
         "range": {

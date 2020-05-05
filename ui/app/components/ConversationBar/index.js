@@ -501,6 +501,24 @@ export class ConversationBar extends React.PureComponent {
         handler,
       );
     };
+    client.onError = err => {
+      let subscriptions = client.subscriptions();
+      subscriptions.forEach(subscription => {
+        client.unsubscribe(subscription);
+      })
+      this.setState({
+        socketClientConnected: false,
+      });
+    };
+    client.onDisconnect = (willReconnect, log) => {
+      let subscriptions = client.subscriptions();
+      subscriptions.forEach(subscription => {
+        client.unsubscribe(subscription);
+      })
+      this.setState({
+        socketClientConnected: false,
+      });
+    };
     client.connect({
       delay: 1000,
       auth: AUTH_ENABLED
