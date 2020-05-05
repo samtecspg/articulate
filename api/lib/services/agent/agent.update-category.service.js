@@ -1,3 +1,4 @@
+import Moment from 'moment';
 import {
     MODEL_AGENT,
     MODEL_CATEGORY,
@@ -18,10 +19,11 @@ module.exports = async function ({ id, categoryId, categoryData, returnModel = f
         const AgentModel = models[MODEL_AGENT];
         const CategoryModel = models[MODEL_CATEGORY];
         if ((categoryData.categoryName !== undefined && CategoryModel.property('categoryName') !== categoryData.categoryName) &&
-            (categoryData.actionThreshold !== undefined && CategoryModel.property('actionThreshold') !== categoryData.actionThreshold)){
+            (categoryData.actionThreshold !== undefined && CategoryModel.property('actionThreshold') !== categoryData.actionThreshold)) {
             categoryData.status = STATUS_OUT_OF_DATE;
             AgentModel.property('status', STATUS_OUT_OF_DATE);
         }
+        categoryData.lastTraining = Moment(categoryData.lastTraining).utc().format();
         await AgentModel.saveInstance();
         await CategoryModel.updateInstance({ data: categoryData });
         return returnModel ? CategoryModel : CategoryModel.allProperties();

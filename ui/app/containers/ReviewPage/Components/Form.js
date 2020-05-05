@@ -444,7 +444,7 @@ class Form extends React.Component {
                 logsText={this.props.logsText}
                 loading={this.props.loading}
                 processSelectedFilters={this.processSelectedPopoverFiltersLogs}
-                refreshLogs={() => { this.props.onSearchLog(this.props.reviewPageFilterLogsString, reviewPageFilterMaxLogs) }}
+                refreshLogs={() => { this.props.onSearchLog(this.props.reviewPageFilterLogsString, this.props.reviewPageFilterMaxLogs) }}
               />
             </Fragment>
           )
