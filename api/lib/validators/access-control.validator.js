@@ -2,7 +2,7 @@ import {
     PARAM_GROUP_NAME,
     PARAM_RULES
 } from '../../util/constants';
-
+import Joi from 'joi'
 const AccessControlSchema = require('../models/access-control.model').schema;
 
 class AccessControlValidate {
@@ -44,6 +44,10 @@ class AccessControlValidate {
                     [PARAM_GROUP_NAME]: AccessControlSchema.name.required()
                 };
             })()
+        };
+
+        this.bulkUpdateGroup = {
+            payload:  Joi.array().items(AccessControlSchema)
         };
     }
 }

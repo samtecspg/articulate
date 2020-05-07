@@ -320,7 +320,8 @@ import {
   TEST_AGENT_TRAIN,
   TEST_AGENT_TRAIN_ERROR,
   LOAD_AGENT_TRAIN_TEST,
-  LOAD_AGENT_LATEST_TRAIN_TEST_SUCCESS
+  LOAD_AGENT_LATEST_TRAIN_TEST_SUCCESS,
+  CHANGE_ACCESS_CONTROL_DATA,
 } from './constants';
 
 const happyEmojies = [
@@ -3079,6 +3080,12 @@ function appReducer(state = initialState, action) {
         .set('accessPolicyGroups', action.accessPolicyGroups)
         .set('loading', false)
         .set('error', false);
+    case CHANGE_ACCESS_CONTROL_DATA:
+      return state
+        .update('accessPolicyGroups', accessPolicyGroups => {
+          const index = _.findIndex(accessPolicyGroups, ['name', action.groupName]);
+          return accessPolicyGroups.setIn([index, 'rules'], action.rules);
+        });
     case UPDATE_ACCESS_CONTROL:
       return state
         .set('loading', true)
