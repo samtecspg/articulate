@@ -356,7 +356,7 @@ export class MainTab extends React.Component {
                       )
                   }
                   className={classes.tab}
-                  disabled={!newKeyword}
+                  disabled={newKeyword}
                 />
               </Tabs>
             </Grid>

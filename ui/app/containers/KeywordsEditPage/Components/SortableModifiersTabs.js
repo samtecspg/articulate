@@ -68,11 +68,10 @@ class SortableModifiersTabs extends React.Component {
 
   render() {
     const { keyword, classes } = this.props;
-
     return (
       <Tabs
         className={classes.keywordTabs}
-        value={this.props.selectedTab}
+        value={Number(this.props.selectedTab)}
         indicatorColor="primary"
         textColor="secondary"
         scrollable

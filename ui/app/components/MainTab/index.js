@@ -419,6 +419,9 @@ export class MainTab extends React.Component {
                   currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
                   loadedAgentVersionName={currentAgent ? currentAgent.loadedAgentVersionName : ''}
                   agentSettings={currentAgent ? currentAgent.settings : {}}
+                  isReadOnly={isReadOnly}
+                  agentVersions={agentVersions}
+                  loadingAgentVersion={loadingAgentVersion}
                 />
               )}
               {disableSave ||
