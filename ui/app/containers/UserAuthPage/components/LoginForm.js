@@ -24,7 +24,7 @@ const styles = theme => ({
 });
 
 function LoginForm(props) {
-  const { intl, classes, onInputChange, username, password, onLogin, error, isLoading, errorState } = props;
+  const { intl, classes, onInputChange, username, password, onLogin, error, isLoading, errorState, authProviders } = props;
   const onFormSubmit = e => {
     e.preventDefault();
     onLogin();
@@ -65,18 +65,18 @@ function LoginForm(props) {
         <Typography className={classes.error} variant="caption" gutterBottom>
           {_.isString(error) ? error : ''}
         </Typography>
-        <Typography className={classes.separator} align="center" variant="overline" gutterBottom>
-          &mdash;&mdash;&mdash;&nbsp;OR&nbsp;&mdash;&mdash;&mdash;
-        </Typography>
-        <Button variant="contained" className={classes.button} component={Link} to="/api/auth/twitter" target="_self">
-          twitter
-        </Button>
-        <Button variant="contained" className={classes.button} component={Link} to="/api/auth/github" target="_self">
-          github
-        </Button>
-        <Button variant="contained" className={classes.button} component={Link} to="/api/auth/azuread" target="_self">
-          azure
-        </Button>
+        {authProviders.length > 0 && (
+          <React.Fragment>
+            <Typography className={classes.separator} align="center" variant="overline" gutterBottom>
+              &mdash;&mdash;&mdash;&nbsp;OR&nbsp;&mdash;&mdash;&mdash;
+            </Typography>
+            {authProviders.map(provider => (
+              <Button variant="contained" className={classes.button} component={Link} to={`/api/auth/${provider}`} target="_self">
+                {provider}
+              </Button>
+            ))}
+          </React.Fragment>
+        )}
       </Grid>
     </form>
   );
@@ -91,11 +91,14 @@ LoginForm.propTypes = {
   username: PropTypes.string,
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.bool]),
   isLoading: PropTypes.bool,
+  authProviders: PropTypes.array,
   errorState: PropTypes.shape({
     username: PropTypes.bool,
     lastName: PropTypes.bool,
     password: PropTypes.bool,
   }),
 };
-
+LoginForm.defaultProps = {
+  authProviders: [],
+};
 export default injectIntl(withStyles(styles)(LoginForm));

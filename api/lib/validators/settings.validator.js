@@ -59,7 +59,7 @@ class SettingsValidate {
                         .value
                         .optional();
                 });
-                return Joi.object().keys(keys);
+                return Joi.object().keys(keys).options({ stripUnknown: true });
             })()
         };
 

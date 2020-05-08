@@ -1,4 +1,8 @@
-import { MODEL_SETTINGS } from '../../../util/constants';
+import {
+    CONFIG_SETTINGS_AUTH_PROVIDERS,
+    MODEL_SETTINGS
+} from '../../../util/constants';
+import { AUTH_PROVIDERS } from '../../../util/env';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
 module.exports = async function ({ asArray = false } = {}) {
@@ -18,6 +22,7 @@ module.exports = async function ({ asArray = false } = {}) {
             const { name, value } = setting.allProperties();
             settings[name] = value;
         });
+        settings[CONFIG_SETTINGS_AUTH_PROVIDERS] = AUTH_PROVIDERS;
         return settings;
     }
     catch (error) {

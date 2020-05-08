@@ -203,6 +203,7 @@ export const GENERATE_SLOTS_QUICK_RESPONSES_MAX = 'generateSlotsQuickResponsesMa
 export const GENERATE_ACTIONS_QUICK_RESPONSES = 'generateActionsQuickResponses';
 export const GENERATE_ACTIONS_QUICK_RESPONSES_MAX = 'generateActionsQuickResponsesMax';
 export const CONFIG_SETTINGS_ENABLE_AGENT_VERSIONS = 'enableAgentVersions'
+export const CONFIG_SETTINGS_AUTH_PROVIDERS = 'authProviders'
 
 export const CONFIG_KEYWORD_TYPE_LEARNED = 'learned';
 export const CONFIG_KEYWORD_TYPE_REGEX = 'regex';
