@@ -119,6 +119,7 @@ export class UserAuthPage extends React.PureComponent {
               onGoToUrl={onGoToUrl}
               error={error}
               isLoading={isLoading}
+              authProviders={settings.authProviders}
             />
           )}
         </Paper>

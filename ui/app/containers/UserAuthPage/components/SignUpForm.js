@@ -1,7 +1,16 @@
-import { Button, Grid, TextField, Typography, withStyles } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { injectIntl, intlShape } from 'react-intl';
+import {
+  injectIntl,
+  intlShape,
+} from 'react-intl';
 import { Link } from 'react-router-dom';
 import messages from '../messages';
 
@@ -20,7 +29,7 @@ const styles = theme => ({
 });
 
 function SignUpForm(props) {
-  const { intl, classes, onInputChange, username, password, name, lastName, onSignUp, refUrl, onGoToUrl, error, isLoading } = props;
+  const { intl, classes, onInputChange, username, password, name, lastName, onSignUp, refUrl, onGoToUrl, authProviders, error, isLoading } = props;
 
   return (
     <form className={classes.root}>
@@ -99,15 +108,18 @@ function SignUpForm(props) {
             {intl.formatMessage(messages.goBack)}
           </Button>
         ) : null}
-        <Typography className={classes.separator} align="center" variant="overline" gutterBottom>
-          &mdash;&mdash;&mdash;&nbsp;OR&nbsp;&mdash;&mdash;&mdash;
-        </Typography>
-        <Button variant="contained" className={classes.button} component={Link} to="/auth/twitter" target="_self">
-          twitter
-        </Button>
-        <Button variant="contained" className={classes.button} component={Link} to="/auth/github" target="_self">
-          github
-        </Button>
+        {authProviders.length > 0 && (
+          <React.Fragment>
+            <Typography className={classes.separator} align="center" variant="overline" gutterBottom>
+              &mdash;&mdash;&mdash;&nbsp;OR&nbsp;&mdash;&mdash;&mdash;
+            </Typography>
+            {authProviders.map(provider => (
+              <Button variant="contained" className={classes.button} component={Link} to={`/api/auth/${provider}`} target="_self">
+                {provider}
+              </Button>
+            ))}
+          </React.Fragment>
+        )}
       </Grid>
     </form>
   );
@@ -126,6 +138,9 @@ SignUpForm.propTypes = {
   onGoToUrl: PropTypes.func.isRequired,
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.bool]),
   isLoading: PropTypes.bool,
+  authProviders: PropTypes.array,
 };
-
+SignUpForm.defaultProps = {
+  authProviders: [],
+};
 export default injectIntl(withStyles(styles)(SignUpForm));
