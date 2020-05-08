@@ -156,16 +156,20 @@ const makeSelectAgent = () =>
 const makeSelectAgentVersions = () =>
   createSelector(
     selectGlobal,
-    globalState => makeSelectAgentVersionsSorted(globalState.agentVersions)
+    globalState => makeSelectAgentVersionsSorted(globalState.agentVersions),
   );
 
-const makeSelectAgentVersionsSorted = (versions) => {
+const makeSelectAgentVersionsSorted = versions => {
   var tempArray = Immutable.asMutable(versions);
-  var temp = tempArray && tempArray.length ? tempArray
-    .sort((a, b) => (Number(b.creationDate) > Number(a.creationDate)) ? 1 : -1)
-    .filter(version => { return !version.isOriginalAgentVersion })
-    : []
-  return temp
+  var temp =
+    tempArray && tempArray.length
+      ? tempArray
+          .sort((a, b) => (Number(b.creationDate) > Number(a.creationDate) ? 1 : -1))
+          .filter(version => {
+            return !version.isOriginalAgentVersion;
+          })
+      : [];
+  return temp;
 };
 
 const makeSelectCurrentAgent = () =>
@@ -227,13 +231,13 @@ const makeSelectDocumentsStats = () =>
     selectGlobal,
     globalState => {
       return {
-        'documentsAnalyticsRequestCount': globalState.documentsAnalyticsRequestCount,
-        'documentsAnalyticsSessionsCount': globalState.documentsAnalyticsSessionsCount,
-        'documentsAnalyticsFallbacksCount': globalState.documentsAnalyticsFallbacksCount,
-        'documentsAnalyticsTopActions': globalState.documentsAnalyticsTopActions,
-        'documentsAnalyticsRequestsOverTime': globalState.documentsAnalyticsRequestsOverTime
-      }
-    }
+        documentsAnalyticsRequestCount: globalState.documentsAnalyticsRequestCount,
+        documentsAnalyticsSessionsCount: globalState.documentsAnalyticsSessionsCount,
+        documentsAnalyticsFallbacksCount: globalState.documentsAnalyticsFallbacksCount,
+        documentsAnalyticsTopActions: globalState.documentsAnalyticsTopActions,
+        documentsAnalyticsRequestsOverTime: globalState.documentsAnalyticsRequestsOverTime,
+      };
+    },
   );
 
 const makeSelectTotalDocumentsAnalytics = () =>
@@ -272,12 +276,16 @@ const makeSelectTrainTest = () =>
     globalState => makeSelectTrainTestOnlyFails(globalState.trainTest),
   );
 
-const makeSelectTrainTestOnlyFails = (trainTest) => {
+const makeSelectTrainTestOnlyFails = trainTest => {
   var tempTest = null;
   if (trainTest) {
     tempTest = Immutable.asMutable(trainTest);
-    tempTest.keywords = tempTest.keywords.filter(keyword => { return keyword.bad > 0 })
-    tempTest.actions = tempTest.actions.filter(action => { return action.bad > 0 })
+    tempTest.keywords = tempTest.keywords.filter(keyword => {
+      return keyword.bad > 0;
+    });
+    tempTest.actions = tempTest.actions.filter(action => {
+      return action.bad > 0;
+    });
   }
   return tempTest;
 };
@@ -304,10 +312,10 @@ const makeSelectLogs = () =>
 const makeSelectLogsText = () =>
   createSelector(
     selectGlobal,
-    globalState => getLogsContent(globalState.logs)
-  )
+    globalState => getLogsContent(globalState.logs),
+  );
 
-const getLogsContent = (logs) => {
+const getLogsContent = logs => {
   var result = '';
   logs.map((log, index) => {
     if (log && log._source && log._source.container && log._source.container.name && log._source.message) {
@@ -471,7 +479,7 @@ const makeSelectSettings = () =>
 const makeSelectSettingsTouched = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.settingsTouched
+    globalState => globalState.settingsTouched,
   );
 
 /* Keyword */
@@ -601,101 +609,117 @@ const makeSelectUserDataTouched = () =>
 const makeSelectDialoguePageFilterSearchSaying = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.dialoguePageFilterSearchSaying
-  )
+    globalState => globalState.dialoguePageFilterSearchSaying,
+  );
 const makeSelectDialoguePageFilterCategory = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.dialoguePageFilterCategory
-  )
+    globalState => globalState.dialoguePageFilterCategory,
+  );
 const makeSelectDialoguePageFilterActions = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.dialoguePageFilterActions
-  )
+    globalState => globalState.dialoguePageFilterActions,
+  );
 const makeSelectDialoguePageNumberOfFiltersApplied = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.dialoguePageNumberOfFiltersApplied
-  )
+    globalState => globalState.dialoguePageNumberOfFiltersApplied,
+  );
 const makeSelectDialoguePageFilterString = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.dialoguePageFilterString
-  )
+    globalState => globalState.dialoguePageFilterString,
+  );
 const makeSelectDialoguePageFilterKeywords = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.dialoguePageFilterKeywords
-  )
+    globalState => globalState.dialoguePageFilterKeywords,
+  );
 const makeSelectDialoguePageFilterActionIssues = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.dialoguePageFilterActionIssues
-  )
+    globalState => globalState.dialoguePageFilterActionIssues,
+  );
 const makeSelectDialoguePageFilterKeywordIssues = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.dialoguePageFilterKeywordIssues
-  )
+    globalState => globalState.dialoguePageFilterKeywordIssues,
+  );
 
 /* Review Page Filters */
 const makeSelectReviewPageFilterSearchSaying = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.reviewPageFilterSearchSaying
-  )
+    globalState => globalState.reviewPageFilterSearchSaying,
+  );
 const makeSelectReviewPageFilterCategory = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.reviewPageFilterCategory
-  )
+    globalState => globalState.reviewPageFilterCategory,
+  );
 const makeSelectReviewPageFilterActions = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.reviewPageFilterActions
-  )
+    globalState => globalState.reviewPageFilterActions,
+  );
 const makeSelectReviewPageNumberOfFiltersApplied = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.reviewPageNumberOfFiltersApplied
-  )
+    globalState => globalState.reviewPageNumberOfFiltersApplied,
+  );
 const makeSelectReviewPageFilterString = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.reviewPageFilterString
-  )
+    globalState => globalState.reviewPageFilterString,
+  );
 const makeSelectReviewPageFilterActionIntervalMax = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.reviewPageFilterActionIntervalMax
-  )
+    globalState => globalState.reviewPageFilterActionIntervalMax,
+  );
 const makeSelectReviewPageFilterActionIntervalMin = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.reviewPageFilterActionIntervalMin
-  )
+    globalState => globalState.reviewPageFilterActionIntervalMin,
+  );
 const makeSelectReviewPageFilterContainers = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.reviewPageFilterContainers
-  )
+    globalState => globalState.reviewPageFilterContainers,
+  );
 const makeSelectReviewPageFilterMaxLogs = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.reviewPageFilterMaxLogs
-  )
+    globalState => globalState.reviewPageFilterMaxLogs,
+  );
 const makeSelectReviewPageFilterLogsString = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.reviewPageFilterLogsString
-  )
+    globalState => globalState.reviewPageFilterLogsString,
+  );
 const makeSelectReviewPageLogsNumberOfFiltersApplied = () =>
   createSelector(
     selectGlobal,
-    globalState => globalState.reviewPageLogsNumberOfFiltersApplied
-  )
+    globalState => globalState.reviewPageLogsNumberOfFiltersApplied,
+  );
+const makeUserSignupLoading = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.userSignupLoading,
+  );
 
+const makeUserSignupSuccess = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.userSignupSuccess,
+  );
+
+const makeUserSignupError = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.userSignupSuccess,
+  );
 export {
   makeSelectServerStatus,
   makeSelectLocation,
@@ -806,4 +830,7 @@ export {
   makeSelectReviewPageFilterMaxLogs,
   makeSelectReviewPageFilterLogsString,
   makeSelectReviewPageLogsNumberOfFiltersApplied,
+  makeUserSignupLoading,
+  makeUserSignupError,
+  makeUserSignupSuccess,
 };

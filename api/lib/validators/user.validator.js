@@ -10,6 +10,7 @@ import {
     PARAM_PROVIDER,
     PARAM_SALT,
     PARAM_SECRET,
+    PARAM_SKIP_LOGIN,
     PARAM_TOKEN,
     PARAM_USER_ACCOUNT_ID
 } from '../../util/constants';
@@ -32,6 +33,7 @@ const userAccountParams = {
     [PARAM_SALT]: UserAccountModel.salt,
     [PARAM_PROVIDER]: Joi.string().trim().description('Provider').required(),
     [PARAM_IDENTITY]: Joi.object().optional().keys(userIdentityParams),
+    [PARAM_SKIP_LOGIN]: Joi.boolean().optional().default(false),
 };
 
 class UserValidate {

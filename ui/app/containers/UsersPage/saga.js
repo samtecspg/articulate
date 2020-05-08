@@ -1,10 +1,8 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { ROUTE_USER } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
-import { loadUsersSuccess, loadUsersError, deleteUserError } from '../App/actions';
-import {
-  LOAD_USERS, DELETE_USER, UPDATE_SETTING,
-} from '../App/constants';
+import { deleteUserError, loadUsersError, loadUsersSuccess, signUpUserError, signUpUserSuccess } from '../App/actions';
+import { DELETE_USER, LOAD_USERS, SIGN_UP_USER, UPDATE_SETTING } from '../App/constants';
 import { putSetting } from '../SettingsPage/saga';
 
 export function* getUsers(payload) {
@@ -20,11 +18,7 @@ export function* getUsers(payload) {
       skip,
       limit,
     };
-    const response = yield call(
-      api.get,
-      toAPIPath([ROUTE_USER]),
-      { params },
-    );
+    const response = yield call(api.get, toAPIPath([ROUTE_USER]), { params });
     yield put(loadUsersSuccess(response));
   } catch (err) {
     yield put(loadUsersError(err));
@@ -36,9 +30,27 @@ export function* deleteUser(payload) {
   try {
     yield call(api.delete, toAPIPath([ROUTE_USER, id]));
     yield call(getUsers, { api, page, pageSize });
-  }
-  catch (err){
+  } catch (err) {
     yield put(deleteUserError(err));
+  }
+}
+
+export function* signUpUser(payload) {
+  const { api, name, lastName, username, password } = payload;
+  const data = {
+    name,
+    lastName,
+    email: username,
+    password,
+    provider: 'basic',
+    skipLogin: true,
+  };
+  try {
+    const response = yield call(api.post, toAPIPath([ROUTE_USER]), data);
+    yield put(signUpUserSuccess(response));
+    yield call(getUsers, { api });
+  } catch (err) {
+    yield put(signUpUserError(err));
   }
 }
 
@@ -46,4 +58,5 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_USERS, getUsers);
   yield takeLatest(DELETE_USER, deleteUser);
   yield takeLatest(UPDATE_SETTING, putSetting);
+  yield takeLatest(SIGN_UP_USER, signUpUser);
 }

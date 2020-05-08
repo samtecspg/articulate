@@ -123,6 +123,7 @@ export const PARAM_GROUP_NAME = 'groupName';
 export const PARAM_VALIDATE = 'validate';
 export const PARAM_RULES = 'rules';
 export const PARAM_IS_ADMIN = 'isAdmin';
+export const PARAM_SKIP_LOGIN = 'skipLogin';
 
 export const PARAM_ACTION_ID = ROUTE_ACTION + PARAMS_POSTFIX_ID;
 export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;

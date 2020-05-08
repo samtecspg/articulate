@@ -50,5 +50,9 @@ export default defineMessages({
   noUsersFound: {
     id: 'app.containers.UsersPage.component.SayingDataForm.noUsersFound',
     defaultMessage: 'No users found',
-  }
+  },
+  addUserDialogTittle: {
+    id: 'app.containers.UsersPage.component.SayingDataForm.addUserDialogTittle',
+    defaultMessage: 'Add User',
+  },
 });
