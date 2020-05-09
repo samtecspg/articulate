@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { STATUS_OUT_OF_DATE, MODEL_AGENT, MODEL_ACTION, MODEL_KEYWORD, MODEL_CATEGORY, MODEL_SAYING, MODEL_AGENT_VERSION } from '../../../util/constants';
 import RedisErrorHandler from '../../errors/redis.error-handler';
 
-module.exports = async function ({ payload }) {
+module.exports = async function ({ payload, destinationAgentId }) {
 
     const { agentService, categoryService, globalService, sayingService, actionService, keywordService } = await this.server.services();
     const {
@@ -22,7 +22,10 @@ module.exports = async function ({ payload }) {
 
         var AgentModel;
         var originalAgentName = agent.originalAgentVersionName;
-        if (!isVersionImport) {
+        // If it is not a version import or its not an import to replace an existing agent we create a new agent
+        if (!isVersionImport && (!destinationAgentId || Number(destinationAgentId) === -1)) {
+            agent.loadedAgentVersionName = agent.agentName;
+            agent.currentAgentVersionCounter = 0;
             AgentModel = await agentService.create({
                 data: {
                     ...agent,
@@ -39,12 +42,15 @@ module.exports = async function ({ payload }) {
                 isVersionCreation
             });
         } else {
+            if (isVersionImport) {
+                agent.agentName = originalAgentName;
+            }
             agent.loadedAgentVersionName = agent.agentName;
-            agent.agentName = originalAgentName;
             delete agent.versionNameAgentId;
-            AgentModel = await agentService.updateById({ id: agent.originalAgentVersionId, data: agent, returnModel: true });
-            await agentService.removePostFormat({ id: agent.originalAgentVersionId, returnModel: true });
-            await agentService.removeWebhook({ id: agent.originalAgentVersionId, returnModel: true });
+            delete agent.currentAgentVersionCounter;
+            AgentModel = await agentService.updateById({ id: isVersionImport ? agent.originalAgentVersionId : Number(destinationAgentId), data: agent, returnModel: true });
+            await agentService.removePostFormat({ id: isVersionImport ? agent.originalAgentVersionId : Number(destinationAgentId), returnModel: true });
+            await agentService.removeWebhook({ id: isVersionImport ? agent.originalAgentVersionId : Number(destinationAgentId), returnModel: true });
 
             var linkedSayings = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_SAYING, returnModel: true });
             var linkedCategories = await globalService.loadAllLinked({ parentModel: AgentModel, model: MODEL_CATEGORY, returnModel: false });

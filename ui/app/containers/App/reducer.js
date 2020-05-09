@@ -781,7 +781,9 @@ const initialState = Immutable({
   reviewPageFilterContainers: [],
   reviewPageFilterMaxLogs: 1000,
   reviewPageFilterLogsString: '',
-  reviewPageLogsNumberOfFiltersApplied: 0
+  reviewPageLogsNumberOfFiltersApplied: 0,
+  importAgentErrorId: -1,
+  importAgentSuccessId: -1
 });
 
 function appReducer(state = initialState, action) {
@@ -951,17 +953,24 @@ function appReducer(state = initialState, action) {
         .set('loading', false)
         .set('error', false);
     case IMPORT_AGENT:
-      return state.set('loading', true).set('error', false);
+      return state
+        .set('loading', true)
+        .set('error', false)
+        .set('importAgentErrorId', -1)
+        .set('importAgentSuccessId', -1);
     case IMPORT_AGENT_ERROR:
       return state
         .set('loading', false)
         .set('success', false)
-        .set('error', action.error);
+        .set('error', action.error)
+        .set('importAgentErrorId', action.destinationAgentId);
     case IMPORT_AGENT_SUCCESS:
       return state
         .set('loading', false)
         .set('success', true)
-        .set('error', false);
+        .set('error', false)
+        .set('importAgentErrorId', -1)
+        .set('importAgentSuccessId', action.destinationAgentId);
     case DELETE_AGENT:
       return state
         .set('loading', true)

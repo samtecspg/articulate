@@ -4,8 +4,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import gravatars from '../../../components/Gravatar';
-import exportIcon from '../../../images/export-icon.svg';
-import importIcon from '../../../images/import-icon.svg';
+import exportIconGray from '../../../images/export-icon-gray.svg';
+import importIconGray from '../../../images/import-icon-gray.svg';
+import importIconGreen from '../../../images/import-icon-green.svg';
+import importIconGrayFail from '../../../images/import-icon-gray-fail.svg';
+import importIconGraySuccess from '../../../images/import-icon-gray-success.svg';
+import downloadIconGraySuccess from '../../../images/download-icon-gray-success.svg'
 import rightArrowIcon from '../../../images/right-arrow-icon.svg';
 import messages from '../messages';
 
@@ -142,6 +146,7 @@ class AgentsCards extends React.Component {
       ? document.getElementById('dvCardsContainer').scrollWidth - document.getElementById('dvCardsContainer').clientWidth >
       document.getElementById('dvCardsContainer').scrollLeft
       : false,
+    clickedImportAgentId: -1
   };
 
   componentDidMount() {
@@ -249,9 +254,9 @@ class AgentsCards extends React.Component {
                     minHeight: '30px',
                   }}
                 >
-                  <label style={{ padding: '15px' }} htmlFor="import_agent">
+                  <label style={{ padding: '15px' }} htmlFor="import_agent" onClick={() => { this.setState({ clickedImportAgentId: -1 }) }}>
                     <Grid container justify="center">
-                      <img src={importIcon} />
+                      <img src={importIconGreen} />
                       <Typography className={classes.importLabel} variant="body1">
                         <FormattedMessage {...messages.import} />
                       </Typography>
@@ -260,7 +265,7 @@ class AgentsCards extends React.Component {
                   <input
                     onChange={evt => {
                       const { files } = evt.target; // FileList object
-
+                      const clickedImportAgentId = this.state.clickedImportAgentId;
                       for (let i = 0, f; (f = files[i]); i++) {
                         const reader = new FileReader();
 
@@ -269,7 +274,7 @@ class AgentsCards extends React.Component {
                           return function (e) {
                             try {
                               const agent = JSON.parse(e.target.result);
-                              onImportAgent(agent);
+                              onImportAgent(agent, clickedImportAgentId);
                             } catch (ex) {
                               console.error(`ex when trying to parse json = ${ex}`);
                             }
@@ -310,7 +315,7 @@ class AgentsCards extends React.Component {
                       })}
                       <Tooltip title={agent.agentName} placement="top">
                         <span className={classes.agentName}>
-                          {agent.agentName.length > 11 ? `${agent.agentName.substring(0, 11).trim()}...` : agent.agentName}
+                          {agent.agentName.length > 10 ? `${agent.agentName.substring(0, 10).trim()}...` : agent.agentName}
                         </span>
                       </Tooltip>
                     </span>
@@ -324,37 +329,84 @@ class AgentsCards extends React.Component {
                 >
                   <Grid>{agent.description.length > 65 ? `${agent.description.substring(0, 64).trim()}...` : agent.description}</Grid>
                 </CardContent>
-                <Grid container justify="center" className={classes.exportFooter}>
-                  {this.props.agentExport && this.props.agentExport.agentName === agent.agentName ? (
-                    <a
-                      onClick={() => {
-                        this.props.onExportAgent(0);
-                      }}
-                      style={{ textDecoration: 'none', padding: '15px' }}
-                      href={`data: text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.props.agentExport, null, 2))}`}
-                      download={`${agent.agentName}.json`}
-                    >
-                      <Grid container justify="center">
-                        <Typography className={classes.exportLabelReady} variant="body1">
-                          <FormattedMessage {...messages.download} />
-                        </Typography>
-                      </Grid>
-                    </a>
-                  ) : (
+                <Grid container direction="row" justify="center" className={classes.exportFooter}>
+                  <Grid item xs={6}>
+                    <label htmlFor="import_agent">
                       <Grid
-                        style={{ padding: '15px' }}
-                        onClick={() => {
-                          this.props.onExportAgent(agent.id);
-                        }}
+                        style={{ padding: '15px', borderRight: '1px solid #979797' }}
                         container
                         justify="center"
                       >
-                        <img src={exportIcon} />
-                        <Typography className={classes.exportLabel} variant="body1">
-                          <FormattedMessage {...messages.export} />
-                        </Typography>
+                        <Tooltip title={'Import'} placement="top">
+                          <img src={(this.props.importAgentErrorId === agent.id) ? importIconGrayFail
+                            : (this.props.importAgentSuccessId === agent.id) ? importIconGraySuccess
+                              : importIconGray}
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => { this.setState({ clickedImportAgentId: agent.id }) }} />
+                        </Tooltip>
                       </Grid>
-                    )}
+                    </label>
+                    <input
+                      onChange={evt => {
+                        const { files } = evt.target; // FileList object
+                        const clickedImportAgentId = this.state.clickedImportAgentId;
+                        for (let i = 0, f; (f = files[i]); i++) {
+                          const reader = new FileReader();
+
+                          // Closure to capture the file information.
+                          reader.onload = (function (theFile) {
+                            return function (e) {
+                              try {
+                                const agent = JSON.parse(e.target.result);
+                                onImportAgent(agent, clickedImportAgentId);
+                              } catch (ex) {
+                                console.error(`ex when trying to parse json = ${ex}`);
+                              }
+                            };
+                          })(f);
+                          reader.readAsText(f);
+                        }
+                      }}
+                      accept="application/JSON"
+                      hidden
+                      id="import_agent"
+                      type="file"
+                    />
+                  </Grid>
+                  <Grid item xs={6} style={{ cursor: 'default' }}>
+                    {this.props.agentExport && this.props.agentExport.agentName === agent.agentName ? (
+                      <Grid
+                        container
+                        justify="center"
+                      >
+                        <a
+                          onClick={() => {
+                            this.props.onExportAgent(0);
+                          }}
+                          style={{ textDecoration: 'none' }}
+                          href={`data: text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.props.agentExport, null, 2))}`}
+                          download={`${agent.agentName}.json`}
+                        >
+                          <Tooltip title={'Download Now'} placement="top">
+                            <img src={downloadIconGraySuccess} style={{ paddingTop: '13px', cursor: 'pointer' }} />
+                          </Tooltip>
+                        </a>
+                      </Grid>
+                    ) : (
+                        <Grid
+                          style={{ padding: '15px' }}
+                          onClick={() => {
+                            this.props.onExportAgent(agent.id);
+                          }}
+                          container
+                          justify="center"
+                        >
+                          <Tooltip title={'Export'} placement="top">
+                            <img src={exportIconGray} style={{ cursor: 'pointer' }} />
+                          </Tooltip>
+                        </Grid>
+                      )}
+                  </Grid>
                 </Grid>
               </Card>
             </Grid>

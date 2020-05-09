@@ -622,25 +622,28 @@ export function exportAgentSuccess(agent) {
   };
 }
 
-export function importAgent(agent) {
+export function importAgent(agent, destinationAgentId) {
   return {
     type: IMPORT_AGENT,
     apiCall: true,
     agent,
+    destinationAgentId
   };
 }
 
-export function importAgentError(error) {
+export function importAgentError(error, destinationAgentId = -1) {
   return {
     type: IMPORT_AGENT_ERROR,
     error,
+    destinationAgentId
   };
 }
 
-export function importAgentSuccess(agent) {
+export function importAgentSuccess(agent, destinationAgentId = -1) {
   return {
     type: IMPORT_AGENT_SUCCESS,
     agent,
+    destinationAgentId
   };
 }
 

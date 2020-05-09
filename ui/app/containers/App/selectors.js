@@ -294,6 +294,18 @@ const makeSelectTestTrainError = () =>
     globalState => globalState.testTrainError,
   );
 
+const makeSelectImportAgentErrorId = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.importAgentErrorId
+  );
+
+const makeSelectImportAgentSuccessId = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.importAgentSuccessId
+  );
+
 /*Logs*/
 const makeSelectLogs = () =>
   createSelector(
@@ -765,6 +777,8 @@ export {
   makeSelectDocumentsAnalytics,
   makeSelectDocumentsStats,
   makeSelectTotalDocumentsAnalytics,
+  makeSelectImportAgentErrorId,
+  makeSelectImportAgentSuccessId,
   makeSelectLogs,
   makeSelectLogsText,
   makeSelectSessions,
