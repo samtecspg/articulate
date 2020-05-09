@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="21px" viewBox="0 0 26 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>download-icon-gray-success</title>
+    <defs>
+        <polygon id="path-1" points="0 0.5 17.9995 0.5 17.9995 2 0 2"></polygon>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="agent-list-page-v.2" transform="translate(-337.000000, -654.000000)">
+            <g id="download-icon-gray-success" transform="translate(337.000000, 654.000000)">
+                <g id="Group-6" stroke-width="1" fill-rule="evenodd" transform="translate(0.000000, 2.500000)">
+                    <g id="Group-3" transform="translate(0.000000, 16.012700)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <g id="Clip-2"></g>
+                        <path d="M17.6025,2 L0.3965,2 C0.1775,2 -0.0005,1.822 -0.0005,1.603 L-0.0005,0.897 C-0.0005,0.678 0.1775,0.5 0.3965,0.5 L17.6025,0.5 C17.8225,0.5 17.9995,0.678 17.9995,0.897 L17.9995,1.603 C17.9995,1.822 17.8225,2 17.6025,2" id="Fill-1" fill="#4E4E4E" mask="url(#mask-2)"></path>
+                    </g>
+                    <path d="M11.583,10.3389 L9.75,12.1719 L9.75,0.3429 C9.75,0.1539 9.597,-0.0001 9.407,-0.0001 L8.594,-0.0001 C8.404,-0.0001 8.25,0.1539 8.25,0.3429 L8.25,12.1719 L6.417,10.3389 C6.283,10.2039 6.065,10.2039 5.932,10.3389 L5.356,10.9139 C5.223,11.0479 5.223,11.2649 5.356,11.3999 L8.758,14.7999 C8.892,14.9339 9.109,14.9339 9.243,14.7999 L12.644,11.3999 C12.777,11.2649 12.777,11.0479 12.644,10.9139 L12.068,10.3389 C11.935,10.2039 11.717,10.2039 11.583,10.3389" id="Fill-4" fill="#4E4E4E"></path>
+                </g>
+                <path d="M13,6.075 C13,2.72 15.72,4.52970994e-14 19.075,4.52970994e-14 C22.43,4.52970994e-14 25.149,2.72 25.149,6.075 C25.149,9.43 22.43,12.15 19.075,12.15 C15.72,12.15 13,9.43 13,6.075" id="Fill-5" fill="#28B46D" fill-rule="evenodd"></path>
+                <polyline id="Stroke-7" stroke="#FEFEFE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" points="16.3691 6.3899 18.2561 8.2759 22.2341 4.2969"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

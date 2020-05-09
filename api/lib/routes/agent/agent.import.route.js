@@ -25,7 +25,7 @@ module.exports = {
             const { agentService } = await request.services();
             const credential = request.auth.credentials;
             try {
-                return await agentService.import({ payload: { ...request.payload, ...{ userCredentials: credential } } });
+                return await agentService.import({ payload: { ...request.payload.agent, ...{ userCredentials: credential } }, destinationAgentId: request.payload.destinationAgentId });
                 //return h.continue;
             }
             catch ({ message, statusCode }) {

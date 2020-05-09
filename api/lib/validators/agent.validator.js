@@ -933,123 +933,38 @@ class AgentValidate {
             payload: (() => {
 
                 return {
-                    gravatar: AgentSchema.gravatar.required(),
-                    uiColor: AgentSchema.uiColor.required(),
-                    agentName: AgentSchema.agentName.required(),
-                    description: AgentSchema.description,
-                    language: AgentSchema.language.required().valid(_.map(defaultSettings.agentLanguages, 'value')).default('en'),
-                    timezone: AgentSchema.timezone.required().valid(defaultSettings.timezones).default('UTC'),
-                    categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
-                    categoryRecognizer: AgentSchema.categoryRecognizer,
-                    modifiersRecognizer: AgentSchema.modifiersRecognizer,
-                    modifiersRecognizerJustER: AgentSchema.modifiersRecognizerJustER,
-                    fallbackAction: AgentSchema.fallbackAction,
-                    welcomeAction: AgentSchema.welcomeAction,
-                    useWebhook: AgentSchema.useWebhook.required(),
-                    multiCategory: AgentSchema.multiCategory.required(),
-                    usePostFormat: AgentSchema.usePostFormat.required(),
-                    postFormat: {
-                        postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
-                    },
-                    status: AgentSchema.status,
-                    lastTraining: AgentSchema.lastTraining,
-                    extraTrainingData: AgentSchema.extraTrainingData,
-                    enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
-                    model: AgentSchema.model,
-                    enableDiscoverySheet: AgentSchema.enableDiscoverySheet,
-                    enableAgentVersions: AgentSchema.enableAgentVersions,
-                    parameters: Joi.object(),
-                    webhook: {
-                        webhookKey: WebhookSchema.webhookKey.required().error(new Error('The webhook key is required. If this is an old export, please add a webhook key to this webhook')),
-                        webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
-                        webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
-                        webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
-                        webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
-                        webhookHeaders: Joi.array().items({
-                            key: Joi.string(),
-                            value: Joi.string()
-                        }),
-                        webhookUser: WebhookSchema.webhookUser,
-                        webhookPassword: WebhookSchema.webhookPassword,
-                        postScript: WebhookSchema.postScript,
-                        creationDate: WebhookSchema.creationDate,
-                        modificationDate: WebhookSchema.modificationDate
-                    },
-                    settings: Joi.object(),
-                    keywords: Joi.array().items({
-                        keywordName: KeywordSchema.keywordName.required(),
-                        uiColor: KeywordSchema.uiColor,
-                        type: KeywordSchema.type.allow('').allow(null).valid('learned', 'regex').optional().default('learned').error(new Error('Please provide valid keyword type among learned and regex')),
-                        regex: KeywordSchema.regex.allow('').allow(null),
-                        examples: Joi.array().items({
-                            value: KeywordExampledSchema.value.required(),
-                            synonyms: KeywordExampledSchema.synonyms
-                        }).required(),
-                        modifiers: Joi.array().items({
-                            modifierName: ModifierSchema.modifierName.required(),
-                            action: ModifierSchema.action.required(),
-                            valueSource: ModifierSchema.valueSource.required(),
-                            staticValue: ModifierSchema.staticValue,
-                            sayings: Joi.array().items({
-                                userSays: ModifierSayingSchema.userSays.required(),
-                                keywords: Joi.array().items({
-                                    start: SayingKeywordSchema.start.required(),
-                                    end: SayingKeywordSchema.end.required(),
-                                    value: SayingKeywordSchema.value.required(),
-                                    keyword: SayingKeywordSchema.keyword.required(),
-                                    keywordId: SayingKeywordSchema.keywordId,
-                                    extractor: SayingKeywordSchema.extractor
-                                })
-                            })
-                        }),
-                        creationDate: KeywordSchema.creationDate,
-                        modificationDate: KeywordSchema.modificationDate
-                    }),
-                    categories: Joi.array().items({
-                        categoryName: CategorySchema.categoryName.required(),
-                        enabled: CategorySchema.enabled.required(),
-                        actionThreshold: CategorySchema.actionThreshold.required(),
-                        model: CategorySchema.model,
-                        status: CategorySchema.status,
-                        lastTraining: CategorySchema.lastTraining,
-                        extraTrainingData: CategorySchema.extraTrainingData,
-                        parameters: Joi.object(),
-                        sayings: Joi.array().items({
-                            userSays: SayingSchema.userSays.required().error(new Error('The user says text is required')),
-                            actions: SayingSchema.actions.allow([]),
-                            keywords: Joi.array().items({
-                                keywordId: KeywordSchema.id.required().error(new Error('You must specify the id of the keyword that you are tagging in the examples')),
-                                value: SayingKeywordSchema.value.required().error(new Error('You must specify the value that this keyword represents in the user saying')),
-                                keyword: SayingKeywordSchema.keyword.required().error(new Error('You must specify the keyword name')),
-                                start: SayingKeywordSchema.start.required().error(new Error('The start value should be an integer and it is required.')),
-                                end: SayingKeywordSchema.end.required().error(new Error('The end value should be an integer and it is required.')),
-                                extractor: SayingKeywordSchema.extractor
-                            }).required().allow([]),
-                            creationDate: KeywordSchema.creationDate,
-                            modificationDate: KeywordSchema.modificationDate,
-                            starred: SayingSchema.starred,
-                            lastFailedTestingTimestamp: SayingSchema.lastFailedTestingTimestamp,
-                            lastFailedTestingKeywords: SayingSchema.lastFailedTestingKeywords,
-                            lastFailedTestingKeywordsTimeStamp: SayingSchema.lastFailedTestingKeywordsTimeStamp,
-                            lastFailedTestingActions: SayingSchema.lastFailedTestingActions,
-                            lastFailedTestingActionsTimeStamp: SayingSchema.lastFailedTestingActionsTimeStamp,
-                        }),
-                        creationDate: KeywordSchema.creationDate,
-                        modificationDate: KeywordSchema.modificationDate
-                    }),
-                    accessPolicies: Joi.object(),
-                    actions: Joi.array().items({
-                        actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
-                        useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fullfilment.')),
-                        usePostFormat: ActionSchema.usePostFormat.required().error(new Error('Please specify if this action use a post format for fullfilment.')),
+                    agent: {
+                        gravatar: AgentSchema.gravatar.required(),
+                        uiColor: AgentSchema.uiColor.required(),
+                        agentName: AgentSchema.agentName.required(),
+                        description: AgentSchema.description,
+                        language: AgentSchema.language.required().valid(_.map(defaultSettings.agentLanguages, 'value')).default('en'),
+                        timezone: AgentSchema.timezone.required().valid(defaultSettings.timezones).default('UTC'),
+                        categoryClassifierThreshold: AgentSchema.categoryClassifierThreshold.required(),
+                        categoryRecognizer: AgentSchema.categoryRecognizer,
+                        modifiersRecognizer: AgentSchema.modifiersRecognizer,
+                        modifiersRecognizerJustER: AgentSchema.modifiersRecognizerJustER,
+                        fallbackAction: AgentSchema.fallbackAction,
+                        welcomeAction: AgentSchema.welcomeAction,
+                        useWebhook: AgentSchema.useWebhook.required(),
+                        multiCategory: AgentSchema.multiCategory.required(),
+                        usePostFormat: AgentSchema.usePostFormat.required(),
                         postFormat: {
                             postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
                         },
+                        status: AgentSchema.status,
+                        lastTraining: AgentSchema.lastTraining,
+                        extraTrainingData: AgentSchema.extraTrainingData,
+                        enableModelsPerCategory: AgentSchema.enableModelsPerCategory,
+                        model: AgentSchema.model,
+                        enableDiscoverySheet: AgentSchema.enableDiscoverySheet,
+                        enableAgentVersions: AgentSchema.enableAgentVersions,
+                        parameters: Joi.object(),
                         webhook: {
                             webhookKey: WebhookSchema.webhookKey.required().error(new Error('The webhook key is required. If this is an old export, please add a webhook key to this webhook')),
                             webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
-                            webhookVerb: WebhookSchema.webhookVerb.required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
-                            webhookPayloadType: WebhookSchema.webhookPayloadType.required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
+                            webhookVerb: WebhookSchema.webhookVerb.valid('GET', 'PUT', 'POST', 'DELETE', 'PATCH').required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
+                            webhookPayloadType: WebhookSchema.webhookPayloadType.valid('None', 'JSON', 'XML').required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
                             webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
                             webhookHeaders: Joi.array().items({
                                 key: Joi.string(),
@@ -1058,44 +973,132 @@ class AgentValidate {
                             webhookUser: WebhookSchema.webhookUser,
                             webhookPassword: WebhookSchema.webhookPassword,
                             postScript: WebhookSchema.postScript,
-                            creationDate: ActionSchema.creationDate,
-                            modificationDate: ActionSchema.modificationDate
+                            creationDate: WebhookSchema.creationDate,
+                            modificationDate: WebhookSchema.modificationDate
                         },
-                        responses: Joi.array().items({
-                            richResponses: Joi.array().items({
-                                type: ActionResponseRichResponseSchema.type,
-                                data: ActionResponseRichResponseSchema.data
-                            }).allow([]),
-                            textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
-                            actions: ActionResponseSchema.actions,
-                            disableTextResponse: ActionResponseSchema.disableTextResponse
-                        }).required().min(1).error(new Error('Please specify at least one response.')),
-                        slots: Joi.array().items({
-                            slotName: SlotSchema.slotName.required(),
-                            uiColor: SlotSchema.uiColor.required(),
-                            keywordId: SlotSchema.keywordId,
-                            keyword: SlotSchema.keyword,
-                            isList: SlotSchema.isList.required(),
-                            isRequired: SlotSchema.isRequired.required(),
-                            quickResponses: SlotSchema.quickResponses,
-                            promptCountLimit: SlotSchema.promptCountLimit,
-                            textPrompts: SlotSchema.textPrompts,
-                            remainingLife: SlotSchema.remainingLife,
-                            freeText: SlotSchema.freeText
+                        settings: Joi.object(),
+                        keywords: Joi.array().items({
+                            keywordName: KeywordSchema.keywordName.required(),
+                            uiColor: KeywordSchema.uiColor,
+                            type: KeywordSchema.type.allow('').allow(null).valid('learned', 'regex').optional().default('learned').error(new Error('Please provide valid keyword type among learned and regex')),
+                            regex: KeywordSchema.regex.allow('').allow(null),
+                            examples: Joi.array().items({
+                                value: KeywordExampledSchema.value.required(),
+                                synonyms: KeywordExampledSchema.synonyms
+                            }).required(),
+                            modifiers: Joi.array().items({
+                                modifierName: ModifierSchema.modifierName.required(),
+                                action: ModifierSchema.action.required(),
+                                valueSource: ModifierSchema.valueSource.required(),
+                                staticValue: ModifierSchema.staticValue,
+                                sayings: Joi.array().items({
+                                    userSays: ModifierSayingSchema.userSays.required(),
+                                    keywords: Joi.array().items({
+                                        start: SayingKeywordSchema.start.required(),
+                                        end: SayingKeywordSchema.end.required(),
+                                        value: SayingKeywordSchema.value.required(),
+                                        keyword: SayingKeywordSchema.keyword.required(),
+                                        keywordId: SayingKeywordSchema.keywordId,
+                                        extractor: SayingKeywordSchema.extractor
+                                    })
+                                })
+                            }),
+                            creationDate: KeywordSchema.creationDate,
+                            modificationDate: KeywordSchema.modificationDate
                         }),
+                        categories: Joi.array().items({
+                            categoryName: CategorySchema.categoryName.required(),
+                            enabled: CategorySchema.enabled.required(),
+                            actionThreshold: CategorySchema.actionThreshold.required(),
+                            model: CategorySchema.model,
+                            status: CategorySchema.status,
+                            lastTraining: CategorySchema.lastTraining,
+                            extraTrainingData: CategorySchema.extraTrainingData,
+                            parameters: Joi.object(),
+                            sayings: Joi.array().items({
+                                userSays: SayingSchema.userSays.required().error(new Error('The user says text is required')),
+                                actions: SayingSchema.actions.allow([]),
+                                keywords: Joi.array().items({
+                                    keywordId: KeywordSchema.id.required().error(new Error('You must specify the id of the keyword that you are tagging in the examples')),
+                                    value: SayingKeywordSchema.value.required().error(new Error('You must specify the value that this keyword represents in the user saying')),
+                                    keyword: SayingKeywordSchema.keyword.required().error(new Error('You must specify the keyword name')),
+                                    start: SayingKeywordSchema.start.required().error(new Error('The start value should be an integer and it is required.')),
+                                    end: SayingKeywordSchema.end.required().error(new Error('The end value should be an integer and it is required.')),
+                                    extractor: SayingKeywordSchema.extractor
+                                }).required().allow([]),
+                                creationDate: KeywordSchema.creationDate,
+                                modificationDate: KeywordSchema.modificationDate,
+                                starred: SayingSchema.starred,
+                                lastFailedTestingTimestamp: SayingSchema.lastFailedTestingTimestamp,
+                                lastFailedTestingKeywords: SayingSchema.lastFailedTestingKeywords,
+                                lastFailedTestingKeywordsTimeStamp: SayingSchema.lastFailedTestingKeywordsTimeStamp,
+                                lastFailedTestingActions: SayingSchema.lastFailedTestingActions,
+                                lastFailedTestingActionsTimeStamp: SayingSchema.lastFailedTestingActionsTimeStamp,
+                            }),
+                            creationDate: KeywordSchema.creationDate,
+                            modificationDate: KeywordSchema.modificationDate
+                        }),
+                        accessPolicies: Joi.object(),
+                        actions: Joi.array().items({
+                            actionName: ActionSchema.actionName.required().error(new Error('The action name is required')),
+                            useWebhook: ActionSchema.useWebhook.required().error(new Error('Please specify if this action use a webhook for fullfilment.')),
+                            usePostFormat: ActionSchema.usePostFormat.required().error(new Error('Please specify if this action use a post format for fullfilment.')),
+                            postFormat: {
+                                postFormatPayload: PostFormatSchema.postFormatPayload.allow('').required()
+                            },
+                            webhook: {
+                                webhookKey: WebhookSchema.webhookKey.required().error(new Error('The webhook key is required. If this is an old export, please add a webhook key to this webhook')),
+                                webhookUrl: WebhookSchema.webhookUrl.required().error(new Error('The url is required. Please specify an url for the webhook.')),
+                                webhookVerb: WebhookSchema.webhookVerb.required().error(new Error('Please provide a valid verb for the webhook. Supported verbs are: GET, PUT, POST, DELETE, PATCH.')),
+                                webhookPayloadType: WebhookSchema.webhookPayloadType.required().error(new Error('Please provide a valid payload type for the webhook. Supported types are: None, JSON, XML.')),
+                                webhookPayload: WebhookSchema.webhookPayload.allow('').optional(),
+                                webhookHeaders: Joi.array().items({
+                                    key: Joi.string(),
+                                    value: Joi.string()
+                                }),
+                                webhookUser: WebhookSchema.webhookUser,
+                                webhookPassword: WebhookSchema.webhookPassword,
+                                postScript: WebhookSchema.postScript,
+                                creationDate: ActionSchema.creationDate,
+                                modificationDate: ActionSchema.modificationDate
+                            },
+                            responses: Joi.array().items({
+                                richResponses: Joi.array().items({
+                                    type: ActionResponseRichResponseSchema.type,
+                                    data: ActionResponseRichResponseSchema.data
+                                }).allow([]),
+                                textResponse: ActionResponseSchema.textResponse.required().error(new Error('Please specify the text response for each response')),
+                                actions: ActionResponseSchema.actions,
+                                disableTextResponse: ActionResponseSchema.disableTextResponse
+                            }).required().min(1).error(new Error('Please specify at least one response.')),
+                            slots: Joi.array().items({
+                                slotName: SlotSchema.slotName.required(),
+                                uiColor: SlotSchema.uiColor.required(),
+                                keywordId: SlotSchema.keywordId,
+                                keyword: SlotSchema.keyword,
+                                isList: SlotSchema.isList.required(),
+                                isRequired: SlotSchema.isRequired.required(),
+                                quickResponses: SlotSchema.quickResponses,
+                                promptCountLimit: SlotSchema.promptCountLimit,
+                                textPrompts: SlotSchema.textPrompts,
+                                remainingLife: SlotSchema.remainingLife,
+                                freeText: SlotSchema.freeText
+                            }),
+                            creationDate: KeywordSchema.creationDate,
+                            modificationDate: KeywordSchema.modificationDate
+                        }),
+                        isOriginalAgentVersion: AgentSchema.isOriginalAgentVersion,
+                        originalAgentVersionId: AgentSchema.originalAgentVersionId,
+                        originalAgentVersionName: AgentSchema.originalAgentVersionName,
+                        agentVersionNotes: AgentSchema.agentVersionNotes.allow(''),
+                        loadedAgentVersionName: AgentSchema.loadedAgentVersionName,
+                        currentAgentVersionCounter: AgentSchema.currentAgentVersionCounter,
                         creationDate: KeywordSchema.creationDate,
-                        modificationDate: KeywordSchema.modificationDate
-                    }),
-                    isOriginalAgentVersion: AgentSchema.isOriginalAgentVersion,
-                    originalAgentVersionId: AgentSchema.originalAgentVersionId,
-                    originalAgentVersionName: AgentSchema.originalAgentVersionName,
-                    agentVersionNotes: AgentSchema.agentVersionNotes.allow(''),
-                    loadedAgentVersionName: AgentSchema.loadedAgentVersionName,
-                    currentAgentVersionCounter: AgentSchema.currentAgentVersionCounter,
-                    creationDate: KeywordSchema.creationDate,
-                    modificationDate: KeywordSchema.modificationDate,
-                    accessPolicies: AgentSchema.accessPolicies,
-                    isVersionImport: Joi.boolean(),
+                        modificationDate: KeywordSchema.modificationDate,
+                        accessPolicies: AgentSchema.accessPolicies,
+                        isVersionImport: Joi.boolean()
+                    },
+                    destinationAgentId: Joi.number()
                 };
             })()
         };

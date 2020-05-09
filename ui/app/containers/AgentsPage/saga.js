@@ -70,13 +70,13 @@ export function* getAgentExport(payload) {
 }
 
 export function* postAgentImport(payload) {
-  const { api, agent } = payload;
+  const { api, agent, destinationAgentId } = payload;
   try {
-    const response = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), agent);
-    yield put(importAgentSuccess(response.obj));
+    const response = yield call(api.post, toAPIPath([ROUTE_AGENT, ROUTE_IMPORT]), { agent, destinationAgentId });
+    yield put(importAgentSuccess(response.obj, destinationAgentId));
     yield call(getAgents, { api });
   } catch (err) {
-    yield put(importAgentError(err));
+    yield put(importAgentError(err, destinationAgentId));
   }
 }
 

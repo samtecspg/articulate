@@ -10,7 +10,7 @@ import AccessControl from '../../components/AccessControl';
 import AC from '../../utils/accessControl';
 import injectSaga from '../../utils/injectSaga';
 import { exportAgent, importAgent, loadAgents, loadChannels, loadConnections, toggleConversationBar } from '../App/actions';
-import { makeSelectAgentExport, makeSelectAgents, makeSelectChannels, makeSelectConnections, makeSelectCurrentUser } from '../App/selectors';
+import { makeSelectAgentExport, makeSelectAgents, makeSelectChannels, makeSelectConnections, makeSelectCurrentUser, makeSelectImportAgentErrorId, makeSelectImportAgentSuccessId } from '../App/selectors';
 import AgentsCards from './Components/AgentsCards';
 import ConnectionsCards from './Components/ConnectionsCards';
 import GetStarted from './Components/GetStarted';
@@ -43,7 +43,7 @@ export class AgentsPage extends React.PureComponent {
   }
 
   render() {
-    const { agents, connections, channels, currentUser } = this.props;
+    const { agents, connections, channels, currentUser, importAgentErrorId, importAgentSuccessId } = this.props;
     const isAgentReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
     const isConnectionReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.CONNECTION_WRITE] });
     return (
@@ -66,6 +66,8 @@ export class AgentsPage extends React.PureComponent {
                 agentExport={this.props.agentExport}
                 onGoToUrl={this.props.onGoToUrl}
                 onToggleConversationBar={this.props.onToggleConversationBar}
+                importAgentErrorId={importAgentErrorId}
+                importAgentSuccessId={importAgentSuccessId}
               />
 
               <AccessControl
@@ -119,6 +121,8 @@ const mapStateToProps = createStructuredSelector({
   channels: makeSelectChannels(),
   agentExport: makeSelectAgentExport(),
   currentUser: makeSelectCurrentUser(),
+  importAgentErrorId: makeSelectImportAgentErrorId(),
+  importAgentSuccessId: makeSelectImportAgentSuccessId(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -138,8 +142,8 @@ function mapDispatchToProps(dispatch) {
     onExportAgent: id => {
       dispatch(exportAgent(id));
     },
-    onImportAgent: agent => {
-      dispatch(importAgent(agent));
+    onImportAgent: (agent, destinationAgentId) => {
+      dispatch(importAgent(agent, destinationAgentId));
     },
     onToggleConversationBar: value => {
       dispatch(toggleConversationBar(value));
