@@ -123,6 +123,7 @@ export const PARAM_GROUP_NAME = 'groupName';
 export const PARAM_VALIDATE = 'validate';
 export const PARAM_RULES = 'rules';
 export const PARAM_IS_ADMIN = 'isAdmin';
+export const PARAM_SKIP_LOGIN = 'skipLogin';
 
 export const PARAM_ACTION_ID = ROUTE_ACTION + PARAMS_POSTFIX_ID;
 export const PARAM_AGENT_ID = ROUTE_AGENT + PARAMS_POSTFIX_ID;
@@ -203,6 +204,7 @@ export const GENERATE_SLOTS_QUICK_RESPONSES_MAX = 'generateSlotsQuickResponsesMa
 export const GENERATE_ACTIONS_QUICK_RESPONSES = 'generateActionsQuickResponses';
 export const GENERATE_ACTIONS_QUICK_RESPONSES_MAX = 'generateActionsQuickResponsesMax';
 export const CONFIG_SETTINGS_ENABLE_AGENT_VERSIONS = 'enableAgentVersions'
+export const CONFIG_SETTINGS_AUTH_PROVIDERS = 'authProviders'
 
 export const CONFIG_KEYWORD_TYPE_LEARNED = 'learned';
 export const CONFIG_KEYWORD_TYPE_REGEX = 'regex';

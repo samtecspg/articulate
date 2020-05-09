@@ -68,11 +68,10 @@ export function* getAccessPolicyGroups(payload) {
   }
 }
 
-export function* postAccessPolicyGroups(payload) {
-  const { api, groupName, rules } = payload;
+export function* putAccessPolicyGroups(payload) {
+  const { api, accessPolicyGroups } = payload;
   try {
-    const response = yield call(api.post, toAPIPath([ROUTE_ACCESS_CONTROL, ROUTE_GROUP, groupName]), rules);
-    yield put(updateAccessPolicyGroupSuccess(response));
+    yield call(api.put, toAPIPath([ROUTE_ACCESS_CONTROL, ROUTE_BULK]), accessPolicyGroups);
     yield call(getAccessPolicyGroups, { api });
   } catch (err) {
     yield put(updateAccessPolicyGroupError(err));
@@ -93,7 +92,7 @@ export function* deleteAccessPolicyGroup(payload) {
 export default function* rootSaga() {
   yield takeLatest(LOAD_SETTINGS, getSettings);
   yield takeLatest(LOAD_ACCESS_CONTROL, getAccessPolicyGroups);
-  yield takeLatest(UPDATE_ACCESS_CONTROL, postAccessPolicyGroups);
+  yield takeLatest(UPDATE_ACCESS_CONTROL, putAccessPolicyGroups);
   yield takeLatest(UPDATE_SETTINGS, putSettings);
   yield takeLatest(UPDATE_SETTING, putSetting);
   yield takeLatest(REMOVE_ACCESS_CONTROL, deleteAccessPolicyGroup);

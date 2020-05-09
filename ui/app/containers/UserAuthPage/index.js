@@ -86,14 +86,14 @@ export class UserAuthPage extends React.PureComponent {
   }
 
   render() {
-    const { classes, onGoToUrl, error, isLoading } = this.props;
+    const { classes, onGoToUrl, error, isLoading, settings } = this.props;
     const { selectedTab, username, password, name, lastName, ref, errorState } = this.state;
     return (
       <Grid container justify="center">
         <Paper square className={classes.root}>
           <Tabs value={selectedTab} indicatorColor="primary" textColor="secondary" onChange={this.handleTabChange} centered fullWidth>
             <Tab value={TAB_LOGIN} label="Login" />
-            {this.props.settings.allowNewUsersSignUps ? <Tab value={TAB_SIGN_UP} label="Sign Up" /> : null}
+            {settings.allowNewUsersSignUps ? <Tab value={TAB_SIGN_UP} label="Sign Up" /> : null}
           </Tabs>
           {selectedTab === TAB_LOGIN && (
             <LoginForm
@@ -104,9 +104,10 @@ export class UserAuthPage extends React.PureComponent {
               password={password}
               error={error}
               isLoading={isLoading}
+              authProviders={settings.authProviders}
             />
           )}
-          {selectedTab === TAB_SIGN_UP && this.props.settings.allowNewUsersSignUps && (
+          {selectedTab === TAB_SIGN_UP && settings.allowNewUsersSignUps && (
             <SignUpForm
               onSignUp={this.onSignUp}
               onInputChange={this.onInputChange}
@@ -118,6 +119,7 @@ export class UserAuthPage extends React.PureComponent {
               onGoToUrl={onGoToUrl}
               error={error}
               isLoading={isLoading}
+              authProviders={settings.authProviders}
             />
           )}
         </Paper>

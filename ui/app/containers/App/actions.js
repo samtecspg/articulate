@@ -359,7 +359,8 @@ import {
   CHANGE_REVIEW_PAGE_LOGS_NUMBER_OF_FILTERS_APPLIED,
   RESET_DIALOGUE_PAGE_FILTERS,
   RESET_REVIEW_PAGE_FILTERS,
-  RESET_REVIEW_PAGE_LOGS_FILTERS
+  RESET_REVIEW_PAGE_LOGS_FILTERS,
+  CHANGE_ACCESS_CONTROL_DATA,
 } from './constants';
 
 /*
@@ -2742,12 +2743,18 @@ export function loadAccessPolicyGroupsSuccess(accessPolicyGroups) {
   };
 }
 
-export function updateAccessPolicyGroup({ groupName, rules }) {
+export function changeAccessPolicyGroup({ groupName, rules }) {
+  return {
+    type: CHANGE_ACCESS_CONTROL_DATA,
+    groupName,
+    rules,
+  };
+}
+export function updateAccessPolicyGroup({ accessPolicyGroups }) {
   return {
     type: UPDATE_ACCESS_CONTROL,
     apiCall: true,
-    groupName,
-    rules,
+    accessPolicyGroups,
   };
 }
 

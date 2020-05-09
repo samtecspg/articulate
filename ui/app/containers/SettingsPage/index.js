@@ -1,7 +1,4 @@
-import {
-  CircularProgress,
-  Grid,
-} from '@material-ui/core';
+import { CircularProgress, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -15,6 +12,7 @@ import injectSaga from '../../utils/injectSaga';
 import {
   addAccessPolicyGroup,
   addFallbackResponse,
+  changeAccessPolicyGroup,
   changeSettingsData,
   deleteFallbackResponse,
   loadAccessPolicyGroups,
@@ -39,7 +37,7 @@ import ActionButtons from './Components/ActionButtons';
 import Form from './Components/Form';
 import messages from './messages';
 import saga from './saga';
-
+import _ from 'lodash';
 /* eslint-disable react/prefer-stateless-function */
 export class SettingsPage extends React.PureComponent {
   constructor(props) {
@@ -113,13 +111,14 @@ export class SettingsPage extends React.PureComponent {
       newErrorState.defaultUISessionId = false;
     }
 
-    if (!this.props.settings.rasaURLs
-      || this.props.settings.rasaURLs.length === 0
-      || this.props.settings.rasaURLs.indexOf('') !== -1
-      || this.props.settings.rasaURLs.some((item) => {
-        return this.props.settings.rasaURLs.indexOf(item)
-          !== this.props.settings.rasaURLs.lastIndexOf(item);
-      })) {
+    if (
+      !this.props.settings.rasaURLs ||
+      this.props.settings.rasaURLs.length === 0 ||
+      this.props.settings.rasaURLs.indexOf('') !== -1 ||
+      this.props.settings.rasaURLs.some(item => {
+        return this.props.settings.rasaURLs.indexOf(item) !== this.props.settings.rasaURLs.lastIndexOf(item);
+      })
+    ) {
       errors = true;
       newErrorState.rasaURLs = true;
     } else {
@@ -133,10 +132,7 @@ export class SettingsPage extends React.PureComponent {
       newErrorState.rasaConcurrentRequests = false;
     }
 
-    if (
-      !this.props.settings.ducklingURL ||
-      this.props.settings.ducklingURL === ''
-    ) {
+    if (!this.props.settings.ducklingURL || this.props.settings.ducklingURL === '') {
       errors = true;
       newErrorState.ducklingURL = true;
     } else {
@@ -272,9 +268,11 @@ export class SettingsPage extends React.PureComponent {
       this.setState({
         formError: false,
         errorState: { ...newErrorState },
-        exitAfterSubmit: exit
+        exitAfterSubmit: exit,
       });
       this.props.onSaveChanges();
+      const accessPolicyGroups = _.map(this.props.accessPolicyGroups, group => _.pick(group, ['id', 'name', 'rules']));
+      this.props.onUpdateAccessPolicyGroup({ accessPolicyGroups });
     } else {
       this.setState({
         formError: true,
@@ -299,7 +297,9 @@ export class SettingsPage extends React.PureComponent {
           inlineElement={
             <ActionButtons
               fowrmError={this.state.formError}
-              onFinishAction={() => { this.submit(false); }}
+              onFinishAction={() => {
+                this.submit(false);
+              }}
               touched={this.props.settingsTouched}
               loading={this.props.settingsLoading}
               success={this.props.settingsSuccess}
@@ -322,7 +322,7 @@ export class SettingsPage extends React.PureComponent {
           onDeleteFallbackResponse={this.props.onDeleteFallbackResponse}
           errorState={this.state.errorState}
           accessPolicyGroups={this.props.accessPolicyGroups}
-          onUpdateAccessPolicyGroup={this.props.onUpdateAccessPolicyGroup}
+          onUpdateAccessPolicyGroup={this.props.onChangeAccessPolicyGroup}
           onAddAccessPolicyGroup={this.props.onAddAccessPolicyGroup}
           newAccessPolicyGroupName={this.state.newAccessPolicyGroupName}
           onUpdateNewAccessPolicyGroupName={this.onUpdateNewAccessPolicyGroupName}
@@ -330,8 +330,8 @@ export class SettingsPage extends React.PureComponent {
         />
       </Grid>
     ) : (
-        <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
-      );
+      <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
+    );
   }
 }
 
@@ -347,6 +347,7 @@ SettingsPage.propTypes = {
   onLoadSettings: PropTypes.func,
   onLoadAccessPolicyGroups: PropTypes.func,
   onUpdateAccessPolicyGroup: PropTypes.func,
+  onChangeAccessPolicyGroup: PropTypes.func,
   onAddAccessPolicyGroup: PropTypes.func,
   accessPolicyGroups: PropTypes.array,
   currentUser: PropTypes.object,
@@ -397,8 +398,11 @@ function mapDispatchToProps(dispatch) {
     onLoadAccessPolicyGroups: () => {
       dispatch(loadAccessPolicyGroups());
     },
-    onUpdateAccessPolicyGroup: ({ groupName, rules }) => {
-      dispatch(updateAccessPolicyGroup({ groupName, rules }));
+    onUpdateAccessPolicyGroup: ({ accessPolicyGroups }) => {
+      dispatch(updateAccessPolicyGroup({ accessPolicyGroups }));
+    },
+    onChangeAccessPolicyGroup: ({ groupName, rules }) => {
+      dispatch(changeAccessPolicyGroup({ groupName, rules }));
     },
     onAddAccessPolicyGroup: ({ groupName, rules }) => {
       dispatch(addAccessPolicyGroup({ groupName, rules }));
