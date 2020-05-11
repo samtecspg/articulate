@@ -52,7 +52,7 @@ const deleteRemainingAgent = async (server, agentName) => {
 const loadImportAgent = async (server) => {
     await server.inject({
         url: `/${ROUTE_AGENT}/import`,
-        payload: importAgent,
+        payload: { agent: importAgent },
         method: 'POST'
     });
     return await server.inject(`/${ROUTE_AGENT}/search/agentName/${importAgent.agentName}`);
@@ -747,7 +747,7 @@ describe('Agent', () => {
         importAgentCopy.agentName = '57f0a070-bcff-11e8-bd42-f7ad09e07ef5-copy'; //For uniqueness
         await server.inject({
             url: `/${ROUTE_AGENT}/import`,
-            payload: importAgentCopy,
+            payload: { agent: importAgentCopy },
             method: 'POST'
         });
         const response = await server.inject(`/${ROUTE_AGENT}/search/agentName/${importAgentCopy.agentName}`);

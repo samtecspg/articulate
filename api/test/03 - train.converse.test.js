@@ -42,7 +42,7 @@ describe('Agent', () => {
 
         await server.inject({
             url: `/${ROUTE_AGENT}/import`,
-            payload: importAgentConverse,
+            payload: { agent: importAgentConverse },
             method: 'POST'
         });
         const response = await server.inject(`/${ROUTE_AGENT}/search/agentName/${importAgentConverse.agentName}`);

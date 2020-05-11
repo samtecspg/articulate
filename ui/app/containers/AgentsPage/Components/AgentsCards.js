@@ -189,6 +189,10 @@ class AgentsCards extends React.Component {
     return emptyCards;
   }
 
+  onInputClick = (event) => {
+    event.target.value = ''
+  }
+
   render() {
     const { classes, agents, onImportAgent, isReadOnly } = this.props;
     return (
@@ -265,6 +269,7 @@ class AgentsCards extends React.Component {
                   <input
                     onChange={evt => {
                       const { files } = evt.target; // FileList object
+                      debugger;
                       const clickedImportAgentId = this.state.clickedImportAgentId;
                       for (let i = 0, f; (f = files[i]); i++) {
                         const reader = new FileReader();
@@ -287,6 +292,7 @@ class AgentsCards extends React.Component {
                     hidden
                     id="import_agent"
                     type="file"
+                    onClick={this.onInputClick}
                   />
                 </Grid>
               </Card>
@@ -331,7 +337,7 @@ class AgentsCards extends React.Component {
                 </CardContent>
                 <Grid container direction="row" justify="center" className={classes.exportFooter}>
                   <Grid item xs={6}>
-                    <label htmlFor="import_agent">
+                    <label htmlFor="import_agent1">
                       <Grid
                         style={{ padding: '15px', borderRight: '1px solid #979797' }}
                         container
@@ -342,18 +348,20 @@ class AgentsCards extends React.Component {
                             : (this.props.importAgentSuccessId === agent.id) ? importIconGraySuccess
                               : importIconGray}
                             style={{ cursor: 'pointer' }}
-                            onClick={() => { this.setState({ clickedImportAgentId: agent.id }) }} />
+                            onClick={() => { debugger; this.setState({ clickedImportAgentId: agent.id }) }} />
                         </Tooltip>
                       </Grid>
                     </label>
                     <input
                       onChange={evt => {
+                        debugger;
                         const { files } = evt.target; // FileList object
                         const clickedImportAgentId = this.state.clickedImportAgentId;
                         for (let i = 0, f; (f = files[i]); i++) {
                           const reader = new FileReader();
 
                           // Closure to capture the file information.
+                          debugger;
                           reader.onload = (function (theFile) {
                             return function (e) {
                               try {
@@ -369,8 +377,9 @@ class AgentsCards extends React.Component {
                       }}
                       accept="application/JSON"
                       hidden
-                      id="import_agent"
+                      id="import_agent1"
                       type="file"
+                      onClick={this.onInputClick}
                     />
                   </Grid>
                   <Grid item xs={6} style={{ cursor: 'default' }}>

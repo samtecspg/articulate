@@ -28,7 +28,7 @@ const deleteRemainingAgent = async (server, agentName) => {
 const loadImportAgent = async (server) => {
     await server.inject({
         url: `/${ROUTE_AGENT}/import`,
-        payload: importAgent,
+        payload: { agent: importAgent },
         method: 'POST'
     });
     return await server.inject(`/${ROUTE_AGENT}/search/agentName/${importAgent.agentName}`);
