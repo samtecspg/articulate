@@ -160,13 +160,13 @@ export class UsersPage extends React.PureComponent {
     const { classes } = this.props;
     return this.props.users && typeof this.props.totalUsers === 'number' ? (
       <Grid container>
-        <Grid style={{ paddingBottom: this.props.settings.allowNewUsersSignUps ? null : 20 }} className={classes.container} item xs={12}>
+        <Grid className={classes.container} item xs={12}>
           <Grid className={classes.titleContainer}>
             <Typography className={classes.title}>
               <FormattedMessage {...messages.title} />
             </Typography>
           </Grid>
-          {this.props.settings.allowNewUsersSignUps ? <ActionButtons onFinishAction={() => this.handleOpenSignUpDialog()} /> : null}
+          <ActionButtons onFinishAction={() => this.handleOpenSignUpDialog()} />
         </Grid>
         <Form
           users={this.props.users}

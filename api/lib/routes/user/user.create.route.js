@@ -1,6 +1,8 @@
 import Boom from 'boom';
+import _ from 'lodash';
 import {
     CONFIG_SETTINGS_ALLOW_NEW_USERS_SIGN_UPS,
+    DEFAULT_ADMIN_GROUP_NAME,
     ROUTE_USER_ACCOUNT
 } from '../../../util/constants';
 import { AUTH_ENABLED } from '../../../util/env';
@@ -22,7 +24,9 @@ module.exports = {
             const { userService, settingsService } = await request.services();
             try {
                 const allowNewUsersSignUps = await settingsService.findByName({ name: CONFIG_SETTINGS_ALLOW_NEW_USERS_SIGN_UPS });
-                if (allowNewUsersSignUps && allowNewUsersSignUps.value) {
+                const currentUser = await userService.findById({ id: _.get(request, 'auth.credentials.id', null), filterSensitiveData: true, includeAccessPolicies: true });
+                const isAdmin = currentUser.groups.indexOf(DEFAULT_ADMIN_GROUP_NAME) >= 0;
+                if (isAdmin || (allowNewUsersSignUps && allowNewUsersSignUps.value)) {
                     const { identity, skipLogin, ...rest } = request.payload;
                     const user = await userService.create({ data: rest, identity, filterSensitiveData: true });
                     if (AUTH_ENABLED && !skipLogin) {
