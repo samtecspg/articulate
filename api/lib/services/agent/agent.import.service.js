@@ -42,10 +42,13 @@ module.exports = async function ({ payload, destinationAgentId }) {
                 isVersionCreation
             });
         } else {
+            agent.loadedAgentVersionName = agent.agentName;
             if (isVersionImport) {
                 agent.agentName = originalAgentName;
             }
-            agent.loadedAgentVersionName = agent.agentName;
+            if (destinationAgentId && Number(destinationAgentId) !== -1) {
+                agent.originalAgentVersionId = Number(destinationAgentId);
+            }
             delete agent.versionNameAgentId;
             delete agent.currentAgentVersionCounter;
             AgentModel = await agentService.updateById({ id: isVersionImport ? agent.originalAgentVersionId : Number(destinationAgentId), data: agent, returnModel: true });

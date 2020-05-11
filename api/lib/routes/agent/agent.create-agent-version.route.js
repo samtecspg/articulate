@@ -1,6 +1,7 @@
 import Boom from 'boom';
 import {
     ACL_ACTION_WRITE,
+    ACL_ACTION_CONVERSE,
     MODEL_AGENT,
     P_HAPI_ABAC,
     P_HAPI_GBAC,
@@ -18,10 +19,12 @@ module.exports = {
     options: {
         plugins: {
             [P_HAPI_GBAC]: [
-                `${ROUTE_TO_MODEL[ROUTE_AGENT_VERSION]}:${ACL_ACTION_WRITE}`
+                `${ROUTE_TO_MODEL[ROUTE_AGENT]}:${ACL_ACTION_WRITE}`,
+                `${ROUTE_TO_MODEL[ROUTE_AGENT]}:${ACL_ACTION_CONVERSE}`
             ],
             [P_HAPI_ABAC]: [
-                `${MODEL_AGENT}:${ACL_ACTION_WRITE}`
+                `${MODEL_AGENT}:${ACL_ACTION_WRITE}`,
+                `${MODEL_AGENT}:${ACL_ACTION_CONVERSE}`
             ]
         }, tags: ['api'],
         validate: AgentValidator.createAgentVersion,

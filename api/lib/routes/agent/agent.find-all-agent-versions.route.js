@@ -15,7 +15,7 @@ module.exports = {
     options: {
         plugins: {
             [P_HAPI_GBAC]: [
-                `${ROUTE_TO_MODEL[ROUTE_AGENT_VERSION]}:${ACL_ACTION_READ}`
+                `${ROUTE_TO_MODEL[ROUTE_AGENT]}:${ACL_ACTION_READ}`
             ]
         },
         tags: ['api'],
