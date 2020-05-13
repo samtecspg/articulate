@@ -361,6 +361,9 @@ import {
   RESET_REVIEW_PAGE_FILTERS,
   RESET_REVIEW_PAGE_LOGS_FILTERS,
   CHANGE_ACCESS_CONTROL_DATA,
+  ADD_ACCESS_CONTROL_ERROR,
+  ADD_ACCESS_CONTROL,
+  ADD_ACCESS_CONTROL_SUCCESS,
 } from './constants';
 
 /*
@@ -2777,7 +2780,7 @@ export function updateAccessPolicyGroupSuccess(accessPolicyGroup) {
 
 export function addAccessPolicyGroup({ groupName, rules }) {
   return {
-    type: UPDATE_ACCESS_CONTROL,
+    type: ADD_ACCESS_CONTROL,
     apiCall: true,
     groupName,
     rules,
@@ -2786,14 +2789,14 @@ export function addAccessPolicyGroup({ groupName, rules }) {
 
 export function addAccessPolicyGroupError(error) {
   return {
-    type: UPDATE_ACCESS_CONTROL_ERROR,
+    type: ADD_ACCESS_CONTROL_ERROR,
     error,
   };
 }
 
 export function addAccessPolicyGroupSuccess() {
   return {
-    type: UPDATE_ACCESS_CONTROL_SUCCESS,
+    type: ADD_ACCESS_CONTROL_SUCCESS,
   };
 }
 

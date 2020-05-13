@@ -2,6 +2,8 @@ import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { ROUTE_ACCESS_CONTROL, ROUTE_BULK, ROUTE_GROUP, ROUTE_SETTINGS } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
 import {
+  addAccessPolicyGroupError,
+  addAccessPolicyGroupSuccess,
   changeLocale,
   loadAccessPolicyGroupsError,
   loadAccessPolicyGroupsSuccess,
@@ -10,16 +12,20 @@ import {
   removeAccessPolicyGroupError,
   removeAccessPolicyGroupSuccess,
   updateAccessPolicyGroupError,
-  updateAccessPolicyGroupSuccess,
   updateSettingError,
   updateSettingsError,
   updateSettingsSuccess,
   updateSettingSuccess,
-  addAccessPolicyGroup,
-  addAccessPolicyGroupError,
-  addAccessPolicyGroupSuccess,
 } from '../App/actions';
-import { LOAD_ACCESS_CONTROL, LOAD_SETTINGS, REMOVE_ACCESS_CONTROL, UPDATE_ACCESS_CONTROL, UPDATE_SETTING, UPDATE_SETTINGS } from '../App/constants';
+import {
+  ADD_ACCESS_CONTROL,
+  LOAD_ACCESS_CONTROL,
+  LOAD_SETTINGS,
+  REMOVE_ACCESS_CONTROL,
+  UPDATE_ACCESS_CONTROL,
+  UPDATE_SETTING,
+  UPDATE_SETTINGS,
+} from '../App/constants';
 import { makeSelectSettings } from '../App/selectors';
 
 export function* getSettings(payload) {
@@ -78,6 +84,17 @@ export function* putAccessPolicyGroups(payload) {
   }
 }
 
+export function* postAccessPolicyGroups(payload) {
+  const { api, groupName, rules } = payload;
+  try {
+    const response = yield call(api.post, toAPIPath([ROUTE_ACCESS_CONTROL, ROUTE_GROUP, groupName]), rules);
+    yield put(addAccessPolicyGroupSuccess(response));
+    yield call(getAccessPolicyGroups, { api });
+  } catch (err) {
+    yield put(addAccessPolicyGroupError(err));
+  }
+}
+
 export function* deleteAccessPolicyGroup(payload) {
   const { api, groupName } = payload;
   try {
@@ -93,6 +110,7 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_SETTINGS, getSettings);
   yield takeLatest(LOAD_ACCESS_CONTROL, getAccessPolicyGroups);
   yield takeLatest(UPDATE_ACCESS_CONTROL, putAccessPolicyGroups);
+  yield takeLatest(ADD_ACCESS_CONTROL, postAccessPolicyGroups);
   yield takeLatest(UPDATE_SETTINGS, putSettings);
   yield takeLatest(UPDATE_SETTING, putSetting);
   yield takeLatest(REMOVE_ACCESS_CONTROL, deleteAccessPolicyGroup);
