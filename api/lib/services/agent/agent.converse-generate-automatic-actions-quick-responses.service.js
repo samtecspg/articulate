@@ -187,12 +187,12 @@ const insertSlotsInSaying = async (
       finalSaying.slice(0, startIndex) + finalSaying.slice(endIndex);
     finalSaying =
       finalSaying.slice(0, startIndex) +
-      usedAvailableKeywordsSlots[i].value +
+      usedAvailableKeywordsSlots[i].original +
       finalSaying.slice(startIndex);
 
     var sizeDifference =
       currentPossibleSaying.keywords[i].value.length -
-      usedAvailableKeywordsSlots[i].value.length;
+      usedAvailableKeywordsSlots[i].original.length;
     currentOffset = currentOffset - sizeDifference;
   }
   return finalSaying;

@@ -362,7 +362,7 @@ export function* deleteAction(payload) {
       toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, id]),
     );
     yield put(deleteActionSuccess());
-    yield put(push(redirectUrl || `/agent/${agent.id}/dialogue?tab=sayings`));
+    yield put(push(redirectUrl || `/agent/${agent.id}/dialogue?tab=actions`));
   } catch (err) {
     const error = { ...err };
     yield put(deleteActionError(error.response.data.message));
