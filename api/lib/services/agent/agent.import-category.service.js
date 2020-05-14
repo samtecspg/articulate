@@ -25,13 +25,13 @@ module.exports = async function (
         const categoryToImport = Categories[categoryData.categoryName];
 
         if (categoryToImport) {
-            
+
             const AgentModel = await globalService.findById({ id, model: MODEL_AGENT, returnModel: true });
             const isValidCategory = await agentService.isModelUnique({
                 AgentModel,
                 model: MODEL_CATEGORY,
                 field: 'categoryName',
-                value: categoryData.categoryName
+                value: categoryToImport.info.name
             });
 
             if (isValidCategory) {
@@ -46,7 +46,7 @@ module.exports = async function (
                     });
                 }));
 
-                if (keywordsValidation.indexOf(false) === -1){
+                if (keywordsValidation.indexOf(false) === -1) {
 
                     const actionsValidation = await Promise.all(categoryToImport.actions.map(async (action) => {
 
@@ -57,9 +57,9 @@ module.exports = async function (
                             value: action.actionName
                         });
                     }));
-    
-                    if (actionsValidation.indexOf(false) === -1){
-    
+
+                    if (actionsValidation.indexOf(false) === -1) {
+
                         const keywordsDir = {};
                         await Promise.all(categoryToImport.keywords.map(async (keyword) => {
 
@@ -69,7 +69,7 @@ module.exports = async function (
                             });
                             keywordsDir[newKeyword.keywordName] = parseInt(newKeyword.id);
                         }));
-                        
+
                         await Promise.all(categoryToImport.actions.map(async (action) => {
 
                             const { postFormat, webhook, ...actionData } = action;
@@ -84,7 +84,7 @@ module.exports = async function (
                                 AgentModel,
                                 actionData
                             });
-                
+
                             if (action.usePostFormat) {
                                 await agentService.upsertPostFormatInAction({
                                     id: AgentModel.id,
@@ -92,7 +92,7 @@ module.exports = async function (
                                     postFormatData: postFormat
                                 });
                             }
-                
+
                             if (action.useWebhook) {
                                 await agentService.upsertWebhookInAction({
                                     id: AgentModel.id,
@@ -112,7 +112,7 @@ module.exports = async function (
                         await Promise.all(categoryToImport.sayings.map(async (saying) => {
 
                             saying.keywords.forEach((tempKeyword) => {
-                                
+
                                 tempKeyword.keywordId = tempKeyword.keyword.indexOf(KEYWORD_PREFIX_SYS) === 0 ? 0 : keywordsDir[tempKeyword.keyword];
                                 tempKeyword.keywordId = keywordsDir[tempKeyword.keyword];
                             });
@@ -132,15 +132,15 @@ module.exports = async function (
 
                         return returnModel ? CategoryModel : CategoryModel.allProperties();
                     }
-    
+
                     const existingActions = categoryToImport.actions.filter((action, index) => {
-    
+
                         return !actionsValidation[index];
                     }).map((existingAction) => {
-    
+
                         return existingAction.actionName;
                     });
-    
+
                     return Promise.reject(GlobalDefaultError({
                         message: `The ${MODEL_AGENT} already has ${MODEL_ACTION} with the name(s) = ${existingActions.join(', ')}.`,
                         statusCode: 404
@@ -159,10 +159,10 @@ module.exports = async function (
                     message: `The ${MODEL_AGENT} already has a ${MODEL_KEYWORD}(s) with the name(s) = ${existingKeywords.join(', ')}.`,
                     statusCode: 404
                 }));
-            }    
+            }
 
             return Promise.reject(GlobalDefaultError({
-                message: `The ${MODEL_AGENT} already has a ${MODEL_CATEGORY} with the name= "${categoryData.categoryName}".`,
+                message: `The ${MODEL_AGENT} already has a ${MODEL_CATEGORY} with the name= "${categoryToImport.info.name}".`,
                 statusCode: 404
             }));
         }

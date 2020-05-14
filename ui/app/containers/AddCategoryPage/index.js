@@ -24,9 +24,10 @@ import {
   makeSelectAgent,
   makeSelectLoadingImportCategory,
   makeSelectPrebuiltCategories,
+  makeSelectErrorImportCategory,
 } from '../App/selectors';
 
-import { loadPrebuiltCategories, importCategory } from '../App/actions';
+import { loadPrebuiltCategories, importCategory, toggleChatButton, loadPrebuiltCategoriesError } from '../App/actions';
 
 import ActionButtons from './Components/ActionButtons';
 
@@ -49,6 +50,7 @@ export class AddCategoryPage extends React.Component {
 
   initForm() {
     this.props.onLoadPrebuiltCategories();
+    this.props.onShowChatButton(true);
   }
 
   componentWillMount() {
@@ -78,7 +80,7 @@ export class AddCategoryPage extends React.Component {
               goBack={() => {
                 this.props.onGoToUrl(
                   `/agent/${this.props.agent.id}/dialogue?tab=sayings&filter=${
-                    this.state.filter
+                  this.state.filter
                   }&page=${this.state.page}`,
                 );
               }}
@@ -91,13 +93,15 @@ export class AddCategoryPage extends React.Component {
           onGoToUrl={this.props.onGoToUrl}
           importCategory={this.props.onImportCategory}
           loading={this.props.loading}
+          error={this.props.error}
+          onSetError={this.props.onImportCategoryError}
         />
       </Grid>
     ) : (
-      <CircularProgress
-        style={{ position: 'absolute', top: '40%', left: '49%' }}
-      />
-    );
+        <CircularProgress
+          style={{ position: 'absolute', top: '40%', left: '49%' }}
+        />
+      );
   }
 }
 
@@ -112,6 +116,7 @@ const mapStateToProps = createStructuredSelector({
   agent: makeSelectAgent(),
   loading: makeSelectLoadingImportCategory(),
   prebuiltCategories: makeSelectPrebuiltCategories(),
+  error: makeSelectErrorImportCategory(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -125,6 +130,12 @@ function mapDispatchToProps(dispatch) {
     onImportCategory: category => {
       dispatch(importCategory(category));
     },
+    onShowChatButton: value => {
+      dispatch(toggleChatButton(value));
+    },
+    onImportCategoryError: value => {
+      dispatch(loadPrebuiltCategoriesError(value));
+    }
   };
 }
 

@@ -54,6 +54,12 @@ const makeSelectLoadingImportCategory = () =>
     globalState => globalState.loadingImportCategory,
   );
 
+const makeSelectErrorImportCategory = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.errorImportCategory,
+  );
+
 const makeSelectLoadingKeywordExamplesUpdate = () =>
   createSelector(
     selectGlobal,
@@ -164,10 +170,10 @@ const makeSelectAgentVersionsSorted = versions => {
   var temp =
     tempArray && tempArray.length
       ? tempArray
-          .sort((a, b) => (Number(b.creationDate) > Number(a.creationDate) ? 1 : -1))
-          .filter(version => {
-            return !version.isOriginalAgentVersion;
-          })
+        .sort((a, b) => (Number(b.creationDate) > Number(a.creationDate) ? 1 : -1))
+        .filter(version => {
+          return !version.isOriginalAgentVersion;
+        })
       : [];
   return temp;
 };
@@ -741,6 +747,7 @@ export {
   makeSelectLoading,
   makeSelectLoadingAgentVersion,
   makeSelectLoadingImportCategory,
+  makeSelectErrorImportCategory,
   makeSelectError,
   makeSelectSuccess,
   makeSelectConversationBarOpen,

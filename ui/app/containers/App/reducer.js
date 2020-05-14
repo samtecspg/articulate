@@ -323,7 +323,7 @@ import {
   UPDATE_SETTINGS_TOUCHED,
   UPDATE_USER,
   UPDATE_USER_ERROR,
-  UPDATE_USER_SUCCESS,
+  UPDATE_USER_SUCCESS
 } from './constants';
 
 const happyEmojies = [
@@ -729,6 +729,7 @@ const initialState = Immutable({
   settingsTouched: false,
   loading: false,
   loadingImportCategory: false,
+  errorImportCategory: false,
   loadingKeywordExamplesUpdate: false,
   loadingAgentVersion: false,
   error: false,
@@ -1592,12 +1593,23 @@ function appReducer(state = initialState, action) {
         .set('prebuiltCategories', {})
         .set('loading', true)
         .set('loadingImportCategory', false)
-        .set('error', false);
+        .set('errorImportCategory', false);
     case LOAD_PREBUILT_CATEGORIES_ERROR:
+      if (action.error) {
+        state = state.update('notifications', notifications =>
+          notifications.concat({
+            template: 'errorMessageTemplate',
+            error: action.error.response.data.message,
+            emoji: errorEmojies[Math.floor(Math.random() * errorEmojies.length)],
+            type: 'error',
+          }),
+        );
+      }
       return state
-        .set('prebuiltCategories', {})
+        //.set('prebuiltCategories', {})
+        .set('loadingImportCategory', false)
         .set('loading', false)
-        .set('error', action.error);
+        .set('errorImportCategory', action.error);
     case LOAD_PREBUILT_CATEGORIES_SUCCESS:
       return state
         .set('prebuiltCategories', action.prebuiltCategories)

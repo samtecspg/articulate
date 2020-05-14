@@ -127,6 +127,7 @@ class CategoryDataForm extends React.Component {
                 category={this.props.prebuiltCategories[prebuiltCategory]}
                 agentId={this.props.agentId}
                 onClick={() => {
+                  this.props.onSetError(false);
                   this.setState({
                     openCategoryModal: true,
                     selectedCategory: prebuiltCategory,
@@ -138,7 +139,7 @@ class CategoryDataForm extends React.Component {
           {this.fillEmptyCards()}
         </Grid>
         <Modal
-          open={this.state.openCategoryModal}
+          open={this.state.openCategoryModal && !this.props.error}
           onClose={() => {
             this.setState({
               openCategoryModal: false,
@@ -154,34 +155,34 @@ class CategoryDataForm extends React.Component {
             <Grid item xs={12} container className={classes.modalHeader}>
               <Grid className={classes.modalCategoryNameContainer} item xs={12}>
                 <Typography className={classes.modalCategoryName}>
-                  {this.state.selectedCategory
+                  {this.state.selectedCategory && this.props.prebuiltCategories[this.state.selectedCategory]
                     ? this.props.prebuiltCategories[this.state.selectedCategory]
-                        .name
+                      .name
                     : null}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
                 <Typography className={classes.modalCategoryDescription}>
-                  {this.state.selectedCategory
+                  {this.state.selectedCategory && this.props.prebuiltCategories[this.state.selectedCategory]
                     ? this.props.prebuiltCategories[this.state.selectedCategory]
-                        .description
+                      .description
                     : null}
                 </Typography>
               </Grid>
             </Grid>
             <Grid item xs={12} container className={classes.modalContent}>
-              {this.state.selectedCategory
+              {this.state.selectedCategory && this.props.prebuiltCategories[this.state.selectedCategory]
                 ? this.props.prebuiltCategories[
-                    this.state.selectedCategory
-                  ].samples.map((sample, index) => (
-                    <Typography
-                      className={classes.modalContentSample}
-                      variant="body1"
-                      key={`sample_${index}`}
-                    >
-                      {`"${sample}"`}
-                    </Typography>
-                  ))
+                  this.state.selectedCategory
+                ].samples.map((sample, index) => (
+                  <Typography
+                    className={classes.modalContentSample}
+                    variant="body1"
+                    key={`sample_${index}`}
+                  >
+                    {`"${sample}"`}
+                  </Typography>
+                ))
                 : null}
             </Grid>
             <Grid item xs={12} container className={classes.modalFooter}>

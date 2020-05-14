@@ -180,6 +180,8 @@ class Form extends React.Component {
             onGoToUrl={this.props.onGoToUrl}
             importCategory={this.props.importCategory}
             loading={this.props.loading}
+            error={this.props.error}
+            onSetError={this.props.onSetError}
           />
         </Grid>
       </Grid>
@@ -194,7 +196,7 @@ Form.propTypes = {
   agentId: PropTypes.string,
   onGoToUrl: PropTypes.func,
   importCategory: PropTypes.func,
-  loading: PropTypes.bool,
+  loading: PropTypes.bool
 };
 
 export default injectIntl(withStyles(styles)(Form));

@@ -269,7 +269,6 @@ class AgentsCards extends React.Component {
                   <input
                     onChange={evt => {
                       const { files } = evt.target; // FileList object
-                      debugger;
                       const clickedImportAgentId = this.state.clickedImportAgentId;
                       for (let i = 0, f; (f = files[i]); i++) {
                         const reader = new FileReader();
@@ -348,20 +347,18 @@ class AgentsCards extends React.Component {
                             : (this.props.importAgentSuccessId === agent.id) ? importIconGraySuccess
                               : importIconGray}
                             style={{ cursor: 'pointer' }}
-                            onClick={() => { debugger; this.setState({ clickedImportAgentId: agent.id }) }} />
+                            onClick={() => { this.setState({ clickedImportAgentId: agent.id }) }} />
                         </Tooltip>
                       </Grid>
                     </label>
                     <input
                       onChange={evt => {
-                        debugger;
                         const { files } = evt.target; // FileList object
                         const clickedImportAgentId = this.state.clickedImportAgentId;
                         for (let i = 0, f; (f = files[i]); i++) {
                           const reader = new FileReader();
 
                           // Closure to capture the file information.
-                          debugger;
                           reader.onload = (function (theFile) {
                             return function (e) {
                               try {
