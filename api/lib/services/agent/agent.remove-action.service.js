@@ -17,8 +17,11 @@ module.exports = async function ({ id, actionId }) {
         // Validate action belongs to agent
         const ActionModel = await globalService.findInModelPath({ modelPath, returnModel: true });
         const AgentModel = await redis.factory(MODEL_AGENT, id);
-        if (ActionModel.data.property('actionName') === AgentModel.property('fallbackAction')){
+        if (ActionModel.data.property('actionName') === AgentModel.property('fallbackAction')) {
             return Promise.reject(GlobalDefaultErrorHandler({ statusCode: 400, message: 'You can\'t delete this action as it is being used as the fallback action of this agent' }));
+        }
+        if (ActionModel.data.property('actionName') === AgentModel.property('welcomeAction')) {
+            return Promise.reject(GlobalDefaultErrorHandler({ statusCode: 400, message: 'You can\'t delete this action as it is being used as the welcome action of this agent' }));
         }
         return await actionService.remove({ id: actionId });
     }
