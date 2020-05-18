@@ -1,4 +1,4 @@
-import { Button, FormControl, Grid, InputLabel, MenuItem, Modal, TextField, Typography } from '@material-ui/core';
+import { Button, FormControl, Grid, InputLabel, MenuItem, Modal, TextField, Typography, InputAdornment, Tooltip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import 'brace/mode/html';
 import 'brace/theme/terminal';
@@ -11,6 +11,8 @@ import { PROXY_ROUTE_PREFIX } from '../../../../common/constants';
 import DeleteFooter from '../../../components/DeleteFooter';
 import gravatars from '../../../components/Gravatar';
 import playHelpIcon from '../../../images/play-help-icon.svg';
+import copyIcon from '../../../images/icon-copy.svg';
+import gotoIcon from '../../../images/icon-goto.svg';
 import messages from '../messages';
 import actionsJSON from './actions.json';
 import ChannelCard from './ChannelCard';
@@ -104,6 +106,16 @@ const styles = {
   editor: {
     marginTop: '30px',
   },
+  icon: {
+    '&:hover': {
+      filter: 'invert(0)',
+    },
+    filter: 'invert(1)',
+    height: '20px',
+    cursor: 'pointer',
+    verticalAlign: 'middle',
+    paddingRight: '5px'
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -126,7 +138,7 @@ class ConnectionForm extends React.Component {
       clonedAction.actions[0].intent.trigger.queryPatterns = queryPatterns;
       clonedAction.conversations.articulate_intent.url = `${window.location.protocol}//${window.location.hostname}${
         window.location.port === 80 ? null : window.location.port ? `:${window.location.port}` : ''
-      }${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external`;
+        }${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external`;
       this.setState({
         actionExport: clonedAction,
       });
@@ -281,7 +293,7 @@ class ConnectionForm extends React.Component {
                         id="shareLink"
                         value={`${window.location.protocol}//${window.location.hostname}${
                           window.location.port === 80 ? null : window.location.port ? `:${window.location.port}` : ''
-                        }/demo/${connection.id}`}
+                          }/demo/${connection.id}`}
                         label={intl.formatMessage(messages.shareUrl)}
                         margin="normal"
                         fullWidth
@@ -292,7 +304,43 @@ class ConnectionForm extends React.Component {
                         inputProps={{
                           className: classes.disabledFields,
                         }}
-                      />
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position='end'>
+                              <Tooltip title={intl.formatMessage(messages.copy)} placement="top">
+                                <img
+                                  onClick={() => {
+                                    const textField = document.createElement('textarea');
+                                    textField.innerText = `${window.location.protocol}//${window.location.hostname}${
+                                      window.location.port === 80 ? null : window.location.port ? `:${window.location.port}` : ''
+                                      }/demo/${connection.id}`;
+                                    document.body.appendChild(textField);
+                                    textField.select();
+                                    document.execCommand('copy');
+                                    textField.remove();
+                                  }}
+                                  className={classes.icon}
+                                  src={copyIcon}
+                                >
+                                </img>
+                              </Tooltip>
+                              <Tooltip title={intl.formatMessage(messages.openInNewTab)} placement="top">
+                                <img
+                                  onClick={() => {
+                                    window.open(`${window.location.protocol}//${window.location.hostname}${
+                                      window.location.port === 80 ? null : window.location.port ? `:${window.location.port}` : ''
+                                      }/demo/${connection.id}`);
+                                  }}
+                                  className={classes.icon}
+                                  src={gotoIcon}
+                                >
+                                </img>
+                              </Tooltip>
+                            </InputAdornment>
+                          ),
+                        }}
+                      >
+                      </TextField>
                     </Grid>
                   </Grid>
                 ) : connection.channel === 'chat-widget' ? (
@@ -334,7 +382,7 @@ class ConnectionForm extends React.Component {
                         id="converseUrl"
                         value={`${window.location.protocol}//${window.location.hostname}${
                           window.location.port === 80 ? null : window.location.port ? `:${window.location.port}` : ''
-                        }${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external`}
+                          }${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external`}
                         label={intl.formatMessage(messages.converseUrl)}
                         margin="normal"
                         fullWidth
@@ -404,65 +452,65 @@ class ConnectionForm extends React.Component {
                     </Grid>
                   </Grid>
                 ) : (
-                  <Grid container item xs={12}>
-                    <Grid item xs={12}>
-                      <TextField
-                        id="callbackUrl"
-                        value={`${window.location.protocol}//${window.location.hostname}${
-                          window.location.port === 80 ? null : window.location.port ? `:${window.location.port}` : ''
-                        }${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external`}
-                        label={intl.formatMessage(messages.callbackUrl)}
-                        margin="normal"
-                        fullWidth
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        disabled
-                        inputProps={{
-                          className: classes.disabledFields,
-                        }}
-                      />
-                    </Grid>
-                    {connection.channel === 'facebook' ? (
-                      <Grid item xs={12}>
-                        <TextField
-                          id="verifyToken"
-                          value={connection.details.verifyToken}
-                          label={intl.formatMessage(messages.verifyToken)}
-                          margin="normal"
-                          fullWidth
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          disabled
-                          inputProps={{
-                            className: classes.disabledFields,
-                          }}
-                        />
+                      <Grid container item xs={12}>
+                        <Grid item xs={12}>
+                          <TextField
+                            id="callbackUrl"
+                            value={`${window.location.protocol}//${window.location.hostname}${
+                              window.location.port === 80 ? null : window.location.port ? `:${window.location.port}` : ''
+                              }${PROXY_ROUTE_PREFIX}/connection/${connection.id}/external`}
+                            label={intl.formatMessage(messages.callbackUrl)}
+                            margin="normal"
+                            fullWidth
+                            InputLabelProps={{
+                              shrink: true,
+                            }}
+                            disabled
+                            inputProps={{
+                              className: classes.disabledFields,
+                            }}
+                          />
+                        </Grid>
+                        {connection.channel === 'facebook' ? (
+                          <Grid item xs={12}>
+                            <TextField
+                              id="verifyToken"
+                              value={connection.details.verifyToken}
+                              label={intl.formatMessage(messages.verifyToken)}
+                              margin="normal"
+                              fullWidth
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              disabled
+                              inputProps={{
+                                className: classes.disabledFields,
+                              }}
+                            />
+                          </Grid>
+                        ) : null}
+                        {connection.channel === 'google-home' ? (
+                          <Grid item xs={12}>
+                            <Button
+                              variant="contained"
+                              href={`data: text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state.actionExport, null, 2))}`}
+                              download="actions.json"
+                              style={{
+                                marginTop: '20px',
+                              }}
+                            >
+                              <FormattedMessage {...messages.download} />
+                            </Button>
+                          </Grid>
+                        ) : null}
                       </Grid>
-                    ) : null}
-                    {connection.channel === 'google-home' ? (
-                      <Grid item xs={12}>
-                        <Button
-                          variant="contained"
-                          href={`data: text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(this.state.actionExport, null, 2))}`}
-                          download="actions.json"
-                          style={{
-                            marginTop: '20px',
-                          }}
-                        >
-                          <FormattedMessage {...messages.download} />
-                        </Button>
-                      </Grid>
-                    ) : null}
-                  </Grid>
-                )
+                    )
               ) : null}
             </Grid>
           </Grid>
         </Grid>
         {this.props.newConnection ? null : <DeleteFooter onDelete={this.props.onDelete} type={intl.formatMessage(messages.instanceName)} />}
-      </Grid>
+      </Grid >
     );
   }
 }

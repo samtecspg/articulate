@@ -166,4 +166,14 @@ export default defineMessages({
       'app.containers.ConnectionsEditPage.component.ConnectionDataForm.download',
     defaultMessage: 'Download Actions Package',
   },
+  copy: {
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.copy',
+    defaultMessage: 'Copy',
+  },
+  openInNewTab: {
+    id:
+      'app.containers.ConnectionsEditPage.component.ConnectionDataForm.openInNewTab',
+    defaultMessage: 'Open in new tab',
+  },
 });
