@@ -1881,13 +1881,16 @@ export function updateActionSuccess(action, oldActionName) {
   };
 }
 
-export function deleteAction(id, actionName, redirectUrl) {
+export function deleteAction(id, actionName, redirectUrl, filter, page, pageSize) {
   return {
     type: DELETE_ACTION,
     apiCall: true,
     id,
     actionName,
     redirectUrl,
+    filter,
+    page,
+    pageSize
   };
 }
 

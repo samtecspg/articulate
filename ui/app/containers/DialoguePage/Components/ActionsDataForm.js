@@ -1,9 +1,10 @@
 import { Button, Grid, MenuItem, Table, TableBody, TableCell, TableRow, TextField, Tooltip, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import copyIcon from '../../../images/icon-copy.svg';
+import trashIcon from '../../../images/trash-icon.svg';
 import messages from '../messages';
 
 const styles = {
@@ -126,6 +127,7 @@ class ActionsDataForm extends React.Component {
                       {actionsPage.map((action, index) => (
                         <TableRow className={classes.actionRow} key={`${action}_${index}`}>
                           <TableCell
+                            style={{ width: '90%' }}
                             onClick={() => {
                               this.props.onGoToUrl(`/agent/${this.props.agentId}/action/${action.id}`);
                             }}
@@ -133,17 +135,34 @@ class ActionsDataForm extends React.Component {
                             <span>{action.actionName}</span>
                           </TableCell>
                           {!isReadOnly && (
-                            <TableCell>
-                              <Tooltip
-                                onClick={() => {
-                                  this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create?isDuplicate=true&actionId=${action.id}`);
-                                }}
-                                title={intl.formatMessage(messages.duplicateAction)}
-                                placement="top"
+                            <Fragment>
+                              <TableCell align="right"
+                                style={{ width: '5%' }}
                               >
-                                <img className={classes.icon} src={copyIcon} />
-                              </Tooltip>
-                            </TableCell>
+                                <Tooltip
+                                  onClick={() => {
+                                    this.props.onGoToUrl(`/agent/${this.props.agentId}/action/create?isDuplicate=true&actionId=${action.id}`);
+                                  }}
+                                  title={intl.formatMessage(messages.duplicateAction)}
+                                  placement="top"
+                                >
+                                  <img className={classes.icon} src={copyIcon} />
+                                </Tooltip>
+                              </TableCell>
+                              <TableCell align="right"
+                                style={{ width: '5%' }}
+                              >
+                                <Tooltip
+                                  onClick={async () => {
+                                    await this.props.onDeleteTotalAction(action.id, action.actionName);
+                                  }}
+                                  title={intl.formatMessage(messages.deleteAction)}
+                                  placement="top"
+                                >
+                                  <img className={classes.icon} src={trashIcon} />
+                                </Tooltip>
+                              </TableCell>
+                            </Fragment>
                           )}
                         </TableRow>
                       ))}
@@ -200,8 +219,8 @@ class ActionsDataForm extends React.Component {
                           evt.target.value === ''
                             ? this.props.changeActionsPage(1)
                             : evt.target.value <= this.props.numberOfActionsPages && evt.target.value >= 1
-                            ? this.props.changeActionsPage(Number(evt.target.value))
-                            : false;
+                              ? this.props.changeActionsPage(Number(evt.target.value))
+                              : false;
                         }}
                         fullWidth
                         InputLabelProps={{

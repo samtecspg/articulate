@@ -137,6 +137,10 @@ export default defineMessages({
     id: 'app.containers.DialoguePage.component.ActionsDataForm.duplicateAction',
     defaultMessage: 'Create a duplicate of this action',
   },
+  deleteAction: {
+    id: 'app.containers.DialoguePage.component.ActionsDataForm.deleteAction',
+    defaultMessage: 'Delete this action',
+  },
   sayingEnter: {
     id: 'app.containers.DialoguePage.component.SayingsDataForm.sayingEnter',
     defaultMessage: 'Enter',

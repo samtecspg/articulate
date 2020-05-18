@@ -397,6 +397,7 @@ class Form extends React.Component {
                 null,
                 this.props.selectedTab,
               )}
+              onDeleteTotalAction={this.props.onDeleteTotalAction}
             />
           )}
         </Grid>

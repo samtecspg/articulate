@@ -93,7 +93,8 @@ import {
   changeDialoguePageFilterKeywordIssues,
   toggleConversationBar,
   sendMessage,
-  updateSaying
+  updateSaying,
+  deleteAction
 } from '../App/actions';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -124,6 +125,7 @@ export class DialoguePage extends React.PureComponent {
     this.changeActionsPageSize = this.changeActionsPageSize.bind(this);
     this.initForm = this.initForm.bind(this);
     this.handleTabChange = this.handleTabChange.bind(this);
+    this.deleteTotalAction = this.deleteTotalAction.bind(this);
   }
 
   state = {
@@ -226,9 +228,13 @@ export class DialoguePage extends React.PureComponent {
       });
       this.setNumberOfActionsPages(this.state.actionsPageSize);
     }
-    if (this.needSwitchToPreviousPage(this.state.currentSayingsPage, this.props.totalSayings, prevProps.totalSayings, this.state.sayingsPageSize)) {
+    if (this.state.selectedTab === 'sayings' && this.needSwitchToPreviousPage(this.state.currentSayingsPage, this.props.totalSayings, prevProps.totalSayings, this.state.sayingsPageSize)) {
       const currentSayingsPage = this.state.currentSayingsPage - 1;
       this.changeSayingsPage(currentSayingsPage);
+    }
+    if (this.state.selectedTab === 'actions' && this.needSwitchToPreviousPage(this.state.currentActionsPage, this.props.totalActions, prevProps.totalActions, this.state.actionsPageSize)) {
+      const currentActionsPage = this.state.currentActionsPage - 1;
+      this.changeActionsPage(currentActionsPage);
     }
   }
 
@@ -428,6 +434,11 @@ export class DialoguePage extends React.PureComponent {
     }
   };
 
+  deleteTotalAction = (id, actionName) => {
+
+    this.props.onDeleteTotalAction(id, actionName, this.state.filter, this.state.currentActionsPage, this.state.actionsPageSize);
+  }
+
   render() {
     const { currentUser } = this.props;
     const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
@@ -545,6 +556,7 @@ export class DialoguePage extends React.PureComponent {
                 onSendMessage={this.props.onSendMessage}
                 trainTest={this.props.trainTest}
                 onUpdateSayingData={this.props.onUpdateSayingData}
+                onDeleteTotalAction={this.deleteTotalAction}
               />
             }
             reviewURL={`/agent/${this.props.agent.id}/review`}
@@ -787,7 +799,10 @@ function mapDispatchToProps(dispatch) {
     },
     onUpdateSayingData: (saying, field, value) => {
       dispatch(updateSaying(saying, field, value))
-    }
+    },
+    onDeleteTotalAction: (id, actionName, filter, page, pageSize) => {
+      dispatch(deleteAction(id, actionName, null, filter, page, pageSize));
+    },
   };
 }
 

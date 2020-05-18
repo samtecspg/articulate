@@ -456,6 +456,7 @@ export class ActionPage extends React.Component {
                   null,
                   this.props.action.id,
                   this.props.action.actionName,
+                  agent
                 )}
               />
             }
@@ -477,6 +478,7 @@ export class ActionPage extends React.Component {
                   null,
                   this.props.action.id,
                   this.props.action.actionName,
+                  agent
                 )}
                 onSortSlots={this.props.onSortSlots}
                 onDeleteSlot={this.props.onDeleteSlot}
@@ -506,6 +508,7 @@ export class ActionPage extends React.Component {
                   null,
                   this.props.action.id,
                   this.props.action.actionName,
+                  agent
                 )}
               />
             }
@@ -533,6 +536,7 @@ export class ActionPage extends React.Component {
                   null,
                   this.props.action.id,
                   this.props.action.actionName,
+                  agent
                 )}
                 newResponse={this.props.newResponse}
                 onUpdateNewResponse={this.props.onUpdateNewResponse}
@@ -703,8 +707,8 @@ function mapDispatchToProps(dispatch) {
     onGoToUrl: url => {
       dispatch(push(url));
     },
-    onDelete: (id, actionName) => {
-      dispatch(deleteAction(id, actionName));
+    onDelete: (id, actionName, agent) => {
+      dispatch(deleteAction(id, actionName, `/agent/${agent.id}/dialogue?tab=actions`));
     },
     onAddNewSlot: () => {
       dispatch(addNewSlot());

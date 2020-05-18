@@ -17,15 +17,13 @@ import {
   ROUTE_USER,
   ROUTE_WEBHOOK,
   ROUTE_TEST_TRAIN,
-  ROUTE_EXPORT,
-  ROUTE_IMPORT,
   ROUTE_KEYWORD,
   ROUTE_TRAIN_TEST,
-  ROUTE_AGENT_VERSION
+  ROUTE_AGENT_VERSION,
+  ROUTE_ACTION
 
 } from '../../../common/constants';
 import { toAPIPath } from '../../utils/locationResolver';
-import Immutable from 'seamless-immutable';
 import {
   getSettings,
   putSetting,
@@ -73,7 +71,12 @@ import {
   loadAgentLatestTrainTest,
   loadAgentLatestTrainTestSuccess,
   loadAgentLatestTrainTestError,
-  closeTestTrainNotification
+  closeTestTrainNotification,
+  deleteActionSuccess,
+  deleteActionError,
+  loadActionsPageSuccess,
+  loadActionsPageError,
+  loadActionsPage
 } from './actions';
 import {
   LOAD_AGENT,
@@ -94,7 +97,9 @@ import {
   DELETE_AGENT_VERSION,
   LOAD_KEYWORDS,
   LOAD_AGENT_TRAIN_TESTS,
-  LOAD_AGENT_LATEST_TRAIN_TEST
+  LOAD_AGENT_LATEST_TRAIN_TEST,
+  DELETE_ACTION,
+  LOAD_ACTIONS_PAGE,
 } from './constants';
 import {
   makeSelectAgent,
@@ -440,6 +445,61 @@ export function* getAgentLatestTrainTest(payload) {
   }
 }
 
+export function* deleteTotalAction(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, id, redirectUrl, filter, page, pageSize } = payload;
+  try {
+    yield call(
+      api.delete,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, id]),
+    );
+    yield put(deleteActionSuccess());
+    if (redirectUrl) {
+      yield put(push(redirectUrl));
+    }
+    if (!redirectUrl && (filter || page || pageSize)) {
+      yield put(loadActionsPage(filter, page, pageSize));
+    }
+  } catch (err) {
+    const error = { ...err };
+    yield put(deleteActionError(error.response.data.message));
+  }
+}
+
+export function* getActionsPage(payload) {
+  const agent = yield select(makeSelectAgent());
+  const { api, filter, page, pageSize } = payload;
+  let skip = 0;
+  let limit = -1;
+  if (page) {
+    skip = (page - 1) * pageSize;
+    limit = pageSize;
+  }
+  try {
+    const params = {
+      filter: filter === '' ? undefined : filter,
+      skip,
+      limit,
+      direction: 'ASC',
+      field: 'actionName',
+    };
+    const response = yield call(
+      api.get,
+      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION]),
+      { params },
+    );
+    // TODO: Fix in the api the return of total sayings
+    yield put(
+      loadActionsPageSuccess({
+        actions: response.data,
+        total: response.totalCount,
+      }),
+    );
+  } catch (err) {
+    yield put(loadActionsPageError(err));
+  }
+}
+
 
 export default function* rootSaga() {
   yield takeLatest(LOAD_AGENT, getAgent);
@@ -463,4 +523,6 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_KEYWORDS, getKeywords);
   yield takeLatest(LOAD_AGENT_TRAIN_TESTS, getAgentTrainTests);
   yield takeLatest(LOAD_AGENT_LATEST_TRAIN_TEST, getAgentLatestTrainTest);
+  yield takeLatest(DELETE_ACTION, deleteTotalAction);
+  yield takeLatest(LOAD_ACTIONS_PAGE, getActionsPage);
 }

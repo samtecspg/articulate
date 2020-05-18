@@ -1,4 +1,3 @@
-import { push } from 'react-router-redux';
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import Immutable from 'seamless-immutable';
 import {
@@ -12,8 +11,6 @@ import { toAPIPath } from '../../utils/locationResolver';
 import {
   addActionError,
   addActionSuccess,
-  deleteActionError,
-  deleteActionSuccess,
   loadActionError,
   loadActionsError,
   loadActionsSuccess,
@@ -353,22 +350,6 @@ export function* putAction(payload) {
   }
 }
 
-export function* deleteAction(payload) {
-  const agent = yield select(makeSelectAgent());
-  const { api, id, redirectUrl } = payload;
-  try {
-    yield call(
-      api.delete,
-      toAPIPath([ROUTE_AGENT, agent.id, ROUTE_ACTION, id]),
-    );
-    yield put(deleteActionSuccess());
-    yield put(push(redirectUrl || `/agent/${agent.id}/dialogue?tab=actions`));
-  } catch (err) {
-    const error = { ...err };
-    yield put(deleteActionError(error.response.data.message));
-  }
-}
-
 export function* getRichResponses(payload) {
   const { api } = payload;
 
@@ -386,7 +367,6 @@ export default function* rootSaga() {
   yield takeLatest(LOAD_KEYWORDS, getKeywords);
   yield takeLatest(ADD_ACTION, postAction);
   yield takeLatest(UPDATE_ACTION, putAction);
-  yield takeLatest(DELETE_ACTION, deleteAction);
   yield takeLatest(LOAD_FILTERED_ACTIONS, getActions);
   yield takeLatest(LOAD_RICH_RESPONSES, getRichResponses);
 }
