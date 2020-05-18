@@ -1,6 +1,6 @@
 module.exports = async function ({ CSO, response }) {
 
-  if (!response.richResponses.some(richResponse => { return richResponse.type === 'quickResponses' })) {
+  if (response.richResponses && !response.richResponses.some(richResponse => { return richResponse.type === 'quickResponses' })) {
     var availableKeywordsSlots = await getAvailableKeywordsSlots(CSO);
 
     const { agentService } = await this.server.services();
