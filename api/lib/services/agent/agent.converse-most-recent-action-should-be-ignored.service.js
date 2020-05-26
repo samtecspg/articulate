@@ -11,7 +11,7 @@ module.exports = async function ({ CSO, newActionIndex, getActionData }) {
         //    recognizedKeywords: CSO.recognizedKeywords
         //})
     ) {
-        mostRecentActionShouldBeIgnored = candidateForKeywordFillingExists({ CSO, newActionIndex, getActionData });
+        mostRecentActionShouldBeIgnored = await candidateForKeywordFillingExists({ CSO, newActionIndex, getActionData });
     }
     return mostRecentActionShouldBeIgnored;
 };
@@ -22,7 +22,7 @@ const candidateForKeywordFillingExists = async ({ CSO, newActionIndex, getAction
     candidateExists = CSO.context.actionQueue.some((action, index) => {
         actionData = getActionData({ actionName: action.name, CSO });
         if (action.fulfilled
-            || action.name !== CSO.context.actionQueue[newActionIndex].name
+            //|| action.name !== CSO.context.actionQueue[newActionIndex].name
             || index === newActionIndex) {
             return false;
         }
