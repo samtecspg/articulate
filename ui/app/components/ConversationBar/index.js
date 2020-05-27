@@ -374,7 +374,7 @@ export class ConversationBar extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    this.disconnectWSClient();
+    this.disconnectWSClient(true);
   }
 
   componentDidUpdate(prevProps) {
@@ -527,7 +527,7 @@ export class ConversationBar extends React.PureComponent {
     });
   }
 
-  disconnectWSClient = () => {
+  disconnectWSClient = (disconnect = false) => {
     if (this.state.client) {
       var session, sessionId;
       if (this.props.demoMode) {
@@ -538,9 +538,13 @@ export class ConversationBar extends React.PureComponent {
       this.state.client.unsubscribe(this.props.demoMode ?
         `/${ROUTE_CONNECTION}/${this.props.connection.id}/external/${sessionId}` :
         `/${ROUTE_AGENT}/${this.props.agent.id}/${ROUTE_CONVERSE}`);
-      this.setState({
-        socketClientConnected: false,
-      });
+      if (disconnect) {
+        this.state.client.disconnect();
+      }
+      //this.setState({
+      //  socketClientConnected: false,
+      //  client: null
+      //});
     }
   }
 
