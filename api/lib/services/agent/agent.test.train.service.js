@@ -84,6 +84,9 @@ const upsertResultAction = function (result, sayingAction, recognizedAction, say
         condition = 'good';
     }
 
+    if (recognizedAction.indexOf('+__+') !== -1 || sayingAction.indexOf('+__+') !== -1) {
+        const a = 1;
+    }
     let actionIndex = result.actions.findIndex(action => { return action.actionName === sayingAction })
     if (actionIndex === -1) {
         result.actions.push({
@@ -117,7 +120,7 @@ const upsertResultKeywords = function (result, sayingKeywords, recognizedKeyword
                     recognizedKeyword.keyword == sayingKeyword.keyword
             });
         let condition = 'bad';
-        if (recognizedKeywordsIndex !== -1) {
+        if (recognizedKeywordsIndex !== -1 && recognizedKeywords.length !== 0) {
             condition = 'good';
         } else {
             errorPresent = true;

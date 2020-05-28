@@ -381,6 +381,42 @@ export class WebhookSettings extends React.Component {
             ]
             : null}
         </Grid>
+        <Grid key="grid-editor-prescript" item xs={12}>
+          <Grid className={classes.bodyTitleContainer} item xs={12}>
+            <Typography variant="h2">
+              <FormattedMessage {...messages.preScript} />
+            </Typography>
+          </Grid>
+          <AceEditor
+            key="preScript"
+            width="100%"
+            height="300px"
+            mode={'javascript'}
+            theme="terminal"
+            name="preScript"
+            readOnly={isReadOnly}
+            onLoad={this.onLoad}
+            onChange={this.props.onChangeWebhookData.bind(null, 'preScript')}
+            fontSize={14}
+            showPrintMargin
+            showGutter
+            highlightActiveLine
+            value={webhook.preScript}
+            editorProps={{
+              $blockScrolling: Infinity,
+            }}
+            setOptions={{
+              useWorker: false,
+              showLineNumbers: true,
+              tabSize: 2,
+            }}
+          />
+          {this.props.errorState.postScript ? (
+            <Typography key="preScriptError" variant="caption" className={classes.errorLabel}>
+              <FormattedMessage {...messages.preScriptError} />
+            </Typography>
+          ) : null}
+        </Grid>
         <Grid key="grid-editor-postscript" item xs={12}>
           <Grid className={classes.bodyTitleContainer} item xs={12}>
             <Typography variant="h2">

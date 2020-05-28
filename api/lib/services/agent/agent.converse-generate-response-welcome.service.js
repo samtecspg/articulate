@@ -39,6 +39,21 @@ module.exports = async function ({ CSO }) {
             ];
             webhook = await globalService.findInModelPath({ modelPath, isFindById: false, isSingleResult: true, skip: 0, limit: -1 });
         }
+        if (webhook.preScript) {
+            const vm = new VM({
+                timeout: 1000,
+                sandbox: {
+                    CSO
+                }
+            });
+
+            const script = new VMScript(webhook.preScript);
+            try {
+                CSO = vm.run(script);
+            } catch (err) {
+                console.error(`Failed to execute preScript of the webhook ${webhook.webhookKey}`, err);
+            }
+        }
         const webhookResponse = await agentService.converseCallWebhook({
             url: webhook.webhookUrl,
             templatePayload: webhook.webhookPayload,

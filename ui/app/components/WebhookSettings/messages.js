@@ -103,4 +103,8 @@ export default defineMessages({
     id: 'app.components.WebhookSettings.postScript',
     defaultMessage: 'Postscript',
   },
+  preScript: {
+    id: 'app.components.WebhookSettings.preScript',
+    defaultMessage: 'Prescript',
+  },
 });

@@ -352,7 +352,8 @@ class AgentValidate {
                     }),
                     webhookUser: WebhookSchema.webhookUser,
                     webhookPassword: WebhookSchema.webhookPassword,
-                    postScript: WebhookSchema.postScript
+                    postScript: WebhookSchema.postScript,
+                    preScript: WebhookSchema.preScript
                 };
             })()
         };
@@ -379,6 +380,7 @@ class AgentValidate {
                     webhookUser: WebhookSchema.webhookUser,
                     webhookPassword: WebhookSchema.webhookPassword,
                     postScript: WebhookSchema.postScript,
+                    preScript: WebhookSchema.preScript,
                     creationDate: WebhookSchema.creationDate,
                     modificationDate: WebhookSchema.modificationDate
                 };
@@ -407,7 +409,8 @@ class AgentValidate {
                     }),
                     webhookUser: WebhookSchema.webhookUser,
                     webhookPassword: WebhookSchema.webhookPassword,
-                    postScript: WebhookSchema.postScript
+                    postScript: WebhookSchema.postScript,
+                    preScript: WebhookSchema.preScript
                 };
             })()
         };
@@ -435,6 +438,7 @@ class AgentValidate {
                     webhookUser: WebhookSchema.webhookUser,
                     webhookPassword: WebhookSchema.webhookPassword,
                     postScript: WebhookSchema.postScript,
+                    preScript: WebhookSchema.preScript,
                     creationDate: WebhookSchema.creationDate,
                     modificationDate: WebhookSchema.modificationDate
                 };
@@ -973,6 +977,7 @@ class AgentValidate {
                             webhookUser: WebhookSchema.webhookUser,
                             webhookPassword: WebhookSchema.webhookPassword,
                             postScript: WebhookSchema.postScript,
+                            preScript: WebhookSchema.preScript,
                             creationDate: WebhookSchema.creationDate,
                             modificationDate: WebhookSchema.modificationDate
                         },
@@ -1059,6 +1064,7 @@ class AgentValidate {
                                 webhookUser: WebhookSchema.webhookUser,
                                 webhookPassword: WebhookSchema.webhookPassword,
                                 postScript: WebhookSchema.postScript,
+                                preScript: WebhookSchema.preScript,
                                 creationDate: ActionSchema.creationDate,
                                 modificationDate: ActionSchema.modificationDate
                             },

@@ -29,6 +29,9 @@ const schema = {
     postScript: {
         type: 'string'
     },
+    preScript: {
+        type: 'string'
+    },
     creationDate: {
         type: 'timestamp'
     },
