@@ -321,7 +321,7 @@ export class TestTrainNotification extends React.Component {
               />
             </svg>
           </div>
-          <Typography>{intl.formatMessage(messages.testing)} ({this.props.agent.agentName})</Typography>
+          <Typography>{intl.formatMessage(messages.testing)} ({this.props.agent.agentName.length > 6 ? this.props.agent.agentName.slice(0, 10 - this.props.agent.agentName.length) + ' ...' : this.props.agent.agentName})</Typography>
         </div>)}
       {!this.props.testTrain && !this.props.testTrainLoading && <Typography>{intl.formatMessage(messages.test)}</Typography>}
       {this.props.testTrain && !this.props.testTrainLoading && (<Typography><img style={{ height: '10px', marginRight: '10px' }} src={checkIcon} />{intl.formatMessage(messages.testingFinished)}</Typography>)}
