@@ -123,6 +123,7 @@ module.exports = async function ({ id, returnModel = false }) {
                 markedAsTraining = true;
                 var urls = agent.settings.rasaURLs;
                 await Promise.all(_.map(urls, async (url) => {
+                    //var status = rasaNLUService.status({ baseURL: url });
                     await rasaNLUService.train({
                         project: agent.agentName,
                         model: categoryRecognizerModel,
