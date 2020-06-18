@@ -70,7 +70,7 @@ module.exports = async function ({ id, keywordId, keywordData, returnModel = fal
                         ...saying, keywords: saying.keywords.map((keyword) => {
                             return {
                                 ...keyword,
-                                keyword: keywordData.keywordName
+                                keyword: keyword.keyword === oldKeywordName ? keywordData.keywordName : keyword.keyword
                             }
                         })
                     }
