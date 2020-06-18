@@ -45,7 +45,7 @@ export default defineMessages({
   },
   highlightTooltip: {
     id: 'app.containers.DialoguePage.component.SayingDataForm.highlightTooltip',
-    defaultMessage: 'Highlight a word to make it a keyword',
+    defaultMessage: 'Highlight a word to make it a keyword value',
   },
   backPage: {
     id: 'app.containers.DialoguePage.component.SayingDataForm.backPage',
