@@ -9,15 +9,15 @@ services:
     command: [nginx-debug, '-g', 'daemon off;']
     restart: always
   api:
-    image: samtecspg/articulate-api:repo-head
+    image: samtecspg/articulate-api:1.0.0
     environment:
       - AGENT_LIMIT=${AGENT_LIMIT:--1}
     restart: always
   ui:
-    image: samtecspg/articulate-ui:repo-head
+    image: samtecspg/articulate-ui:1.0.0
     restart: always
   rasa:
-    image: samtecspg/articulate-rasa:repo-head
+    image: samtecspg/articulate-rasa:1.0.0
     volumes: ["${MODEL_DIR:-./local-storage/rasa/nlu-model}:/app/projects", "${RASA_CONFIG:-./local-storage/rasa/rasa-config.yml}:/app/config.yml", "./local-storage/rasa/logs:/app/logs"]
   duckling:
     image: samtecspg/duckling:0.1.6.0
