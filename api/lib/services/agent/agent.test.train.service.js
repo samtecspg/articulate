@@ -42,19 +42,24 @@ module.exports = async function ({ id, debug = false }) {
             let ParsedDocument = await agentService.parse({ AgentModel, text: value.userSays, timezone: AgentModel.property('timezone'), saveDocument: false });
 
             let release = await mainSemaphore.acquire();
-            let recognizedAction = ParsedDocument.recognized_action;
-            //For multi actions
-            let sayingAction = value.actions.join('+__+');
+            try {
+                let recognizedAction = ParsedDocument.recognized_action;
+                //For multi actions
+                let sayingAction = value.actions.join('+__+');
 
-            errorPresent = upsertResultAction(result, sayingAction, recognizedAction, value.id, badActions);
+                errorPresent = upsertResultAction(result, sayingAction, recognizedAction, value.id, badActions);
 
-            let recognizedKeywords = ParsedDocument.rasa_results[0].keywords.map((keyword) => { return { start: keyword.start, end: keyword.end, keyword: keyword.keyword, value: keyword.value.value } });
-            let sayingKeywords = value.keywords;
-            errorPresent = errorPresent || upsertResultKeywords(result, sayingKeywords, recognizedKeywords, value.id, badKeywords);
+                let recognizedKeywords = ParsedDocument.rasa_results[0].keywords.map((keyword) => { return { start: keyword.start, end: keyword.end, keyword: keyword.keyword, value: keyword.value.value } });
+                let sayingKeywords = value.keywords;
+                errorPresent = errorPresent || upsertResultKeywords(result, sayingKeywords, recognizedKeywords, value.id, badKeywords);
 
-            if (errorPresent) {
-                errorCounter++;
-                await updateFailedSaying(value.id, result, globalService, agentService, AgentModel, badKeywords, badActions)
+                if (errorPresent) {
+                    errorCounter++;
+                    await updateFailedSaying(value.id, result, globalService, agentService, AgentModel, badKeywords, badActions)
+                }
+            } catch (error) {
+                release();
+                throw error;
             }
             release();
         }));
@@ -68,9 +73,6 @@ module.exports = async function ({ id, debug = false }) {
         return result;
     }
     catch (error) {
-        if (release) {
-            release();
-        }
         throw RedisErrorHandler({ error });
     }
 };
