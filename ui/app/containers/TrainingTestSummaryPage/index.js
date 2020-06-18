@@ -7,7 +7,6 @@
 import { CircularProgress, Grid } from '@material-ui/core';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import qs from 'query-string';
 import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -17,8 +16,6 @@ import { GROUP_ACCESS_CONTROL } from '../../../common/constants';
 import MainTab from './Components/MainTab';
 import Form from './Components/Form';
 import AC from '../../utils/accessControl';
-import injectSaga from '../../utils/injectSaga';
-import saga from './saga';
 
 import {
   makeSelectAgent,
@@ -208,9 +205,6 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withSaga = injectSaga({ key: 'trainingTestSummary', saga });
-
 export default compose(
-  withSaga,
   withConnect,
 )(TrainingTestSummaryPage);

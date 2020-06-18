@@ -191,11 +191,11 @@ export class ActionPage extends React.Component {
           ? `/agent/${this.props.agent.id}/actionDummy/${
           this.state.refActionId
           }?filter=${this.state.filter}&page=${
-          this.state.page
+          this.state.page ? this.state.page : '1'
           }&actionTab=response`
           : `/agent/${this.props.agent.id}/dialogue?filter=${
           this.state.filter
-          }&page=${this.state.page}${
+          }&page=${this.state.page ? this.state.page : '1'}${
           this.state.tab ? `&tab=${this.state.tab}` : '&tab=sayings'
           }`;
     this.setState({
@@ -456,7 +456,7 @@ export class ActionPage extends React.Component {
                   null,
                   this.props.action.id,
                   this.props.action.actionName,
-                  agent
+                  this.state.exitUrl
                 )}
               />
             }
@@ -478,7 +478,7 @@ export class ActionPage extends React.Component {
                   null,
                   this.props.action.id,
                   this.props.action.actionName,
-                  agent
+                  this.state.exitUrl
                 )}
                 onSortSlots={this.props.onSortSlots}
                 onDeleteSlot={this.props.onDeleteSlot}
@@ -508,7 +508,7 @@ export class ActionPage extends React.Component {
                   null,
                   this.props.action.id,
                   this.props.action.actionName,
-                  agent
+                  this.state.exitUrl
                 )}
               />
             }
@@ -536,7 +536,7 @@ export class ActionPage extends React.Component {
                   null,
                   this.props.action.id,
                   this.props.action.actionName,
-                  agent
+                  this.state.exitUrl
                 )}
                 newResponse={this.props.newResponse}
                 onUpdateNewResponse={this.props.onUpdateNewResponse}
@@ -707,8 +707,8 @@ function mapDispatchToProps(dispatch) {
     onGoToUrl: url => {
       dispatch(push(url));
     },
-    onDelete: (id, actionName, agent) => {
-      dispatch(deleteAction(id, actionName, `/agent/${agent.id}/dialogue?tab=actions`));
+    onDelete: (id, actionName, exitUrl) => {
+      dispatch(deleteAction(id, actionName, exitUrl));
     },
     onAddNewSlot: () => {
       dispatch(addNewSlot());

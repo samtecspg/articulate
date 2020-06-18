@@ -1534,11 +1534,12 @@ export function loadKeywordsSuccess(keywords) {
   };
 }
 
-export function deleteKeyword(id) {
+export function deleteKeyword(id, exitUrl) {
   return {
     type: DELETE_KEYWORD,
     apiCall: true,
     id,
+    exitUrl
   };
 }
 
@@ -2110,10 +2111,11 @@ export function loadKeywordSuccess(keyword) {
   };
 }
 
-export function createKeyword(updateSayingsKeywords) {
+export function createKeyword(updateSayingsKeywords, exitUrl) {
   return {
     type: CREATE_KEYWORD,
     updateSayingsKeywords,
+    exitUrl,
     apiCall: true,
   };
 }
@@ -2132,10 +2134,11 @@ export function createKeywordSuccess(keyword) {
   };
 }
 
-export function updateKeyword(updateSayingsKeywords) {
+export function updateKeyword(updateSayingsKeywords, exitUrl) {
   return {
     type: UPDATE_KEYWORD,
     updateSayingsKeywords,
+    exitUrl,
     apiCall: true,
   };
 }
