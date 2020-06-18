@@ -395,7 +395,7 @@ class Form extends React.Component {
               moveActionsPageForward={this.props.moveActionsPageForward}
               onGoToUrl={this.props.onGoToUrl.bind(
                 null,
-                this.props.selectedTab,
+                this.props.selectedTab
               )}
               onDeleteTotalAction={this.props.onDeleteTotalAction}
             />

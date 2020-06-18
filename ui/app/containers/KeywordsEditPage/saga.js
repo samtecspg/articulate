@@ -63,7 +63,7 @@ export function* postKeyword(payload) {
   const keyword = yield select(makeSelectKeyword());
   const newKeyword = Immutable.asMutable(keyword, { deep: true });
   delete newKeyword.agent;
-  const { api, updateSayingsKeywords } = payload;
+  const { api, updateSayingsKeywords, exitUrl } = payload;
   try {
     const response = yield call(
       api.post,
@@ -75,6 +75,9 @@ export function* postKeyword(payload) {
       yield put(refreshKeywordExamplesUpdate());
     }
     yield put(createKeywordSuccess(response));
+    if (exitUrl) {
+      yield put(push(exitUrl));
+    }
   } catch (err) {
     const error = { ...err };
     yield put(createKeywordError(error.response.data.message));
@@ -86,7 +89,7 @@ export function* putKeyword(payload) {
   const keyword = yield select(makeSelectKeyword());
   const mutableKeyword = Immutable.asMutable(keyword, { deep: true });
   const keywordId = keyword.id;
-  const { api, updateSayingsKeywords } = payload;
+  const { api, updateSayingsKeywords, exitUrl } = payload;
   delete mutableKeyword.id;
   delete mutableKeyword.agent;
   try {
@@ -103,8 +106,10 @@ export function* putKeyword(payload) {
     yield put(updateKeywordSuccess(response));
     var agentSettings = yield select(makeSelectAgentSettings());
     var dialoguePageFilterString = yield select(makeSelectDialoguePageFilterString());
-    //This is in case the name of the keyword change, the sayings are updated so they are loaded again
     yield put(loadSayings(dialoguePageFilterString, 1, agentSettings.sayingsPageSize));
+    if (exitUrl) {
+      yield put(push(exitUrl));
+    }
   } catch (err) {
     yield put(updateKeywordError(err));
   }
@@ -165,18 +170,13 @@ export function* putRecognizeUpdatedKeywords(payload, createdKeywordId = null) {
 
 export function* deleteKeyword(payload) {
   const agent = yield select(makeSelectAgent());
-  const { api, id } = payload;
+  const { api, id, exitUrl } = payload;
   try {
     yield call(
       api.delete,
       toAPIPath([ROUTE_AGENT, agent.id, ROUTE_KEYWORD, id]),
     );
-    yield call(getKeywords, {
-      api,
-      filter: '',
-      page: 1,
-    });
-    yield put(push(`/agent/${agent.id}/dialogue?tab=keywords`));
+    yield put(push(exitUrl));
   } catch (err) {
     const error = { ...err };
     yield put(deleteKeywordError(error.response.data.message));

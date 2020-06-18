@@ -137,12 +137,32 @@ export class DialoguePage extends React.PureComponent {
     filter: this.props.dialoguePageFilterString,
     categoryFilter: '',
     actionFilter: '',
-    currentSayingsPage: 1,
+    currentSayingsPage: qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).tab && qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).tab == 'sayings' && qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).page ? Number(qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).page) : 1,
     sayingsPageSize: this.props.agent.id ? this.props.agent.settings.sayingsPageSize : 5,
     numberOfSayingsPages: null,
     userSays: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).userSays,
-    currentKeywordsPage: 1,
-    currentActionsPage: 1,
+    currentKeywordsPage: qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).tab && qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).tab == 'keywords' ? Number(qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).page) : 1,
+    currentActionsPage: qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).tab && qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).tab == 'actions' ? Number(qs.parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    }).page) : 1,
     keywordsPageSize: this.props.agent.id ? this.props.agent.settings.keywordsPageSize : 5,
     actionsPageSize: this.props.agent.id ? (this.props.agent.settings.actionsPageSize ? this.props.agent.settings.actionsPageSize : 5) : 5,
     numberOfKeywordsPages: null,
@@ -235,6 +255,10 @@ export class DialoguePage extends React.PureComponent {
     if (this.state.selectedTab === 'actions' && this.needSwitchToPreviousPage(this.state.currentActionsPage, this.props.totalActions, prevProps.totalActions, this.state.actionsPageSize)) {
       const currentActionsPage = this.state.currentActionsPage - 1;
       this.changeActionsPage(currentActionsPage);
+    }
+    if (this.state.selectedTab === 'keywords' && this.needSwitchToPreviousPage(this.state.currentKeywordsPage, this.props.totalKeywords, prevProps.totalKeywords, this.state.keywordsPageSize)) {
+      const currentKeywordsPage = this.state.currentKeywordsPage - 1;
+      this.changeKeywordsPage(currentKeywordsPage);
     }
   }
 
@@ -339,14 +363,14 @@ export class DialoguePage extends React.PureComponent {
     this.setState({
       currentKeywordsPage: pageNumber,
     });
-    this.props.onLoadKeywords(this.state.filter, pageNumber, this.state.keywordsPageSize);
+    this.props.onLoadKeywords('', pageNumber, this.state.keywordsPageSize);
   }
 
   changeActionsPage(pageNumber) {
     this.setState({
       currentActionsPage: pageNumber,
     });
-    this.props.onLoadActionsPage(this.state.filter, pageNumber, this.state.actionsPageSize);
+    this.props.onLoadActionsPage('', pageNumber, this.state.actionsPageSize);
   }
 
   moveKeywordsPageBack() {
@@ -372,14 +396,14 @@ export class DialoguePage extends React.PureComponent {
     });
     this.setNumberOfKeywordsPages(keywordsPageSize);
     this.props.onChangeKeywordsPageSize(this.props.agent.id, keywordsPageSize);
-    this.props.onLoadKeywords(this.state.filter, 1, keywordsPageSize);
+    this.props.onLoadKeywords('', 1, keywordsPageSize);
   }
 
   onSearchKeyword(filter) {
     this.setState({
       filter,
     });
-    this.props.onLoadKeywords(filter, this.state.currentKeywordsPage, this.state.keywordsPageSize);
+    this.props.onLoadKeywords('', this.state.currentKeywordsPage, this.state.keywordsPageSize);
   }
 
   moveActionsPageBack() {
@@ -405,14 +429,14 @@ export class DialoguePage extends React.PureComponent {
     });
     this.setNumberOfActionsPages(actionsPageSize);
     this.props.onChangeActionsPageSize(this.props.agent.id, actionsPageSize);
-    this.props.onLoadActionsPage(this.state.filter, 1, actionsPageSize);
+    this.props.onLoadActionsPage('', 1, actionsPageSize);
   }
 
   onSearchAction(filter) {
     this.setState({
       filter,
     });
-    this.props.onLoadActionsPage(filter, this.state.currentActionsPage, this.state.actionsPageSize);
+    this.props.onLoadActionsPage('', this.state.currentActionsPage, this.state.actionsPageSize);
   }
 
   handleTabChange = (event, value) => {
@@ -435,7 +459,6 @@ export class DialoguePage extends React.PureComponent {
   };
 
   deleteTotalAction = (id, actionName) => {
-
     this.props.onDeleteTotalAction(id, actionName, this.state.filter, this.state.currentActionsPage, this.state.actionsPageSize);
   }
 
@@ -521,7 +544,13 @@ export class DialoguePage extends React.PureComponent {
                 onSearchSaying={this.onSearchSaying}
                 onSearchCategory={this.onSearchCategory}
                 onSearchActions={this.onSearchActions}
-                onGoToUrl={this.props.onGoToUrl.bind(null, this.state.filter, this.state.currentSayingsPage, this.state.sayingsPageSize)}
+                onGoToUrl={this.props.onGoToUrl.bind(null, this.state.filter,
+                  this.state.selectedTab === 'sayings' ? this.state.currentSayingsPage :
+                    this.state.selectedTab === 'actions' ? this.state.currentActionsPage :
+                      this.state.selectedTab === 'keywords' ? this.state.currentKeywordsPage : 1
+                  , this.state.selectedTab === 'sayings' ? this.state.sayingsPageSize :
+                    this.state.selectedTab === 'actions' ? this.state.actionsPageSize :
+                      this.state.selectedTab === 'keywords' ? this.state.keywordsPageSize : 5)}
                 onSendSayingToAction={this.props.onSendSayingToAction}
                 currentSayingsPage={parseInt(this.state.currentSayingsPage)}
                 numberOfSayingsPages={this.state.numberOfSayingsPages}

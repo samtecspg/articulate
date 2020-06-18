@@ -5,6 +5,7 @@
  */
 import { CircularProgress, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import qs from 'query-string';
 import React from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
@@ -76,7 +77,9 @@ export class KeywordsEditPage extends React.Component {
     currentTab: 'keyword',
     userCompletedAllRequiredFields: false,
     formError: false,
-    exitAfterSubmit: false,
+    page: qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page
+      ? qs.parse(this.props.location.search, { ignoreQueryPrefix: true }).page
+      : '',
     errorState: {
       keywordName: false,
       examples: false,
@@ -84,6 +87,7 @@ export class KeywordsEditPage extends React.Component {
       tabs: [],
       modifiersTabs: [],
     },
+    exitUrl: ''
   };
 
   initForm() {
@@ -97,6 +101,16 @@ export class KeywordsEditPage extends React.Component {
     this.props.onShowChatButton(true);
   }
 
+  componentDidMount() {
+    const exitUrl =
+      `/agent/${this.props.agent.id}/dialogue?page=${
+      this.state.page ? this.state.page : 1
+      }&tab=keywords`;
+    this.setState({
+      exitUrl,
+    });
+  }
+
   componentWillMount() {
     if (this.props.agent.id) {
       this.initForm();
@@ -108,9 +122,6 @@ export class KeywordsEditPage extends React.Component {
       this.initForm();
     }
     if (this.props.success) {
-      if (this.state.exitAfterSubmit) {
-        this.props.onSuccess(`/agent/${this.props.agent.id}/dialogue?tab=keywords`);
-      }
       if (this.state.isNewKeyword) {
         this.setState({
           isNewKeyword: false,
@@ -138,7 +149,7 @@ export class KeywordsEditPage extends React.Component {
     });
   }
 
-  submit(exit, updateSayingsKeywords) {
+  async submit(exit, updateSayingsKeywords) {
     let errors = false;
     const newErrorState = {
       keywordName: false,
@@ -211,13 +222,12 @@ export class KeywordsEditPage extends React.Component {
     if (!errors) {
       this.setState({
         formError: false,
-        exitAfterSubmit: exit,
         errorState: { ...newErrorState },
       });
       if (this.state.isNewKeyword) {
-        this.props.onCreateKeyword(updateSayingsKeywords);
+        await this.props.onCreateKeyword(updateSayingsKeywords, exit ? this.state.exitUrl : null);
       } else {
-        this.props.onUpdateKeyword(updateSayingsKeywords);
+        await this.props.onUpdateKeyword(updateSayingsKeywords, exit ? this.state.exitUrl : null);
       }
     } else {
       this.setState({
@@ -230,83 +240,82 @@ export class KeywordsEditPage extends React.Component {
   render() {
     const { currentUser } = this.props;
     const isReadOnly = !AC.validate({ userPolicies: currentUser.simplifiedGroupPolicies, requiredPolicies: [GROUP_ACCESS_CONTROL.AGENT_WRITE] });
-
     return this.props.settings && this.props.agent.id && this.props.agentKeywords ? (
-        <Grid container>
-          <MainTab
+      <Grid container>
+        <MainTab
           isReadOnly={isReadOnly}
-            touched={this.props.touched}
-            keywordValuesTouched={this.props.keywordValuesTouched.filter((keyword) => { return keyword.count != 0 }).length > 0}
-            loading={this.props.loading || this.props.loadingKeywordExamplesUpdate}
-            success={this.props.success || this.props.successKeywordExamplesUpdate}
-            goBack={() => {
-            this.props.onGoToUrl(`/agent/${this.props.agent.id}/dialogue?tab=keywords`);
-            }}
-          onSaveAndExit={(updateKeywords = false) => {
-            this.submit(true, updateKeywords);
-            }}
-            newKeyword={this.state.isNewKeyword}
-            keywordName={this.props.keyword.keywordName}
-            formError={this.state.formError}
+          touched={this.props.touched}
+          keywordValuesTouched={this.props.keywordValuesTouched.filter((keyword) => { return keyword.count != 0 }).length > 0}
+          loading={this.props.loading || this.props.loadingKeywordExamplesUpdate}
+          success={this.props.success || this.props.successKeywordExamplesUpdate}
+          goBack={() => {
+            this.props.onGoToUrl(this.state.exitUrl);
+          }}
+          onSaveAndExit={async (updateKeywords = false) => {
+            await this.submit(true, updateKeywords);
+          }}
+          newKeyword={this.state.isNewKeyword}
+          keywordName={this.props.keyword.keywordName}
+          formError={this.state.formError}
           hideFinishButton={this.state.currentTab === 'keyword' && !this.state.userCompletedAllRequiredFields}
-            isLastTab={this.state.currentTab === 'modifiers'}
-          onFinishAction={(updateKeywords = false) => {
-            this.submit(false, updateKeywords);
-            }}
-            onNextAction={this.moveNextTab}
-            selectedTab={this.state.currentTab}
-            errorState={this.state.errorState}
-            keywordForm={
-              <KeywordForm
+          isLastTab={this.state.currentTab === 'modifiers'}
+          onFinishAction={async (updateKeywords = false) => {
+            await this.submit(false, updateKeywords);
+          }}
+          onNextAction={this.moveNextTab}
+          selectedTab={this.state.currentTab}
+          errorState={this.state.errorState}
+          keywordForm={
+            <KeywordForm
               isReadOnly={isReadOnly}
-                keyword={this.props.keyword}
-                onChangeKeywordData={this.props.onChangeKeywordData}
-                errorState={this.state.errorState}
-                newKeyword={this.state.isNewKeyword}
-                onDelete={this.props.onDelete.bind(null, this.props.keyword.id)}
-              />
-            }
-            valuesForm={
-              <ValuesForm
+              keyword={this.props.keyword}
+              onChangeKeywordData={this.props.onChangeKeywordData}
+              errorState={this.state.errorState}
+              newKeyword={this.state.isNewKeyword}
+              onDelete={this.props.onDelete.bind(null, this.props.keyword.id, this.state.exitUrl)}
+            />
+          }
+          valuesForm={
+            <ValuesForm
               isReadOnly={isReadOnly}
-                keyword={this.props.keyword}
-                onChangeKeywordData={this.props.onChangeKeywordData}
-                onAddKeywordExample={this.props.onAddKeywordExample}
-                onDeleteKeywordExample={this.props.onDeleteKeywordExample}
-                onChangeExampleName={this.props.onChangeExampleName}
-                onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
-                errorState={this.state.errorState}
-                newKeyword={this.state.isNewKeyword}
-                onDelete={this.props.onDelete.bind(null, this.props.keyword.id)}
-              />
-            }
-            modifiersForm={
-              <ModifiersForm
+              keyword={this.props.keyword}
+              onChangeKeywordData={this.props.onChangeKeywordData}
+              onAddKeywordExample={this.props.onAddKeywordExample}
+              onDeleteKeywordExample={this.props.onDeleteKeywordExample}
+              onChangeExampleName={this.props.onChangeExampleName}
+              onChangeExampleSynonyms={this.props.onChangeExampleSynonyms}
+              errorState={this.state.errorState}
+              newKeyword={this.state.isNewKeyword}
+              onDelete={this.props.onDelete.bind(null, this.props.keyword.id)}
+            />
+          }
+          modifiersForm={
+            <ModifiersForm
               isReadOnly={isReadOnly}
-                keyword={this.props.keyword}
-                settings={this.props.settings}
-                onChangeModifierData={this.props.onChangeModifierData}
-                onAddModifierSaying={this.props.onAddModifierSaying}
-                onDeleteModifierSaying={this.props.onDeleteModifierSaying}
-                onAddNewModifier={this.props.onAddNewModifier}
-                onChangeModifierName={this.props.onChangeModifierName}
-                errorState={this.state.errorState}
-                newKeyword={this.state.isNewKeyword}
-                onSortModifiers={this.props.onSortModifiers}
-                onDeleteModifier={this.props.onDeleteModifier}
-                onDelete={this.props.onDelete.bind(null, this.props.keyword.id)}
-                agentKeywords={this.props.agentKeywords}
-                onUntagModifierKeyword={this.props.onUntagModifierKeyword}
-                onTagModifierKeyword={this.props.onTagModifierKeyword}
+              keyword={this.props.keyword}
+              settings={this.props.settings}
+              onChangeModifierData={this.props.onChangeModifierData}
+              onAddModifierSaying={this.props.onAddModifierSaying}
+              onDeleteModifierSaying={this.props.onDeleteModifierSaying}
+              onAddNewModifier={this.props.onAddNewModifier}
+              onChangeModifierName={this.props.onChangeModifierName}
+              errorState={this.state.errorState}
+              newKeyword={this.state.isNewKeyword}
+              onSortModifiers={this.props.onSortModifiers}
+              onDeleteModifier={this.props.onDeleteModifier}
+              onDelete={this.props.onDelete.bind(null, this.props.keyword.id)}
+              agentKeywords={this.props.agentKeywords}
+              onUntagModifierKeyword={this.props.onUntagModifierKeyword}
+              onTagModifierKeyword={this.props.onTagModifierKeyword}
               modifierSayingsPageSize={this.props.agent.settings.modifierSayingsPageSize}
               onChangeModifiersSayingsPageSize={this.props.onChangeModifiersSayingsPageSize.bind(null, this.props.agent.id)}
-              />
-            }
-            onChangeTab={this.onChangeTab}
-          />
-        </Grid>
-      ) : (
-      <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
+            />
+          }
+          onChangeTab={this.onChangeTab}
+        />
+      </Grid>
+    ) : (
+        <CircularProgress style={{ position: 'absolute', top: '40%', left: '49%' }} />
       );
   }
 }
@@ -366,11 +375,11 @@ function mapDispatchToProps(dispatch) {
     onLoadKeywords: () => {
       dispatch(loadKeywords());
     },
-    onCreateKeyword: (updateSayingsKeywords) => {
-      dispatch(createKeyword(updateSayingsKeywords));
+    onCreateKeyword: (updateSayingsKeywords, exitUrl) => {
+      dispatch(createKeyword(updateSayingsKeywords, exitUrl));
     },
-    onUpdateKeyword: (updateSayingsKeywords) => {
-      dispatch(updateKeyword(updateSayingsKeywords));
+    onUpdateKeyword: (updateSayingsKeywords, exitUrl) => {
+      dispatch(updateKeyword(updateSayingsKeywords, exitUrl));
     },
     onChangeKeywordData: (field, value) => {
       dispatch(changeKeywordData({ field, value }));
@@ -387,15 +396,15 @@ function mapDispatchToProps(dispatch) {
     onChangeExampleSynonyms: (exampleIndex, synonyms, synonymChanged, action) => {
       dispatch(changeExampleSynonyms(exampleIndex, synonyms, synonymChanged, action));
     },
-    onSuccess: url => {
-      dispatch(resetStatusFlag());
-      dispatch(push(url));
-    },
+    //onSuccess: url => {
+    //dispatch(resetStatusFlag());
+    //dispatch(push(url));
+    //},
     onGoToUrl: url => {
       dispatch(push(url));
     },
-    onDelete: id => {
-      dispatch(deleteKeyword(id));
+    onDelete: (id, exitUrl) => {
+      dispatch(deleteKeyword(id, exitUrl));
     },
     onAddNewModifier: () => {
       dispatch(addNewModifier());
