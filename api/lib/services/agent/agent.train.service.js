@@ -79,7 +79,7 @@ module.exports = async function ({ id, returnModel = false }) {
 
     const { redis } = this.server.app;
 
-    const { globalService, categoryService, rasaNLUService, serverService } = await this.server.services();
+    const { globalService, categoryService, rasaNLUService, serverService, agentService } = await this.server.services();
 
     let model = Guid.create().toString();
     try {
@@ -261,9 +261,13 @@ module.exports = async function ({ id, returnModel = false }) {
             if (currentAgent.status === STATUS_TRAINING) {
                 AgentModel.property('lastTraining', Moment().utc().format());
                 AgentModel.property('status', STATUS_READY);
-                ServerModel.property('status', STATUS_READY);
+                await AgentModel.saveInstance();
             }
-            await AgentModel.saveInstance();
+            //Create version if enabled
+            if (currentAgent.settings.enableAgentVersions) {
+                await agentService.createAgentVersion({ id });
+            }
+            ServerModel.property('status', STATUS_READY);
             await ServerModel.saveInstance();
             return returnModel ? AgentModel : AgentModel.allProperties();
         }
