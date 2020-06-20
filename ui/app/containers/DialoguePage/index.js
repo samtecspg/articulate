@@ -78,7 +78,6 @@ import {
   toggleChatButton,
   trainAgent,
   untagKeyword,
-  addAgentVersion,
   loadAgentVersion,
   updateAgentVersion,
   deleteAgentVersion,
@@ -593,7 +592,6 @@ export class DialoguePage extends React.PureComponent {
             analyticsForm={Link}
             analyticsURL={`/agent/${this.props.agent.id}/analytics`}
             currentAgent={this.props.agent}
-            onAddAgentVersion={this.props.onAddAgentVersion}
             onLoadAgentVersion={this.props.onLoadAgentVersion}
             onUpdateAgentVersion={this.props.onUpdateAgentVersion}
             onDeleteAgentVersion={this.props.onDeleteAgentVersion}
@@ -789,9 +787,6 @@ function mapDispatchToProps(dispatch) {
     },
     onDeleteAgentVersion: (versionId, currentAgentId) => {
       dispatch(deleteAgentVersion(versionId, currentAgentId));
-    },
-    onAddAgentVersion: id => {
-      dispatch(addAgentVersion(id));
     },
     onChangeDialoguePageFilterSearchSaying: newValue => {
       dispatch(changeDialoguePageFilterSearchSaying(newValue));

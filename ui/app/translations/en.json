@@ -241,7 +241,7 @@
   "app.containers.KeywordsEditPage.component.ModifierForm.actionSelect": "Action:",
   "app.containers.KeywordsEditPage.component.ModifierForm.backPage": "Back",
   "app.containers.KeywordsEditPage.component.ModifierForm.entries": "entries",
-  "app.containers.KeywordsEditPage.component.ModifierForm.highlightTooltip": "Highlight a word to label it as a keyword value.",
+  "app.containers.KeywordsEditPage.component.ModifierForm.highlightTooltip": "Highlight a word to label it as a keyword value.q",
   "app.containers.KeywordsEditPage.component.ModifierForm.modifierNameTextField": "Modifier Name",
   "app.containers.KeywordsEditPage.component.ModifierForm.modifierNameTextFieldPlaceholder": "Set a name to reference the modifier in your responses",
   "app.containers.KeywordsEditPage.component.ModifierForm.nextPage": "Next",

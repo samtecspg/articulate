@@ -133,13 +133,6 @@ export class TrainButton extends React.Component {
     clearInterval(this.interval);
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.agentStatus === 'Training' && this.props.agentStatus === 'Ready'
-      && this.props.agentSettings && this.props.agentSettings.enableAgentVersions) {
-      this.props.onAddAgentVersion(this.props.currentAgentId);
-    }
-  }
-
   getLastTrainingTime(lastTraining) {
     if (lastTraining) {
       return new TimeAgo(this.props.locale).format(new Date(lastTraining));
@@ -154,7 +147,6 @@ export class TrainButton extends React.Component {
       agentVersions={this.props.agentVersions}
       selectedTab={this.props.selectedTab}
       onLoadAgentVersion={this.props.onLoadAgentVersion}
-      onAddAgentVersion={this.props.onAddAgentVersion}
       onUpdateAgentVersion={this.props.onUpdateAgentVersion}
       onDeleteAgentVersion={this.props.onDeleteAgentVersion}
       loadedAgentVersionName={this.props.loadedAgentVersionName}
@@ -239,10 +231,8 @@ TrainButton.propTypes = {
   agentVersions: PropTypes.array,
   selectedTab: PropTypes.string,
   onLoadAgentVersion: PropTypes.func,
-  onAddAgentVersion: PropTypes.func,
   onUpdateAgentVersion: PropTypes.func,
   onDeleteAgentVersion: PropTypes.func,
-  onAddAgentVersion: PropTypes.func,
   currentAgentId: PropTypes.number
 };
 

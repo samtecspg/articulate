@@ -67,6 +67,7 @@ import {
   toggleChatButton,
   toggleConversationBar,
   updateSetting,
+  loadAgentVersions,
 } from './actions';
 import saga from './saga';
 import {
@@ -177,6 +178,9 @@ class App extends React.Component {
           const handler = agent => {
             if (agent) {
               this.props.onRefreshAgent(agent);
+              if (agent.settings.enableAgentVersions) {
+                this.props.onLoadAgentVersions(Number(agent.id));
+              }
             }
           };
           this.state.client.subscribe(`/${ROUTE_AGENT}/${this.props.agent.id}`, handler);
@@ -295,6 +299,7 @@ App.propTypes = {
   onGoToUrl: PropTypes.func,
   loadCurrentUserError: PropTypes.func,
   currentUser: PropTypes.object,
+  onLoadAgentVersions: PropTypes.func
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -319,6 +324,9 @@ export function mapDispatchToProps(dispatch) {
     onRefreshAgent: agent => {
       agent.categoryClassifierThreshold *= 100;
       dispatch(loadAgentSuccess({ agent, socket: true }));
+    },
+    onLoadAgentVersions: agentId => {
+      dispatch(loadAgentVersions(agentId));
     },
     onLoadAgent: agentId => {
       dispatch(loadAgent(agentId));

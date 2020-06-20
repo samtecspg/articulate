@@ -97,7 +97,6 @@ export class MainTab extends React.Component {
       onLoadAgentVersion,
       onDeleteAgentVersion,
       onUpdateAgentVersion,
-      onAddAgentVersion,
       newAgent,
       disableSave,
       locale,
@@ -267,7 +266,6 @@ export class MainTab extends React.Component {
                     onLoadAgentVersion={onLoadAgentVersion}
                     onUpdateAgentVersion={onUpdateAgentVersion}
                     onDeleteAgentVersion={onDeleteAgentVersion}
-                    onAddAgentVersion={onAddAgentVersion}
                     currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
                     loadedAgentVersionName={currentAgent ? currentAgent.loadedAgentVersionName : ''}
                     agentSettings={currentAgent ? currentAgent.settings : {}}
@@ -415,7 +413,6 @@ export class MainTab extends React.Component {
                   onLoadAgentVersion={onLoadAgentVersion}
                   onUpdateAgentVersion={onUpdateAgentVersion}
                   onDeleteAgentVersion={onDeleteAgentVersion}
-                  onAddAgentVersion={onAddAgentVersion}
                   currentAgentId={currentAgent ? Number(currentAgent.id) : -1}
                   loadedAgentVersionName={currentAgent ? currentAgent.loadedAgentVersionName : ''}
                   agentSettings={currentAgent ? currentAgent.settings : {}}
@@ -494,7 +491,6 @@ MainTab.propTypes = {
   onFinishAction: PropTypes.func,
   onTrain: PropTypes.func,
   onLoadAgentVersion: PropTypes.func,
-  onAddAgentVersion: PropTypes.func,
   onUpdateAgentVersion: PropTypes.func,
   onDeleteAgentVersion: PropTypes.func,
   agentStatus: PropTypes.string,

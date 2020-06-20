@@ -20,7 +20,6 @@ import _ from 'lodash';
 import {
   trainAgent, loadKeywords, loadActions, loadAgentDocuments, loadAgentDocumentsSuccess,
   toggleChatButton, loadAgentStats,
-  addAgentVersion,
   loadAgentVersion,
   updateAgentVersion,
   deleteAgentVersion,
@@ -159,7 +158,6 @@ export class AnalyticsPage extends React.PureComponent {
           reviewForm={Link}
           reviewURL={`/agent/${this.props.agent.id}/review`}
           currentAgent={this.props.agent}
-          onAddAgentVersion={this.props.onAddAgentVersion}
           onLoadAgentVersion={this.props.onLoadAgentVersion}
           onUpdateAgentVersion={this.props.onUpdateAgentVersion}
           onDeleteAgentVersion={this.props.onDeleteAgentVersion}
@@ -429,10 +427,7 @@ function mapDispatchToProps(dispatch) {
     },
     onDeleteAgentVersion: (versionId, currentAgentId) => {
       dispatch(deleteAgentVersion(versionId, currentAgentId));
-    },
-    onAddAgentVersion: id => {
-      dispatch(addAgentVersion(id));
-    },
+    }
   };
 }
 

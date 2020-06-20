@@ -53,7 +53,6 @@ import {
   trainAgent,
   updateAgent,
   testAgentTrain,
-  addAgentVersion,
   loadAgentVersion,
   updateAgentVersion,
   deleteAgentVersion,
@@ -456,7 +455,6 @@ export class AgentPage extends React.PureComponent {
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
           onTestAgentTrain={this.props.onTestAgentTrain}
           agent={this.props.agent}
-          onAddAgentVersion={this.props.onAddAgentVersion}
           onLoadAgentVersion={this.props.onLoadAgentVersion}
           onUpdateAgentVersion={this.props.onUpdateAgentVersion}
           onDeleteAgentVersion={this.props.onDeleteAgentVersion}
@@ -644,10 +642,7 @@ function mapDispatchToProps(dispatch) {
     },
     onDeleteAgentVersion: (versionId, currentAgentId) => {
       dispatch(deleteAgentVersion(versionId, currentAgentId));
-    },
-    onAddAgentVersion: id => {
-      dispatch(addAgentVersion(id));
-    },
+    }
   };
 }
 

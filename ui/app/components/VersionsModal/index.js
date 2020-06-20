@@ -594,7 +594,6 @@ VersionsModal.propTypes = {
   agentVersions: PropTypes.array,
   selectedTab: PropTypes.string,
   onLoadAgentVersion: PropTypes.func,
-  onAddAgentVersion: PropTypes.func,
   onUpdateAgentVersion: PropTypes.func,
   onDeleteAgentVersion: PropTypes.func,
 };

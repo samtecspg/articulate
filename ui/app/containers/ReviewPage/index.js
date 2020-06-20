@@ -753,7 +753,6 @@ export class ReviewPage extends React.Component {
           analyticsForm={Link}
           analyticsURL={`/agent/${this.props.agent.id}/analytics`}
           currentAgent={this.props.agent}
-          onAddAgentVersion={this.props.onAddAgentVersion}
           onLoadAgentVersion={this.props.onLoadAgentVersion}
           onUpdateAgentVersion={this.props.onUpdateAgentVersion}
           onDeleteAgentVersion={this.props.onDeleteAgentVersion}
@@ -924,10 +923,7 @@ function mapDispatchToProps(dispatch) {
     },
     onDeleteAgentVersion: (versionId, currentAgentId) => {
       dispatch(Actions.deleteAgentVersion(versionId, currentAgentId));
-    },
-    onAddAgentVersion: id => {
-      dispatch(Actions.addAgentVersion(id));
-    },
+    }
   };
 }
 

@@ -38,7 +38,6 @@ import {
   loadAgentVersionsSuccess,
   addAgentVersionError,
   addAgentVersionSuccess,
-  loadAgentVersion,
   loadAgentVersionError,
   loadAgentVersionSuccess,
   updateAgentVersionError,
