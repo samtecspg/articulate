@@ -455,7 +455,7 @@ class ResponseRow extends React.Component {
                   }}
                   variant="contained"
                 >
-                  {intl.formatMessage(this.state.editingRichResponse ? messages.editButton : messages.addButton)}
+                  {intl.formatMessage(this.state.editingRichResponse ? messages.saveButton : messages.addButton)}
                 </Button>
               </Grid>
               <Grid item xs={12}>

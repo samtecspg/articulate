@@ -259,9 +259,9 @@ export default defineMessages({
     id: 'app.containers.ActionPage.component.ResponseRow.addButton',
     defaultMessage: 'Add',
   },
-  editButton: {
-    id: 'app.containers.ActionPage.component.ResponseRow.editButton',
-    defaultMessage: 'Edit',
+  saveButton: {
+    id: 'app.containers.ActionPage.component.ResponseRow.saveButton',
+    defaultMessage: 'Save',
   },
   hint1: {
     id: 'app.containers.ActionPage.component.ResponseRow.hint',
