@@ -42,7 +42,7 @@ const styles = {
     display: 'inline-block',
   },
   justMaxInput: {
-    color: '#979797',
+    color: '#4e4e4e !important',
     fontSize: '12pt',
     fontFamily: 'Montserrat',
     marginRight: '10px',
@@ -148,7 +148,7 @@ export class AutomaticQuickRepliesSettings extends React.Component {
                     style: {
                       border: 'none',
                       paddingRight: '0px',
-                      color: '#C5CBD8',
+                      color: '#4e4e4e',
                     },
                   }}
                   InputProps={{
@@ -209,7 +209,7 @@ export class AutomaticQuickRepliesSettings extends React.Component {
                       style: {
                         border: 'none',
                         paddingRight: '0px',
-                        color: '#C5CBD8',
+                        color: '#4e4e4e',
                       },
                     }}
                     InputProps={{
