@@ -12,7 +12,7 @@
       "type": "string"
     },
     "message": {
-      "displayName": "Message for users",
+      "displayName": "Message for users (Markdown allowed)",
       "description": "The message you want to share with your users (i.e.: instructions, saying examples).",
       "type": "textarea"
     },

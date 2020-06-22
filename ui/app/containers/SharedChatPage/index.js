@@ -18,9 +18,10 @@ import saga from './saga';
 import gravatars from '../../components/Gravatar';
 import { makeSelectAgent, makeSelectConnection } from '../App/selectors';
 import { loadConnection, toggleConversationBar } from '../App/actions';
+import Markdown from 'markdown-to-jsx';
 
 const styles = {
-  mainContainer: { 
+  mainContainer: {
     marginTop: '100px'
   },
   agentNameContainer: {
@@ -71,13 +72,14 @@ const styles = {
   message: {
     fontSize: '14px',
     color: '#4E4E4E',
+    fontFamily: 'Montserrat'
   }
 }
 
 /* eslint-disable react/prefer-stateless-function */
 export class SharedChatPage extends React.PureComponent {
 
-  componentWillMount(){
+  componentWillMount() {
     this.props.onLoadConnection(this.props.match.params.id);
     this.props.onToggleConversationBar(true);
   }
@@ -85,48 +87,40 @@ export class SharedChatPage extends React.PureComponent {
   render() {
     const { agent, connection, classes, intl } = this.props;
     return (
-      agent.id ? 
-      <Grid container className={classes.mainContainer}>
-        <Grid className={classes.agentNameContainer} item xs={12}>
-          <Typography
-            className={classes.agentName}
-            style={{ color: agent.uiColor }}
-          >
-            {gravatars[agent.gravatar - 1]({
-              color: agent.uiColor,
-              className: classes.agentIcon,
-            })}
-            <span className={classes.agentName}>{agent.agentName}</span>
-          </Typography>
-        </Grid>
-        <Grid container item xs={12}>
-          <Grid item xs={12} className={classes.agentDescriptionContainer}>
-            <Typography className={classes.agentDescriptionTitle}>
-              {intl.formatMessage(messages.agentDescription)}
-            </Typography>
-            <Typography className={classes.agentDescription}>
-              {agent.description}
+      agent.id ?
+        <Grid container className={classes.mainContainer}>
+          <Grid className={classes.agentNameContainer} item xs={12}>
+            <Typography
+              className={classes.agentName}
+              style={{ color: agent.uiColor }}
+            >
+              {gravatars[agent.gravatar - 1]({
+                color: agent.uiColor,
+                className: classes.agentIcon,
+              })}
+              <span className={classes.agentName}>{agent.agentName}</span>
             </Typography>
           </Grid>
-          <Grid item xs={12} className={classes.messageContainer}>
-            <Typography className={classes.messageTitle}>
-              {connection.details.messageTitle}
-            </Typography>
-            {
-              connection.details.message.split('\n').map((text, index) => {
-                return (
-                  <Typography key={`message_${index}`} className={classes.message}>
-                    {text}
-                  </Typography>
-                );
-              })
-            }
+          <Grid container item xs={12}>
+            <Grid item xs={12} className={classes.agentDescriptionContainer}>
+              <Typography className={classes.agentDescriptionTitle}>
+                {intl.formatMessage(messages.agentDescription)}
+              </Typography>
+              <Typography className={classes.agentDescription}>
+                {agent.description}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} className={classes.messageContainer}>
+              <Typography className={classes.messageTitle}>
+                {connection.details.messageTitle}
+              </Typography>
+              <Markdown className={classes.message}>{connection.details.message}</Markdown>
+            </Grid>
           </Grid>
-        </Grid>
-      </Grid> :
-      <CircularProgress
-        style={{ position: 'absolute', top: '40%', left: '49%' }}
-      />
+        </Grid> :
+        <CircularProgress
+          style={{ position: 'absolute', top: '40%', left: '49%' }}
+        />
     );
   }
 }
@@ -144,10 +138,10 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    onLoadConnection(id){
+    onLoadConnection(id) {
       dispatch(loadConnection(id));
     },
-    onToggleConversationBar(value){
+    onToggleConversationBar(value) {
       dispatch(toggleConversationBar(value));
     }
   };
