@@ -15,6 +15,7 @@ import 'brace/theme/terminal';
 
 import messages from './messages';
 import trashIcon from '../../images/trash-icon.svg';
+import eyeIcon from '../../images/icon-eye.svg';
 
 const styles = {
   toggleContainer: {
@@ -55,6 +56,18 @@ const styles = {
     marginRight: '24px',
     marginTop: '17px',
   },
+  eyeIcon: {
+    // '&:hover': {
+    //   filter: 'invert(0)',
+    // },
+    // filter: 'invert(1)',
+    cursor: 'pointer',
+    float: 'right',
+    marginRight: '24px',
+    marginTop: '17px',
+    height: '20px !important',
+    width: '20px !important'
+  },
 };
 
 /* eslint-disable react/prefer-stateless-function */
@@ -63,6 +76,7 @@ export class WebhookSettings extends React.Component {
     newHeaderKey: '',
     newHeaderKeyValue: '',
     lastHeaderEdited: false,
+    showPassword: false
   };
 
   render() {
@@ -219,7 +233,7 @@ export class WebhookSettings extends React.Component {
             <TextField
               disabled={isReadOnly}
               id="webhookPassword"
-              type="password"
+              type={this.state.showPassword ? "" : "password"}
               label={intl.formatMessage(messages.webhookPassword)}
               value={webhook.webhookPassword}
               placeholder={intl.formatMessage(messages.webhookPasswordPlaceholder)}
@@ -230,6 +244,28 @@ export class WebhookSettings extends React.Component {
               fullWidth
               InputLabelProps={{
                 shrink: true,
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment
+                    style={{
+                      position: 'absolute',
+                      left: '90%',
+                      top: '17px',
+                    }}
+                    position="end"
+                  >
+                    <img
+                      key={`showPassword`}
+                      onClick={() => {
+                        this.setState({ showPassword: !this.state.showPassword })
+                      }}
+                      className={classes.eyeIcon}
+                      style={{ filter: this.state.showPassword ? 'invert(0)' : 'invert(1)', }}
+                      src={eyeIcon}
+                    />
+                  </InputAdornment>
+                ),
               }}
               error={this.props.errorState.webhookPassword}
             />
