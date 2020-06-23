@@ -57,10 +57,6 @@ const styles = {
     marginTop: '17px',
   },
   eyeIcon: {
-    // '&:hover': {
-    //   filter: 'invert(0)',
-    // },
-    // filter: 'invert(1)',
     cursor: 'pointer',
     float: 'right',
     marginRight: '24px',
