@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 module.exports = async ({ Handlebars }) => {
     //Overwrite/extend compile from handlebars to complete incomplete paths
-    var compile = Handlebars.compile.bind(Handlebars);
+    let compile = Handlebars.compile.bind(Handlebars);
     Handlebars.compile = function (input, options) {
         return (context) => {
             try {
@@ -32,23 +32,23 @@ const completeTemplate = (template, context) => {
 
 const getHandlebarExpressions = (template) => {
     const regex = /(?<=({{))[^{].*?(?=(}}))/g
-    var result = template.match(regex);
+    let result = template.match(regex);
     return result ? result : [];
 }
 
 // Handlebar expressions are everything between {{}} like {{a.b.c d.e.f}} and {{a.b.c #if}}
 const generateNewHandlebarExpressions = function (handlebarExpressions, context) {
-    let newHandlebarExpressions = [];
+    var newHandlebarExpressions = [];
     handlebarExpressions.forEach((handlebarExpression) => {
 
-        let newHandlebarExpressionUnits = generateNewHandlebarExpressionUnits(handlebarExpression, context);
+        var newHandlebarExpressionUnits = generateNewHandlebarExpressionUnits(handlebarExpression, context);
 
         if (newHandlebarExpressionUnits.length > 0) {
             let newHandlebarExpression = handlebarExpression
             newHandlebarExpressionUnits.forEach(newPath => {
                 newHandlebarExpression = newHandlebarExpression.replace(newPath.original, newPath.new);
             })
-            newHandleBarExpressions.push({ 'original': "{{" + handlebarExpression + "}}", 'new': "{{" + newHandlebarExpression + "}}" });
+            newHandlebarExpressions.push({ 'original': "{{" + handlebarExpression + "}}", 'new': "{{" + newHandlebarExpression + "}}" });
         }
     })
     return newHandlebarExpressions;
@@ -56,8 +56,8 @@ const generateNewHandlebarExpressions = function (handlebarExpressions, context)
 
 // Handlebar expressions units are everything between {{}} but its units like {{a.b.c #if}} will have a.b.c and #if as units
 const generateNewHandlebarExpressionUnits = function (handlebarExpression, context) {
-    let handlebarExpressionUnits = handlebarExpression.split(" ");
-    let newHandlebarExpressionUnits = [];
+    var handlebarExpressionUnits = handlebarExpression.split(" ");
+    var newHandlebarExpressionUnits = [];
     handlebarExpressionUnits.forEach(handlebarExpressionUnit => {
 
         let cleanHandlebarExpressionUnit = generateCleanHandlebarExpressionUnit(handlebarExpressionUnit);
