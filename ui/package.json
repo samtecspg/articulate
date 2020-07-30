@@ -87,7 +87,7 @@
     "lodash": "^4.17.13",
     "markdown-to-jsx": "^6.11.4",
     "material-colors": "1.2.6",
-    "minimist": "1.2.0",
+    "minimist": "1.2.3",
     "moment-range": "^4.0.2",
     "nes": "10.0.2",
     "prop-types": "15.7.2",
