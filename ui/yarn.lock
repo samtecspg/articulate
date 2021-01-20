@@ -5531,10 +5531,10 @@ imagemin@^5.3.1:
     pify "^2.3.0"
     replace-ext "^1.0.0"
 
-immer@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-3.0.0.tgz#3991440679116ec2d6b39b0ed5341e681b26ebcf"
-  integrity sha512-dqLrAUJz/G7vfcuQG6GdjOGm+5Mw9YJEvDRbEwHwzBPBRziZYevOq2P1pF//B07CG1l28ZsjSqLz+RziObkaDQ==
+immer@8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.1.tgz#9c73db683e2b3975c424fb0572af5889877ae656"
+  integrity sha512-aqXhGP7//Gui2+UrEtvxZxSquQVXTpZ7KDxfCcKAF3Vysvw0CViVaW9RZ1j1xlIYqaaaipBoqdqeibkc18PNvA==
 
 immutable@^3.8.1:
   version "3.8.2"
