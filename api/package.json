@@ -44,7 +44,7 @@
     "fast-string-search": "^1.4.1",
     "glue": "5.x.x",
     "guid": "^0.0.12",
-    "handlebars": "^4.0.12",
+    "handlebars": "^4.7.7",
     "handlebars-helpers": "^0.10.0",
     "handlebars-intl": "^1.1.2",
     "handlebars.moment": "^1.0.4",
