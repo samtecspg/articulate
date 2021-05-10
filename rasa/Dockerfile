@@ -13,14 +13,19 @@ RUN apt-get update -qq \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN wget -O - https://github.com/RasaHQ/rasa/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
-RUN mv rasa-${RASA_RELEASE} ${RASA_NLU_HOME}
+#RUN wget -O - https://github.com/RasaHQ/rasa/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
+RUN git clone https://github.com/RasaHQ/rasa.git
+RUN cd rasa
+RUN pip install -r requirements.txt
+
+RUN mv rasa-main ${RASA_NLU_HOME}
 
 WORKDIR ${RASA_NLU_HOME}
 
 RUN sed -i '/matplotlib/d' alt_requirements/requirements_bare.txt
 
-RUN pip install -r alt_requirements/requirements_tensorflow_sklearn.txt
+#RUN pip install -r alt_requirements/requirements_tensorflow_sklearn.txt
+RUN pip install rasa[tensorflow]
 RUN pip install -r alt_requirements/requirements_spacy_sklearn.txt
 
 RUN pip install -e .
@@ -38,7 +43,7 @@ RUN pip install https://github.com/explosion/spacy-models/releases/download/pt_c
 
 RUN cp  sample_configs/config_spacy_duckling.yml ${RASA_NLU_HOME}/config.yml
 
-EXPOSE 5000
+EXPOSE 5000    
 
 ENTRYPOINT ["./entrypoint.sh"]
 CMD ["start", "--path", "/app/projects", "-c", "config.yml", "--max_training_processes", "1"]
