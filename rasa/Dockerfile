@@ -43,7 +43,7 @@ RUN pip install https://github.com/explosion/spacy-models/releases/download/pt_c
 
 RUN cp  sample_configs/config_spacy_duckling.yml ${RASA_NLU_HOME}/config.yml
 
-EXPOSE 5000
+EXPOSE 5000    
 
 ENTRYPOINT ["./entrypoint.sh"]
 CMD ["start", "--path", "/app/projects", "-c", "config.yml", "--max_training_processes", "1"]
