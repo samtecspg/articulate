@@ -15,8 +15,8 @@ RUN apt-get update -qq \
 
 #RUN wget -O - https://github.com/RasaHQ/rasa/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
 RUN git clone https://github.com/RasaHQ/rasa.git
-cd rasa
-pip install -r requirements.txt
+RUN cd rasa
+RUN pip install -r requirements.txt
 
 RUN mv rasa-main ${RASA_NLU_HOME}
 
@@ -24,7 +24,8 @@ WORKDIR ${RASA_NLU_HOME}
 
 RUN sed -i '/matplotlib/d' alt_requirements/requirements_bare.txt
 
-RUN pip install -r alt_requirements/requirements_tensorflow_sklearn.txt
+#RUN pip install -r alt_requirements/requirements_tensorflow_sklearn.txt
+RUN pip install rasa[tensorflow]
 RUN pip install -r alt_requirements/requirements_spacy_sklearn.txt
 
 RUN pip install -e .
