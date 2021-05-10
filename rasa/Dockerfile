@@ -13,8 +13,12 @@ RUN apt-get update -qq \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN wget -O - https://github.com/RasaHQ/rasa/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
-RUN mv rasa-${RASA_RELEASE} ${RASA_NLU_HOME}
+#RUN wget -O - https://github.com/RasaHQ/rasa/archive/${RASA_RELEASE}.tar.gz | zcat | tar xvf -
+RUN git clone https://github.com/RasaHQ/rasa.git
+cd rasa
+pip install -r requirements.txt
+
+RUN mv rasa-main ${RASA_NLU_HOME}
 
 WORKDIR ${RASA_NLU_HOME}
 
