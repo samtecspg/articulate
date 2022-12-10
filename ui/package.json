@@ -154,7 +154,7 @@
     "eslint-plugin-react": "7.12.4",
     "eslint-plugin-react-hooks": "1.6.0",
     "eslint-plugin-redux-saga": "1.0.0",
-    "express": "4.16.4",
+    "express": "4.17.3",
     "file-loader": "3.0.1",
     "glob": "^7.1.4",
     "html-loader": "0.5.5",
